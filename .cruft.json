@@ -1,0 +1,22 @@
+{
+  "template": "https://github.com/nickderobertis/cookiecutter-pypi-sphinx",
+  "commit": "091fcff1b2a425adc13a75fc587fbbb190b7ca3a",
+  "checkout": null,
+  "context": {
+    "cookiecutter": {
+      "package_name": "flexlate",
+      "package_directory": "flexlate",
+      "full_name": "Flexlate",
+      "repo_name": "flexlate",
+      "repo_username": "nickderobertis",
+      "short_description": "A composable, maintainable system for managing templates",
+      "package_author": "Nick DeRobertis",
+      "author_email": "whoopnip@gmail.com",
+      "google_analytics_id": "",
+      "logo_url": "",
+      "install_packages": "py-app-conf cookiecutter GitPython",
+      "_template": "https://github.com/nickderobertis/cookiecutter-pypi-sphinx"
+    }
+  },
+  "directory": null
+}
