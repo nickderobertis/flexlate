@@ -1,10 +1,13 @@
+from typing import List
+
 import pytest
 
-from flexlate.render.cookiecutter import CookiecutterRenderer
+from flexlate.render.multi import MultiRenderer
+from flexlate.render.specific.cookiecutter import CookiecutterRenderer
 from flexlate.template.cookiecutter import CookiecutterTemplate
 from tests.config import GENERATED_FILES_DIR
 from tests.dirutils import wipe_generated_folder
-from tests.fixtures.template import cookiecutter_one_template
+from tests.fixtures.template import *
 
 COOKIECUTTER_ONE_GENERATED_TEXT_PATH = GENERATED_FILES_DIR / "b" / "text.txt"
 
@@ -35,3 +38,11 @@ def test_render_cookiecutter_with_data(
         cookiecutter_one_template, out_path=GENERATED_FILES_DIR, data={"c": "something"}
     )
     assert _cookiecutter_one_generated_text_content() == "something"
+
+
+def test_render_multi_with_defaults(cookiecutter_templates: List[CookiecutterTemplate]):
+    renderer = MultiRenderer()
+    renderer.render(
+        cookiecutter_templates, out_path=GENERATED_FILES_DIR
+    )
+    breakpoint()

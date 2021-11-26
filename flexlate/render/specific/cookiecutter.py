@@ -3,12 +3,15 @@ from typing import Optional
 
 from cookiecutter.main import cookiecutter
 
-from flexlate.render.base import TemplateRenderer
+from flexlate.render.specific.base import SpecificTemplateRenderer
 from flexlate.template.cookiecutter import CookiecutterTemplate
+from flexlate.template.types import TemplateType
 from flexlate.types import TemplateData
 
 
-class CookiecutterRenderer(TemplateRenderer):
+class CookiecutterRenderer(SpecificTemplateRenderer):
+    _template_type = TemplateType.COOKIECUTTER
+
     def render(
         self,
         template: CookiecutterTemplate,
