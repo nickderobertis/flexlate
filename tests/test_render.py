@@ -70,3 +70,15 @@ def test_render_multi_with_data(cookiecutter_templates: List[CookiecutterTemplat
     )
     assert _cookiecutter_one_generated_text_content(folder="z") == "something"
     assert _cookiecutter_two_generated_text_content(folder="z") == "f"
+
+
+def test_render_multi_with_overlap(
+    cookiecutter_one_template: CookiecutterTemplate,
+):
+    renderer = MultiRenderer()
+    renderer.render(
+        [cookiecutter_one_template, cookiecutter_one_template],
+        out_path=GENERATED_FILES_DIR,
+        data={"c": "something"},
+    )
+    assert _cookiecutter_one_generated_text_content() == "somethingsomething"

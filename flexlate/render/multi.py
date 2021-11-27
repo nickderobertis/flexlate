@@ -27,9 +27,9 @@ class MultiRenderer:
         with tempfile.TemporaryDirectory() as d:
             temp_root = Path(d)
             temp_folders: List[Path] = []
-            for template in templates:
+            for i, template in enumerate(templates):
                 renderer = _get_specific_renderer(template)
-                temp_folder = temp_root / template.name
+                temp_folder = temp_root / f"{i + 1}-{template.name}"
                 temp_folders.append(temp_folder)
                 renderer.render(template, data=data, out_path=temp_folder)
             _merge_file_trees(temp_folders, out_path)
