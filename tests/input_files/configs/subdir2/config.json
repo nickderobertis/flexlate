@@ -1,0 +1,29 @@
+{
+  "template_sources": [
+    {
+      "name": "two",
+      "path": "tests/input_files/templates/cookiecutters/two",
+      "version": null
+    }
+  ],
+  "applied_templates": [
+    {
+      "name": "two",
+      "data": {
+        "a": "b",
+        "d": "e"
+      },
+      "version": "some version",
+      "root": "."
+    },
+    {
+      "name": "one",
+      "data": {
+        "a": "b",
+        "c": "something"
+      },
+      "version": "d512c7e14e83cb4bc8d4e5ae06bb357e",
+      "root": "subdir2_2"
+    }
+  ]
+}
