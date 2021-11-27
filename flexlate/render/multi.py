@@ -2,7 +2,7 @@ import os
 import shutil
 import tempfile
 from pathlib import Path
-from typing import Sequence, Optional, List
+from typing import Sequence, Optional, List, Dict
 
 from flexlate.exc import InvalidTemplateClassException, RendererNotFoundException
 from flexlate.render.specific.base import SpecificTemplateRenderer
@@ -24,7 +24,8 @@ class MultiRenderer:
         data: Optional[TemplateData] = None,
         out_path: Path = Path("."),
         no_input: bool = False,
-    ):
+    ) -> List[TemplateData]:
+        out_data: List[TemplateData] = []
         with tempfile.TemporaryDirectory() as d:
             temp_root = Path(d)
             temp_folders: List[Path] = []
@@ -32,8 +33,12 @@ class MultiRenderer:
                 renderer = _get_specific_renderer(template)
                 temp_folder = temp_root / f"{i + 1}-{template.name}"
                 temp_folders.append(temp_folder)
-                renderer.render(template, data=data, out_path=temp_folder, no_input=no_input)
+                template_data = renderer.render(
+                    template, data=data, out_path=temp_folder, no_input=no_input
+                )
+                out_data.append(template_data)
             _merge_file_trees(temp_folders, out_path)
+        return out_data
 
 
 def _get_specific_renderer(template: Template) -> SpecificTemplateRenderer:
