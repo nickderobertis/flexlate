@@ -8,7 +8,17 @@ DEFAULT_BRANCH_NAME = "flexlate-output"
 
 
 def checkout_template_branch(repo: Repo, branch_name: str = DEFAULT_BRANCH_NAME):
-    branch = repo.create_head(branch_name)
+    try:
+        # Get branch if it exists already
+        branch = repo.branches[branch_name]  # type: ignore
+    except IndexError as e:
+        if "No item found with id" in str(e) and branch_name in str(e):
+            # Could not find branch, must not exist, create it
+            branch = repo.create_head(branch_name)
+        else:
+            # Unknown error, raise it
+            raise e
+
     branch.checkout()
 
 
