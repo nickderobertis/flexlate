@@ -19,5 +19,6 @@ class SpecificTemplateRenderer(Protocol[T]):
         template: T,
         data: Optional[TemplateData] = None,
         out_path: Path = Path("."),
+        no_input: bool = False,
     ):
         ...

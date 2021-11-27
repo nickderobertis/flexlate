@@ -25,6 +25,7 @@ class Updater:
         data: Optional[TemplateData] = None,
         renderer: MultiRenderer = MultiRenderer(),
         branch_name: str = "flexlate-output",
+        no_input: bool = False,
     ):
         if repo.is_dirty(untracked_files=True):
             raise GitRepoDirtyException(
@@ -35,7 +36,7 @@ class Updater:
         orig_branch = repo.active_branch
         checkout_template_branch(repo, branch_name=branch_name)
         delete_tracked_files(repo)
-        renderer.render(templates, data=data, out_path=out_path)
+        renderer.render(templates, data=data, out_path=out_path, no_input=no_input)
         stage_and_commit_all(repo, _commit_message(templates))
         orig_branch.checkout()
         merge_branch_into_current(repo, branch_name)

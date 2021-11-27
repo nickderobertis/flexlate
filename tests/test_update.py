@@ -26,7 +26,7 @@ def test_update_template_no_history(
 ):
     repo = repo_with_placeholder_committed
     updater = Updater()
-    updater.update(repo, [cookiecutter_one_template])
+    updater.update(repo, [cookiecutter_one_template], no_input=True)
     main_branch: Head = repo.branches["master"]  # type: ignore
     template_branch: Head = repo.branches[DEFAULT_BRANCH_NAME]  # type: ignore
     assert repo.active_branch == main_branch
@@ -47,7 +47,7 @@ def test_update_template_dirty_repo(
     repo = dirty_repo
     updater = Updater()
     with pytest.raises(GitRepoDirtyException):
-        updater.update(repo, [cookiecutter_one_template])
+        updater.update(repo, [cookiecutter_one_template], no_input=True)
 
 
 def test_update_add_template(
@@ -56,7 +56,7 @@ def test_update_add_template(
 ):
     repo = repo_with_template_branch_from_cookiecutter_one
     updater = Updater()
-    updater.update(repo, cookiecutter_templates)
+    updater.update(repo, cookiecutter_templates, no_input=True)
     main_branch: Head = repo.branches["master"]  # type: ignore
     template_branch: Head = repo.branches[DEFAULT_BRANCH_NAME]  # type: ignore
     assert repo.active_branch == main_branch
@@ -78,7 +78,7 @@ def test_update_modify_template(
 ):
     repo = repo_with_template_branch_from_cookiecutter_one
     updater = Updater()
-    updater.update(repo, [cookiecutter_one_modified_template])
+    updater.update(repo, [cookiecutter_one_modified_template], no_input=True)
     main_branch: Head = repo.branches["master"]  # type: ignore
     template_branch: Head = repo.branches[DEFAULT_BRANCH_NAME]  # type: ignore
     assert repo.active_branch == main_branch
@@ -98,5 +98,5 @@ def test_update_modify_template_conflict(
 ):
     repo = repo_from_cookiecutter_one_with_modifications
     updater = Updater()
-    updater.update(repo, [cookiecutter_one_modified_template])
+    updater.update(repo, [cookiecutter_one_modified_template], no_input=True)
     assert repo_has_merge_conflicts(repo)

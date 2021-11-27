@@ -18,10 +18,11 @@ class CookiecutterRenderer(SpecificTemplateRenderer):
         template: CookiecutterTemplate,
         data: Optional[TemplateData] = None,
         out_path: Path = Path("."),
+        no_input: bool = False,
     ):
         cookiecutter(
             str(template.path),
-            no_input=True,
+            no_input=no_input,
             output_dir=str(out_path),
             extra_context=data,
         )

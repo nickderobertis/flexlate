@@ -16,7 +16,7 @@ def repo_with_template_branch_from_cookiecutter_one(
 ) -> Repo:
     repo = repo_with_placeholder_committed
     updater = Updater()
-    updater.update(repo, [cookiecutter_one_template])
+    updater.update(repo, [cookiecutter_one_template], no_input=True)
     yield repo
 
 
