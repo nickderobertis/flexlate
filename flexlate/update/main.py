@@ -5,6 +5,7 @@ from typing import Sequence, Optional
 
 from git import Repo
 
+from flexlate.exc import GitRepoDirtyException
 from flexlate.render.multi import MultiRenderer
 from flexlate.template.base import Template
 from flexlate.types import TemplateData
@@ -25,8 +26,12 @@ class Updater:
         renderer: MultiRenderer = MultiRenderer(),
         branch_name: str = "flexlate-output",
     ):
+        if repo.is_dirty(untracked_files=True):
+            raise GitRepoDirtyException(
+                "git working tree is not clean. Please commit, stash, or discard any changes first."
+            )
+
         out_path = Path(repo.working_dir)
-        # TODO: check if git repo and clean working directory, if not, exit
         orig_branch = repo.active_branch
         checkout_template_branch(repo, branch_name=branch_name)
         delete_tracked_files(repo)
