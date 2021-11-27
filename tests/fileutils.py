@@ -20,3 +20,9 @@ def cookiecutter_two_generated_text_content(
     folder: str = "b", file: str = "text2.txt"
 ) -> str:
     return _generated_text_content(folder, file)
+
+
+def preprend_cookiecutter_one_generated_text(content: str):
+    current_content = COOKIECUTTER_ONE_GENERATED_TEXT_PATH.read_text()
+    full_content = content + current_content
+    COOKIECUTTER_ONE_GENERATED_TEXT_PATH.write_text(full_content)

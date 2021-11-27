@@ -16,6 +16,8 @@ from tests.fileutils import (
 )
 from tests.fixtures.git import *
 from tests.fixtures.template import *
+from tests.fixtures.templated_repo import *
+from tests.gitutils import repo_has_merge_conflicts
 
 
 def test_update_template_no_history(
@@ -81,10 +83,20 @@ def test_update_modify_template(
     template_branch: Head = repo.branches[DEFAULT_BRANCH_NAME]  # type: ignore
     assert repo.active_branch == main_branch
     assert (
-            repo.commit().message
-            == "Update flexlate templates\n\none: 7e18a6cc14856c8558ac999efa01e5e8\n"
+        repo.commit().message
+        == "Update flexlate templates\n\none: 7e18a6cc14856c8558ac999efa01e5e8\n"
     )
     assert cookiecutter_one_generated_text_content() == " and extra"
     template_branch.checkout()
     assert repo.active_branch == template_branch
     assert cookiecutter_one_generated_text_content() == " and extra"
+
+
+def test_update_modify_template_conflict(
+    cookiecutter_one_modified_template: CookiecutterTemplate,
+    repo_from_cookiecutter_one_with_modifications: Repo,
+):
+    repo = repo_from_cookiecutter_one_with_modifications
+    updater = Updater()
+    updater.update(repo, [cookiecutter_one_modified_template])
+    assert repo_has_merge_conflicts(repo)

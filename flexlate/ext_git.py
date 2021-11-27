@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 from typing import List, cast, Set
 
-from git import Repo, Blob, Tree
+from git import Repo, Blob, Tree, GitCommandError
 
 DEFAULT_BRANCH_NAME = "flexlate-output"
 
@@ -52,8 +52,16 @@ def delete_tracked_files(repo: Repo):
         os.remove(path)
 
 
-def merge_branch_into_current(repo: Repo, branch_name: str):
-    repo.git.merge(branch_name)
+def merge_branch_into_current(
+    repo: Repo, branch_name: str, allow_conflicts: bool = True
+):
+    try:
+        repo.git.merge(branch_name)
+    except GitCommandError as e:
+        if allow_conflicts and "fix conflicts and then commit the result" in e.stdout:
+            #
+            return
+        raise e
 
 
 def get_current_version(repo: Repo) -> str:
