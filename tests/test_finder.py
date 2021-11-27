@@ -14,6 +14,7 @@ def test_get_cookiecutter_local_template():
     finder = CookiecutterFinder()
     template = finder.find(COOKIECUTTER_ONE_DIR)
     assert template.path == COOKIECUTTER_ONE_DIR
+    assert template.version == "d512c7e14e83cb4bc8d4e5ae06bb357e"
     assert template.config.defaults == {"a": "b", "c": ""}
 
 
@@ -24,4 +25,5 @@ def test_get_cookiecutter_remote_template():
         template.path
         == Path("~").expanduser() / ".cookiecutters" / "cookiecutter-simple-example"
     )
+    assert template.version == "c390901c4fd599473bdb95fa4dd3d2a6eb2b34f0"
     assert template.config.defaults == {"name": "abc", "key": "value"}

@@ -9,7 +9,7 @@ from flexlate.exc import GitRepoDirtyException
 from flexlate.render.multi import MultiRenderer
 from flexlate.template.base import Template
 from flexlate.types import TemplateData
-from flexlate.update.ext_git import (
+from flexlate.ext_git import (
     checkout_template_branch,
     delete_tracked_files,
     stage_and_commit_all,
@@ -36,7 +36,13 @@ class Updater:
         checkout_template_branch(repo, branch_name=branch_name)
         delete_tracked_files(repo)
         renderer.render(templates, data=data, out_path=out_path)
-        # TODO: determine old and new version of template, put new template version in message
-        stage_and_commit_all(repo, "Update template")
+        stage_and_commit_all(repo, _commit_message(templates))
         orig_branch.checkout()
         merge_branch_into_current(repo, branch_name)
+
+
+def _commit_message(templates: Sequence[Template]) -> str:
+    message = "Update flexlate templates\n\n"
+    for template in templates:
+        message += f"{template.name}: {template.version}\n"
+    return message

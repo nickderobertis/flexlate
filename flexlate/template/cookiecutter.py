@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Optional
 
 from flexlate.template.base import Template
 from flexlate.template.types import TemplateType
@@ -8,5 +9,11 @@ from flexlate.template_config.cookiecutter import CookiecutterConfig
 class CookiecutterTemplate(Template):
     _type = TemplateType.COOKIECUTTER
 
-    def __init__(self, config: CookiecutterConfig, path: Path):
-        super().__init__(config, path)
+    def __init__(
+        self,
+        config: CookiecutterConfig,
+        path: Path,
+        name: Optional[str] = None,
+        version: Optional[str] = None,
+    ):
+        super().__init__(config, path, name=name, version=version)

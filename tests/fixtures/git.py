@@ -1,7 +1,7 @@
 import pytest
 from git import Repo
 
-from flexlate.update.ext_git import stage_and_commit_all
+from flexlate.ext_git import stage_and_commit_all
 from tests.dirutils import wipe_generated_folder
 from tests.gitutils import (
     create_empty_repo,

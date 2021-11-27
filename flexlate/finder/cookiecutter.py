@@ -1,10 +1,12 @@
 import json
 from pathlib import Path
-from typing import Union
+from typing import Union, Optional
 
 from cookiecutter.config import get_user_config
-from cookiecutter.repository import determine_repo_dir
+from cookiecutter.repository import determine_repo_dir, is_repo_url
+from git import Repo
 
+from flexlate.ext_git import get_current_version
 from flexlate.finder.base import TemplateFinder
 from flexlate.template.cookiecutter import CookiecutterTemplate
 from flexlate.template_config.cookiecutter import CookiecutterConfig
@@ -22,7 +24,11 @@ class CookiecutterFinder(TemplateFinder):
         )
         repo_path = Path(repo_dir)
         config = self.get_config(repo_path)
-        return CookiecutterTemplate(config, repo_path)
+        version: Optional[str] = None
+        if is_repo_url(str(path)):
+            # Get version from repo
+            version = get_current_version(Repo(repo_dir))
+        return CookiecutterTemplate(config, repo_path, version=version)
 
     def get_config(self, directory: Path) -> CookiecutterConfig:
         config_path = directory / "cookiecutter.json"

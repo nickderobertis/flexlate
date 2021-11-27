@@ -44,3 +44,7 @@ def delete_tracked_files(repo: Repo):
 
 def merge_branch_into_current(repo: Repo, branch_name: str):
     repo.git.merge(branch_name)
+
+
+def get_current_version(repo: Repo) -> str:
+    return repo.head.commit.hexsha

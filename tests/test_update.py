@@ -3,7 +3,7 @@ from git import Repo, Head
 
 from flexlate.exc import GitRepoDirtyException
 from flexlate.template.cookiecutter import CookiecutterTemplate
-from flexlate.update.ext_git import DEFAULT_BRANCH_NAME
+from flexlate.ext_git import DEFAULT_BRANCH_NAME
 from flexlate.update.main import Updater
 from tests.config import GENERATED_FILES_DIR
 from tests.fileutils import cookiecutter_one_generated_text_content
@@ -21,6 +21,7 @@ def test_update_template_no_history(
     main_branch: Head = repo.branches["master"]  # type: ignore
     template_branch: Head = repo.branches[DEFAULT_BRANCH_NAME]  # type: ignore
     assert repo.active_branch == main_branch
+    assert repo.commit().message == 'Update flexlate templates\n\none: d512c7e14e83cb4bc8d4e5ae06bb357e\n'
     assert cookiecutter_one_generated_text_content() == ""
     template_branch.checkout()
     assert repo.active_branch == template_branch
@@ -37,5 +38,4 @@ def test_update_template_dirty_repo(
         updater.update(repo, [cookiecutter_one_template])
 
 
-# TODO: test for unclean git directory
 # TODO: test for template branch already exists
