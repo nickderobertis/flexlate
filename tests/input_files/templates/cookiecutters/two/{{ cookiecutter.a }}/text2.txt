@@ -1,1 +1,1 @@
-{{ cookiecutter.c }}
+{{ cookiecutter.d }}

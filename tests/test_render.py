@@ -10,11 +10,17 @@ from tests.dirutils import wipe_generated_folder
 from tests.fixtures.template import *
 
 COOKIECUTTER_ONE_GENERATED_TEXT_PATH = GENERATED_FILES_DIR / "b" / "text.txt"
+COOKIECUTTER_TWO_GENERATED_TEXT_PATH = GENERATED_FILES_DIR / "b" / "text2.txt"
 
 
 def _cookiecutter_one_generated_text_content() -> str:
     assert COOKIECUTTER_ONE_GENERATED_TEXT_PATH.exists()
     return COOKIECUTTER_ONE_GENERATED_TEXT_PATH.read_text()
+
+
+def _cookiecutter_two_generated_text_content() -> str:
+    assert COOKIECUTTER_TWO_GENERATED_TEXT_PATH.exists()
+    return COOKIECUTTER_TWO_GENERATED_TEXT_PATH.read_text()
 
 
 @pytest.fixture(autouse=True)
@@ -45,4 +51,5 @@ def test_render_multi_with_defaults(cookiecutter_templates: List[CookiecutterTem
     renderer.render(
         cookiecutter_templates, out_path=GENERATED_FILES_DIR
     )
-    breakpoint()
+    assert _cookiecutter_one_generated_text_content() == ""
+    assert _cookiecutter_two_generated_text_content() == "e"
