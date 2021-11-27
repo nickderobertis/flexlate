@@ -10,6 +10,7 @@ from flexlate.types import TemplateData
 
 
 class CookiecutterRenderer(SpecificTemplateRenderer):
+    _template_cls = CookiecutterTemplate
     _template_type = TemplateType.COOKIECUTTER
 
     def render(
