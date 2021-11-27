@@ -1,3 +1,7 @@
+import shutil
+import tempfile
+from pathlib import Path
+
 import pytest
 from git import Repo, Head
 
@@ -66,4 +70,21 @@ def test_update_add_template(
     assert cookiecutter_two_generated_text_content() == "e"
 
 
-# TODO: test for template branch already exists
+def test_update_modify_template(
+    cookiecutter_one_modified_template: CookiecutterTemplate,
+    repo_with_template_branch_from_cookiecutter_one: Repo,
+):
+    repo = repo_with_template_branch_from_cookiecutter_one
+    updater = Updater()
+    updater.update(repo, [cookiecutter_one_modified_template])
+    main_branch: Head = repo.branches["master"]  # type: ignore
+    template_branch: Head = repo.branches[DEFAULT_BRANCH_NAME]  # type: ignore
+    assert repo.active_branch == main_branch
+    assert (
+            repo.commit().message
+            == "Update flexlate templates\n\none: 7e18a6cc14856c8558ac999efa01e5e8\n"
+    )
+    assert cookiecutter_one_generated_text_content() == " and extra"
+    template_branch.checkout()
+    assert repo.active_branch == template_branch
+    assert cookiecutter_one_generated_text_content() == " and extra"
