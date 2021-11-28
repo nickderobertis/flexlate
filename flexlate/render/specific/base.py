@@ -4,7 +4,7 @@ from typing import Optional, TypeVar, Type, Protocol
 
 from flexlate.template.base import Template
 from flexlate.template.types import TemplateType
-from flexlate.types import TemplateData
+from flexlate.template_data import TemplateData
 
 T = TypeVar("T", bound=Template)
 

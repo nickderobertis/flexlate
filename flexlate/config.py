@@ -1,16 +1,41 @@
 from pathlib import Path
-from typing import List, Optional, Sequence, Dict, Any
+from typing import List, Optional, Sequence, Dict, Any, Protocol, Tuple
 
 from pyappconf import BaseConfig, AppConfig, ConfigFormats
 from pydantic import BaseModel, Field, validator, Extra
 
-from flexlate.types import TemplateData
+from flexlate.exc import InvalidTemplateTypeException
+from flexlate.finder.cookiecutter import CookiecutterFinder
+from flexlate.template.base import Template
+from flexlate.template.cookiecutter import CookiecutterTemplate
+from flexlate.template.types import TemplateType
+from flexlate.template_data import TemplateData
+
+
+# TODO: trying to be able to build template and data from config.
+#  Need to be from applied templates, but sources have the template
+#  types and paths needed to find them. Probably best to create
+#  some combined config and put the logic to transform there
+from flexlate.update.template import TemplateUpdate
 
 
 class TemplateSource(BaseModel):
     name: str
     path: str
+    type: TemplateType
     version: Optional[str] = None
+
+    def to_template(self) -> Template:
+        if self.type == TemplateType.BASE:
+            raise InvalidTemplateTypeException("base type is not allowed for concrete templates")
+        if self.type == TemplateType.COOKIECUTTER:
+            finder = CookiecutterFinder()
+        else:
+            raise InvalidTemplateTypeException(f"no handling for template type {self.type} in creating template from source")
+        kwargs = dict(name=self.name)
+        if self.version is not None:
+            kwargs.update(version=self.version)
+        return finder.find(self.path, name=self.name, version=self.version)
 
 
 class AppliedTemplateConfig(BaseModel):
@@ -18,6 +43,14 @@ class AppliedTemplateConfig(BaseModel):
     data: TemplateData
     version: str
     root: Path = Path(".")
+
+
+class AppliedTemplateWithSource(BaseModel):
+    applied_template: AppliedTemplateConfig
+    source: TemplateSource
+
+    def to_template_and_data(self) -> Tuple[Template, TemplateData]:
+        return self.source.to_template(), self.applied_template.data
 
 
 class FlexlateConfig(BaseConfig):
@@ -59,8 +92,8 @@ class FlexlateConfig(BaseConfig):
         return v
 
     @property
-    def applied_templates_dict(self) -> Dict[str, AppliedTemplateConfig]:
-        return {at.name: at for at in self.applied_templates}
+    def template_sources_dict(self) -> Dict[str, TemplateSource]:
+        return {ts.name: ts for ts in self.template_sources}
 
     @property
     def child_configs(self) -> List["FlexlateConfig"]:
@@ -74,26 +107,9 @@ class FlexlateConfig(BaseConfig):
         for config in self.child_configs:
             config.save(serializer_kwargs, **kwargs)
 
-    def update_applied_template(
-        self, template_name: str, new_version: str, new_data: TemplateData
-    ):
-        _update_applied_template_for_config(self, template_name, new_version, new_data)
-        for config in self.child_configs:
-            _update_applied_template_for_config(
-                config, template_name, new_version, new_data
-            )
-
     class Config:
         extra = Extra.allow
 
-
-def _update_applied_template_for_config(
-    conf: FlexlateConfig, template_name: str, new_version: str, new_data: TemplateData
-):
-    for applied_template in conf.applied_templates:
-        if applied_template.name == template_name:
-            applied_template.version = new_version
-            applied_template.data = new_data
 
 
 def _load_nested_configs(

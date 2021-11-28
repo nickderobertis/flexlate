@@ -6,7 +6,23 @@ class RendererNotFoundException(FlexlateException):
     pass
 
 
-class InvalidTemplateClassException(FlexlateException):
+class FlexlateTemplateException(FlexlateException):
+    pass
+
+
+class InvalidTemplateClassException(FlexlateTemplateException):
+    pass
+
+
+class InvalidTemplateTypeException(FlexlateTemplateException):
+    pass
+
+
+class TemplateLookupException(FlexlateTemplateException):
+    pass
+
+
+class InvalidTemplateDataException(FlexlateTemplateException):
     pass
 
 
@@ -15,4 +31,12 @@ class FlexlateGitException(FlexlateException):
 
 
 class GitRepoDirtyException(FlexlateGitException):
+    pass
+
+
+class FlexlateConfigException(FlexlateException):
+    pass
+
+
+class FlexlateConfigFileNotExistsException(FlexlateConfigException):
     pass

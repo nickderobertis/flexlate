@@ -9,7 +9,7 @@ from flexlate.render.specific.base import SpecificTemplateRenderer
 from flexlate.render.specific.cookiecutter import CookiecutterRenderer
 from flexlate.template.base import Template
 from flexlate.template.types import TemplateType
-from flexlate.types import TemplateData
+from flexlate.template_data import TemplateData
 
 renderers = [CookiecutterRenderer()]
 

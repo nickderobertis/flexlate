@@ -3,6 +3,7 @@
     {
       "name": "two",
       "path": "tests/input_files/templates/cookiecutters/two",
+      "type": "cookiecutter",
       "version": null
     }
   ],

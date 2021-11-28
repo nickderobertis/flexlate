@@ -9,10 +9,10 @@ from cookiecutter.prompt import prompt_for_config
 from flexlate.render.specific.base import SpecificTemplateRenderer
 from flexlate.template.cookiecutter import CookiecutterTemplate
 from flexlate.template.types import TemplateType
-from flexlate.types import TemplateData
+from flexlate.template_data import TemplateData
 
 
-class CookiecutterRenderer(SpecificTemplateRenderer):
+class CookiecutterRenderer(SpecificTemplateRenderer[CookiecutterTemplate]):
     _template_cls = CookiecutterTemplate
     _template_type = TemplateType.COOKIECUTTER
 

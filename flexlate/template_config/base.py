@@ -1,6 +1,6 @@
 import abc
 
-from flexlate.types import TemplateData
+from flexlate.template_data import TemplateData
 
 
 class TemplateConfig(abc.ABC):

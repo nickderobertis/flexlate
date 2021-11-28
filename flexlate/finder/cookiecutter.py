@@ -13,7 +13,7 @@ from flexlate.template_config.cookiecutter import CookiecutterConfig
 
 
 class CookiecutterFinder(TemplateFinder):
-    def find(self, path: Union[str, Path]) -> CookiecutterTemplate:
+    def find(self, path: Union[str, Path], **template_kwargs) -> CookiecutterTemplate:
         config_dict = get_user_config()
         repo_dir, _ = determine_repo_dir(
             template=str(path),
@@ -25,10 +25,12 @@ class CookiecutterFinder(TemplateFinder):
         repo_path = Path(repo_dir)
         config = self.get_config(repo_path)
         version: Optional[str] = None
-        if is_repo_url(str(path)):
+        if "version" in template_kwargs:
+            version = template_kwargs.pop("version")
+        elif is_repo_url(str(path)):
             # Get version from repo
             version = get_current_version(Repo(repo_dir))
-        return CookiecutterTemplate(config, repo_path, version=version)
+        return CookiecutterTemplate(config, repo_path, version=version, **template_kwargs)
 
     def get_config(self, directory: Path) -> CookiecutterConfig:
         config_path = directory / "cookiecutter.json"

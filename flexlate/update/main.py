@@ -1,5 +1,3 @@
-import os
-import shutil
 from pathlib import Path
 from typing import Sequence, Optional, List
 
@@ -9,12 +7,16 @@ from flexlate.config_manager import ConfigManager
 from flexlate.exc import GitRepoDirtyException
 from flexlate.render.multi import MultiRenderer
 from flexlate.template.base import Template
-from flexlate.types import TemplateData
 from flexlate.ext_git import (
-    checkout_template_branch,
     delete_tracked_files,
     stage_and_commit_all,
     merge_branch_into_current,
+    checked_out_template_branch,
+)
+from flexlate.template_data import TemplateData, merge_data
+from flexlate.update.template import (
+    TemplateUpdate,
+    updates_with_updated_data,
 )
 
 
@@ -22,8 +24,7 @@ class Updater:
     def update(
         self,
         repo: Repo,
-        templates: Sequence[Template],
-        data: Optional[Sequence[TemplateData]] = None,
+        updates: Sequence[TemplateUpdate],
         branch_name: str = "flexlate-output",
         no_input: bool = False,
         renderer: MultiRenderer = MultiRenderer(),
@@ -35,16 +36,43 @@ class Updater:
             )
 
         out_path = Path(repo.working_dir)
-        orig_branch = repo.active_branch
-        checkout_template_branch(repo, branch_name=branch_name)
-        delete_tracked_files(repo)
-        previous_data = config_manager.get_data_for_templates(templates, project_root=out_path)
-        input_data = _merge_data(data or [], previous_data)
-        updated_data = renderer.render(templates, data=input_data, out_path=out_path, no_input=no_input)
-        config_manager.update_applied_templates(templates, updated_data, project_root=out_path)
-        stage_and_commit_all(repo, _commit_message(templates))
-        orig_branch.checkout()
+        with checked_out_template_branch(repo, branch_name=branch_name):
+            config_manager.update_applied_templates(updates, project_root=out_path)
+            templates, data = config_manager.get_templates_with_data(
+                project_root=out_path
+            )
+            delete_tracked_files(repo)
+            updated_data = renderer.render(
+                templates, data=data, out_path=out_path, no_input=no_input
+            )
+            new_updates = updates_with_updated_data(updates, updated_data)
+            config_manager.update_applied_templates(new_updates, project_root=out_path)
+            stage_and_commit_all(repo, _commit_message(templates))
         merge_branch_into_current(repo, branch_name)
+
+    def get_updates_for_templates(
+        self,
+        templates: Sequence[Template],
+        data: Optional[Sequence[TemplateData]],
+        project_root: Path = Path("."),
+        config_manager: ConfigManager = ConfigManager(),
+    ) -> List[TemplateUpdate]:
+        data = data or []
+        all_updates = config_manager.get_no_op_updates(project_root=project_root)
+        templates_by_name = {template.name: template for template in templates}
+        out_updates: List[TemplateUpdate] = []
+        for i, template in enumerate(templates):
+            try:
+                template_data = data[i]
+            except IndexError:
+                template_data = {}
+            # TODO: more efficient algorithm for matching updates to templates
+            for update in all_updates:
+                if update.template.name in templates_by_name:
+                    update.data = merge_data([template_data], [update.data or {}])[0]
+                    update.template.version = template.version
+                    out_updates.append(update)
+        return out_updates
 
 
 def _commit_message(templates: Sequence[Template]) -> str:
@@ -52,14 +80,3 @@ def _commit_message(templates: Sequence[Template]) -> str:
     for template in templates:
         message += f"{template.name}: {template.version}\n"
     return message
-
-
-def _merge_data(overrides: Sequence[TemplateData], defaults: Sequence[TemplateData]) -> List[TemplateData]:
-    out_data: List[TemplateData] = []
-    for i, default_data in enumerate(defaults):
-        try:
-            override_data = overrides[i]
-        except IndexError:
-            override_data = {}
-        out_data.append({**default_data, **override_data})
-    return out_data

@@ -3,6 +3,8 @@ from pathlib import Path
 
 from flexlate.config import FlexlateConfig, AppliedTemplateConfig
 from flexlate.config_manager import ConfigManager
+from flexlate.update.main import Updater
+from flexlate.update.template import TemplateUpdate
 from tests.config import CONFIGS_DIR, GENERATED_FILES_DIR
 from tests.fixtures.config import generated_dir_with_configs
 from tests.fixtures.template import *
@@ -25,9 +27,15 @@ def test_update_and_save_multi_config(
     cookiecutter_one_modified_template: CookiecutterTemplate,
 ):
     manager = ConfigManager()
-    manager.update_applied_templates(
+    updater = Updater()
+    template_updates = updater.get_updates_for_templates(
         [cookiecutter_one_modified_template],
         [{"a": "yeah", "c": "woo"}],
+        project_root=GENERATED_FILES_DIR,
+        config_manager=manager
+    )
+    manager.update_applied_templates(
+        template_updates,
         project_root=GENERATED_FILES_DIR,
     )
 

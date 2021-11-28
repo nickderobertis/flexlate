@@ -1,4 +1,5 @@
 import os
+from contextlib import contextmanager
 from pathlib import Path
 from typing import List, cast, Set
 
@@ -66,3 +67,11 @@ def merge_branch_into_current(
 
 def get_current_version(repo: Repo) -> str:
     return repo.head.commit.hexsha
+
+
+@contextmanager
+def checked_out_template_branch(repo: Repo, branch_name: str = DEFAULT_BRANCH_NAME):
+    orig_branch = repo.active_branch
+    checkout_template_branch(repo, branch_name=branch_name)
+    yield
+    orig_branch.checkout()

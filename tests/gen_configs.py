@@ -2,6 +2,7 @@
 from pathlib import Path
 
 from flexlate.config import FlexlateConfig, TemplateSource, AppliedTemplateConfig
+from flexlate.template.types import TemplateType
 from tests.config import (
     COOKIECUTTER_ONE_DIR,
     CONFIGS_DIR,
@@ -15,7 +16,9 @@ def create_config_1() -> FlexlateConfig:
     config = FlexlateConfig(
         template_sources=[
             TemplateSource(
-                name="one", path=str(COOKIECUTTER_ONE_DIR.relative_to(PROJECT_DIR))
+                name="one",
+                path=str(COOKIECUTTER_ONE_DIR.relative_to(PROJECT_DIR)),
+                type=TemplateType.COOKIECUTTER,
             ),
         ],
         applied_templates=[
@@ -40,7 +43,9 @@ def create_config_2() -> FlexlateConfig:
     config = FlexlateConfig(
         template_sources=[
             TemplateSource(
-                name="two", path=str(COOKIECUTTER_TWO_DIR.relative_to(PROJECT_DIR))
+                name="two",
+                path=str(COOKIECUTTER_TWO_DIR.relative_to(PROJECT_DIR)),
+                type=TemplateType.COOKIECUTTER,
             ),
         ],
         applied_templates=[
