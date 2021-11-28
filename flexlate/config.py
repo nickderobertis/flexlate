@@ -24,14 +24,16 @@ class FlexlateConfig(BaseConfig):
     template_sources: List[TemplateSource] = Field(default_factory=list)
     applied_templates: List[AppliedTemplateConfig] = Field(default_factory=list)
     _child_configs: Optional[List["FlexlateConfig"]] = None
-    _settings = AppConfig(app_name="flexlate", default_format=ConfigFormats.JSON)
+    _settings = AppConfig(
+        app_name="flexlate", default_format=ConfigFormats.JSON, config_name="flexlate"
+    )
 
     @classmethod
     def from_dir_including_nested(cls, root: Path) -> "FlexlateConfig":
         file_name = cls._settings.config_file_name
         configs = _load_nested_configs(root, file_name, root)
         if not configs:
-            FlexlateConfig.load_or_create(root / file_name)
+            return FlexlateConfig.load_or_create(root / file_name)
         return cls.from_multiple(configs)
 
     @classmethod
@@ -72,10 +74,14 @@ class FlexlateConfig(BaseConfig):
         for config in self.child_configs:
             config.save(serializer_kwargs, **kwargs)
 
-    def update_applied_template(self, template_name: str, new_version: str, new_data: TemplateData):
+    def update_applied_template(
+        self, template_name: str, new_version: str, new_data: TemplateData
+    ):
         _update_applied_template_for_config(self, template_name, new_version, new_data)
         for config in self.child_configs:
-            _update_applied_template_for_config(config, template_name, new_version, new_data)
+            _update_applied_template_for_config(
+                config, template_name, new_version, new_data
+            )
 
     class Config:
         extra = Extra.allow

@@ -21,10 +21,11 @@ class MultiRenderer:
     def render(
         self,
         templates: Sequence[Template],
-        data: Optional[TemplateData] = None,
+        data: Optional[Sequence[TemplateData]] = None,
         out_path: Path = Path("."),
         no_input: bool = False,
     ) -> List[TemplateData]:
+        data = data or []
         out_data: List[TemplateData] = []
         with tempfile.TemporaryDirectory() as d:
             temp_root = Path(d)
@@ -33,8 +34,12 @@ class MultiRenderer:
                 renderer = _get_specific_renderer(template)
                 temp_folder = temp_root / f"{i + 1}-{template.name}"
                 temp_folders.append(temp_folder)
+                try:
+                    in_data = data[i]
+                except IndexError:
+                    in_data = {}
                 template_data = renderer.render(
-                    template, data=data, out_path=temp_folder, no_input=no_input
+                    template, data=in_data, out_path=temp_folder, no_input=no_input
                 )
                 out_data.append(template_data)
             _merge_file_trees(temp_folders, out_path)
