@@ -104,7 +104,7 @@ class ConfigManager:
             )
         for update, data in zip(updates, all_data):
             applied_template = _get_applied_template_from_config(config, update)
-            applied_template.data = update.data
+            applied_template.data = update.data or {}
             applied_template.version = update.template.version
         self.save_config(config)
 
@@ -168,7 +168,10 @@ def _get_or_create_child_config_by_path(
 
 def _create_child_config(config: FlexlateConfig, config_path: Path) -> FlexlateConfig:
     new_child = FlexlateConfig.load_or_create(config_path)
-    config._child_configs.append(new_child)
+    if config._child_configs:
+        config._child_configs.append(new_child)
+    else:
+        config._child_configs = [new_child]
     return new_child
 
 

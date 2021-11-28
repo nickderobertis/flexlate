@@ -50,6 +50,8 @@ def _list_tracked_files(tree: Tree, root_path: Path) -> Set[Path]:
 
 def delete_tracked_files(repo: Repo):
     for path in list_tracked_files(repo):
+        if path.name == "flexlate.json":
+            continue
         os.remove(path)
 
 

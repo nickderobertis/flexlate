@@ -41,6 +41,7 @@ class Updater:
             templates, data = config_manager.get_templates_with_data(
                 project_root=out_path
             )
+            # TODO: shouldn't delete files, just overwrite
             delete_tracked_files(repo)
             updated_data = renderer.render(
                 templates, data=data, out_path=out_path, no_input=no_input
