@@ -34,9 +34,6 @@ def test_update_template_dirty_repo(
         updater.update(repo, [cookiecutter_one_update_no_data], no_input=True)
 
 
-# TODO: fix tests after repo_with_template_branch_from_cookiecutter_one and repo_from_cookiecutter_one_with_modifications are fixed by using add
-
-
 def test_update_modify_template(
     cookiecutter_one_modified_template: CookiecutterTemplate,
     repo_with_template_branch_from_cookiecutter_one: Repo,
@@ -60,13 +57,14 @@ def test_update_modify_template(
     assert cookiecutter_one_generated_text_content() == " and extra"
 
 
-#
-#
-# def test_update_modify_template_conflict(
-#     cookiecutter_one_modified_template: CookiecutterTemplate,
-#     repo_from_cookiecutter_one_with_modifications: Repo,
-# ):
-#     repo = repo_from_cookiecutter_one_with_modifications
-#     updater = Updater()
-#     updater.update(repo, [cookiecutter_one_modified_template], no_input=True)
-#     assert repo_has_merge_conflicts(repo)
+def test_update_modify_template_conflict(
+    cookiecutter_one_modified_template: CookiecutterTemplate,
+    repo_from_cookiecutter_one_with_modifications: Repo,
+):
+    repo = repo_from_cookiecutter_one_with_modifications
+    updater = Updater()
+    template_updates = updater.get_updates_for_templates(
+        [cookiecutter_one_modified_template], project_root=GENERATED_FILES_DIR
+    )
+    updater.update(repo, template_updates, no_input=True)
+    assert repo_has_merge_conflicts(repo)
