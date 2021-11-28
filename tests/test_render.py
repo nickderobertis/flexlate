@@ -54,7 +54,7 @@ def test_render_multi_with_data(cookiecutter_templates: List[CookiecutterTemplat
     data = renderer.render(
         cookiecutter_templates,
         out_path=GENERATED_FILES_DIR,
-        data={"a": "z", "c": "something", "d": "f"},
+        data=[{"a": "z", "c": "something"}, {"a": "z", "d": "f"}],
         no_input=True,
     )
     assert data == [{"a": "z", "c": "something"}, {"a": "z", "d": "f"}]
@@ -69,8 +69,8 @@ def test_render_multi_with_overlap(
     data = renderer.render(
         [cookiecutter_one_template, cookiecutter_one_template],
         out_path=GENERATED_FILES_DIR,
-        data={"c": "something"},
+        data=[{"c": "something"}, {"c": "something else"}],
         no_input=True,
     )
-    assert data == [{"a": "b", "c": "something"}, {"a": "b", "c": "something"}]
-    assert cookiecutter_one_generated_text_content() == "somethingsomething"
+    assert data == [{"a": "b", "c": "something"}, {"a": "b", "c": "something else"}]
+    assert cookiecutter_one_generated_text_content() == "somethingsomething else"

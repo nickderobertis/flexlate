@@ -31,8 +31,8 @@ def test_update_and_save_multi_config(
         project_root=GENERATED_FILES_DIR,
     )
 
-    config_1_path = GENERATED_FILES_DIR / "config.json"
-    config_2_path = GENERATED_FILES_DIR / "subdir2" / "config.json"
+    config_1_path = GENERATED_FILES_DIR / "flexlate.json"
+    config_2_path = GENERATED_FILES_DIR / "subdir2" / "flexlate.json"
     config_1 = FlexlateConfig.load(config_1_path)
     config_2 = FlexlateConfig.load(config_2_path)
 
