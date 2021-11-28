@@ -34,7 +34,7 @@ def test_update_and_save_multi_config(
         project_root=GENERATED_FILES_DIR,
         config_manager=manager
     )
-    manager.update_applied_templates(
+    manager.update_templates(
         template_updates,
         project_root=GENERATED_FILES_DIR,
     )

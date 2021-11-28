@@ -37,7 +37,7 @@ class Updater:
 
         out_path = Path(repo.working_dir)
         with checked_out_template_branch(repo, branch_name=branch_name):
-            config_manager.update_applied_templates(updates, project_root=out_path)
+            config_manager.update_templates(updates, project_root=out_path)
             templates, data = config_manager.get_templates_with_data(
                 project_root=out_path
             )
@@ -47,14 +47,14 @@ class Updater:
                 templates, data=data, out_path=out_path, no_input=no_input
             )
             new_updates = updates_with_updated_data(updates, updated_data)
-            config_manager.update_applied_templates(new_updates, project_root=out_path)
+            config_manager.update_templates(new_updates, project_root=out_path)
             stage_and_commit_all(repo, _commit_message(templates))
         merge_branch_into_current(repo, branch_name)
 
     def get_updates_for_templates(
         self,
         templates: Sequence[Template],
-        data: Optional[Sequence[TemplateData]],
+        data: Optional[Sequence[TemplateData]] = None,
         project_root: Path = Path("."),
         config_manager: ConfigManager = ConfigManager(),
     ) -> List[TemplateUpdate]:
@@ -72,6 +72,7 @@ class Updater:
                 if update.template.name in templates_by_name:
                     update.data = merge_data([template_data], [update.data or {}])[0]
                     update.template.version = template.version
+                    update.template.path = template.path
                     out_updates.append(update)
         return out_updates
 

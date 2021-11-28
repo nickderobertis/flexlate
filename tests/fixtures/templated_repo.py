@@ -29,12 +29,14 @@ def repo_with_cookiecutter_one_template_source(
 
 @pytest.fixture
 def repo_with_template_branch_from_cookiecutter_one(
-    repo_with_placeholder_committed: Repo,
+    repo_with_cookiecutter_one_template_source: Repo,
     cookiecutter_one_template: CookiecutterTemplate,
 ) -> Repo:
-    repo = repo_with_placeholder_committed
-    updater = Updater()
-    updater.update(repo, [cookiecutter_one_template], no_input=True)
+    repo = repo_with_cookiecutter_one_template_source
+    adder = Adder()
+    adder.apply_template_and_add(
+        repo, cookiecutter_one_template, out_root=GENERATED_FILES_DIR, no_input=True
+    )
     yield repo
 
 

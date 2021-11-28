@@ -52,3 +52,4 @@ def test_add_applied_template_to_repo(
 
 # TODO: tests for different add modes, different out roots
 # TODO: ensure it uses a relative path when it is a project or local config
+# TODO: test for adding to existing

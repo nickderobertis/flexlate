@@ -89,7 +89,7 @@ class ConfigManager:
                 )
         return updates
 
-    def update_applied_templates(
+    def update_templates(
         self,
         updates: Sequence[TemplateUpdate],
         project_root: Path = Path("."),
@@ -106,6 +106,9 @@ class ConfigManager:
             applied_template = _get_applied_template_from_config(config, update)
             applied_template.data = update.data or {}
             applied_template.version = update.template.version
+            template_source = _get_template_source_from_config(config, update)
+            template_source.version = update.template.version
+            template_source.path = update.template.path
         self.save_config(config)
 
     def add_template_source(
@@ -185,3 +188,13 @@ def _get_applied_template_from_config(
             f"for index {update.index}, got applied template {applied_template} that does not match template {update.template}"
         )
     return applied_template
+
+
+def _get_template_source_from_config(
+    config: FlexlateConfig, update: TemplateUpdate
+) -> TemplateSource:
+    for child_config in config.child_configs:
+        sources = child_config.template_sources_dict
+        if update.template.name in sources:
+            return sources[update.template.name]
+    raise TemplateLookupException(f"could not find source with name {update.template.name} in any child config")
