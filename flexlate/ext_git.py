@@ -23,7 +23,7 @@ def checkout_template_branch(repo: Repo, branch_name: str = DEFAULT_BRANCH_NAME)
 
 
 def stage_and_commit_all(repo: Repo, commit_message: str):
-    repo.git.add(".")
+    repo.git.add("-A")
     repo.git.commit("-m", commit_message)
 
 
