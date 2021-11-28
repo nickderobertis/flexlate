@@ -1,8 +1,8 @@
 from pathlib import Path
-from typing import List, Optional, Sequence
+from typing import List, Optional, Sequence, Dict, Any
 
 from pyappconf import BaseConfig, AppConfig, ConfigFormats
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, validator, Extra
 
 from flexlate.types import TemplateData
 
@@ -23,6 +23,7 @@ class AppliedTemplateConfig(BaseModel):
 class FlexlateConfig(BaseConfig):
     template_sources: List[TemplateSource] = Field(default_factory=list)
     applied_templates: List[AppliedTemplateConfig] = Field(default_factory=list)
+    _child_configs: Optional[List["FlexlateConfig"]] = None
     _settings = AppConfig(app_name="flexlate", default_format=ConfigFormats.JSON)
 
     @classmethod
@@ -40,9 +41,11 @@ class FlexlateConfig(BaseConfig):
         for conf in configs:
             template_sources.extend(conf.template_sources)
             applied_templates.extend(conf.applied_templates)
-        return cls(
+        obj = cls(
             template_sources=template_sources, applied_templates=applied_templates
         )
+        obj._child_configs = configs
+        return obj
 
     @validator("template_sources")
     def template_name_must_be_unique(cls, v):
@@ -52,6 +55,39 @@ class FlexlateConfig(BaseConfig):
             if names.count(name) > 1:
                 raise ValueError(f"Must have unique name. Repeated: {name}")
         return v
+
+    @property
+    def applied_templates_dict(self) -> Dict[str, AppliedTemplateConfig]:
+        return {at.name: at for at in self.applied_templates}
+
+    @property
+    def child_configs(self) -> List["FlexlateConfig"]:
+        return self._child_configs or []
+
+    def save(self, serializer_kwargs: Optional[Dict[str, Any]] = None, **kwargs):
+        if not self.child_configs:
+            # Normal singular config, fall back to py-app-conf behavior
+            return super().save(serializer_kwargs, **kwargs)
+        # Parent pseudo-config holding actual child configs, save those instead
+        for config in self.child_configs:
+            config.save(serializer_kwargs, **kwargs)
+
+    def update_applied_template(self, template_name: str, new_version: str, new_data: TemplateData):
+        _update_applied_template_for_config(self, template_name, new_version, new_data)
+        for config in self.child_configs:
+            _update_applied_template_for_config(config, template_name, new_version, new_data)
+
+    class Config:
+        extra = Extra.allow
+
+
+def _update_applied_template_for_config(
+    conf: FlexlateConfig, template_name: str, new_version: str, new_data: TemplateData
+):
+    for applied_template in conf.applied_templates:
+        if applied_template.name == template_name:
+            applied_template.version = new_version
+            applied_template.data = new_data
 
 
 def _load_nested_configs(

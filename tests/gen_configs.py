@@ -63,9 +63,9 @@ def create_config_2() -> FlexlateConfig:
 
 def gen_configs():
     config_1 = create_config_1()
-    config_1.save(serializer_kwargs=dict(indent=2))
+    config_1.save()
     config_2 = create_config_2()
-    config_2.save(serializer_kwargs=dict(indent=2))
+    config_2.save()
 
 
 if __name__ == "__main__":

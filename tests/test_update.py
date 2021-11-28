@@ -19,6 +19,8 @@ from tests.fixtures.template import *
 from tests.fixtures.templated_repo import *
 from tests.gitutils import repo_has_merge_conflicts
 
+# TODO: check that config is updated after tests
+
 
 def test_update_template_no_history(
     cookiecutter_one_template: CookiecutterTemplate,
