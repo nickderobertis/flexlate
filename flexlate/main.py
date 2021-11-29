@@ -114,3 +114,13 @@ class Flexlate:
             renderer=self.renderer,
             config_manager=self.config_manager,
         )
+
+    def init_project(
+        self,
+        path: Path = Path("."),
+        default_add_mode: AddMode = AddMode.LOCAL,
+        user: bool = False,
+    ):
+        self.config_manager.add_project(
+            path=path, default_add_mode=default_add_mode, user=user
+        )

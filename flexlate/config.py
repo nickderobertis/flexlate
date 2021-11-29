@@ -4,6 +4,7 @@ from typing import List, Optional, Sequence, Dict, Any, Protocol, Tuple
 from pyappconf import BaseConfig, AppConfig, ConfigFormats
 from pydantic import BaseModel, Field, validator, Extra
 
+from flexlate.adder import AddMode
 from flexlate.exc import InvalidTemplateTypeException
 from flexlate.finder.specific.cookiecutter import CookiecutterFinder
 from flexlate.template.base import Template
@@ -27,11 +28,15 @@ class TemplateSource(BaseModel):
 
     def to_template(self) -> Template:
         if self.type == TemplateType.BASE:
-            raise InvalidTemplateTypeException("base type is not allowed for concrete templates")
+            raise InvalidTemplateTypeException(
+                "base type is not allowed for concrete templates"
+            )
         if self.type == TemplateType.COOKIECUTTER:
             finder = CookiecutterFinder()
         else:
-            raise InvalidTemplateTypeException(f"no handling for template type {self.type} in creating template from source")
+            raise InvalidTemplateTypeException(
+                f"no handling for template type {self.type} in creating template from source"
+            )
         kwargs = dict(name=self.name)
         if self.version is not None:
             kwargs.update(version=self.version)
@@ -111,7 +116,6 @@ class FlexlateConfig(BaseConfig):
         extra = Extra.allow
 
 
-
 def _load_nested_configs(
     root: Path, file_name: str, orig_root: Path
 ) -> List["FlexlateConfig"]:
@@ -128,6 +132,20 @@ def _load_nested_configs(
         if folder_or_file.is_dir():
             configs.extend(_load_nested_configs(folder_or_file, file_name, orig_root))
     return configs
+
+
+class ProjectConfig(BaseModel):
+    path: Path
+    default_add_mode: AddMode = AddMode.LOCAL
+
+
+class FlexlateProjectConfig(BaseConfig):
+    projects: List[ProjectConfig] = Field(default_factory=list)
+    _settings = AppConfig(
+        app_name="flexlate",
+        default_format=ConfigFormats.JSON,
+        config_name="flexlate-project",
+    )
 
 
 if __name__ == "__main__":

@@ -46,5 +46,13 @@ class FlexlateConfigException(FlexlateException):
     pass
 
 
-class FlexlateConfigFileNotExistsException(FlexlateConfigException):
+class CannotLoadConfigException(FlexlateConfigException):
+    pass
+
+
+class FlexlateConfigFileNotExistsException(CannotLoadConfigException):
+    pass
+
+
+class FlexlateProjectConfigFileNotExistsException(CannotLoadConfigException):
     pass

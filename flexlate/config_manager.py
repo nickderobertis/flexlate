@@ -1,16 +1,22 @@
 from pathlib import Path
 from typing import Sequence, List, Optional, Tuple
 
+from flexlate.adder import AddMode
 from flexlate.config import (
     FlexlateConfig,
     TemplateSource,
     AppliedTemplateConfig,
     AppliedTemplateWithSource,
+    FlexlateProjectConfig,
+    ProjectConfig,
 )
 from flexlate.exc import (
     FlexlateConfigFileNotExistsException,
     TemplateLookupException,
-    InvalidTemplateDataException, TemplateNotRegisteredException,
+    InvalidTemplateDataException,
+    TemplateNotRegisteredException,
+    CannotLoadConfigException,
+    FlexlateProjectConfigFileNotExistsException,
 )
 from flexlate.template.base import Template
 from flexlate.template_data import TemplateData, merge_data
@@ -23,6 +29,44 @@ class ConfigManager:
 
     def save_config(self, config: FlexlateConfig):
         config.save()
+
+    def load_specific_projects_config(self, path: Path = Path("."), user: bool = False):
+        if user:
+            if path != Path("."):
+                raise CannotLoadConfigException(
+                    "cannot pass both path and user=True to load_project_config"
+                )
+            # Let py-app-conf figure out the path for user config
+            path = None
+        return FlexlateProjectConfig.load_or_create(path)
+
+    def load_projects_config(self, path: Path = Path(".")) -> FlexlateProjectConfig:
+        # TODO: the found config might not have this project's config in it, need to check
+        return FlexlateProjectConfig.load_recursive(path)
+
+    def load_project_config(self, path: Path = Path(".")) -> ProjectConfig:
+        projects_config = self.load_projects_config()
+        for project in projects_config.projects:
+            if project.path.absolute() == path.absolute():
+                return project
+        raise FlexlateProjectConfigFileNotExistsException(
+            f"could not find a project matching the path {path} from the "
+            f"projects config file at {projects_config.settings.config_location}"
+        )
+
+    def save_projects_config(self, config: FlexlateProjectConfig):
+        config.save()
+
+    def add_project(
+        self,
+        path: Path = Path("."),
+        default_add_mode: AddMode = AddMode.LOCAL,
+        user: bool = False,
+    ):
+        config = self.load_specific_projects_config(path, user)
+        project_config = ProjectConfig(path=path, default_add_mode=default_add_mode)
+        config.projects.append(project_config)
+        self.save_projects_config(config)
 
     def get_applied_templates_with_sources(
         self, project_root: Path = Path("."), config: Optional[FlexlateConfig] = None
@@ -160,7 +204,9 @@ class ConfigManager:
         try:
             source = config.template_sources_dict[name]
         except KeyError:
-            raise TemplateNotRegisteredException(f"could not find template source with name {name}")
+            raise TemplateNotRegisteredException(
+                f"could not find template source with name {name}"
+            )
         return source.to_template()
 
 
