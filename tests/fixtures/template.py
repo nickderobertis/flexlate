@@ -6,7 +6,7 @@ from typing import List
 
 import pytest
 
-from flexlate.finder.cookiecutter import CookiecutterFinder
+from flexlate.finder.specific.cookiecutter import CookiecutterFinder
 from flexlate.template.cookiecutter import CookiecutterTemplate
 from tests.config import COOKIECUTTER_ONE_DIR, COOKIECUTTER_TWO_DIR
 

@@ -5,7 +5,7 @@ from pyappconf import BaseConfig, AppConfig, ConfigFormats
 from pydantic import BaseModel, Field, validator, Extra
 
 from flexlate.exc import InvalidTemplateTypeException
-from flexlate.finder.cookiecutter import CookiecutterFinder
+from flexlate.finder.specific.cookiecutter import CookiecutterFinder
 from flexlate.template.base import Template
 from flexlate.template.cookiecutter import CookiecutterTemplate
 from flexlate.template.types import TemplateType

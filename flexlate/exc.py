@@ -18,6 +18,10 @@ class InvalidTemplateTypeException(FlexlateTemplateException):
     pass
 
 
+class InvalidTemplatePathException(FlexlateTemplateException):
+    pass
+
+
 class TemplateLookupException(FlexlateTemplateException):
     pass
 
