@@ -30,6 +30,10 @@ class InvalidTemplateDataException(FlexlateTemplateException):
     pass
 
 
+class TemplateNotRegisteredException(FlexlateTemplateException):
+    pass
+
+
 class FlexlateGitException(FlexlateException):
     pass
 

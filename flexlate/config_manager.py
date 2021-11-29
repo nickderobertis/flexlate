@@ -10,7 +10,7 @@ from flexlate.config import (
 from flexlate.exc import (
     FlexlateConfigFileNotExistsException,
     TemplateLookupException,
-    InvalidTemplateDataException,
+    InvalidTemplateDataException, TemplateNotRegisteredException,
 )
 from flexlate.template.base import Template
 from flexlate.template_data import TemplateData, merge_data
@@ -150,6 +150,19 @@ class ConfigManager:
         child_config = _get_child_config_by_path(config, child_config_path)
         return len(child_config.applied_templates)
 
+    def get_template_by_name(
+        self,
+        name: str,
+        project_root: Path = Path("."),
+        config: Optional[FlexlateConfig] = None,
+    ) -> Template:
+        config = config or self.load_config(project_root)
+        try:
+            source = config.template_sources_dict[name]
+        except KeyError:
+            raise TemplateNotRegisteredException(f"could not find template source with name {name}")
+        return source.to_template()
+
 
 def _get_child_config_by_path(config: FlexlateConfig, path: Path) -> FlexlateConfig:
     for child_config in config.child_configs:
@@ -197,4 +210,6 @@ def _get_template_source_from_config(
         sources = child_config.template_sources_dict
         if update.template.name in sources:
             return sources[update.template.name]
-    raise TemplateLookupException(f"could not find source with name {update.template.name} in any child config")
+    raise TemplateLookupException(
+        f"could not find source with name {update.template.name} in any child config"
+    )
