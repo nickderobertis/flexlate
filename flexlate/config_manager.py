@@ -10,6 +10,7 @@ from flexlate.config import (
     FlexlateProjectConfig,
     ProjectConfig,
 )
+from flexlate.constants import DEFAULT_BRANCH_NAME
 from flexlate.exc import (
     FlexlateConfigFileNotExistsException,
     TemplateLookupException,
@@ -75,7 +76,7 @@ class ConfigManager:
         self,
         path: Path = Path("."),
         default_add_mode: AddMode = AddMode.LOCAL,
-        branch_name: str = "flexlate-output",
+        branch_name: str = DEFAULT_BRANCH_NAME,
         user: bool = False,
     ):
         config = self.load_specific_projects_config(path, user)

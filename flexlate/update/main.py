@@ -4,6 +4,7 @@ from typing import Sequence, Optional, List
 from git import Repo
 
 from flexlate.config_manager import ConfigManager
+from flexlate.constants import DEFAULT_BRANCH_NAME
 from flexlate.exc import GitRepoDirtyException
 from flexlate.render.multi import MultiRenderer
 from flexlate.template.base import Template
@@ -25,7 +26,7 @@ class Updater:
         self,
         repo: Repo,
         updates: Sequence[TemplateUpdate],
-        branch_name: str = "flexlate-output",
+        branch_name: str = DEFAULT_BRANCH_NAME,
         no_input: bool = False,
         renderer: MultiRenderer = MultiRenderer(),
         config_manager: ConfigManager = ConfigManager(),

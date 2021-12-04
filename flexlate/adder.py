@@ -6,6 +6,7 @@ from git import Repo
 from flexlate.add_mode import AddMode
 from flexlate.config import FlexlateConfig
 from flexlate.config_manager import ConfigManager
+from flexlate.constants import DEFAULT_BRANCH_NAME
 from flexlate.exc import GitRepoDirtyException
 from flexlate.ext_git import checked_out_template_branch, stage_and_commit_all
 from flexlate.render.multi import MultiRenderer
@@ -36,7 +37,7 @@ class Adder:
         data: Optional[TemplateData] = None,
         out_root: Path = Path("."),
         add_mode: AddMode = AddMode.LOCAL,
-        branch_name: str = "flexlate-output",
+        branch_name: str = DEFAULT_BRANCH_NAME,
         no_input: bool = False,
         config_manager: ConfigManager = ConfigManager(),
         updater: Updater = Updater(),

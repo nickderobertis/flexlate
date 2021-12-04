@@ -6,6 +6,7 @@ from git import Repo
 from flexlate.adder import Adder
 from flexlate.add_mode import AddMode
 from flexlate.config_manager import ConfigManager
+from flexlate.constants import DEFAULT_BRANCH_NAME
 from flexlate.finder.multi import MultiFinder
 from flexlate.render.multi import MultiRenderer
 from flexlate.template.base import Template
@@ -120,7 +121,7 @@ class Flexlate:
         self,
         path: Path = Path("."),
         default_add_mode: AddMode = AddMode.LOCAL,
-        branch_name: str = "flexlate-output",
+        branch_name: str = DEFAULT_BRANCH_NAME,
         user: bool = False,
     ):
         self.config_manager.add_project(

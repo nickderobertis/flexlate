@@ -5,6 +5,7 @@ from pyappconf import BaseConfig, AppConfig, ConfigFormats
 from pydantic import BaseModel, Field, validator, Extra
 
 from flexlate.add_mode import AddMode
+from flexlate.constants import DEFAULT_BRANCH_NAME
 from flexlate.exc import (
     InvalidTemplateTypeException,
     FlexlateProjectConfigFileNotExistsException,
@@ -140,7 +141,7 @@ def _load_nested_configs(
 class ProjectConfig(BaseModel):
     path: Path
     default_add_mode: AddMode = AddMode.LOCAL
-    flexlate_branch_name: str = "flexlate-output"
+    flexlate_branch_name: str = DEFAULT_BRANCH_NAME
 
 
 class FlexlateProjectConfig(BaseConfig):

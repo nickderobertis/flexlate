@@ -1,11 +1,11 @@
 import os
 from contextlib import contextmanager
 from pathlib import Path
-from typing import List, cast, Set
+from typing import cast, Set
 
 from git import Repo, Blob, Tree, GitCommandError
 
-DEFAULT_BRANCH_NAME = "flexlate-output"
+from flexlate.constants import DEFAULT_BRANCH_NAME
 
 
 def checkout_template_branch(repo: Repo, branch_name: str = DEFAULT_BRANCH_NAME):

@@ -7,7 +7,7 @@ from git import Repo, Head
 
 from flexlate.exc import GitRepoDirtyException
 from flexlate.template.cookiecutter import CookiecutterTemplate
-from flexlate.ext_git import DEFAULT_BRANCH_NAME
+from flexlate.constants import DEFAULT_BRANCH_NAME
 from flexlate.update.main import Updater
 from flexlate.update.template import TemplateUpdate
 from tests.config import GENERATED_FILES_DIR
