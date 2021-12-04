@@ -1,7 +1,13 @@
 # A bootstrap script to set up input files for config tests
 from pathlib import Path
 
-from flexlate.config import FlexlateConfig, TemplateSource, AppliedTemplateConfig
+from flexlate.config import (
+    FlexlateConfig,
+    TemplateSource,
+    AppliedTemplateConfig,
+    FlexlateProjectConfig,
+    ProjectConfig,
+)
 from flexlate.template.types import TemplateType
 from tests.config import (
     COOKIECUTTER_ONE_DIR,
@@ -9,6 +15,9 @@ from tests.config import (
     COOKIECUTTER_TWO_DIR,
     CONFIG_SUBDIR_2,
     PROJECT_DIR,
+    PROJECT_CONFIGS_PROJECT_2_PATH,
+    PROJECT_CONFIGS_ROOT_DIR,
+    PROJECT_CONFIGS_PROJECT_1_PATH, PROJECT_CONFIGS_PROJECT_1_SUBDIR, PROJECT_CONFIGS_PROJECT_2_SUBDIR,
 )
 
 
@@ -73,5 +82,37 @@ def gen_configs():
     config_2.save()
 
 
+def create_project_config_root() -> FlexlateProjectConfig:
+    config = FlexlateProjectConfig(
+        projects=[
+            ProjectConfig(
+                path=PROJECT_CONFIGS_PROJECT_2_PATH.relative_to(
+                    PROJECT_CONFIGS_ROOT_DIR
+                )
+            )
+        ]
+    )
+    config.settings.custom_config_folder = PROJECT_CONFIGS_ROOT_DIR
+    return config
+
+
+def create_project_config_1() -> FlexlateProjectConfig:
+    config = FlexlateProjectConfig(projects=[ProjectConfig(path=Path("."))])
+    config.settings.custom_config_folder = PROJECT_CONFIGS_PROJECT_1_PATH
+    return config
+
+
+def gen_project_configs():
+    if not PROJECT_CONFIGS_PROJECT_1_SUBDIR.exists():
+        PROJECT_CONFIGS_PROJECT_1_SUBDIR.mkdir(parents=True)
+    if not PROJECT_CONFIGS_PROJECT_2_SUBDIR.exists():
+        PROJECT_CONFIGS_PROJECT_2_SUBDIR.mkdir(parents=True)
+    config_root = create_project_config_root()
+    config_root.save()
+    config_1 = create_project_config_1()
+    config_1.save()
+
+
 if __name__ == "__main__":
     gen_configs()
+    gen_project_configs()

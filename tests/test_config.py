@@ -6,7 +6,12 @@ from flexlate.config import FlexlateConfig, AppliedTemplateConfig, FlexlateProje
 from flexlate.config_manager import ConfigManager
 from flexlate.update.main import Updater
 from flexlate.update.template import TemplateUpdate
-from tests.config import CONFIGS_DIR, GENERATED_FILES_DIR
+from tests.config import (
+    CONFIGS_DIR,
+    GENERATED_FILES_DIR,
+    PROJECT_CONFIGS_PROJECT_1_PATH,
+    PROJECT_CONFIGS_PROJECT_1_SUBDIR, PROJECT_CONFIGS_PROJECT_2_PATH, PROJECT_CONFIGS_PROJECT_2_SUBDIR,
+)
 from tests.dirutils import wipe_generated_folder
 from tests.fixtures.config import generated_dir_with_configs
 from tests.fixtures.template import *
@@ -83,3 +88,23 @@ def test_add_project_config_in_project(add_mode: AddMode):
 
 # TODO: Test add project in user config
 #  It is a bit difficult because will need to mock config to set location
+
+
+@pytest.mark.parametrize(
+    "path", [PROJECT_CONFIGS_PROJECT_1_SUBDIR, PROJECT_CONFIGS_PROJECT_1_PATH]
+)
+def test_load_local_project_config(path: Path):
+    manager = ConfigManager()
+    config = manager.load_project_config(path)
+    assert config.path == PROJECT_CONFIGS_PROJECT_1_PATH
+    assert config.default_add_mode == AddMode.LOCAL
+
+
+@pytest.mark.parametrize(
+    "path", [PROJECT_CONFIGS_PROJECT_2_SUBDIR, PROJECT_CONFIGS_PROJECT_2_PATH]
+)
+def test_load_recursive_project_config(path: Path):
+    manager = ConfigManager()
+    config = manager.load_project_config(path)
+    assert config.path == PROJECT_CONFIGS_PROJECT_2_PATH
+    assert config.default_add_mode == AddMode.LOCAL

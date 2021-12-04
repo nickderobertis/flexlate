@@ -59,7 +59,7 @@ class ConfigManager:
         return config
 
     def load_project_config(self, path: Path = Path(".")) -> ProjectConfig:
-        projects_config = self.load_projects_config()
+        projects_config = self.load_projects_config(path=path)
         return projects_config.get_project_for_path(path)
 
     def save_projects_config(self, config: FlexlateProjectConfig):

@@ -153,7 +153,8 @@ class FlexlateProjectConfig(BaseConfig):
     def get_project_for_path(self, path: Path = Path(".")) -> ProjectConfig:
         # Find the project root that is the closest parent to the given path
         project_closeness: List[Tuple[ProjectConfig, int]] = []
-        for project in self.projects:
+        for raw_project in self.projects:
+            project = self._absolutify_project_config(raw_project)
             if project.path.absolute() == path.absolute():
                 # If it is an exact match, just return it, we are done
                 return project
@@ -164,7 +165,6 @@ class FlexlateProjectConfig(BaseConfig):
                     (project, path.absolute().parents.index(project.path.absolute()))
                 )
             # Else, this path is totally unrelated, do nothing
-
         if len(project_closeness) == 0:
             raise FlexlateProjectConfigFileNotExistsException(
                 f"could not find a project matching the path {path} from the "
@@ -174,6 +174,18 @@ class FlexlateProjectConfig(BaseConfig):
         # We have potentially multiple matching projects. Take the closest parent
         project_closeness.sort(key=lambda pc: pc[1])
         return project_closeness[0][0]
+
+    def _absolutify_project_config(
+        self, project_config: ProjectConfig
+    ) -> ProjectConfig:
+        if project_config.path.is_absolute():
+            return project_config
+        # Project config has a relative path, but that is relative to the config location,
+        # not the current working directory
+        real_path = self.settings.config_location.parent / project_config.path
+        return ProjectConfig(
+            path=real_path.absolute(), default_add_mode=project_config.default_add_mode
+        )
 
 
 if __name__ == "__main__":
