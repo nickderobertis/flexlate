@@ -4,8 +4,11 @@ from typing import List, Optional, Sequence, Dict, Any, Protocol, Tuple
 from pyappconf import BaseConfig, AppConfig, ConfigFormats
 from pydantic import BaseModel, Field, validator, Extra
 
-from flexlate.adder import AddMode
-from flexlate.exc import InvalidTemplateTypeException
+from flexlate.add_mode import AddMode
+from flexlate.exc import (
+    InvalidTemplateTypeException,
+    FlexlateProjectConfigFileNotExistsException,
+)
 from flexlate.finder.specific.cookiecutter import CookiecutterFinder
 from flexlate.template.base import Template
 from flexlate.template.cookiecutter import CookiecutterTemplate
@@ -146,6 +149,31 @@ class FlexlateProjectConfig(BaseConfig):
         default_format=ConfigFormats.JSON,
         config_name="flexlate-project",
     )
+
+    def get_project_for_path(self, path: Path = Path(".")) -> ProjectConfig:
+        # Find the project root that is the closest parent to the given path
+        project_closeness: List[Tuple[ProjectConfig, int]] = []
+        for project in self.projects:
+            if project.path.absolute() == path.absolute():
+                # If it is an exact match, just return it, we are done
+                return project
+            elif project.path.absolute() in path.absolute().parents:
+                # Project path is a parent of the given path. Track the closeness
+                # so that we can take the nearest parent
+                project_closeness.append(
+                    (project, path.absolute().parents.index(project.path.absolute()))
+                )
+            # Else, this path is totally unrelated, do nothing
+
+        if len(project_closeness) == 0:
+            raise FlexlateProjectConfigFileNotExistsException(
+                f"could not find a project matching the path {path} from the "
+                f"projects config file at {self.settings.config_location}"
+            )
+
+        # We have potentially multiple matching projects. Take the closest parent
+        project_closeness.sort(key=lambda pc: pc[1])
+        return project_closeness[0][0]
 
 
 if __name__ == "__main__":

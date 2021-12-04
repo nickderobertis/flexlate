@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Sequence, List, Optional, Tuple
 
-from flexlate.adder import AddMode
+from flexlate.add_mode import AddMode
 from flexlate.config import (
     FlexlateConfig,
     TemplateSource,
@@ -38,21 +38,29 @@ class ConfigManager:
                 )
             # Let py-app-conf figure out the path for user config
             path = None
-        return FlexlateProjectConfig.load_or_create(path)
+        config_path = path / FlexlateProjectConfig._settings.config_file_name
+        return FlexlateProjectConfig.load_or_create(config_path)
 
     def load_projects_config(self, path: Path = Path(".")) -> FlexlateProjectConfig:
-        # TODO: the found config might not have this project's config in it, need to check
-        return FlexlateProjectConfig.load_recursive(path)
+        # TODO: more efficient algorithm for finding project config
+        config = FlexlateProjectConfig.load_recursive(path)
+        # The found config might not have this project's config in it, need to check
+        try:
+            config.get_project_for_path(path)
+        except FlexlateProjectConfigFileNotExistsException as e:
+            # Project was not in this config file. Keep going up to parents
+            # to check for more config files
+            if path.parent == path:
+                # We have hit the root path, and still have not found the config.
+                # It must not exist, so raise the error
+                raise e
+            return self.load_projects_config(path.parent)
+
+        return config
 
     def load_project_config(self, path: Path = Path(".")) -> ProjectConfig:
         projects_config = self.load_projects_config()
-        for project in projects_config.projects:
-            if project.path.absolute() == path.absolute():
-                return project
-        raise FlexlateProjectConfigFileNotExistsException(
-            f"could not find a project matching the path {path} from the "
-            f"projects config file at {projects_config.settings.config_location}"
-        )
+        return projects_config.get_project_for_path(path)
 
     def save_projects_config(self, config: FlexlateProjectConfig):
         config.save()
@@ -64,7 +72,8 @@ class ConfigManager:
         user: bool = False,
     ):
         config = self.load_specific_projects_config(path, user)
-        project_config = ProjectConfig(path=path, default_add_mode=default_add_mode)
+        output_path = path.absolute() if user else Path(".")
+        project_config = ProjectConfig(path=output_path, default_add_mode=default_add_mode)
         config.projects.append(project_config)
         self.save_projects_config(config)
 

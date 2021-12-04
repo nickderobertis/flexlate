@@ -1,9 +1,9 @@
-from enum import Enum
 from pathlib import Path
-from typing import Protocol, TypeVar, Optional
+from typing import Optional
 
 from git import Repo
 
+from flexlate.add_mode import AddMode
 from flexlate.config import FlexlateConfig
 from flexlate.config_manager import ConfigManager
 from flexlate.exc import GitRepoDirtyException
@@ -13,12 +13,6 @@ from flexlate.template.base import Template
 from flexlate.template_data import TemplateData
 from flexlate.update.main import Updater
 from flexlate.update.template import TemplateUpdate
-
-
-class AddMode(str, Enum):
-    LOCAL = "local"
-    PROJECT = "project"
-    USER = "user"
 
 
 class Adder:

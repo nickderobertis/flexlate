@@ -3,7 +3,8 @@ from typing import Optional, List
 
 from git import Repo
 
-from flexlate.adder import Adder, AddMode
+from flexlate.adder import Adder
+from flexlate.add_mode import AddMode
 from flexlate.config_manager import ConfigManager
 from flexlate.finder.multi import MultiFinder
 

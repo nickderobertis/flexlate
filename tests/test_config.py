@@ -1,11 +1,13 @@
 import os.path
 from pathlib import Path
 
-from flexlate.config import FlexlateConfig, AppliedTemplateConfig
+from flexlate.add_mode import AddMode
+from flexlate.config import FlexlateConfig, AppliedTemplateConfig, FlexlateProjectConfig
 from flexlate.config_manager import ConfigManager
 from flexlate.update.main import Updater
 from flexlate.update.template import TemplateUpdate
 from tests.config import CONFIGS_DIR, GENERATED_FILES_DIR
+from tests.dirutils import wipe_generated_folder
 from tests.fixtures.config import generated_dir_with_configs
 from tests.fixtures.template import *
 
@@ -32,7 +34,7 @@ def test_update_and_save_multi_config(
         [cookiecutter_one_modified_template],
         [{"a": "yeah", "c": "woo"}],
         project_root=GENERATED_FILES_DIR,
-        config_manager=manager
+        config_manager=manager,
     )
     manager.update_templates(
         template_updates,
@@ -65,3 +67,19 @@ def test_update_and_save_multi_config(
     assert_is_original_template_two(config_2.applied_templates[0])
     assert_is_updated_template_one(config_2.applied_templates[1])
     assert config_2.applied_templates[1].root == Path("subdir2/subdir2_2")
+
+
+@pytest.mark.parametrize("add_mode", [AddMode.LOCAL, AddMode.PROJECT, AddMode.USER])
+def test_add_project_config_in_project(add_mode: AddMode):
+    wipe_generated_folder()
+    manager = ConfigManager()
+    manager.add_project(GENERATED_FILES_DIR, default_add_mode=add_mode)
+    config = FlexlateProjectConfig.load(GENERATED_FILES_DIR / "flexlate-project.json")
+    assert len(config.projects) == 1
+    project = config.projects[0]
+    assert project.path == Path(".")
+    assert project.default_add_mode == add_mode
+
+
+# TODO: Test add project in user config
+#  It is a bit difficult because will need to mock config to set location
