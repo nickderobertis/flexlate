@@ -4,6 +4,7 @@ from pathlib import Path
 from flexlate.add_mode import AddMode
 from flexlate.config import FlexlateConfig, AppliedTemplateConfig, FlexlateProjectConfig
 from flexlate.config_manager import ConfigManager
+from flexlate.exc import FlexlateProjectConfigFileNotExistsException
 from flexlate.update.main import Updater
 from flexlate.update.template import TemplateUpdate
 from tests.config import (
@@ -11,6 +12,7 @@ from tests.config import (
     GENERATED_FILES_DIR,
     PROJECT_CONFIGS_PROJECT_1_PATH,
     PROJECT_CONFIGS_PROJECT_1_SUBDIR, PROJECT_CONFIGS_PROJECT_2_PATH, PROJECT_CONFIGS_PROJECT_2_SUBDIR,
+    PROJECT_CONFIGS_DIR,
 )
 from tests.dirutils import wipe_generated_folder
 from tests.fixtures.config import generated_dir_with_configs
@@ -108,3 +110,11 @@ def test_load_recursive_project_config(path: Path):
     config = manager.load_project_config(path)
     assert config.path == PROJECT_CONFIGS_PROJECT_2_PATH
     assert config.default_add_mode == AddMode.LOCAL
+
+
+def test_fail_to_load_non_existent_project_config():
+    # TODO: Figure out how to isolate no project config test
+    #  It would currently fail if the developer happens to be using flexlate in a parent directory
+    manager = ConfigManager()
+    with pytest.raises(FlexlateProjectConfigFileNotExistsException):
+        config = manager.load_project_config(PROJECT_CONFIGS_DIR)

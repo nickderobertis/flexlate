@@ -43,7 +43,13 @@ class ConfigManager:
 
     def load_projects_config(self, path: Path = Path(".")) -> FlexlateProjectConfig:
         # TODO: more efficient algorithm for finding project config
-        config = FlexlateProjectConfig.load_recursive(path)
+        try:
+            config = FlexlateProjectConfig.load_recursive(path)
+        except FileNotFoundError:
+            raise FlexlateProjectConfigFileNotExistsException(
+                f"could not find a projects config file in any "
+                f"parent directory of path {path} or in the user directory"
+            )
         # The found config might not have this project's config in it, need to check
         try:
             config.get_project_for_path(path)
@@ -73,7 +79,9 @@ class ConfigManager:
     ):
         config = self.load_specific_projects_config(path, user)
         output_path = path.absolute() if user else Path(".")
-        project_config = ProjectConfig(path=output_path, default_add_mode=default_add_mode)
+        project_config = ProjectConfig(
+            path=output_path, default_add_mode=default_add_mode
+        )
         config.projects.append(project_config)
         self.save_projects_config(config)
 
