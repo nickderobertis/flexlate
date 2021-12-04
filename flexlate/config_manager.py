@@ -191,6 +191,7 @@ class ConfigManager:
             version=template.version,
             type=template._type,
             target_version=target_version,
+            git_url=template.git_url,
         )
         child_config.template_sources.append(source)
         self.save_config(config)

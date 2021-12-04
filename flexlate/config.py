@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import List, Optional, Sequence, Dict, Any, Tuple
+from typing import List, Optional, Sequence, Dict, Any, Tuple, Union
 
 from pyappconf import BaseConfig, AppConfig, ConfigFormats
 from pydantic import BaseModel, Field, validator, Extra
@@ -22,6 +22,7 @@ class TemplateSource(BaseModel):
     type: TemplateType
     version: Optional[str] = None
     target_version: Optional[str] = None
+    git_url: Optional[str] = None
 
     def to_template(self) -> Template:
         if self.type == TemplateType.BASE:
@@ -37,7 +38,13 @@ class TemplateSource(BaseModel):
         kwargs = dict(name=self.name)
         if self.version is not None:
             kwargs.update(version=self.version)
+        if self.git_url is not None:
+            kwargs.update(git_url=self.git_url)
         return finder.find(self.path, **kwargs)
+
+    @property
+    def update_location(self) -> Union[str, Path]:
+        return self.git_url or self.path
 
 
 class AppliedTemplateConfig(BaseModel):
