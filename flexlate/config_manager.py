@@ -177,7 +177,11 @@ class ConfigManager:
         self.save_config(config)
 
     def add_template_source(
-        self, template: Template, config_path: Path, project_root: Path = Path(".")
+        self,
+        template: Template,
+        config_path: Path,
+        target_version: Optional[str] = None,
+        project_root: Path = Path("."),
     ):
         config = self.load_config(project_root=project_root)
         child_config = _get_or_create_child_config_by_path(config, config_path)
@@ -186,6 +190,7 @@ class ConfigManager:
             path=str(template.path),
             version=template.version,
             type=template._type,
+            target_version=target_version,
         )
         child_config.template_sources.append(source)
         self.save_config(config)

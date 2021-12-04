@@ -20,6 +20,7 @@ class Adder:
     def add_template_source(
         self,
         template: Template,
+        target_version: Optional[str] = None,
         out_root: Path = Path("."),
         project_root: Path = Path("."),
         add_mode: AddMode = AddMode.LOCAL,
@@ -27,7 +28,10 @@ class Adder:
     ):
         config_path = _determine_config_path(out_root, project_root, add_mode)
         config_manager.add_template_source(
-            template, config_path, project_root=project_root
+            template,
+            config_path,
+            target_version=target_version,
+            project_root=project_root,
         )
 
     def apply_template_and_add(

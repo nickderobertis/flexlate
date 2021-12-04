@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import List, Optional, Sequence, Dict, Any, Protocol, Tuple
+from typing import List, Optional, Sequence, Dict, Any, Tuple
 
 from pyappconf import BaseConfig, AppConfig, ConfigFormats
 from pydantic import BaseModel, Field, validator, Extra
@@ -12,16 +12,8 @@ from flexlate.exc import (
 )
 from flexlate.finder.specific.cookiecutter import CookiecutterFinder
 from flexlate.template.base import Template
-from flexlate.template.cookiecutter import CookiecutterTemplate
 from flexlate.template.types import TemplateType
 from flexlate.template_data import TemplateData
-
-
-# TODO: trying to be able to build template and data from config.
-#  Need to be from applied templates, but sources have the template
-#  types and paths needed to find them. Probably best to create
-#  some combined config and put the logic to transform there
-from flexlate.update.template import TemplateUpdate
 
 
 class TemplateSource(BaseModel):
@@ -29,6 +21,7 @@ class TemplateSource(BaseModel):
     path: str
     type: TemplateType
     version: Optional[str] = None
+    target_version: Optional[str] = None
 
     def to_template(self) -> Template:
         if self.type == TemplateType.BASE:
@@ -44,7 +37,7 @@ class TemplateSource(BaseModel):
         kwargs = dict(name=self.name)
         if self.version is not None:
             kwargs.update(version=self.version)
-        return finder.find(self.path, name=self.name, version=self.version)
+        return finder.find(self.path, **kwargs)
 
 
 class AppliedTemplateConfig(BaseModel):

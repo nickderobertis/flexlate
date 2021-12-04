@@ -33,16 +33,18 @@ class Flexlate:
         self,
         path: str,
         name: Optional[str] = None,
+        target_version: Optional[str] = None,
         template_root: Path = Path("."),
         project_path: Path = Path("."),
         add_mode: AddMode = AddMode.LOCAL,
     ):
         project_config = self.config_manager.load_project_config(project_path)
-        template = self.finder.find(path)
+        template = self.finder.find(path, version=target_version)
         if name:
             template.name = name
         self.adder.add_template_source(
             template,
+            target_version=target_version,
             out_root=template_root,
             add_mode=add_mode,
             config_manager=self.config_manager,

@@ -17,6 +17,7 @@ def test_add_template_source_to_empty_repo(
         cookiecutter_one_template,
         out_root=GENERATED_FILES_DIR,
         project_root=GENERATED_FILES_DIR,
+        target_version="some version"
     )
     config_path = GENERATED_FILES_DIR / "flexlate.json"
     config = FlexlateConfig.load(config_path)
@@ -27,6 +28,7 @@ def test_add_template_source_to_empty_repo(
     assert source.path == str(cookiecutter_one_template.path)
     assert source.version == cookiecutter_one_template.version
     assert source.type == TemplateType.COOKIECUTTER
+    assert source.target_version == "some version"
 
 
 def test_add_applied_template_to_repo(
