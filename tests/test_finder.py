@@ -8,7 +8,7 @@ from tests.config import (
     COOKIECUTTER_ONE_DIR,
     COOKIECUTTER_REMOTE_URL,
     COOKIECUTTER_REMOTE_VERSION_1,
-    COOKIECUTTER_REMOTE_VERSION_2,
+    COOKIECUTTER_REMOTE_VERSION_2, COOKIECUTTER_ONE_VERSION,
 )
 
 
@@ -23,7 +23,7 @@ def test_get_cookiecutter_local_template():
     template = finder.find(COOKIECUTTER_ONE_DIR)
     assert template.path == COOKIECUTTER_ONE_DIR
     assert template.git_url is None
-    assert template.version == "d512c7e14e83cb4bc8d4e5ae06bb357e"
+    assert template.version == COOKIECUTTER_ONE_VERSION
     assert template.config.defaults == {"a": "b", "c": ""}
 
 
@@ -55,7 +55,7 @@ def test_multi_finder_get_cookiecutter_local_template():
     template = finder.find(COOKIECUTTER_ONE_DIR)
     assert template.path == COOKIECUTTER_ONE_DIR
     assert template.git_url is None
-    assert template.version == "d512c7e14e83cb4bc8d4e5ae06bb357e"
+    assert template.version == COOKIECUTTER_ONE_VERSION
     assert template.config.defaults == {"a": "b", "c": ""}
 
 

@@ -24,6 +24,19 @@ class TemplateSource(BaseModel):
     target_version: Optional[str] = None
     git_url: Optional[str] = None
 
+    @classmethod
+    def from_template(
+        cls, template: Template, target_version: Optional[str] = None
+    ) -> "TemplateSource":
+        return cls(
+            name=template.name,
+            path=str(template.path),
+            version=template.version,
+            type=template._type,
+            target_version=target_version,
+            git_url=template.git_url,
+        )
+
     def to_template(self) -> Template:
         if self.type == TemplateType.BASE:
             raise InvalidTemplateTypeException(

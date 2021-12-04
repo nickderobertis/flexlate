@@ -99,10 +99,12 @@ class Flexlate:
                 project_root=project_config.path
             )
 
-        # TODO: check for updates in templates. Need to ensure we have the original
-        #  path in the source, e.g. github url. Will need to implement logic to pull
-        #  down VCS or at least compare version. Modify the templates in place here
-
+        self.updater.update_passed_templates_to_target_versions(
+            templates,
+            project_root=project_config.path,
+            finder=self.finder,
+            config_manager=self.config_manager,
+        )
         updates = self.updater.get_updates_for_templates(
             templates,
             config_manager=self.config_manager,
@@ -127,5 +129,8 @@ class Flexlate:
         user: bool = False,
     ):
         self.config_manager.add_project(
-            path=path, default_add_mode=default_add_mode, user=user, branch_name=branch_name
+            path=path,
+            default_add_mode=default_add_mode,
+            user=user,
+            branch_name=branch_name,
         )

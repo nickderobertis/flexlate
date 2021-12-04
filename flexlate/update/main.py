@@ -1,11 +1,12 @@
 from pathlib import Path
-from typing import Sequence, Optional, List
+from typing import Sequence, Optional, List, Dict, Any
 
 from git import Repo
 
 from flexlate.config_manager import ConfigManager
 from flexlate.constants import DEFAULT_BRANCH_NAME
 from flexlate.exc import GitRepoDirtyException
+from flexlate.finder.multi import MultiFinder
 from flexlate.render.multi import MultiRenderer
 from flexlate.template.base import Template
 from flexlate.ext_git import (
@@ -76,6 +77,31 @@ class Updater:
                     update.template.path = template.path
                     out_updates.append(update)
         return out_updates
+
+    def update_passed_templates_to_target_versions(
+        self,
+        templates: Sequence[Template],
+        project_root: Path = Path("."),
+        finder: MultiFinder = MultiFinder(),
+        config_manager: ConfigManager = ConfigManager(),
+    ):
+        sources = config_manager.get_sources_for_templates(
+            templates, project_root=project_root
+        )
+        templates_by_name = {template.name: template for template in templates}
+        for source in sources:
+            # TODO: Separate finding from updating the local version of the repo
+            #  If the code failed after the find line but before updating the config,
+            #  then the config would not match what is on the disk
+            kwargs: Dict[str, Any] = {}
+            if source.target_version:
+                kwargs.update(version=source.target_version)
+            new_template = finder.find(source.update_location, **kwargs)
+            template = templates_by_name[source.name]
+            if template.version != new_template.version:
+                # Template needs to be upgraded
+                # As finder already updates the local files, just update the template object
+                template.version = new_template.version
 
 
 def _commit_message(templates: Sequence[Template]) -> str:

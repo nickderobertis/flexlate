@@ -15,6 +15,14 @@ class CookiecutterTemplate(Template):
         path: Path,
         name: Optional[str] = None,
         version: Optional[str] = None,
+        target_version: Optional[str] = None,
         git_url: Optional[str] = None,
     ):
-        super().__init__(config, path, name=name, version=version, git_url=git_url)
+        super().__init__(
+            config,
+            path,
+            name=name,
+            version=version,
+            target_version=target_version,
+            git_url=git_url,
+        )

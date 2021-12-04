@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Sequence, List, Optional, Tuple
+from typing import Sequence, List, Optional, Tuple, Set
 
 from flexlate.add_mode import AddMode
 from flexlate.config import (
@@ -185,13 +185,9 @@ class ConfigManager:
     ):
         config = self.load_config(project_root=project_root)
         child_config = _get_or_create_child_config_by_path(config, config_path)
-        source = TemplateSource(
-            name=template.name,
-            path=str(template.path),
-            version=template.version,
-            type=template._type,
+        source = TemplateSource.from_template(
+            template,
             target_version=target_version,
-            git_url=template.git_url,
         )
         child_config.template_sources.append(source)
         self.save_config(config)
@@ -221,12 +217,12 @@ class ConfigManager:
         child_config = _get_child_config_by_path(config, child_config_path)
         return len(child_config.applied_templates)
 
-    def get_template_by_name(
+    def _get_template_source_by_name(
         self,
         name: str,
         project_root: Path = Path("."),
         config: Optional[FlexlateConfig] = None,
-    ) -> Template:
+    ) -> TemplateSource:
         config = config or self.load_config(project_root)
         try:
             source = config.template_sources_dict[name]
@@ -234,7 +230,34 @@ class ConfigManager:
             raise TemplateNotRegisteredException(
                 f"could not find template source with name {name}"
             )
-        return source.to_template()
+        return source
+
+    def get_template_by_name(
+        self,
+        name: str,
+        project_root: Path = Path("."),
+        config: Optional[FlexlateConfig] = None,
+    ) -> Template:
+        return self._get_template_source_by_name(
+            name, project_root=project_root, config=config
+        ).to_template()
+
+    def get_sources_for_templates(
+        self,
+        templates: Sequence[Template],
+        project_root: Path = Path("."),
+        config: Optional[FlexlateConfig] = None,
+    ) -> List[TemplateSource]:
+        config = config or self.load_config(project_root)
+        sources: List[TemplateSource] = []
+        seen_names: Set[str] = set()
+        for template in templates:
+            if template.name in seen_names:
+                continue
+            source = self._get_template_source_by_name(template.name, config=config)
+            sources.append(source)
+            seen_names.add(template.name)
+        return sources
 
 
 def _get_child_config_by_path(config: FlexlateConfig, path: Path) -> FlexlateConfig:
