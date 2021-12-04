@@ -16,11 +16,16 @@ SPECIFIC_FINDERS = [
 
 
 class MultiFinder:
-    def find(self, path: str, finders: Optional[Sequence[TemplateFinder]] = None) -> Template:
+    def find(
+        self,
+        path: str,
+        version: Optional[str] = None,
+        finders: Optional[Sequence[TemplateFinder]] = None,
+    ) -> Template:
         finders = finders or SPECIFIC_FINDERS
         for finder in finders:
             if finder.matches_template_type(path):
-                return finder.find(path)
+                return finder.find(path, version=version)
         raise InvalidTemplatePathException(
             f"could not find a template at {path} with any of the registered template finders"
         )

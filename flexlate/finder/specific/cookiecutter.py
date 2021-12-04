@@ -18,7 +18,10 @@ from flexlate.template_config.cookiecutter import CookiecutterConfig
 
 class CookiecutterFinder(TemplateFinder[CookiecutterTemplate]):
     def find(self, path: Union[str, Path], **template_kwargs) -> CookiecutterTemplate:
-        repo_path = _download_repo_if_necessary_get_local_path(path)
+        git_version = template_kwargs.get("version")
+        repo_path = _download_repo_if_necessary_get_local_path(
+            path, checkout=git_version
+        )
         config = self.get_config(repo_path)
         version = get_version_from_source_path(path, repo_path, template_kwargs)
         git_url = get_git_url_from_source_path(path, template_kwargs)
@@ -36,13 +39,15 @@ class CookiecutterFinder(TemplateFinder[CookiecutterTemplate]):
         return (repo_path / "cookiecutter.json").exists()
 
 
-def _download_repo_if_necessary_get_local_path(path: Union[str, Path]) -> Path:
+def _download_repo_if_necessary_get_local_path(
+    path: Union[str, Path], checkout: Optional[str] = None
+) -> Path:
     config_dict = get_user_config()
     repo_dir, _ = determine_repo_dir(
         template=str(path),
         abbreviations=config_dict["abbreviations"],
         clone_to_dir=config_dict["cookiecutters_dir"],
-        checkout=None,
+        checkout=checkout,
         no_input=True,
     )
     return Path(repo_dir)
