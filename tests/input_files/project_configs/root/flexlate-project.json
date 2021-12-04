@@ -2,7 +2,8 @@
   "projects": [
     {
       "path": "2",
-      "default_add_mode": "local"
+      "default_add_mode": "local",
+      "flexlate_branch_name": "flexlate-output"
     }
   ]
 }

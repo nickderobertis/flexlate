@@ -7,11 +7,8 @@ from flexlate.adder import Adder
 from flexlate.add_mode import AddMode
 from flexlate.config_manager import ConfigManager
 from flexlate.finder.multi import MultiFinder
-
-# TODO: branch name should be in the project config
 from flexlate.render.multi import MultiRenderer
 from flexlate.template.base import Template
-
 from flexlate.template_data import TemplateData
 from flexlate.update.main import Updater
 
@@ -30,8 +27,6 @@ class Flexlate:
         self.finder = finder
         self.renderer = renderer
         self.updater = updater
-
-    # TODO: add project init function, sets up project config
 
     def add_template_source(
         self,
@@ -65,7 +60,6 @@ class Flexlate:
         template = self.config_manager.get_template_by_name(
             name, project_root=project_config.path
         )
-        # TODO: get branch name from project config
         repo = Repo(project_config.path)
         self.adder.apply_template_and_add(
             repo,
@@ -74,6 +68,7 @@ class Flexlate:
             out_root=out_root,
             add_mode=add_mode,
             no_input=no_input,
+            branch_name=project_config.flexlate_branch_name,
             config_manager=self.config_manager,
             renderer=self.renderer,
             updater=self.updater,
@@ -112,11 +107,11 @@ class Flexlate:
         )
 
         repo = Repo(project_config.path)
-        # TODO: get branch name from project config
         self.updater.update(
             repo,
             updates,
             no_input=no_input,
+            branch_name=project_config.flexlate_branch_name,
             renderer=self.renderer,
             config_manager=self.config_manager,
         )
@@ -125,8 +120,9 @@ class Flexlate:
         self,
         path: Path = Path("."),
         default_add_mode: AddMode = AddMode.LOCAL,
+        branch_name: str = "flexlate-output",
         user: bool = False,
     ):
         self.config_manager.add_project(
-            path=path, default_add_mode=default_add_mode, user=user
+            path=path, default_add_mode=default_add_mode, user=user, branch_name=branch_name
         )

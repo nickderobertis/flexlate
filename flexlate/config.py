@@ -140,6 +140,7 @@ def _load_nested_configs(
 class ProjectConfig(BaseModel):
     path: Path
     default_add_mode: AddMode = AddMode.LOCAL
+    flexlate_branch_name: str = "flexlate-output"
 
 
 class FlexlateProjectConfig(BaseConfig):

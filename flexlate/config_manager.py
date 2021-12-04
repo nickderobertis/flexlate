@@ -75,12 +75,15 @@ class ConfigManager:
         self,
         path: Path = Path("."),
         default_add_mode: AddMode = AddMode.LOCAL,
+        branch_name: str = "flexlate-output",
         user: bool = False,
     ):
         config = self.load_specific_projects_config(path, user)
         output_path = path.absolute() if user else Path(".")
         project_config = ProjectConfig(
-            path=output_path, default_add_mode=default_add_mode
+            path=output_path,
+            default_add_mode=default_add_mode,
+            flexlate_branch_name=branch_name,
         )
         config.projects.append(project_config)
         self.save_projects_config(config)
