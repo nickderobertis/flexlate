@@ -8,6 +8,10 @@ from git import Repo
 
 from flexlate.ext_git import get_current_version
 from flexlate.finder.specific.base import TemplateFinder
+from flexlate.finder.specific.git import (
+    get_version_from_source_path,
+    get_git_url_from_source_path,
+)
 from flexlate.template.cookiecutter import CookiecutterTemplate
 from flexlate.template_config.cookiecutter import CookiecutterConfig
 
@@ -16,14 +20,10 @@ class CookiecutterFinder(TemplateFinder[CookiecutterTemplate]):
     def find(self, path: Union[str, Path], **template_kwargs) -> CookiecutterTemplate:
         repo_path = _download_repo_if_necessary_get_local_path(path)
         config = self.get_config(repo_path)
-        version: Optional[str] = None
-        if "version" in template_kwargs:
-            version = template_kwargs.pop("version")
-        elif is_repo_url(str(path)):
-            # Get version from repo
-            version = get_current_version(Repo(str(repo_path)))
+        version = get_version_from_source_path(path, repo_path, template_kwargs)
+        git_url = get_git_url_from_source_path(path, template_kwargs)
         return CookiecutterTemplate(
-            config, repo_path, version=version, **template_kwargs
+            config, repo_path, version=version, git_url=git_url, **template_kwargs
         )
 
     def get_config(self, directory: Path) -> CookiecutterConfig:

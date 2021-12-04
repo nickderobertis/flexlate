@@ -17,9 +17,11 @@ class Template(abc.ABC):
         path: Path,
         name: Optional[str] = None,
         version: Optional[str] = None,
+        git_url: Optional[str] = None,
     ):
         self.config = config
         self.path = path
+        self.git_url = git_url
         self.name = name or self.default_name
         self.version = version or self.folder_hash
 
