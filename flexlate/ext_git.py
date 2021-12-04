@@ -3,7 +3,7 @@ from contextlib import contextmanager
 from pathlib import Path
 from typing import cast, Set
 
-from git import Repo, Blob, Tree, GitCommandError
+from git import Repo, Blob, Tree, GitCommandError  # type: ignore
 
 from flexlate.exc import GitRepoDirtyException, GitRepoHasNoCommitsException
 
@@ -31,6 +31,8 @@ def stage_and_commit_all(repo: Repo, commit_message: str):
 
 
 def list_tracked_files(repo: Repo) -> Set[Path]:
+    if repo.working_dir is None:
+        raise ValueError("repo working dir should not be none")
     return _list_tracked_files(repo.tree(), Path(repo.working_dir))
 
 

@@ -34,6 +34,9 @@ class Adder:
         config_manager: ConfigManager = ConfigManager(),
     ):
         assert_repo_is_in_clean_state(repo)
+        if repo.working_dir is None:
+            raise ValueError("repo working dir should not be none")
+
         config_path = _determine_config_path(out_root, Path(repo.working_dir), add_mode)
 
         _add_operation_via_branches(
@@ -41,7 +44,7 @@ class Adder:
                 template,
                 config_path,
                 target_version=target_version,
-                project_root=Path(repo.working_dir),
+                project_root=Path(repo.working_dir),  # type: ignore
             ),
             repo,
             _add_template_source_commit_message(
@@ -66,6 +69,8 @@ class Adder:
         renderer: MultiRenderer = MultiRenderer(),
     ):
         assert_repo_is_in_clean_state(repo)
+        if repo.working_dir is None:
+            raise ValueError("repo working dir should not be none")
 
         project_root = Path(repo.working_dir)
         config_path = _determine_config_path(out_root, project_root, add_mode)
@@ -111,6 +116,7 @@ def _determine_config_path(
         return project_root / "flexlate.json"
     if add_mode == AddMode.LOCAL:
         return out_root / "flexlate.json"
+    raise ValueError(f"unexpected add mode {add_mode}")
 
 
 def _add_operation_via_branches(

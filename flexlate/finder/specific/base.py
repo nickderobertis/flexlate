@@ -7,7 +7,8 @@ from flexlate.template_config.base import TemplateConfig
 
 T = TypeVar("T", bound=Template)
 
-class TemplateFinder(Protocol[T]):
+# TODO: figure out how to type TemplateFinder properly
+class TemplateFinder(Protocol[T]):  # type: ignore
     def find(self, path: Union[str, Path], **template_kwargs) -> T:
         ...
 

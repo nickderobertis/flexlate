@@ -36,6 +36,8 @@ class Updater:
         config_manager: ConfigManager = ConfigManager(),
     ):
         assert_repo_is_in_clean_state(repo)
+        if repo.working_dir is None:
+            raise ValueError("repo working dir should not be none")
 
         out_path = Path(repo.working_dir)
         current_branch = repo.active_branch
@@ -110,7 +112,7 @@ class Updater:
             kwargs: Dict[str, Any] = {}
             if source.target_version:
                 kwargs.update(version=source.target_version)
-            new_template = finder.find(source.update_location, **kwargs)
+            new_template = finder.find(str(source.update_location), **kwargs)
             template = templates_by_name[source.name]
             if template.version != new_template.version:
                 # Template needs to be upgraded

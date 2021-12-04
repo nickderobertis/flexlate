@@ -14,6 +14,7 @@ def get_version_from_source_path(
     if is_repo_url(str(path)):
         # Get version from repo
         return get_current_version(Repo(str(local_path)))
+    return None
 
 
 def get_git_url_from_source_path(
@@ -27,3 +28,4 @@ def get_git_url_from_source_path(
     if is_repo_url(str(path)):
         # Get version from repo
         return str(path)
+    return None

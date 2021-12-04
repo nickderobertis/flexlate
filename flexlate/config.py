@@ -101,7 +101,7 @@ class FlexlateConfig(BaseConfig):
         obj = cls(
             template_sources=template_sources, applied_templates=applied_templates
         )
-        obj._child_configs = configs
+        obj._child_configs = list(configs)
         return obj
 
     @validator("template_sources")
