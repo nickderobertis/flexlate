@@ -28,6 +28,20 @@ class Flexlate:
         self.finder = finder
         self.renderer = renderer
         self.updater = updater
+        
+    def init_project(
+        self,
+        path: Path = Path("."),
+        default_add_mode: AddMode = AddMode.LOCAL,
+        branch_name: str = DEFAULT_BRANCH_NAME,
+        user: bool = False,
+    ):
+        self.config_manager.add_project(
+            path=path,
+            default_add_mode=default_add_mode,
+            user=user,
+            branch_name=branch_name,
+        )
 
     def add_template_source(
         self,
@@ -121,16 +135,4 @@ class Flexlate:
             config_manager=self.config_manager,
         )
 
-    def init_project(
-        self,
-        path: Path = Path("."),
-        default_add_mode: AddMode = AddMode.LOCAL,
-        branch_name: str = DEFAULT_BRANCH_NAME,
-        user: bool = False,
-    ):
-        self.config_manager.add_project(
-            path=path,
-            default_add_mode=default_add_mode,
-            user=user,
-            branch_name=branch_name,
-        )
+
