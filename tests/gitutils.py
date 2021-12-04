@@ -24,10 +24,3 @@ def add_dummy_file2_to_repo(repo: Repo):
     out_path.write_text("some text2")
 
 
-def repo_has_merge_conflicts(repo: Repo) -> bool:
-    for path, blob_tuples in repo.index.unmerged_blobs().items():
-        for (code, blob) in blob_tuples:
-            if code != 0:
-                # Code 0 means merged successfully. 1, 2, and 3 represent conflicts
-                return True
-    return False

@@ -9,14 +9,15 @@ from tests.fixtures.template import *
 from tests.fixtures.templated_repo import *
 
 
-def test_add_template_source_to_empty_repo(
-    empty_generated_repo: Repo, cookiecutter_one_template: CookiecutterTemplate
+def test_add_template_source_to_repo(
+    repo_with_placeholder_committed: Repo, cookiecutter_one_template: CookiecutterTemplate
 ):
+    repo = repo_with_placeholder_committed
     adder = Adder()
     adder.add_template_source(
+        repo,
         cookiecutter_one_template,
         out_root=GENERATED_FILES_DIR,
-        project_root=GENERATED_FILES_DIR,
         target_version="some version"
     )
     config_path = GENERATED_FILES_DIR / "flexlate.json"

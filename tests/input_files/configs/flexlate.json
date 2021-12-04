@@ -4,7 +4,9 @@
       "name": "one",
       "path": "tests/input_files/templates/cookiecutters/one",
       "type": "cookiecutter",
-      "version": null
+      "version": null,
+      "target_version": null,
+      "git_url": null
     }
   ],
   "applied_templates": [

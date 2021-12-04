@@ -11,7 +11,7 @@ from flexlate.exc import GitRepoDirtyException
 from flexlate.finder.multi import MultiFinder
 from flexlate.template.base import Template
 from flexlate.template.cookiecutter import CookiecutterTemplate
-from flexlate.constants import DEFAULT_BRANCH_NAME
+from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME
 from flexlate.template.types import TemplateType
 from flexlate.update.main import Updater
 from flexlate.update.template import TemplateUpdate
@@ -30,7 +30,8 @@ from tests.fixtures.git import *
 from tests.fixtures.template import *
 from tests.fixtures.templated_repo import *
 from tests.fixtures.updates import *
-from tests.gitutils import repo_has_merge_conflicts
+from flexlate.ext_git import repo_has_merge_conflicts
+
 
 # TODO: check that config is updated after tests
 
@@ -56,7 +57,7 @@ def test_update_modify_template(
     )
     updater.update(repo, template_updates, no_input=True)
     main_branch: Head = repo.branches["master"]  # type: ignore
-    template_branch: Head = repo.branches[DEFAULT_BRANCH_NAME]  # type: ignore
+    template_branch: Head = repo.branches[DEFAULT_MERGED_BRANCH_NAME]  # type: ignore
     assert repo.active_branch == main_branch
     assert (
         repo.commit().message
@@ -105,7 +106,9 @@ def test_update_passed_templates_to_newest_versions(
             config: Optional[FlexlateConfig] = None,
         ) -> List[TemplateSource]:
             return [
-                TemplateSource.from_template(remote_template, target_version=remote_target_version),
+                TemplateSource.from_template(
+                    remote_template, target_version=remote_target_version
+                ),
                 TemplateSource.from_template(local_template),
             ]
 
@@ -143,7 +146,8 @@ def test_update_passed_templates_to_newest_versions_but_already_at_targets(
                 ),
                 TemplateSource.from_template(
                     # It is actually useless to put target version in a local template
-                    local_template, target_version=COOKIECUTTER_ONE_VERSION
+                    local_template,
+                    target_version=COOKIECUTTER_ONE_VERSION,
                 ),
             ]
 

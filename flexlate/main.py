@@ -6,7 +6,7 @@ from git import Repo
 from flexlate.adder import Adder
 from flexlate.add_mode import AddMode
 from flexlate.config_manager import ConfigManager
-from flexlate.constants import DEFAULT_BRANCH_NAME
+from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.finder.multi import MultiFinder
 from flexlate.render.multi import MultiRenderer
 from flexlate.template.base import Template
@@ -28,19 +28,21 @@ class Flexlate:
         self.finder = finder
         self.renderer = renderer
         self.updater = updater
-        
+
     def init_project(
         self,
         path: Path = Path("."),
         default_add_mode: AddMode = AddMode.LOCAL,
-        branch_name: str = DEFAULT_BRANCH_NAME,
+        merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
+        template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
         user: bool = False,
     ):
         self.config_manager.add_project(
             path=path,
             default_add_mode=default_add_mode,
             user=user,
-            branch_name=branch_name,
+            merged_branch_name=merged_branch_name,
+            template_branch_name=template_branch_name,
         )
 
     def add_template_source(
@@ -56,13 +58,16 @@ class Flexlate:
         template = self.finder.find(path, version=target_version)
         if name:
             template.name = name
+        repo = Repo(project_config.path)
         self.adder.add_template_source(
+            repo,
             template,
             target_version=target_version,
             out_root=template_root,
+            merged_branch_name=project_config.merged_branch_name,
+            template_branch_name=project_config.template_branch_name,
             add_mode=add_mode,
             config_manager=self.config_manager,
-            project_root=project_config.path,
         )
 
     def apply_template_and_add(
@@ -85,7 +90,8 @@ class Flexlate:
             out_root=out_root,
             add_mode=add_mode,
             no_input=no_input,
-            branch_name=project_config.flexlate_branch_name,
+            merged_branch_name=project_config.merged_branch_name,
+            template_branch_name=project_config.template_branch_name,
             config_manager=self.config_manager,
             renderer=self.renderer,
             updater=self.updater,
@@ -130,9 +136,8 @@ class Flexlate:
             repo,
             updates,
             no_input=no_input,
-            branch_name=project_config.flexlate_branch_name,
+            merged_branch_name=project_config.merged_branch_name,
+            template_branch_name=project_config.template_branch_name,
             renderer=self.renderer,
             config_manager=self.config_manager,
         )
-
-

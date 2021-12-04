@@ -4,7 +4,7 @@ from typing import Sequence, Optional, List, Dict, Any
 from git import Repo
 
 from flexlate.config_manager import ConfigManager
-from flexlate.constants import DEFAULT_BRANCH_NAME
+from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.exc import GitRepoDirtyException
 from flexlate.finder.multi import MultiFinder
 from flexlate.render.multi import MultiRenderer
@@ -14,6 +14,8 @@ from flexlate.ext_git import (
     stage_and_commit_all,
     merge_branch_into_current,
     checked_out_template_branch,
+    checkout_template_branch,
+    repo_has_merge_conflicts, assert_repo_is_in_clean_state,
 )
 from flexlate.template_data import TemplateData, merge_data
 from flexlate.update.template import (
@@ -27,31 +29,43 @@ class Updater:
         self,
         repo: Repo,
         updates: Sequence[TemplateUpdate],
-        branch_name: str = DEFAULT_BRANCH_NAME,
+        merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
+        template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
         no_input: bool = False,
         renderer: MultiRenderer = MultiRenderer(),
         config_manager: ConfigManager = ConfigManager(),
     ):
-        if repo.is_dirty(untracked_files=True):
-            raise GitRepoDirtyException(
-                "git working tree is not clean. Please commit, stash, or discard any changes first."
-            )
+        assert_repo_is_in_clean_state(repo)
 
         out_path = Path(repo.working_dir)
-        with checked_out_template_branch(repo, branch_name=branch_name):
+        current_branch = repo.active_branch
+
+        # Prepare the template branch, this is the branch that stores only the template files
+        # Create it from the initial commit if it does not exist
+        with checked_out_template_branch(repo, branch_name=template_branch_name):
             config_manager.update_templates(updates, project_root=out_path)
             templates, data = config_manager.get_templates_with_data(
                 project_root=out_path
             )
-            # TODO: shouldn't delete files, just overwrite
-            delete_tracked_files(repo)
             updated_data = renderer.render(
                 templates, data=data, out_path=out_path, no_input=no_input
             )
             new_updates = updates_with_updated_data(updates, updated_data)
             config_manager.update_templates(new_updates, project_root=out_path)
             stage_and_commit_all(repo, _commit_message(templates))
-        merge_branch_into_current(repo, branch_name)
+
+        # Now prepare the merged (output) branch, by merging the current
+        # branch into it and then the template branch into it.
+        checkout_template_branch(repo, merged_branch_name)
+        # Update with changes from the main repo
+        merge_branch_into_current(repo, current_branch.name)
+        # Update with template changes
+        merge_branch_into_current(repo, template_branch_name)
+
+        if not repo_has_merge_conflicts(repo):
+            # No conflicts, merge back into current branch
+            current_branch.checkout()
+            merge_branch_into_current(repo, merged_branch_name)
 
     def get_updates_for_templates(
         self,

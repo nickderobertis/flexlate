@@ -5,17 +5,19 @@ from typing import cast, Set
 
 from git import Repo, Blob, Tree, GitCommandError
 
-from flexlate.constants import DEFAULT_BRANCH_NAME
+from flexlate.exc import GitRepoDirtyException, GitRepoHasNoCommitsException
 
 
-def checkout_template_branch(repo: Repo, branch_name: str = DEFAULT_BRANCH_NAME):
+def checkout_template_branch(repo: Repo, branch_name: str):
     try:
         # Get branch if it exists already
         branch = repo.branches[branch_name]  # type: ignore
     except IndexError as e:
         if "No item found with id" in str(e) and branch_name in str(e):
             # Could not find branch, must not exist, create it
-            branch = repo.create_head(branch_name)
+            # Get the initial root commit to base it off of
+            initial_commit = repo.git.rev_list("HEAD", max_parents=0)
+            branch = repo.create_head(branch_name, initial_commit)
         else:
             # Unknown error, raise it
             raise e
@@ -72,8 +74,29 @@ def get_current_version(repo: Repo) -> str:
 
 
 @contextmanager
-def checked_out_template_branch(repo: Repo, branch_name: str = DEFAULT_BRANCH_NAME):
+def checked_out_template_branch(repo: Repo, branch_name: str):
     orig_branch = repo.active_branch
     checkout_template_branch(repo, branch_name=branch_name)
     yield
     orig_branch.checkout()
+
+
+def repo_has_merge_conflicts(repo: Repo) -> bool:
+    for path, blob_tuples in repo.index.unmerged_blobs().items():
+        for (code, blob) in blob_tuples:
+            if code != 0:
+                # Code 0 means merged successfully. 1, 2, and 3 represent conflicts
+                return True
+    return False
+
+
+def assert_repo_is_in_clean_state(repo: Repo):
+    if repo.is_dirty(untracked_files=True):
+        raise GitRepoDirtyException(
+            "git working tree is not clean. Please commit, stash, or discard any changes first."
+        )
+    if repo.git.count_objects() == "0 objects, 0 kilobytes":
+        # Empty repo, no commits
+        raise GitRepoHasNoCommitsException(
+            "git repo has no commits. Please initialize it with a commit"
+        )

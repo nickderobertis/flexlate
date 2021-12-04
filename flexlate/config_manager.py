@@ -10,7 +10,7 @@ from flexlate.config import (
     FlexlateProjectConfig,
     ProjectConfig,
 )
-from flexlate.constants import DEFAULT_BRANCH_NAME
+from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.exc import (
     FlexlateConfigFileNotExistsException,
     TemplateLookupException,
@@ -76,7 +76,8 @@ class ConfigManager:
         self,
         path: Path = Path("."),
         default_add_mode: AddMode = AddMode.LOCAL,
-        branch_name: str = DEFAULT_BRANCH_NAME,
+        merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
+        template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
         user: bool = False,
     ):
         config = self.load_specific_projects_config(path, user)
@@ -84,7 +85,8 @@ class ConfigManager:
         project_config = ProjectConfig(
             path=output_path,
             default_add_mode=default_add_mode,
-            flexlate_branch_name=branch_name,
+            merged_branch_name=merged_branch_name,
+            template_branch_name=template_branch_name,
         )
         config.projects.append(project_config)
         self.save_projects_config(config)

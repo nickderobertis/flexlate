@@ -19,11 +19,10 @@ def repo_with_cookiecutter_one_template_source(
     repo = repo_with_placeholder_committed
     adder = Adder()
     adder.add_template_source(
+        repo,
         cookiecutter_one_template,
         out_root=GENERATED_FILES_DIR,
-        project_root=GENERATED_FILES_DIR,
     )
-    stage_and_commit_all(repo, "Add cookiecutter one template source")
     yield repo
 
 

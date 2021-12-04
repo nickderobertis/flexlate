@@ -42,6 +42,10 @@ class GitRepoDirtyException(FlexlateGitException):
     pass
 
 
+class GitRepoHasNoCommitsException(FlexlateGitException):
+    pass
+
+
 class FlexlateConfigException(FlexlateException):
     pass
 
