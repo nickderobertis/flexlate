@@ -8,13 +8,6 @@ from flexlate.add_mode import AddMode
 from flexlate.config_manager import ConfigManager
 from flexlate.finder.multi import MultiFinder
 
-# TODO: determine how to automatically set project root
-#  maybe just adding is_project_root into config and some kind of project initialization
-#  but need to make sure it will work well with user usage. Then maybe config lists project roots?
-
-# TODO: determine how to set a default for add mode per project
-#  maybe just adding to project root config
-
 # TODO: branch name should be in the project config
 from flexlate.render.multi import MultiRenderer
 from flexlate.template.base import Template
@@ -45,17 +38,19 @@ class Flexlate:
         path: str,
         name: Optional[str] = None,
         template_root: Path = Path("."),
+        project_path: Path = Path("."),
         add_mode: AddMode = AddMode.LOCAL,
     ):
+        project_config = self.config_manager.load_project_config(project_path)
         template = self.finder.find(path)
         if name:
             template.name = name
-        # TODO: determine and pass project root
         self.adder.add_template_source(
             template,
             out_root=template_root,
             add_mode=add_mode,
             config_manager=self.config_manager,
+            project_root=project_config.path,
         )
 
     def apply_template_and_add(
@@ -66,11 +61,12 @@ class Flexlate:
         add_mode: AddMode = AddMode.LOCAL,
         no_input: bool = False,
     ):
-        # TODO: pass project root
-        template = self.config_manager.get_template_by_name(name)
+        project_config = self.config_manager.load_project_config(out_root)
+        template = self.config_manager.get_template_by_name(
+            name, project_root=project_config.path
+        )
         # TODO: get branch name from project config
-        # TODO: determine project path, create repo from it
-        repo = Repo()
+        repo = Repo(project_config.path)
         self.adder.apply_template_and_add(
             repo,
             template,
@@ -83,30 +79,39 @@ class Flexlate:
             updater=self.updater,
         )
 
-    def update(self, names: Optional[List[str]] = None, no_input: bool = False):
+    def update(
+        self,
+        names: Optional[List[str]] = None,
+        no_input: bool = False,
+        project_path: Path = Path("."),
+    ):
+        project_config = self.config_manager.load_project_config(project_path)
         templates: List[Template]
         if names:
             # User wants to update targeted template sources
-            # TODO: pass project root
             templates = [
-                self.config_manager.get_template_by_name(name) for name in names
+                self.config_manager.get_template_by_name(
+                    name, project_root=project_config.path
+                )
+                for name in names
             ]
         else:
             # User wants to update all templates
-            # TODO: pass project root
-            templates, _ = self.config_manager.get_templates_with_data()
+            templates, _ = self.config_manager.get_templates_with_data(
+                project_root=project_config.path
+            )
 
         # TODO: check for updates in templates. Need to ensure we have the original
         #  path in the source, e.g. github url. Will need to implement logic to pull
         #  down VCS or at least compare version. Modify the templates in place here
 
-        # TODO: pass project root
         updates = self.updater.get_updates_for_templates(
-            templates, config_manager=self.config_manager
+            templates,
+            config_manager=self.config_manager,
+            project_root=project_config.path,
         )
 
-        # TODO: determine project path, create repo from it
-        repo = Repo()
+        repo = Repo(project_config.path)
         # TODO: get branch name from project config
         self.updater.update(
             repo,
