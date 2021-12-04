@@ -51,10 +51,9 @@ class Flexlate:
         name: Optional[str] = None,
         target_version: Optional[str] = None,
         template_root: Path = Path("."),
-        project_path: Path = Path("."),
         add_mode: AddMode = AddMode.LOCAL,
     ):
-        project_config = self.config_manager.load_project_config(project_path)
+        project_config = self.config_manager.load_project_config(template_root)
         template = self.finder.find(path, version=target_version)
         if name:
             template.name = name
@@ -141,3 +140,5 @@ class Flexlate:
             renderer=self.renderer,
             config_manager=self.config_manager,
         )
+
+    # TODO: list template sources, list applied templates, remove applied templates and sources
