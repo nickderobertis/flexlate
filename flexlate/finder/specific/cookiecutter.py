@@ -25,7 +25,7 @@ class CookiecutterFinder(TemplateFinder[CookiecutterTemplate]):
             path, checkout=git_version
         )
         config = self.get_config(repo_path)
-        version = get_version_from_source_path(path, repo_path)
+        version = get_version_from_source_path(path, repo_path) or git_version
         git_url = get_git_url_from_source_path(path, template_kwargs)
         return CookiecutterTemplate(
             config,

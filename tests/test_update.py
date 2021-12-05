@@ -146,6 +146,7 @@ def test_update_passed_templates_to_newest_versions_but_already_at_targets(
                 ),
                 TemplateSource.from_template(
                     # It is actually useless to put target version in a local template
+                    # TODO: throw an error when user tries to target version for a local template
                     local_template,
                     target_version=COOKIECUTTER_ONE_VERSION,
                 ),
@@ -157,8 +158,8 @@ def test_update_passed_templates_to_newest_versions_but_already_at_targets(
         [remote_template, local_template], config_manager=MockConfigManager()  # type: ignore
     )
     assert remote_template.version == COOKIECUTTER_REMOTE_VERSION_1
-    # Local template is updated anyway, as there is no way to access the old version
-    assert local_template.version == "8d9453d0a0e376965b4edd74a395e47d"
+    # Local template is updated anyway, but it shows the old version due to target version
+    assert local_template.version == COOKIECUTTER_ONE_VERSION
 
 
 def _modify_template_in_generated_folder(template: Template):

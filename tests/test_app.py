@@ -4,13 +4,19 @@ from pathlib import Path
 
 from flexlate.config import FlexlateConfig
 from flexlate.main import Flexlate
-from tests.config import GENERATED_FILES_DIR, COOKIECUTTER_REMOTE_URL, COOKIECUTTER_REMOTE_NAME, \
-    COOKIECUTTER_REMOTE_VERSION_2
+from tests.config import (
+    GENERATED_FILES_DIR,
+    COOKIECUTTER_REMOTE_URL,
+    COOKIECUTTER_REMOTE_NAME,
+    COOKIECUTTER_REMOTE_VERSION_2,
+)
 from tests.dirutils import change_directory_to
 from tests.fixtures.git import *
 
 
-def test_init_project_and_add_source_and_template(repo_with_placeholder_committed: Repo):
+def test_init_project_and_add_source_and_template(
+    repo_with_placeholder_committed: Repo,
+):
     repo = repo_with_placeholder_committed
     fxt = Flexlate()
     with change_directory_to(GENERATED_FILES_DIR):
