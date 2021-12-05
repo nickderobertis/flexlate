@@ -73,6 +73,32 @@ def test_init_project_for_user_with_user_add_mode_and_add_source_and_template(
     )
 
 
+def test_init_project_and_add_source_and_template_in_subdir(
+    repo_with_placeholder_committed: Repo,
+):
+    repo = repo_with_placeholder_committed
+    fxt = Flexlate()
+    with change_directory_to(GENERATED_REPO_DIR):
+        fxt.init_project()
+        fxt.add_template_source(COOKIECUTTER_REMOTE_URL)
+        subdir = GENERATED_REPO_DIR / "subdir"
+        subdir.mkdir()
+        (subdir / "some file.txt").touch()
+        stage_and_commit_all(repo, "A commit to get a clean working tree")
+        with change_directory_to(subdir):
+            fxt.apply_template_and_add(COOKIECUTTER_REMOTE_NAME, no_input=True)
+            breakpoint()
+
+    # TODO: it is putting the generated files in the wrong spot
+    #  See the comment in update.main for required changes
+    _assert_project_files_are_correct()
+    _assert_template_sources_config_is_correct(GENERATED_REPO_DIR / "flexlate.json")
+    _assert_applied_templates_config_is_correct(GENERATED_REPO_DIR / "subdir" / "flexlate.json")
+
+    project_config_path = GENERATED_REPO_DIR / "flexlate-project.json"
+    _assert_project_config_is_correct(project_config_path, user=False)
+
+
 def _assert_project_files_are_correct():
     out_path = GENERATED_REPO_DIR / "abc" / "abc.txt"
     assert out_path.exists()
@@ -80,8 +106,8 @@ def _assert_project_files_are_correct():
     assert content == "some new header\nvalue"
 
 
-def _assert_config_is_correct(
-    config_path: Path = GENERATED_REPO_DIR / "flexlate.json", user: bool = False
+def _assert_template_sources_config_is_correct(
+    config_path: Path = GENERATED_REPO_DIR / "flexlate.json"
 ):
     assert config_path.exists()
     config = FlexlateConfig.load(config_path)
@@ -91,6 +117,13 @@ def _assert_config_is_correct(
     assert template_source.name == COOKIECUTTER_REMOTE_NAME
     assert template_source.version == COOKIECUTTER_REMOTE_VERSION_2
     assert template_source.git_url == COOKIECUTTER_REMOTE_URL
+
+
+def _assert_applied_templates_config_is_correct(
+    config_path: Path = GENERATED_REPO_DIR / "flexlate.json", user: bool = False
+):
+    assert config_path.exists()
+    config = FlexlateConfig.load(config_path)
     # Applied template
     assert len(config.applied_templates) == 1
     applied_template = config.applied_templates[0]
@@ -101,6 +134,13 @@ def _assert_config_is_correct(
         assert applied_template.root == GENERATED_REPO_DIR
     else:
         assert applied_template.root == Path(".")
+
+
+def _assert_config_is_correct(
+    config_path: Path = GENERATED_REPO_DIR / "flexlate.json", user: bool = False
+):
+    _assert_applied_templates_config_is_correct(config_path, user)
+    _assert_template_sources_config_is_correct(config_path)
 
 
 def _assert_project_config_is_correct(
