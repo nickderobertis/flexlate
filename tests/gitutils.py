@@ -22,9 +22,3 @@ def add_dummy_file2_to_repo(repo: Repo):
     out_folder = Path(folder) / "some-dir"
     out_path = out_folder / "placeholder2.txt"
     out_path.write_text("some text2")
-
-
-def set_git_indentity_to_ci():
-    git = Git()
-    git.config("user.email", "ci@testing.com")
-    git.config("user.name", "CI")
