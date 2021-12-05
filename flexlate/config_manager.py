@@ -265,7 +265,7 @@ class ConfigManager:
 
 def _get_child_config_by_path(config: FlexlateConfig, path: Path) -> FlexlateConfig:
     for child_config in config.child_configs:
-        if child_config.settings.config_location == path:
+        if child_config.settings.config_location.absolute() == path.absolute():
             return child_config
     raise FlexlateConfigFileNotExistsException(
         f"could not find config with path {path}"
