@@ -104,6 +104,35 @@ class Adder:
             config_manager=config_manager,
         )
 
+    def init_project_and_add_to_branches(
+        self,
+        repo: Repo,
+        default_add_mode: AddMode = AddMode.LOCAL,
+        merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
+        template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
+        user: bool = False,
+        config_manager: ConfigManager = ConfigManager(),
+    ):
+        assert_repo_is_in_clean_state(repo)
+        if repo.working_dir is None:
+            raise ValueError("repo working dir should not be none")
+
+        path = Path(repo.working_dir)
+
+        _add_operation_via_branches(
+            lambda: config_manager.add_project(
+                path=path,
+                default_add_mode=default_add_mode,
+                user=user,
+                merged_branch_name=merged_branch_name,
+                template_branch_name=template_branch_name,
+            ),
+            repo,
+            "Initialized flexlate project",
+            merged_branch_name=merged_branch_name,
+            template_branch_name=template_branch_name,
+        )
+
 
 def _determine_config_path(
     out_root: Path = Path("."),
@@ -147,12 +176,12 @@ def _add_operation_via_branches(
 def _add_template_commit_message(
     template: Template, out_root: Path, project_root: Path
 ) -> str:
-    relative_path = out_root.relative_to(project_root)
+    relative_path = out_root.absolute().relative_to(project_root)
     return f"Applied template {template.name} to {relative_path}"
 
 
 def _add_template_source_commit_message(
     template: Template, out_root: Path, project_root: Path
 ) -> str:
-    relative_path = out_root.relative_to(project_root)
+    relative_path = out_root.absolute().relative_to(project_root)
     return f"Added template source {template.name} to {relative_path}"

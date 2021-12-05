@@ -39,20 +39,20 @@ def test_render_cookiecutter_with_data(
     assert cookiecutter_one_generated_text_content() == "something"
 
 
-def test_render_multi_with_defaults(cookiecutter_templates: List[CookiecutterTemplate]):
+def test_render_multi_with_defaults(cookiecutter_local_templates):
     renderer = MultiRenderer()
     data = renderer.render(
-        cookiecutter_templates, out_path=GENERATED_FILES_DIR, no_input=True
+        cookiecutter_local_templates, out_path=GENERATED_FILES_DIR, no_input=True
     )
     assert data == [{"a": "b", "c": ""}, {"a": "b", "d": "e"}]
     assert cookiecutter_one_generated_text_content() == ""
     assert cookiecutter_two_generated_text_content() == "e"
 
 
-def test_render_multi_with_data(cookiecutter_templates: List[CookiecutterTemplate]):
+def test_render_multi_with_data(cookiecutter_local_templates):
     renderer = MultiRenderer()
     data = renderer.render(
-        cookiecutter_templates,
+        cookiecutter_local_templates,
         out_path=GENERATED_FILES_DIR,
         data=[{"a": "z", "c": "something"}, {"a": "z", "d": "f"}],
         no_input=True,

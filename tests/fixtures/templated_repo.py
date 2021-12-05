@@ -27,6 +27,21 @@ def repo_with_cookiecutter_one_template_source(
 
 
 @pytest.fixture
+def repo_with_remote_cookiecutter_template_source(
+    repo_with_placeholder_committed: Repo,
+    cookiecutter_remote_template: CookiecutterTemplate,
+) -> Repo:
+    repo = repo_with_placeholder_committed
+    adder = Adder()
+    adder.add_template_source(
+        repo,
+        cookiecutter_remote_template,
+        out_root=GENERATED_FILES_DIR,
+    )
+    yield repo
+
+
+@pytest.fixture
 def repo_with_template_branch_from_cookiecutter_one(
     repo_with_cookiecutter_one_template_source: Repo,
     cookiecutter_one_template: CookiecutterTemplate,

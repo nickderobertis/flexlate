@@ -37,8 +37,9 @@ class Flexlate:
         template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
         user: bool = False,
     ):
-        self.config_manager.add_project(
-            path=path,
+        repo = Repo(path)
+        self.adder.init_project_and_add_to_branches(
+            repo,
             default_add_mode=default_add_mode,
             user=user,
             merged_branch_name=merged_branch_name,
