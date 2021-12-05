@@ -1,0 +1,43 @@
+flexlate.template package
+=========================
+
+.. automodule:: flexlate.template
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+flexlate.template.base module
+-----------------------------
+
+.. automodule:: flexlate.template.base
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+flexlate.template.cookiecutter module
+-------------------------------------
+
+.. automodule:: flexlate.template.cookiecutter
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+flexlate.template.hashing module
+--------------------------------
+
+.. automodule:: flexlate.template.hashing
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+flexlate.template.types module
+------------------------------
+
+.. automodule:: flexlate.template.types
+   :members:
+   :undoc-members:
+   :show-inheritance:
+

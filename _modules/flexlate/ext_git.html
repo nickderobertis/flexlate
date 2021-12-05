@@ -1,0 +1,317 @@
+
+
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>flexlate.ext_git &mdash; flexlate 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/sphinx_paramlinks.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/sg_gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/sg_gallery-binder.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/sg_gallery-dataframe.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/sg_gallery-rendered-html.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> flexlate
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial.html">Getting started with flexlate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html">This is my gallery</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/modules.html">flexlate</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">flexlate</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>flexlate.ext_git</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for flexlate.ext_git</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">contextmanager</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">cast</span><span class="p">,</span> <span class="n">Set</span>
+
+<span class="kn">from</span> <span class="nn">git</span> <span class="kn">import</span> <span class="n">Repo</span><span class="p">,</span> <span class="n">Blob</span><span class="p">,</span> <span class="n">Tree</span><span class="p">,</span> <span class="n">GitCommandError</span>  <span class="c1"># type: ignore</span>
+
+<span class="kn">from</span> <span class="nn">flexlate.exc</span> <span class="kn">import</span> <span class="n">GitRepoDirtyException</span><span class="p">,</span> <span class="n">GitRepoHasNoCommitsException</span>
+
+
+<div class="viewcode-block" id="checkout_template_branch"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.ext_git.checkout_template_branch">[docs]</a><span class="k">def</span> <span class="nf">checkout_template_branch</span><span class="p">(</span><span class="n">repo</span><span class="p">:</span> <span class="n">Repo</span><span class="p">,</span> <span class="n">branch_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Get branch if it exists already</span>
+        <span class="n">branch</span> <span class="o">=</span> <span class="n">repo</span><span class="o">.</span><span class="n">branches</span><span class="p">[</span><span class="n">branch_name</span><span class="p">]</span>  <span class="c1"># type: ignore</span>
+    <span class="k">except</span> <span class="ne">IndexError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;No item found with id&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="ow">and</span> <span class="n">branch_name</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">):</span>
+            <span class="c1"># Could not find branch, must not exist, create it</span>
+            <span class="c1"># Get the initial root commit to base it off of</span>
+            <span class="n">initial_commit</span> <span class="o">=</span> <span class="n">repo</span><span class="o">.</span><span class="n">git</span><span class="o">.</span><span class="n">rev_list</span><span class="p">(</span><span class="s2">&quot;HEAD&quot;</span><span class="p">,</span> <span class="n">max_parents</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">branch</span> <span class="o">=</span> <span class="n">repo</span><span class="o">.</span><span class="n">create_head</span><span class="p">(</span><span class="n">branch_name</span><span class="p">,</span> <span class="n">initial_commit</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Unknown error, raise it</span>
+            <span class="k">raise</span> <span class="n">e</span>
+
+    <span class="n">branch</span><span class="o">.</span><span class="n">checkout</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="stage_and_commit_all"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.ext_git.stage_and_commit_all">[docs]</a><span class="k">def</span> <span class="nf">stage_and_commit_all</span><span class="p">(</span><span class="n">repo</span><span class="p">:</span> <span class="n">Repo</span><span class="p">,</span> <span class="n">commit_message</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="n">repo</span><span class="o">.</span><span class="n">git</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;-A&quot;</span><span class="p">)</span>
+    <span class="n">repo</span><span class="o">.</span><span class="n">git</span><span class="o">.</span><span class="n">commit</span><span class="p">(</span><span class="s2">&quot;-m&quot;</span><span class="p">,</span> <span class="n">commit_message</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="list_tracked_files"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.ext_git.list_tracked_files">[docs]</a><span class="k">def</span> <span class="nf">list_tracked_files</span><span class="p">(</span><span class="n">repo</span><span class="p">:</span> <span class="n">Repo</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">[</span><span class="n">Path</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="n">repo</span><span class="o">.</span><span class="n">working_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;repo working dir should not be none&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_list_tracked_files</span><span class="p">(</span><span class="n">repo</span><span class="o">.</span><span class="n">tree</span><span class="p">(),</span> <span class="n">Path</span><span class="p">(</span><span class="n">repo</span><span class="o">.</span><span class="n">working_dir</span><span class="p">))</span></div>
+
+
+<span class="k">def</span> <span class="nf">_list_tracked_files</span><span class="p">(</span><span class="n">tree</span><span class="p">:</span> <span class="n">Tree</span><span class="p">,</span> <span class="n">root_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">[</span><span class="n">Path</span><span class="p">]:</span>
+    <span class="c1"># TODO: Fix multiple iterations over files for git traverse</span>
+    <span class="c1">#  For now just using a set to keep it working, but should optimize</span>
+    <span class="n">files</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">tree_or_blob</span> <span class="ow">in</span> <span class="n">tree</span><span class="o">.</span><span class="n">traverse</span><span class="p">():</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">tree_or_blob</span><span class="p">,</span> <span class="s2">&quot;traverse&quot;</span><span class="p">):</span>
+            <span class="c1"># Got another tree</span>
+            <span class="n">tree</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">Tree</span><span class="p">,</span> <span class="n">tree_or_blob</span><span class="p">)</span>
+            <span class="n">files</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">_list_tracked_files</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">root_path</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Got a blob</span>
+            <span class="n">blob</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">Blob</span><span class="p">,</span> <span class="n">tree_or_blob</span><span class="p">)</span>
+            <span class="n">files</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">root_path</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="n">blob</span><span class="o">.</span><span class="n">path</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">files</span>
+
+
+<div class="viewcode-block" id="delete_tracked_files"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.ext_git.delete_tracked_files">[docs]</a><span class="k">def</span> <span class="nf">delete_tracked_files</span><span class="p">(</span><span class="n">repo</span><span class="p">:</span> <span class="n">Repo</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">list_tracked_files</span><span class="p">(</span><span class="n">repo</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;flexlate.json&quot;</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="merge_branch_into_current"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.ext_git.merge_branch_into_current">[docs]</a><span class="k">def</span> <span class="nf">merge_branch_into_current</span><span class="p">(</span>
+    <span class="n">repo</span><span class="p">:</span> <span class="n">Repo</span><span class="p">,</span> <span class="n">branch_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">allow_conflicts</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">repo</span><span class="o">.</span><span class="n">git</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">branch_name</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">GitCommandError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">allow_conflicts</span> <span class="ow">and</span> <span class="s2">&quot;fix conflicts and then commit the result&quot;</span> <span class="ow">in</span> <span class="n">e</span><span class="o">.</span><span class="n">stdout</span><span class="p">:</span>
+            <span class="c1">#</span>
+            <span class="k">return</span>
+        <span class="k">raise</span> <span class="n">e</span></div>
+
+
+<div class="viewcode-block" id="get_current_version"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.ext_git.get_current_version">[docs]</a><span class="k">def</span> <span class="nf">get_current_version</span><span class="p">(</span><span class="n">repo</span><span class="p">:</span> <span class="n">Repo</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">repo</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">commit</span><span class="o">.</span><span class="n">hexsha</span></div>
+
+
+<div class="viewcode-block" id="checked_out_template_branch"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.ext_git.checked_out_template_branch">[docs]</a><span class="nd">@contextmanager</span>
+<span class="k">def</span> <span class="nf">checked_out_template_branch</span><span class="p">(</span><span class="n">repo</span><span class="p">:</span> <span class="n">Repo</span><span class="p">,</span> <span class="n">branch_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="n">orig_branch</span> <span class="o">=</span> <span class="n">repo</span><span class="o">.</span><span class="n">active_branch</span>
+    <span class="n">checkout_template_branch</span><span class="p">(</span><span class="n">repo</span><span class="p">,</span> <span class="n">branch_name</span><span class="o">=</span><span class="n">branch_name</span><span class="p">)</span>
+    <span class="k">yield</span>
+    <span class="n">orig_branch</span><span class="o">.</span><span class="n">checkout</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="repo_has_merge_conflicts"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.ext_git.repo_has_merge_conflicts">[docs]</a><span class="k">def</span> <span class="nf">repo_has_merge_conflicts</span><span class="p">(</span><span class="n">repo</span><span class="p">:</span> <span class="n">Repo</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">path</span><span class="p">,</span> <span class="n">blob_tuples</span> <span class="ow">in</span> <span class="n">repo</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">unmerged_blobs</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">blob</span><span class="p">)</span> <span class="ow">in</span> <span class="n">blob_tuples</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">code</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># Code 0 means merged successfully. 1, 2, and 3 represent conflicts</span>
+                <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="assert_repo_is_in_clean_state"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.ext_git.assert_repo_is_in_clean_state">[docs]</a><span class="k">def</span> <span class="nf">assert_repo_is_in_clean_state</span><span class="p">(</span><span class="n">repo</span><span class="p">:</span> <span class="n">Repo</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">repo</span><span class="o">.</span><span class="n">is_dirty</span><span class="p">(</span><span class="n">untracked_files</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">GitRepoDirtyException</span><span class="p">(</span>
+            <span class="s2">&quot;git working tree is not clean. Please commit, stash, or discard any changes first.&quot;</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">repo</span><span class="o">.</span><span class="n">git</span><span class="o">.</span><span class="n">count_objects</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;0 objects, 0 kilobytes&quot;</span><span class="p">:</span>
+        <span class="c1"># Empty repo, no commits</span>
+        <span class="k">raise</span> <span class="n">GitRepoHasNoCommitsException</span><span class="p">(</span>
+            <span class="s2">&quot;git repo has no commits. Please initialize it with a commit&quot;</span>
+        <span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2021, Nick DeRobertis
+
+    </p>
+  </div>
+    
+    
+      Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

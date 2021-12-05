@@ -1,0 +1,26 @@
+flexlate.finder package
+=======================
+
+.. automodule:: flexlate.finder
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+
+   flexlate.finder.specific
+
+Submodules
+----------
+
+flexlate.finder.multi module
+----------------------------
+
+.. automodule:: flexlate.finder.multi
+   :members:
+   :undoc-members:
+   :show-inheritance:
+

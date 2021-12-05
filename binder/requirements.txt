@@ -1,0 +1,5 @@
+gitpython
+flexlate
+py-app-conf
+typer
+cookiecutter

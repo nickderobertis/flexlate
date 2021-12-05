@@ -1,0 +1,27 @@
+flexlate.template\_config package
+=================================
+
+.. automodule:: flexlate.template_config
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+flexlate.template\_config.base module
+-------------------------------------
+
+.. automodule:: flexlate.template_config.base
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+flexlate.template\_config.cookiecutter module
+---------------------------------------------
+
+.. automodule:: flexlate.template_config.cookiecutter
+   :members:
+   :undoc-members:
+   :show-inheritance:
+

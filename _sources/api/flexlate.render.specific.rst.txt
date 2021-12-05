@@ -1,0 +1,27 @@
+flexlate.render.specific package
+================================
+
+.. automodule:: flexlate.render.specific
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+flexlate.render.specific.base module
+------------------------------------
+
+.. automodule:: flexlate.render.specific.base
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+flexlate.render.specific.cookiecutter module
+--------------------------------------------
+
+.. automodule:: flexlate.render.specific.cookiecutter
+   :members:
+   :undoc-members:
+   :show-inheritance:
+

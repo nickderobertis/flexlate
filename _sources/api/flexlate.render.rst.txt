@@ -1,0 +1,26 @@
+flexlate.render package
+=======================
+
+.. automodule:: flexlate.render
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+
+   flexlate.render.specific
+
+Submodules
+----------
+
+flexlate.render.multi module
+----------------------------
+
+.. automodule:: flexlate.render.multi
+   :members:
+   :undoc-members:
+   :show-inheritance:
+

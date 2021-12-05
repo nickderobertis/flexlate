@@ -1,0 +1,7 @@
+flexlate
+========
+
+.. toctree::
+   :maxdepth: 4
+
+   flexlate

@@ -1,0 +1,27 @@
+flexlate.update package
+=======================
+
+.. automodule:: flexlate.update
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+flexlate.update.main module
+---------------------------
+
+.. automodule:: flexlate.update.main
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+flexlate.update.template module
+-------------------------------
+
+.. automodule:: flexlate.update.template
+   :members:
+   :undoc-members:
+   :show-inheritance:
+

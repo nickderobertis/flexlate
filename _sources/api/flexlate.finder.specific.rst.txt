@@ -1,0 +1,35 @@
+flexlate.finder.specific package
+================================
+
+.. automodule:: flexlate.finder.specific
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+flexlate.finder.specific.base module
+------------------------------------
+
+.. automodule:: flexlate.finder.specific.base
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+flexlate.finder.specific.cookiecutter module
+--------------------------------------------
+
+.. automodule:: flexlate.finder.specific.cookiecutter
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+flexlate.finder.specific.git module
+-----------------------------------
+
+.. automodule:: flexlate.finder.specific.git
+   :members:
+   :undoc-members:
+   :show-inheritance:
+

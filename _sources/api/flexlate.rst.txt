@@ -1,0 +1,110 @@
+flexlate package
+================
+
+.. automodule:: flexlate
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+
+   flexlate.finder
+   flexlate.render
+   flexlate.template
+   flexlate.template_config
+   flexlate.update
+
+Submodules
+----------
+
+flexlate.add\_mode module
+-------------------------
+
+.. automodule:: flexlate.add_mode
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+flexlate.adder module
+---------------------
+
+.. automodule:: flexlate.adder
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+flexlate.cli module
+-------------------
+
+.. automodule:: flexlate.cli
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+flexlate.config module
+----------------------
+
+.. automodule:: flexlate.config
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+flexlate.config\_manager module
+-------------------------------
+
+.. automodule:: flexlate.config_manager
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+flexlate.constants module
+-------------------------
+
+.. automodule:: flexlate.constants
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+flexlate.exc module
+-------------------
+
+.. automodule:: flexlate.exc
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+flexlate.ext\_git module
+------------------------
+
+.. automodule:: flexlate.ext_git
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+flexlate.main module
+--------------------
+
+.. automodule:: flexlate.main
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+flexlate.template\_data module
+------------------------------
+
+.. automodule:: flexlate.template_data
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+flexlate.types module
+---------------------
+
+.. automodule:: flexlate.types
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
