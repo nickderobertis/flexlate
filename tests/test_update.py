@@ -53,7 +53,7 @@ def test_update_modify_template(
     repo = repo_with_template_branch_from_cookiecutter_one
     updater = Updater()
     template_updates = updater.get_updates_for_templates(
-        [cookiecutter_one_modified_template], project_root=GENERATED_FILES_DIR
+        [cookiecutter_one_modified_template], project_root=GENERATED_REPO_DIR
     )
     updater.update(repo, template_updates, no_input=True)
     main_branch: Head = repo.branches["master"]  # type: ignore
@@ -63,10 +63,10 @@ def test_update_modify_template(
         repo.commit().message
         == "Update flexlate templates\n\none: 7e18a6cc14856c8558ac999efa01e5e8\n"
     )
-    assert cookiecutter_one_generated_text_content() == " and extra"
+    assert cookiecutter_one_generated_text_content(gen_dir=GENERATED_REPO_DIR) == " and extra"
     template_branch.checkout()
     assert repo.active_branch == template_branch
-    assert cookiecutter_one_generated_text_content() == " and extra"
+    assert cookiecutter_one_generated_text_content(gen_dir=GENERATED_REPO_DIR) == " and extra"
 
 
 def test_update_modify_template_conflict(

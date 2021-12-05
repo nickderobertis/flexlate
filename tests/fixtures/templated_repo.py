@@ -4,7 +4,7 @@ from git import Repo
 from flexlate.adder import Adder
 from flexlate.template.cookiecutter import CookiecutterTemplate
 from flexlate.update.main import Updater
-from tests.config import GENERATED_FILES_DIR
+from tests.config import GENERATED_REPO_DIR
 from tests.fileutils import preprend_cookiecutter_one_generated_text
 
 from tests.fixtures.git import *
@@ -21,7 +21,7 @@ def repo_with_cookiecutter_one_template_source(
     adder.add_template_source(
         repo,
         cookiecutter_one_template,
-        out_root=GENERATED_FILES_DIR,
+        out_root=GENERATED_REPO_DIR,
     )
     yield repo
 
@@ -36,7 +36,7 @@ def repo_with_remote_cookiecutter_template_source(
     adder.add_template_source(
         repo,
         cookiecutter_remote_template,
-        out_root=GENERATED_FILES_DIR,
+        out_root=GENERATED_REPO_DIR,
     )
     yield repo
 
@@ -49,7 +49,7 @@ def repo_with_template_branch_from_cookiecutter_one(
     repo = repo_with_cookiecutter_one_template_source
     adder = Adder()
     adder.apply_template_and_add(
-        repo, cookiecutter_one_template, out_root=GENERATED_FILES_DIR, no_input=True
+        repo, cookiecutter_one_template, out_root=GENERATED_REPO_DIR, no_input=True
     )
     yield repo
 

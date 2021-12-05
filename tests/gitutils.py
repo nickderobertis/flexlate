@@ -1,11 +1,11 @@
 from pathlib import Path
 
-from git import Repo, Git
+from git import Repo
 
-from tests.config import GENERATED_FILES_DIR
+from tests.config import GENERATED_REPO_DIR
 
 
-def create_empty_repo(out_dir: Path = GENERATED_FILES_DIR) -> Repo:
+def create_empty_repo(out_dir: Path = GENERATED_REPO_DIR) -> Repo:
     return Repo.init(out_dir)
 
 
