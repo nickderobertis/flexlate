@@ -147,12 +147,12 @@ def _add_operation_via_branches(
 def _add_template_commit_message(
     template: Template, out_root: Path, project_root: Path
 ) -> str:
-    relative_path = out_root.relative_to(project_root)
+    relative_path = out_root.absolute().relative_to(project_root)
     return f"Applied template {template.name} to {relative_path}"
 
 
 def _add_template_source_commit_message(
     template: Template, out_root: Path, project_root: Path
 ) -> str:
-    relative_path = out_root.relative_to(project_root)
+    relative_path = out_root.absolute().relative_to(project_root)
     return f"Added template source {template.name} to {relative_path}"
