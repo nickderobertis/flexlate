@@ -33,14 +33,9 @@ class ConfigManager:
 
     def load_specific_projects_config(self, path: Path = Path("."), user: bool = False):
         use_path: Optional[Path] = None
-        if user:
-            if path != Path("."):
-                raise CannotLoadConfigException(
-                    "cannot pass both path and user=True to load_project_config"
-                )
-            # Let py-app-conf figure out the path for user config
-        else:
+        if not user:
             use_path = path / FlexlateProjectConfig._settings.config_file_name
+        # else, let py-app-conf figure out the path for user config
         return FlexlateProjectConfig.load_or_create(use_path)
 
     def load_projects_config(self, path: Path = Path(".")) -> FlexlateProjectConfig:
@@ -201,6 +196,7 @@ class ConfigManager:
         config_path: Path,
         data: Optional[TemplateData] = None,
         project_root: Path = Path("."),
+        out_root: Path = Path("."),
     ):
         config = self.load_config(project_root=project_root)
         child_config = _get_or_create_child_config_by_path(config, config_path)
@@ -208,7 +204,7 @@ class ConfigManager:
             name=template.name,
             data=data or {},
             version=template.version,
-            root=config_path.parent,
+            root=out_root,
         )
         child_config.applied_templates.append(applied)
         self.save_config(config)

@@ -4,7 +4,7 @@ from flexlate.adder import Adder
 from flexlate.config import FlexlateConfig, FlexlateProjectConfig
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.template.types import TemplateType
-from tests.config import GENERATED_FILES_DIR
+from tests.config import GENERATED_FILES_DIR, GENERATED_REPO_DIR
 from tests.fixtures.git import *
 from tests.fixtures.template import *
 from tests.fixtures.templated_repo import *
@@ -19,10 +19,10 @@ def test_add_template_source_to_repo(
     adder.add_template_source(
         repo,
         cookiecutter_one_template,
-        out_root=GENERATED_FILES_DIR,
+        out_root=GENERATED_REPO_DIR,
         target_version="some version",
     )
-    config_path = GENERATED_FILES_DIR / "flexlate.json"
+    config_path = GENERATED_REPO_DIR / "flexlate.json"
     config = FlexlateConfig.load(config_path)
     assert len(config.applied_templates) == 0
     assert len(config.template_sources) == 1
@@ -42,10 +42,10 @@ def test_add_local_cookiecutter_applied_template_to_repo(
     template = cookiecutter_one_template
     adder = Adder()
     adder.apply_template_and_add(
-        repo, template, out_root=GENERATED_FILES_DIR, no_input=True
+        repo, template, out_root=GENERATED_REPO_DIR, no_input=True
     )
 
-    config_path = GENERATED_FILES_DIR / "flexlate.json"
+    config_path = GENERATED_REPO_DIR / "flexlate.json"
     config = FlexlateConfig.load(config_path)
     assert len(config.applied_templates) == 1
     assert len(config.template_sources) == 1
@@ -53,7 +53,7 @@ def test_add_local_cookiecutter_applied_template_to_repo(
     assert at.name == template.name
     assert at.version == template.version
     assert at.data == {"a": "b", "c": ""}
-    assert at.root == GENERATED_FILES_DIR
+    assert at.root == GENERATED_REPO_DIR
 
 
 def test_add_remote_cookiecutter_applied_template_to_repo(
@@ -64,10 +64,10 @@ def test_add_remote_cookiecutter_applied_template_to_repo(
     template = cookiecutter_remote_template
     adder = Adder()
     adder.apply_template_and_add(
-        repo, template, out_root=GENERATED_FILES_DIR, no_input=True
+        repo, template, out_root=GENERATED_REPO_DIR, no_input=True
     )
 
-    config_path = GENERATED_FILES_DIR / "flexlate.json"
+    config_path = GENERATED_REPO_DIR / "flexlate.json"
     config = FlexlateConfig.load(config_path)
     assert len(config.applied_templates) == 1
     assert len(config.template_sources) == 1
@@ -75,7 +75,7 @@ def test_add_remote_cookiecutter_applied_template_to_repo(
     assert at.name == template.name
     assert at.version == template.version
     assert at.data == {"name": "abc", "key": "value"}
-    assert at.root == GENERATED_FILES_DIR
+    assert at.root == GENERATED_REPO_DIR
 
 
 # TODO: tests for different add modes, different out roots
@@ -96,7 +96,7 @@ def test_add_project_config_with_git(repo_with_placeholder_committed: Repo):
         branch: Head = repo.branches[branch_name]  # type: ignore
         branch.checkout()
         config = FlexlateProjectConfig.load(
-            GENERATED_FILES_DIR / "flexlate-project.json"
+            GENERATED_REPO_DIR / "flexlate-project.json"
         )
         assert len(config.projects) == 1
         project = config.projects[0]

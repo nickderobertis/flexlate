@@ -34,7 +34,7 @@ TEMPLATE_ROOT_OPTION = typer.Option(
     show_default=False,
 )
 ADD_MODE_OPTION = typer.Option(
-    AddMode.LOCAL,
+    None,
     "--add-mode",
     "-a",
     help=ADD_MODE_DOC,
@@ -61,14 +61,7 @@ def add_source(
         show_default=False,
     ),
     template_root: Path = TEMPLATE_ROOT_OPTION,
-    add_mode: AddMode = typer.Option(
-        AddMode.LOCAL,
-        "--add-mode",
-        "-a",
-        help=ADD_MODE_DOC,
-        case_sensitive=False,
-        show_choices=True,
-    ),
+    add_mode: Optional[AddMode] = ADD_MODE_OPTION,
 ):
     """
     Adds a new template source, so that files can be generated from it
@@ -89,7 +82,7 @@ def generate_applied_template(
         help="The name of the template. It must match a name in template sources",
     ),
     template_root: Path = TEMPLATE_ROOT_OPTION,
-    add_mode: AddMode = ADD_MODE_OPTION,
+    add_mode: Optional[AddMode] = ADD_MODE_OPTION,
     no_input: bool = NO_INPUT_OPTION,
 ):
     """
@@ -106,7 +99,14 @@ cli.add_typer(add_cli, name="add")
 @cli.command(name="init")
 def init_project(
     path: Path = typer.Argument(Path("."), help=PROJECT_PATH_DOC),
-    default_add_mode: AddMode = ADD_MODE_OPTION,
+    default_add_mode: AddMode = typer.Option(
+        AddMode.LOCAL,
+        "--add-mode",
+        "-a",
+        help=ADD_MODE_DOC,
+        case_sensitive=False,
+        show_choices=True,
+    ),
     merged_branch_name: str = typer.Option(
         DEFAULT_MERGED_BRANCH_NAME,
         help="The name of the branch that flexlate creates to store the merges between template updates and the project",

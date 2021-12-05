@@ -39,6 +39,17 @@ class Adder:
 
         config_path = _determine_config_path(out_root, Path(repo.working_dir), add_mode)
 
+        if add_mode == AddMode.USER:
+            # No need to use git if adding for user
+            config_manager.add_template_source(
+                template,
+                config_path,
+                target_version=target_version,
+                project_root=Path(repo.working_dir),  # type: ignore
+            )
+            return
+
+        # Local or project config, add in git
         _add_operation_via_branches(
             lambda: config_manager.add_template_source(
                 template,
@@ -74,6 +85,9 @@ class Adder:
 
         project_root = Path(repo.working_dir)
         config_path = _determine_config_path(out_root, project_root, add_mode)
+        expanded_out_root = (
+            out_root.absolute() if add_mode == AddMode.USER else out_root
+        )
 
         template_update = TemplateUpdate(
             template=template,
@@ -84,15 +98,32 @@ class Adder:
             data=data,
         )
 
-        _add_operation_via_branches(
-            lambda: config_manager.add_applied_template(
-                template, config_path, data=data, project_root=project_root
-            ),
-            repo,
-            _add_template_commit_message(template, out_root, Path(repo.working_dir)),
-            merged_branch_name=merged_branch_name,
-            template_branch_name=template_branch_name,
-        )
+        if add_mode == AddMode.USER:
+            # No need to commit config changes for user
+            config_manager.add_applied_template(
+                template,
+                config_path,
+                data=data,
+                project_root=project_root,
+                out_root=expanded_out_root,
+            )
+        else:
+            # Commit changes for local and project
+            _add_operation_via_branches(
+                lambda: config_manager.add_applied_template(
+                    template,
+                    config_path,
+                    data=data,
+                    project_root=project_root,
+                    out_root=expanded_out_root,
+                ),
+                repo,
+                _add_template_commit_message(
+                    template, out_root, Path(repo.working_dir)
+                ),
+                merged_branch_name=merged_branch_name,
+                template_branch_name=template_branch_name,
+            )
 
         updater.update(
             repo,
@@ -119,6 +150,18 @@ class Adder:
 
         path = Path(repo.working_dir)
 
+        if user:
+            # Simply init the project for the user
+            config_manager.add_project(
+                path=path,
+                default_add_mode=default_add_mode,
+                user=user,
+                merged_branch_name=merged_branch_name,
+                template_branch_name=template_branch_name,
+            )
+            return
+
+        # Config resides in project, so add it via branches
         _add_operation_via_branches(
             lambda: config_manager.add_project(
                 path=path,

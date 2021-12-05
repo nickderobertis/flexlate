@@ -12,7 +12,7 @@ from tests.config import (
     GENERATED_FILES_DIR,
     PROJECT_CONFIGS_PROJECT_1_PATH,
     PROJECT_CONFIGS_PROJECT_1_SUBDIR, PROJECT_CONFIGS_PROJECT_2_PATH, PROJECT_CONFIGS_PROJECT_2_SUBDIR,
-    PROJECT_CONFIGS_DIR,
+    PROJECT_CONFIGS_DIR, GENERATED_REPO_DIR,
 )
 from tests.dirutils import wipe_generated_folder
 from tests.fixtures.config import generated_dir_with_configs
