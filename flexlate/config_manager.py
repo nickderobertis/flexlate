@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from typing import Sequence, List, Optional, Tuple, Set
 
@@ -25,8 +26,8 @@ from flexlate.update.template import TemplateUpdate, data_from_template_updates
 
 
 class ConfigManager:
-    def load_config(self, project_root: Path = Path(".")) -> FlexlateConfig:
-        return FlexlateConfig.from_dir_including_nested(project_root)
+    def load_config(self, project_root: Path = Path("."), adjust_applied_paths: bool = True) -> FlexlateConfig:
+        return FlexlateConfig.from_dir_including_nested(project_root, adjust_applied_paths=adjust_applied_paths)
 
     def save_config(self, config: FlexlateConfig):
         config.save()
@@ -157,7 +158,8 @@ class ConfigManager:
         updates: Sequence[TemplateUpdate],
         project_root: Path = Path("."),
     ):
-        config = self.load_config(project_root)
+        # Don't adjust applied paths, as we are not doing anything with them and writing them back
+        config = self.load_config(project_root, adjust_applied_paths=False)
         existing_data = self.get_data_for_updates(updates, project_root, config)
         template_data = data_from_template_updates(updates)
         all_data = merge_data(template_data, existing_data)

@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from typing import Optional, Callable
 
@@ -89,15 +90,6 @@ class Adder:
             out_root.absolute() if add_mode == AddMode.USER else out_root
         )
 
-        template_update = TemplateUpdate(
-            template=template,
-            config_location=config_path,
-            index=config_manager.get_num_applied_templates_in_child_config(
-                config_path, project_root=project_root
-            ),
-            data=data,
-        )
-
         if add_mode == AddMode.USER:
             # No need to commit config changes for user
             config_manager.add_applied_template(
@@ -108,15 +100,30 @@ class Adder:
                 out_root=expanded_out_root,
             )
         else:
+            # TODO: restructure the current path logic into _add_operation_via_branches
+            #  as it will also be needed for other operations.
             # Commit changes for local and project
-            _add_operation_via_branches(
-                lambda: config_manager.add_applied_template(
+            cwd = Path(os.getcwd())
+            absolute_out_root = out_root.absolute()
+            def make_dirs_add_applied_template():
+                # Need to ensure that both cwd and out root exist on the template branch
+                for p in [cwd, absolute_out_root]:
+                    if not p.exists():
+                        p.mkdir(parents=True)
+                # If cwd was deleted when switching branches, need to navigate back there
+                # or os.getcwd will throw a FileNotExistsError (which also breaks path.absolute())
+                os.chdir(cwd)
+
+                config_manager.add_applied_template(
                     template,
                     config_path,
                     data=data,
                     project_root=project_root,
                     out_root=expanded_out_root,
-                ),
+                )
+
+            _add_operation_via_branches(
+                make_dirs_add_applied_template,
                 repo,
                 _add_template_commit_message(
                     template, out_root, Path(repo.working_dir)
@@ -124,6 +131,19 @@ class Adder:
                 merged_branch_name=merged_branch_name,
                 template_branch_name=template_branch_name,
             )
+
+            # Folder may have been deleted again while switching branches, so
+            # need to set cwd again
+            os.chdir(cwd)
+
+        template_update = TemplateUpdate(
+            template=template,
+            config_location=config_path,
+            index=config_manager.get_num_applied_templates_in_child_config(
+                config_path, project_root=project_root
+            ) - 1,
+            data=data,
+        )
 
         updater.update(
             repo,

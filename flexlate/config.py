@@ -84,9 +84,13 @@ class FlexlateConfig(BaseConfig):
     )
 
     @classmethod
-    def from_dir_including_nested(cls, root: Path) -> "FlexlateConfig":
+    def from_dir_including_nested(
+        cls, root: Path, adjust_applied_paths: bool = True
+    ) -> "FlexlateConfig":
         file_name = cls._settings.config_file_name
-        configs = _load_nested_configs(root, file_name, root)
+        configs = _load_nested_configs(
+            root, file_name, root, adjust_applied_paths=adjust_applied_paths
+        )
         if not configs:
             # Fall back to user config if it exists
             if cls._settings.config_location.exists():
@@ -136,7 +140,7 @@ class FlexlateConfig(BaseConfig):
 
 
 def _load_nested_configs(
-    root: Path, file_name: str, orig_root: Path
+    root: Path, file_name: str, orig_root: Path, adjust_applied_paths: bool = True
 ) -> List["FlexlateConfig"]:
     configs: List["FlexlateConfig"] = []
     path = root / file_name
@@ -144,12 +148,20 @@ def _load_nested_configs(
         relative_path = root.relative_to(orig_root)
         config = FlexlateConfig.load(path)
         # Because we are combining configs, need to update the root for the applied templates
-        for applied_template in config.applied_templates:
-            applied_template.root = relative_path / applied_template.root
+        if adjust_applied_paths:
+            for applied_template in config.applied_templates:
+                applied_template.root = relative_path / applied_template.root
         configs.append(config)
     for folder_or_file in root.iterdir():
         if folder_or_file.is_dir():
-            configs.extend(_load_nested_configs(folder_or_file, file_name, orig_root))
+            configs.extend(
+                _load_nested_configs(
+                    folder_or_file,
+                    file_name,
+                    orig_root,
+                    adjust_applied_paths=adjust_applied_paths,
+                )
+            )
     return configs
 
 

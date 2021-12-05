@@ -46,9 +46,17 @@ class Updater:
         # Create it from the initial commit if it does not exist
         with checked_out_template_branch(repo, branch_name=template_branch_name):
             config_manager.update_templates(updates, project_root=out_path)
+            # TODO: Need to rework getting template/data and rendering
+            #  Currently there is no out path being passed in by template, they are all
+            #  just rendering at the project root. Need to pass along the out path, and
+            #  then adjust the multi-rendering algorithm to create subdirectories in
+            #  the temporary directories corresponding to the out path. As we will then
+            #  have three sets of items that go together, templates, data, and out paths,
+            #  it would make sense to make a combo class and return that instead
             templates, data = config_manager.get_templates_with_data(
                 project_root=out_path
             )
+            breakpoint()
             updated_data = renderer.render(
                 templates, data=data, out_path=out_path, no_input=no_input
             )
