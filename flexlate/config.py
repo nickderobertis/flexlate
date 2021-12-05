@@ -88,7 +88,9 @@ class FlexlateConfig(BaseConfig):
         file_name = cls._settings.config_file_name
         configs = _load_nested_configs(root, file_name, root)
         if not configs:
-            return FlexlateConfig.load_or_create(root / file_name)
+            # Fall back to user config if it exists
+            if cls._settings.config_location.exists():
+                configs = [cls.load()]
         return cls.from_multiple(configs)
 
     @classmethod

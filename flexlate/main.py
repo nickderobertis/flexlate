@@ -52,9 +52,10 @@ class Flexlate:
         name: Optional[str] = None,
         target_version: Optional[str] = None,
         template_root: Path = Path("."),
-        add_mode: AddMode = AddMode.LOCAL,
+        add_mode: Optional[AddMode] = None,
     ):
         project_config = self.config_manager.load_project_config(template_root)
+        add_mode = add_mode or project_config.default_add_mode
         template = self.finder.find(path, version=target_version)
         if name:
             template.name = name
@@ -75,10 +76,11 @@ class Flexlate:
         name: str,
         data: Optional[TemplateData] = None,
         out_root: Path = Path("."),
-        add_mode: AddMode = AddMode.LOCAL,
+        add_mode: Optional[AddMode] = None,
         no_input: bool = False,
     ):
         project_config = self.config_manager.load_project_config(out_root)
+        add_mode = add_mode or project_config.default_add_mode
         template = self.config_manager.get_template_by_name(
             name, project_root=project_config.path
         )

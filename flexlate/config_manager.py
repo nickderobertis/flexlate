@@ -196,6 +196,7 @@ class ConfigManager:
         config_path: Path,
         data: Optional[TemplateData] = None,
         project_root: Path = Path("."),
+        out_root: Path = Path("."),
     ):
         config = self.load_config(project_root=project_root)
         child_config = _get_or_create_child_config_by_path(config, config_path)
@@ -203,7 +204,7 @@ class ConfigManager:
             name=template.name,
             data=data or {},
             version=template.version,
-            root=config_path.parent,
+            root=out_root,
         )
         child_config.applied_templates.append(applied)
         self.save_config(config)
