@@ -12,8 +12,6 @@ def test_init_project_and_add_source_and_template(repo_with_placeholder_committe
     fxt = Flexlate()
     with change_directory_to(GENERATED_FILES_DIR):
         fxt.init_project()
-        # TODO: remove this after init project is git native
-        stage_and_commit_all(repo, "Init project")
         fxt.add_template_source(COOKIECUTTER_REMOTE_URL)
         fxt.apply_template_and_add("cookiecutter-simple-example", no_input=True)
     out_path = GENERATED_FILES_DIR / "abc" / "abc.txt"
