@@ -22,5 +22,6 @@ RUN mkdir cli-testing && \
 COPY . .
 RUN pipenv run python upload.py --build-only
 RUN pip install dist/flexlate*.whl
+RUN fxt --install-completion bash
 
 WORKDIR cli-testing
