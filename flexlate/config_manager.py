@@ -33,14 +33,9 @@ class ConfigManager:
 
     def load_specific_projects_config(self, path: Path = Path("."), user: bool = False):
         use_path: Optional[Path] = None
-        if user:
-            if path != Path("."):
-                raise CannotLoadConfigException(
-                    "cannot pass both path and user=True to load_project_config"
-                )
-            # Let py-app-conf figure out the path for user config
-        else:
+        if not user:
             use_path = path / FlexlateProjectConfig._settings.config_file_name
+        # else, let py-app-conf figure out the path for user config
         return FlexlateProjectConfig.load_or_create(use_path)
 
     def load_projects_config(self, path: Path = Path(".")) -> FlexlateProjectConfig:

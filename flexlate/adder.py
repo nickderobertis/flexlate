@@ -119,6 +119,18 @@ class Adder:
 
         path = Path(repo.working_dir)
 
+        if user:
+            # Simply init the project for the user
+            config_manager.add_project(
+                path=path,
+                default_add_mode=default_add_mode,
+                user=user,
+                merged_branch_name=merged_branch_name,
+                template_branch_name=template_branch_name,
+            )
+            return
+
+        # Config resides in project, so add it via branches
         _add_operation_via_branches(
             lambda: config_manager.add_project(
                 path=path,
