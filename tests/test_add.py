@@ -34,14 +34,15 @@ def test_add_template_source_to_repo(
     assert source.target_version == "some version"
 
 
-def test_add_applied_template_to_repo(
+def test_add_local_cookiecutter_applied_template_to_repo(
     repo_with_cookiecutter_one_template_source: Repo,
     cookiecutter_one_template: CookiecutterTemplate,
 ):
     repo = repo_with_cookiecutter_one_template_source
+    template = cookiecutter_one_template
     adder = Adder()
     adder.apply_template_and_add(
-        repo, cookiecutter_one_template, out_root=GENERATED_FILES_DIR, no_input=True
+        repo, template, out_root=GENERATED_FILES_DIR, no_input=True
     )
 
     config_path = GENERATED_FILES_DIR / "flexlate.json"
@@ -49,9 +50,31 @@ def test_add_applied_template_to_repo(
     assert len(config.applied_templates) == 1
     assert len(config.template_sources) == 1
     at = config.applied_templates[0]
-    assert at.name == cookiecutter_one_template.name
-    assert at.version == cookiecutter_one_template.version
+    assert at.name == template.name
+    assert at.version == template.version
     assert at.data == {"a": "b", "c": ""}
+    assert at.root == GENERATED_FILES_DIR
+
+
+def test_add_remote_cookiecutter_applied_template_to_repo(
+    repo_with_remote_cookiecutter_template_source: Repo,
+    cookiecutter_remote_template: CookiecutterTemplate,
+):
+    repo = repo_with_remote_cookiecutter_template_source
+    template = cookiecutter_remote_template
+    adder = Adder()
+    adder.apply_template_and_add(
+        repo, template, out_root=GENERATED_FILES_DIR, no_input=True
+    )
+
+    config_path = GENERATED_FILES_DIR / "flexlate.json"
+    config = FlexlateConfig.load(config_path)
+    assert len(config.applied_templates) == 1
+    assert len(config.template_sources) == 1
+    at = config.applied_templates[0]
+    assert at.name == template.name
+    assert at.version == template.version
+    assert at.data == {"name": "abc", "key": "value"}
     assert at.root == GENERATED_FILES_DIR
 
 

@@ -8,7 +8,11 @@ import pytest
 
 from flexlate.finder.specific.cookiecutter import CookiecutterFinder
 from flexlate.template.cookiecutter import CookiecutterTemplate
-from tests.config import COOKIECUTTER_ONE_DIR, COOKIECUTTER_TWO_DIR
+from tests.config import (
+    COOKIECUTTER_ONE_DIR,
+    COOKIECUTTER_TWO_DIR,
+    COOKIECUTTER_REMOTE_URL,
+)
 
 
 @pytest.fixture
@@ -23,8 +27,14 @@ def cookiecutter_two_template() -> CookiecutterTemplate:
     yield finder.find(COOKIECUTTER_TWO_DIR)
 
 
+@pytest.fixture()
+def cookiecutter_remote_template() -> CookiecutterTemplate:
+    finder = CookiecutterFinder()
+    yield finder.find(COOKIECUTTER_REMOTE_URL)
+
+
 @pytest.fixture
-def cookiecutter_templates(
+def cookiecutter_local_templates(
     cookiecutter_one_template: CookiecutterTemplate,
     cookiecutter_two_template: CookiecutterTemplate,
 ) -> List[CookiecutterTemplate]:
