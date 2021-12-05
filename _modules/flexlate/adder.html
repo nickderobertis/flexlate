@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.adder &mdash; flexlate 0.1.0 documentation</title>
+  <title>flexlate.adder &mdash; flexlate 0.1.1 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.1.0
+                0.1.1
               </div>
             
           
@@ -271,6 +271,35 @@
             <span class="n">no_input</span><span class="o">=</span><span class="n">no_input</span><span class="p">,</span>
             <span class="n">renderer</span><span class="o">=</span><span class="n">renderer</span><span class="p">,</span>
             <span class="n">config_manager</span><span class="o">=</span><span class="n">config_manager</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Adder.init_project_and_add_to_branches"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.adder.Adder.init_project_and_add_to_branches">[docs]</a>    <span class="k">def</span> <span class="nf">init_project_and_add_to_branches</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">repo</span><span class="p">:</span> <span class="n">Repo</span><span class="p">,</span>
+        <span class="n">default_add_mode</span><span class="p">:</span> <span class="n">AddMode</span> <span class="o">=</span> <span class="n">AddMode</span><span class="o">.</span><span class="n">LOCAL</span><span class="p">,</span>
+        <span class="n">merged_branch_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_MERGED_BRANCH_NAME</span><span class="p">,</span>
+        <span class="n">template_branch_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_TEMPLATE_BRANCH_NAME</span><span class="p">,</span>
+        <span class="n">user</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">config_manager</span><span class="p">:</span> <span class="n">ConfigManager</span> <span class="o">=</span> <span class="n">ConfigManager</span><span class="p">(),</span>
+    <span class="p">):</span>
+        <span class="n">assert_repo_is_in_clean_state</span><span class="p">(</span><span class="n">repo</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">repo</span><span class="o">.</span><span class="n">working_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;repo working dir should not be none&quot;</span><span class="p">)</span>
+
+        <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">repo</span><span class="o">.</span><span class="n">working_dir</span><span class="p">)</span>
+
+        <span class="n">_add_operation_via_branches</span><span class="p">(</span>
+            <span class="k">lambda</span><span class="p">:</span> <span class="n">config_manager</span><span class="o">.</span><span class="n">add_project</span><span class="p">(</span>
+                <span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">,</span>
+                <span class="n">default_add_mode</span><span class="o">=</span><span class="n">default_add_mode</span><span class="p">,</span>
+                <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span>
+                <span class="n">merged_branch_name</span><span class="o">=</span><span class="n">merged_branch_name</span><span class="p">,</span>
+                <span class="n">template_branch_name</span><span class="o">=</span><span class="n">template_branch_name</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">repo</span><span class="p">,</span>
+            <span class="s2">&quot;Initialized flexlate project&quot;</span><span class="p">,</span>
+            <span class="n">merged_branch_name</span><span class="o">=</span><span class="n">merged_branch_name</span><span class="p">,</span>
+            <span class="n">template_branch_name</span><span class="o">=</span><span class="n">template_branch_name</span><span class="p">,</span>
         <span class="p">)</span></div></div>
 
 
@@ -316,14 +345,14 @@
 <span class="k">def</span> <span class="nf">_add_template_commit_message</span><span class="p">(</span>
     <span class="n">template</span><span class="p">:</span> <span class="n">Template</span><span class="p">,</span> <span class="n">out_root</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="n">relative_path</span> <span class="o">=</span> <span class="n">out_root</span><span class="o">.</span><span class="n">relative_to</span><span class="p">(</span><span class="n">project_root</span><span class="p">)</span>
+    <span class="n">relative_path</span> <span class="o">=</span> <span class="n">out_root</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span><span class="o">.</span><span class="n">relative_to</span><span class="p">(</span><span class="n">project_root</span><span class="p">)</span>
     <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Applied template </span><span class="si">{</span><span class="n">template</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">relative_path</span><span class="si">}</span><span class="s2">&quot;</span>
 
 
 <span class="k">def</span> <span class="nf">_add_template_source_commit_message</span><span class="p">(</span>
     <span class="n">template</span><span class="p">:</span> <span class="n">Template</span><span class="p">,</span> <span class="n">out_root</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="n">relative_path</span> <span class="o">=</span> <span class="n">out_root</span><span class="o">.</span><span class="n">relative_to</span><span class="p">(</span><span class="n">project_root</span><span class="p">)</span>
+    <span class="n">relative_path</span> <span class="o">=</span> <span class="n">out_root</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span><span class="o">.</span><span class="n">relative_to</span><span class="p">(</span><span class="n">project_root</span><span class="p">)</span>
     <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Added template source </span><span class="si">{</span><span class="n">template</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">relative_path</span><span class="si">}</span><span class="s2">&quot;</span>
 </pre></div>
 

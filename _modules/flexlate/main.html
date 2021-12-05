@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.main &mdash; flexlate 0.1.0 documentation</title>
+  <title>flexlate.main &mdash; flexlate 0.1.1 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.1.0
+                0.1.1
               </div>
             
           
@@ -206,8 +206,9 @@
         <span class="n">template_branch_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_TEMPLATE_BRANCH_NAME</span><span class="p">,</span>
         <span class="n">user</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">config_manager</span><span class="o">.</span><span class="n">add_project</span><span class="p">(</span>
-            <span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">,</span>
+        <span class="n">repo</span> <span class="o">=</span> <span class="n">Repo</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">adder</span><span class="o">.</span><span class="n">init_project_and_add_to_branches</span><span class="p">(</span>
+            <span class="n">repo</span><span class="p">,</span>
             <span class="n">default_add_mode</span><span class="o">=</span><span class="n">default_add_mode</span><span class="p">,</span>
             <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span>
             <span class="n">merged_branch_name</span><span class="o">=</span><span class="n">merged_branch_name</span><span class="p">,</span>
