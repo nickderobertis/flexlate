@@ -1,0 +1,26 @@
+FROM python:3.9
+
+WORKDIR app
+
+RUN pip install pipenv
+
+COPY Pipfile .
+COPY Pipfile.lock .
+
+RUN pipenv sync
+
+# Set up a sample repo for cli testing
+RUN mkdir cli-testing && \
+     cd cli-testing && \
+     git init && \
+     git config user.email "flexlate-git@nickderobertis.com" && \
+     git config user.name "flexlate-git" && \
+     touch README.md && \
+     git add -A && \
+     git commit -m "Initial commit"
+
+COPY . .
+RUN pipenv run python upload.py --build-only
+RUN pip install dist/flexlate*.whl
+
+WORKDIR cli-testing
