@@ -89,8 +89,6 @@ def test_init_project_and_add_source_and_template_in_subdir(
         fxt.add_template_source(COOKIECUTTER_REMOTE_URL)
         subdir = GENERATED_REPO_DIR / "subdir"
         subdir.mkdir()
-        (subdir / "some file.txt").touch()
-        stage_and_commit_all(repo, "A commit to get a clean working tree")
         with change_directory_to(subdir):
             fxt.apply_template_and_add(COOKIECUTTER_REMOTE_NAME, no_input=True)
 
