@@ -28,11 +28,11 @@ class CookiecutterRenderer(SpecificTemplateRenderer[CookiecutterTemplate]):
 
         context = generate_context(
             context_file=context_file,
-            default_context=config_dict['default_context'],
+            default_context=config_dict["default_context"],
             extra_context=renderable.data,
         )
-        context['cookiecutter'] = prompt_for_config(context, no_input)
-        context['cookiecutter']['_template'] = template.path
+        context["cookiecutter"] = prompt_for_config(context, no_input)
+        context["cookiecutter"]["_template"] = template.path
 
         generate_files(
             repo_dir=str(template.path),

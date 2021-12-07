@@ -125,7 +125,8 @@ class Adder:
             config_location=config_path,
             index=config_manager.get_num_applied_templates_in_child_config(
                 config_path, project_root=project_root
-            ) - 1,
+            )
+            - 1,
             data=data,
         )
 
@@ -207,7 +208,9 @@ def _add_operation_via_branches(
     cwd = os.getcwd()
     current_branch = repo.active_branch
 
-    make_dirs_add_operation = make_func_that_creates_cwd_and_out_root_before_running(out_root, add_operation)
+    make_dirs_add_operation = make_func_that_creates_cwd_and_out_root_before_running(
+        out_root, add_operation
+    )
 
     # Update the template only branch with the new template
     with checked_out_template_branch(repo, branch_name=template_branch_name):

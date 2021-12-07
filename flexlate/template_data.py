@@ -3,7 +3,9 @@ from typing import Dict, Any, Sequence, List
 TemplateData = Dict[str, Any]
 
 
-def merge_data(overrides: Sequence[TemplateData], defaults: Sequence[TemplateData]) -> List[TemplateData]:
+def merge_data(
+    overrides: Sequence[TemplateData], defaults: Sequence[TemplateData]
+) -> List[TemplateData]:
     out_data: List[TemplateData] = []
     for i, default_data in enumerate(defaults):
         try:
