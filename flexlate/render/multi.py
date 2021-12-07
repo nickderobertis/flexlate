@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Sequence, Optional, List, Dict
 
 from flexlate.exc import InvalidTemplateClassException, RendererNotFoundException
+from flexlate.render.renderable import Renderable
 from flexlate.render.specific.base import SpecificTemplateRenderer
 from flexlate.render.specific.cookiecutter import CookiecutterRenderer
 from flexlate.template.base import Template
@@ -20,29 +21,30 @@ class MultiRenderer:
 
     def render(
         self,
-        templates: Sequence[Template],
-        data: Optional[Sequence[TemplateData]] = None,
-        out_path: Path = Path("."),
+        renderables: Sequence[Renderable],
+        project_root: Path = Path("."),
         no_input: bool = False,
     ) -> List[TemplateData]:
-        data = data or []
         out_data: List[TemplateData] = []
         with tempfile.TemporaryDirectory() as d:
             temp_root = Path(d)
             temp_folders: List[Path] = []
-            for i, template in enumerate(templates):
+            for i, renderable in enumerate(renderables):
+                template = renderable.template
                 renderer = _get_specific_renderer(template)
                 temp_folder = temp_root / f"{i + 1}-{template.name}"
                 temp_folders.append(temp_folder)
-                try:
-                    in_data = data[i]
-                except IndexError:
-                    in_data = {}
+                if renderable.out_root.is_absolute():
+                    relative_root = renderable.out_root.relative_to(project_root.absolute())
+                else:
+                    relative_root = renderable.out_root
+                new_root = temp_folder / relative_root
+                temp_renderable = renderable.copy(update=dict(out_root = new_root))
                 template_data = renderer.render(
-                    template, data=in_data, out_path=temp_folder, no_input=no_input
+                    temp_renderable, no_input=no_input
                 )
                 out_data.append(template_data)
-            _merge_file_trees(temp_folders, out_path)
+            _merge_file_trees(temp_folders, project_root)
         return out_data
 
 

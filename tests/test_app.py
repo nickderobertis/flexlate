@@ -87,11 +87,8 @@ def test_init_project_and_add_source_and_template_in_subdir(
         stage_and_commit_all(repo, "A commit to get a clean working tree")
         with change_directory_to(subdir):
             fxt.apply_template_and_add(COOKIECUTTER_REMOTE_NAME, no_input=True)
-            breakpoint()
 
-    # TODO: it is putting the generated files in the wrong spot
-    #  See the comment in update.main for required changes
-    _assert_project_files_are_correct()
+    _assert_project_files_are_correct(GENERATED_REPO_DIR / "subdir")
     _assert_template_sources_config_is_correct(GENERATED_REPO_DIR / "flexlate.json")
     _assert_applied_templates_config_is_correct(GENERATED_REPO_DIR / "subdir" / "flexlate.json")
 
@@ -99,8 +96,8 @@ def test_init_project_and_add_source_and_template_in_subdir(
     _assert_project_config_is_correct(project_config_path, user=False)
 
 
-def _assert_project_files_are_correct():
-    out_path = GENERATED_REPO_DIR / "abc" / "abc.txt"
+def _assert_project_files_are_correct(root: Path = GENERATED_REPO_DIR):
+    out_path = root / "abc" / "abc.txt"
     assert out_path.exists()
     content = out_path.read_text()
     assert content == "some new header\nvalue"

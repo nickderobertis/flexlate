@@ -73,7 +73,7 @@ def test_update_and_save_multi_config(
     assert len(config_2.applied_templates) == 2
     assert_is_original_template_two(config_2.applied_templates[0])
     assert_is_updated_template_one(config_2.applied_templates[1])
-    assert config_2.applied_templates[1].root == Path("subdir2/subdir2_2")
+    assert config_2.applied_templates[1].root == Path("subdir2_2")
 
 
 @pytest.mark.parametrize("add_mode", [AddMode.LOCAL, AddMode.PROJECT, AddMode.USER])
