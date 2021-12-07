@@ -2,6 +2,7 @@ import abc
 from pathlib import Path
 from typing import Optional, TypeVar, Type, Protocol
 
+from flexlate.render.renderable import Renderable
 from flexlate.template.base import Template
 from flexlate.template.types import TemplateType
 from flexlate.template_data import TemplateData
@@ -16,9 +17,7 @@ class SpecificTemplateRenderer(Protocol[T]):
 
     def render(
         self,
-        template: T,
-        data: Optional[TemplateData] = None,
-        out_path: Path = Path("."),
+        renderable: Renderable[T],
         no_input: bool = False,
     ) -> TemplateData:
         ...

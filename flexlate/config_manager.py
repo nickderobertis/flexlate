@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from typing import Sequence, List, Optional, Tuple, Set
 
@@ -19,14 +20,19 @@ from flexlate.exc import (
     CannotLoadConfigException,
     FlexlateProjectConfigFileNotExistsException,
 )
+from flexlate.render.renderable import Renderable
 from flexlate.template.base import Template
 from flexlate.template_data import TemplateData, merge_data
 from flexlate.update.template import TemplateUpdate, data_from_template_updates
 
 
 class ConfigManager:
-    def load_config(self, project_root: Path = Path(".")) -> FlexlateConfig:
-        return FlexlateConfig.from_dir_including_nested(project_root)
+    def load_config(
+        self, project_root: Path = Path("."), adjust_applied_paths: bool = True
+    ) -> FlexlateConfig:
+        return FlexlateConfig.from_dir_including_nested(
+            project_root, adjust_applied_paths=adjust_applied_paths
+        )
 
     def save_config(self, config: FlexlateConfig):
         config.save()
@@ -102,19 +108,22 @@ class ConfigManager:
             )
         return applied_template_with_sources
 
-    def get_templates_with_data(
+    def get_renderables(
         self, project_root: Path = Path("."), config: Optional[FlexlateConfig] = None
-    ) -> Tuple[List[Template], List[TemplateData]]:
+    ) -> List[Renderable]:
         config = config or self.load_config(project_root)
-        templates: List[Template] = []
-        all_data: List[TemplateData] = []
+        renderables: List[Renderable] = []
         for applied_with_source in self.get_applied_templates_with_sources(
             project_root=project_root, config=config
         ):
             template, data = applied_with_source.to_template_and_data()
-            templates.append(template)
-            all_data.append(data)
-        return templates, all_data
+            renderable: Renderable[Template] = Renderable(
+                template=template,
+                data=data,
+                out_root=applied_with_source.applied_template.root,
+            )
+            renderables.append(renderable)
+        return renderables
 
     def get_data_for_updates(
         self,
@@ -157,7 +166,8 @@ class ConfigManager:
         updates: Sequence[TemplateUpdate],
         project_root: Path = Path("."),
     ):
-        config = self.load_config(project_root)
+        # Don't adjust applied paths, as we are not doing anything with them and writing them back
+        config = self.load_config(project_root, adjust_applied_paths=False)
         existing_data = self.get_data_for_updates(updates, project_root, config)
         template_data = data_from_template_updates(updates)
         all_data = merge_data(template_data, existing_data)

@@ -8,6 +8,7 @@ from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRAN
 from flexlate.exc import GitRepoDirtyException
 from flexlate.finder.multi import MultiFinder
 from flexlate.render.multi import MultiRenderer
+from flexlate.render.renderable import Renderable
 from flexlate.template.base import Template
 from flexlate.ext_git import (
     delete_tracked_files,
@@ -15,7 +16,8 @@ from flexlate.ext_git import (
     merge_branch_into_current,
     checked_out_template_branch,
     checkout_template_branch,
-    repo_has_merge_conflicts, assert_repo_is_in_clean_state,
+    repo_has_merge_conflicts,
+    assert_repo_is_in_clean_state,
 )
 from flexlate.template_data import TemplateData, merge_data
 from flexlate.update.template import (
@@ -46,15 +48,13 @@ class Updater:
         # Create it from the initial commit if it does not exist
         with checked_out_template_branch(repo, branch_name=template_branch_name):
             config_manager.update_templates(updates, project_root=out_path)
-            templates, data = config_manager.get_templates_with_data(
-                project_root=out_path
-            )
+            renderables = config_manager.get_renderables(project_root=out_path)
             updated_data = renderer.render(
-                templates, data=data, out_path=out_path, no_input=no_input
+                renderables, project_root=out_path, no_input=no_input
             )
             new_updates = updates_with_updated_data(updates, updated_data)
             config_manager.update_templates(new_updates, project_root=out_path)
-            stage_and_commit_all(repo, _commit_message(templates))
+            stage_and_commit_all(repo, _commit_message(renderables))
 
         # Now prepare the merged (output) branch, by merging the current
         # branch into it and then the template branch into it.
@@ -120,8 +120,9 @@ class Updater:
                 template.version = new_template.version
 
 
-def _commit_message(templates: Sequence[Template]) -> str:
+def _commit_message(renderables: Sequence[Renderable]) -> str:
     message = "Update flexlate templates\n\n"
-    for template in templates:
+    for renderable in renderables:
+        template = renderable.template
         message += f"{template.name}: {template.version}\n"
     return message
