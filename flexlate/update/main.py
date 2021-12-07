@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from typing import Sequence, Optional, List, Dict, Any
 
@@ -7,6 +8,7 @@ from flexlate.config_manager import ConfigManager
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.exc import GitRepoDirtyException
 from flexlate.finder.multi import MultiFinder
+from flexlate.path_ops import make_all_dirs
 from flexlate.render.multi import MultiRenderer
 from flexlate.render.renderable import Renderable
 from flexlate.template.base import Template
@@ -46,9 +48,13 @@ class Updater:
 
         # Prepare the template branch, this is the branch that stores only the template files
         # Create it from the initial commit if it does not exist
+        cwd = Path(os.getcwd())
         with checked_out_template_branch(repo, branch_name=template_branch_name):
             config_manager.update_templates(updates, project_root=out_path)
             renderables = config_manager.get_renderables(project_root=out_path)
+            _create_cwd_and_directories_if_needed(
+                cwd, [renderable.out_root for renderable in renderables]
+            )
             updated_data = renderer.render(
                 renderables, project_root=out_path, no_input=no_input
             )
@@ -126,3 +132,13 @@ def _commit_message(renderables: Sequence[Renderable]) -> str:
         template = renderable.template
         message += f"{template.name}: {template.version}\n"
     return message
+
+
+def _create_cwd_and_directories_if_needed(cwd: Path, directories: Sequence[Path]):
+    make_all_dirs([cwd])
+
+    # Folder may have been deleted again while switching branches, so
+    # need to set cwd again
+    os.chdir(cwd)
+
+    make_all_dirs(directories)
