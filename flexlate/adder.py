@@ -15,6 +15,7 @@ from flexlate.ext_git import (
     merge_branch_into_current,
     assert_repo_is_in_clean_state,
 )
+from flexlate.path_ops import make_func_that_creates_cwd_and_out_root_before_running
 from flexlate.render.multi import MultiRenderer
 from flexlate.template.base import Template
 from flexlate.template_data import TemplateData
@@ -62,6 +63,7 @@ class Adder:
             _add_template_source_commit_message(
                 template, out_root, Path(repo.working_dir)
             ),
+            out_root,
             merged_branch_name=merged_branch_name,
             template_branch_name=template_branch_name,
         )
@@ -100,41 +102,23 @@ class Adder:
                 out_root=expanded_out_root,
             )
         else:
-            # TODO: restructure the current path logic into _add_operation_via_branches
-            #  as it will also be needed for other operations.
             # Commit changes for local and project
-            cwd = Path(os.getcwd())
-            absolute_out_root = out_root.absolute()
-            def make_dirs_add_applied_template():
-                # Need to ensure that both cwd and out root exist on the template branch
-                for p in [cwd, absolute_out_root]:
-                    if not p.exists():
-                        p.mkdir(parents=True)
-                # If cwd was deleted when switching branches, need to navigate back there
-                # or os.getcwd will throw a FileNotExistsError (which also breaks path.absolute())
-                os.chdir(cwd)
-
-                config_manager.add_applied_template(
+            _add_operation_via_branches(
+                lambda: config_manager.add_applied_template(
                     template,
                     config_path,
                     data=data,
                     project_root=project_root,
                     out_root=expanded_out_root,
-                )
-
-            _add_operation_via_branches(
-                make_dirs_add_applied_template,
+                ),
                 repo,
                 _add_template_commit_message(
                     template, out_root, Path(repo.working_dir)
                 ),
+                out_root,
                 merged_branch_name=merged_branch_name,
                 template_branch_name=template_branch_name,
             )
-
-            # Folder may have been deleted again while switching branches, so
-            # need to set cwd again
-            os.chdir(cwd)
 
         template_update = TemplateUpdate(
             template=template,
@@ -192,6 +176,7 @@ class Adder:
             ),
             repo,
             "Initialized flexlate project",
+            path,
             merged_branch_name=merged_branch_name,
             template_branch_name=template_branch_name,
         )
@@ -215,14 +200,18 @@ def _add_operation_via_branches(
     add_operation: Callable[[], None],
     repo: Repo,
     commit_message: str,
+    out_root: Path,
     merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
     template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
 ):
+    cwd = os.getcwd()
     current_branch = repo.active_branch
+
+    make_dirs_add_operation = make_func_that_creates_cwd_and_out_root_before_running(out_root, add_operation)
 
     # Update the template only branch with the new template
     with checked_out_template_branch(repo, branch_name=template_branch_name):
-        add_operation()
+        make_dirs_add_operation()
         stage_and_commit_all(repo, commit_message)
 
     # Bring the change into the merged branch
@@ -234,6 +223,10 @@ def _add_operation_via_branches(
 
     # Merge back into current branch
     merge_branch_into_current(repo, merged_branch_name)
+
+    # Folder may have been deleted again while switching branches, so
+    # need to set cwd again
+    os.chdir(cwd)
 
 
 def _add_template_commit_message(
