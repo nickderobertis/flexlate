@@ -4,7 +4,7 @@ from typing import Optional, Callable
 
 from git import Repo
 
-from flexlate.add_mode import AddMode
+from flexlate.add_mode import AddMode, get_expanded_out_root
 from flexlate.config import FlexlateConfig
 from flexlate.config_manager import ConfigManager
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
@@ -88,9 +88,7 @@ class Adder:
 
         project_root = Path(repo.working_dir)
         config_path = _determine_config_path(out_root, project_root, add_mode)
-        expanded_out_root = (
-            out_root.absolute() if add_mode == AddMode.USER else out_root
-        )
+        expanded_out_root = get_expanded_out_root(out_root, project_root, add_mode)
 
         if add_mode == AddMode.USER:
             # No need to commit config changes for user
