@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.render.multi &mdash; flexlate 0.1.1 documentation</title>
+  <title>flexlate.render.multi &mdash; flexlate 0.1.2 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.1.1
+                0.1.2
               </div>
             
           
@@ -174,6 +174,7 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span>
 
 <span class="kn">from</span> <span class="nn">flexlate.exc</span> <span class="kn">import</span> <span class="n">InvalidTemplateClassException</span><span class="p">,</span> <span class="n">RendererNotFoundException</span>
+<span class="kn">from</span> <span class="nn">flexlate.render.renderable</span> <span class="kn">import</span> <span class="n">Renderable</span>
 <span class="kn">from</span> <span class="nn">flexlate.render.specific.base</span> <span class="kn">import</span> <span class="n">SpecificTemplateRenderer</span>
 <span class="kn">from</span> <span class="nn">flexlate.render.specific.cookiecutter</span> <span class="kn">import</span> <span class="n">CookiecutterRenderer</span>
 <span class="kn">from</span> <span class="nn">flexlate.template.base</span> <span class="kn">import</span> <span class="n">Template</span>
@@ -189,29 +190,30 @@
 
 <div class="viewcode-block" id="MultiRenderer.render"><a class="viewcode-back" href="../../../api/flexlate.render.html#flexlate.render.multi.MultiRenderer.render">[docs]</a>    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">templates</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Template</span><span class="p">],</span>
-        <span class="n">data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="n">TemplateData</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">out_path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
+        <span class="n">renderables</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Renderable</span><span class="p">],</span>
+        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
         <span class="n">no_input</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">TemplateData</span><span class="p">]:</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span> <span class="ow">or</span> <span class="p">[]</span>
         <span class="n">out_data</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">TemplateData</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">d</span><span class="p">:</span>
             <span class="n">temp_root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
             <span class="n">temp_folders</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">template</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">templates</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">renderable</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">renderables</span><span class="p">):</span>
+                <span class="n">template</span> <span class="o">=</span> <span class="n">renderable</span><span class="o">.</span><span class="n">template</span>
                 <span class="n">renderer</span> <span class="o">=</span> <span class="n">_get_specific_renderer</span><span class="p">(</span><span class="n">template</span><span class="p">)</span>
                 <span class="n">temp_folder</span> <span class="o">=</span> <span class="n">temp_root</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">template</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
                 <span class="n">temp_folders</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">temp_folder</span><span class="p">)</span>
-                <span class="k">try</span><span class="p">:</span>
-                    <span class="n">in_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-                <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
-                    <span class="n">in_data</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="k">if</span> <span class="n">renderable</span><span class="o">.</span><span class="n">out_root</span><span class="o">.</span><span class="n">is_absolute</span><span class="p">():</span>
+                    <span class="n">relative_root</span> <span class="o">=</span> <span class="n">renderable</span><span class="o">.</span><span class="n">out_root</span><span class="o">.</span><span class="n">relative_to</span><span class="p">(</span><span class="n">project_root</span><span class="o">.</span><span class="n">absolute</span><span class="p">())</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">relative_root</span> <span class="o">=</span> <span class="n">renderable</span><span class="o">.</span><span class="n">out_root</span>
+                <span class="n">new_root</span> <span class="o">=</span> <span class="n">temp_folder</span> <span class="o">/</span> <span class="n">relative_root</span>
+                <span class="n">temp_renderable</span> <span class="o">=</span> <span class="n">renderable</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">out_root</span> <span class="o">=</span> <span class="n">new_root</span><span class="p">))</span>
                 <span class="n">template_data</span> <span class="o">=</span> <span class="n">renderer</span><span class="o">.</span><span class="n">render</span><span class="p">(</span>
-                    <span class="n">template</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">in_data</span><span class="p">,</span> <span class="n">out_path</span><span class="o">=</span><span class="n">temp_folder</span><span class="p">,</span> <span class="n">no_input</span><span class="o">=</span><span class="n">no_input</span>
+                    <span class="n">temp_renderable</span><span class="p">,</span> <span class="n">no_input</span><span class="o">=</span><span class="n">no_input</span>
                 <span class="p">)</span>
                 <span class="n">out_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">template_data</span><span class="p">)</span>
-            <span class="n">_merge_file_trees</span><span class="p">(</span><span class="n">temp_folders</span><span class="p">,</span> <span class="n">out_path</span><span class="p">)</span>
+            <span class="n">_merge_file_trees</span><span class="p">(</span><span class="n">temp_folders</span><span class="p">,</span> <span class="n">project_root</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">out_data</span></div></div>
 
 

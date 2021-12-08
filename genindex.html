@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Index &mdash; flexlate 0.1.1 documentation</title>
+  <title>Index &mdash; flexlate 0.1.2 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.1.1
+                0.1.2
               </div>
             
           
@@ -182,6 +182,7 @@
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
  | <a href="#N"><strong>N</strong></a>
+ | <a href="#O"><strong>O</strong></a>
  | <a href="#P"><strong>P</strong></a>
  | <a href="#R"><strong>R</strong></a>
  | <a href="#S"><strong>S</strong></a>
@@ -229,10 +230,10 @@
 </li>
       <li><a href="api/flexlate.html#flexlate.add_mode.AddMode">AddMode (class in flexlate.add_mode)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/flexlate.html#flexlate.config.AppliedTemplateWithSource.applied_template">applied_template (flexlate.config.AppliedTemplateWithSource attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/flexlate.html#flexlate.config.FlexlateConfig.applied_templates">applied_templates (flexlate.config.FlexlateConfig attribute)</a>
 </li>
       <li><a href="api/flexlate.html#flexlate.config.AppliedTemplateConfig">AppliedTemplateConfig (class in flexlate.config)</a>
@@ -245,8 +246,12 @@
         <li><a href="api/flexlate.html#flexlate.main.Flexlate.apply_template_and_add">(flexlate.main.Flexlate method)</a>
 </li>
       </ul></li>
-      <li><a href="api/flexlate.update.html#flexlate.update.template.TemplateUpdate.Config.arbitrary_types_allowed">arbitrary_types_allowed (flexlate.update.template.TemplateUpdate.Config attribute)</a>
+      <li><a href="api/flexlate.render.html#flexlate.render.renderable.Renderable.Config.arbitrary_types_allowed">arbitrary_types_allowed (flexlate.render.renderable.Renderable.Config attribute)</a>
+
+      <ul>
+        <li><a href="api/flexlate.update.html#flexlate.update.template.TemplateUpdate.Config.arbitrary_types_allowed">(flexlate.update.template.TemplateUpdate.Config attribute)</a>
 </li>
+      </ul></li>
       <li><a href="api/flexlate.html#flexlate.ext_git.assert_repo_is_in_clean_state">assert_repo_is_in_clean_state() (in module flexlate.ext_git)</a>
 </li>
   </ul></td>
@@ -296,13 +301,15 @@
       <li><a href="api/flexlate.html#flexlate.config.AppliedTemplateConfig.data">data (flexlate.config.AppliedTemplateConfig attribute)</a>
 
       <ul>
+        <li><a href="api/flexlate.render.html#flexlate.render.renderable.Renderable.data">(flexlate.render.renderable.Renderable attribute)</a>
+</li>
         <li><a href="api/flexlate.update.html#flexlate.update.template.TemplateUpdate.data">(flexlate.update.template.TemplateUpdate attribute)</a>
 </li>
       </ul></li>
-      <li><a href="api/flexlate.update.html#flexlate.update.template.data_from_template_updates">data_from_template_updates() (in module flexlate.update.template)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/flexlate.update.html#flexlate.update.template.data_from_template_updates">data_from_template_updates() (in module flexlate.update.template)</a>
+</li>
       <li><a href="api/flexlate.html#flexlate.config.ProjectConfig.default_add_mode">default_add_mode (flexlate.config.ProjectConfig attribute)</a>
 </li>
       <li><a href="api/flexlate.template.html#flexlate.template.base.Template.default_name">default_name (flexlate.template.base.Template property)</a>
@@ -457,6 +464,13 @@
 
       <ul>
         <li><a href="api/flexlate.render.html#module-flexlate.render.multi">module</a>
+</li>
+      </ul></li>
+      <li>
+    flexlate.render.renderable
+
+      <ul>
+        <li><a href="api/flexlate.render.html#module-flexlate.render.renderable">module</a>
 </li>
       </ul></li>
       <li>
@@ -627,11 +641,11 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/flexlate.html#flexlate.config.FlexlateProjectConfig.get_project_for_path">get_project_for_path() (flexlate.config.FlexlateProjectConfig method)</a>
 </li>
+      <li><a href="api/flexlate.html#flexlate.config_manager.ConfigManager.get_renderables">get_renderables() (flexlate.config_manager.ConfigManager method)</a>
+</li>
       <li><a href="api/flexlate.html#flexlate.config_manager.ConfigManager.get_sources_for_templates">get_sources_for_templates() (flexlate.config_manager.ConfigManager method)</a>
 </li>
       <li><a href="api/flexlate.html#flexlate.config_manager.ConfigManager.get_template_by_name">get_template_by_name() (flexlate.config_manager.ConfigManager method)</a>
-</li>
-      <li><a href="api/flexlate.html#flexlate.config_manager.ConfigManager.get_templates_with_data">get_templates_with_data() (flexlate.config_manager.ConfigManager method)</a>
 </li>
       <li><a href="api/flexlate.update.html#flexlate.update.main.Updater.get_updates_for_templates">get_updates_for_templates() (flexlate.update.main.Updater method)</a>
 </li>
@@ -751,6 +765,8 @@
 </li>
         <li><a href="api/flexlate.render.html#module-flexlate.render.multi">flexlate.render.multi</a>
 </li>
+        <li><a href="api/flexlate.render.html#module-flexlate.render.renderable">flexlate.render.renderable</a>
+</li>
         <li><a href="api/flexlate.render.specific.html#module-flexlate.render.specific">flexlate.render.specific</a>
 </li>
         <li><a href="api/flexlate.render.specific.html#module-flexlate.render.specific.base">flexlate.render.specific.base</a>
@@ -805,6 +821,14 @@
   </ul></td>
 </tr></table>
 
+<h2 id="O">O</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/flexlate.render.html#flexlate.render.renderable.Renderable.out_root">out_root (flexlate.render.renderable.Renderable attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -836,8 +860,12 @@
         <li><a href="api/flexlate.render.specific.html#flexlate.render.specific.cookiecutter.CookiecutterRenderer.render">(flexlate.render.specific.cookiecutter.CookiecutterRenderer method)</a>
 </li>
       </ul></li>
+      <li><a href="api/flexlate.render.html#flexlate.render.renderable.Renderable">Renderable (class in flexlate.render.renderable)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/flexlate.render.html#flexlate.render.renderable.Renderable.Config">Renderable.Config (class in flexlate.render.renderable)</a>
+</li>
       <li><a href="api/flexlate.html#flexlate.exc.RendererNotFoundException">RendererNotFoundException</a>
 </li>
       <li><a href="api/flexlate.html#flexlate.ext_git.repo_has_merge_conflicts">repo_has_merge_conflicts() (in module flexlate.ext_git)</a>
@@ -874,8 +902,12 @@
 </li>
       <li><a href="api/flexlate.template.html#flexlate.template.base.Template">Template (class in flexlate.template.base)</a>
 </li>
-      <li><a href="api/flexlate.update.html#flexlate.update.template.TemplateUpdate.template">template (flexlate.update.template.TemplateUpdate attribute)</a>
+      <li><a href="api/flexlate.render.html#flexlate.render.renderable.Renderable.template">template (flexlate.render.renderable.Renderable attribute)</a>
+
+      <ul>
+        <li><a href="api/flexlate.update.html#flexlate.update.template.TemplateUpdate.template">(flexlate.update.template.TemplateUpdate attribute)</a>
 </li>
+      </ul></li>
       <li><a href="api/flexlate.html#flexlate.config.ProjectConfig.template_branch_name">template_branch_name (flexlate.config.ProjectConfig attribute)</a>
 </li>
       <li><a href="api/flexlate.html#flexlate.config.FlexlateConfig.template_name_must_be_unique">template_name_must_be_unique() (flexlate.config.FlexlateConfig class method)</a>
@@ -886,10 +918,10 @@
 </li>
       <li><a href="api/flexlate.template_config.html#flexlate.template_config.base.TemplateConfig">TemplateConfig (class in flexlate.template_config.base)</a>
 </li>
-      <li><a href="api/flexlate.finder.specific.html#flexlate.finder.specific.base.TemplateFinder">TemplateFinder (class in flexlate.finder.specific.base)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/flexlate.finder.specific.html#flexlate.finder.specific.base.TemplateFinder">TemplateFinder (class in flexlate.finder.specific.base)</a>
+</li>
       <li><a href="api/flexlate.html#flexlate.exc.TemplateLookupException">TemplateLookupException</a>
 </li>
       <li><a href="api/flexlate.html#flexlate.exc.TemplateNotRegisteredException">TemplateNotRegisteredException</a>

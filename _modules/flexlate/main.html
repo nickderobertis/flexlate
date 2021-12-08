@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.main &mdash; flexlate 0.1.1 documentation</title>
+  <title>flexlate.main &mdash; flexlate 0.1.2 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.1.1
+                0.1.2
               </div>
             
           
@@ -221,9 +221,10 @@
         <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">target_version</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">template_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
-        <span class="n">add_mode</span><span class="p">:</span> <span class="n">AddMode</span> <span class="o">=</span> <span class="n">AddMode</span><span class="o">.</span><span class="n">LOCAL</span><span class="p">,</span>
+        <span class="n">add_mode</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AddMode</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="n">project_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_manager</span><span class="o">.</span><span class="n">load_project_config</span><span class="p">(</span><span class="n">template_root</span><span class="p">)</span>
+        <span class="n">add_mode</span> <span class="o">=</span> <span class="n">add_mode</span> <span class="ow">or</span> <span class="n">project_config</span><span class="o">.</span><span class="n">default_add_mode</span>
         <span class="n">template</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">finder</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="n">target_version</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
             <span class="n">template</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
@@ -244,10 +245,11 @@
         <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TemplateData</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">out_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
-        <span class="n">add_mode</span><span class="p">:</span> <span class="n">AddMode</span> <span class="o">=</span> <span class="n">AddMode</span><span class="o">.</span><span class="n">LOCAL</span><span class="p">,</span>
+        <span class="n">add_mode</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AddMode</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">no_input</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="n">project_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_manager</span><span class="o">.</span><span class="n">load_project_config</span><span class="p">(</span><span class="n">out_root</span><span class="p">)</span>
+        <span class="n">add_mode</span> <span class="o">=</span> <span class="n">add_mode</span> <span class="ow">or</span> <span class="n">project_config</span><span class="o">.</span><span class="n">default_add_mode</span>
         <span class="n">template</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_manager</span><span class="o">.</span><span class="n">get_template_by_name</span><span class="p">(</span>
             <span class="n">name</span><span class="p">,</span> <span class="n">project_root</span><span class="o">=</span><span class="n">project_config</span><span class="o">.</span><span class="n">path</span>
         <span class="p">)</span>
@@ -284,9 +286,10 @@
             <span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># User wants to update all templates</span>
-            <span class="n">templates</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_manager</span><span class="o">.</span><span class="n">get_templates_with_data</span><span class="p">(</span>
+            <span class="n">renderables</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_manager</span><span class="o">.</span><span class="n">get_renderables</span><span class="p">(</span>
                 <span class="n">project_root</span><span class="o">=</span><span class="n">project_config</span><span class="o">.</span><span class="n">path</span>
             <span class="p">)</span>
+            <span class="n">templates</span> <span class="o">=</span> <span class="p">[</span><span class="n">renderable</span><span class="o">.</span><span class="n">template</span> <span class="k">for</span> <span class="n">renderable</span> <span class="ow">in</span> <span class="n">renderables</span><span class="p">]</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">updater</span><span class="o">.</span><span class="n">update_passed_templates_to_target_versions</span><span class="p">(</span>
             <span class="n">templates</span><span class="p">,</span>

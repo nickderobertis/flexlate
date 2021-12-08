@@ -24,3 +24,11 @@ flexlate.render.multi module
    :undoc-members:
    :show-inheritance:
 
+flexlate.render.renderable module
+---------------------------------
+
+.. automodule:: flexlate.render.renderable
+   :members:
+   :undoc-members:
+   :show-inheritance:
+

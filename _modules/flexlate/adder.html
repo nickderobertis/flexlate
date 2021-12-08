@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.adder &mdash; flexlate 0.1.1 documentation</title>
+  <title>flexlate.adder &mdash; flexlate 0.1.2 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.1.1
+                0.1.2
               </div>
             
           
@@ -167,7 +167,8 @@
            <div itemprop="articleBody">
             
   <h1>Source code for flexlate.adder</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span>
 
 <span class="kn">from</span> <span class="nn">git</span> <span class="kn">import</span> <span class="n">Repo</span>
@@ -208,6 +209,17 @@
 
         <span class="n">config_path</span> <span class="o">=</span> <span class="n">_determine_config_path</span><span class="p">(</span><span class="n">out_root</span><span class="p">,</span> <span class="n">Path</span><span class="p">(</span><span class="n">repo</span><span class="o">.</span><span class="n">working_dir</span><span class="p">),</span> <span class="n">add_mode</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="n">add_mode</span> <span class="o">==</span> <span class="n">AddMode</span><span class="o">.</span><span class="n">USER</span><span class="p">:</span>
+            <span class="c1"># No need to use git if adding for user</span>
+            <span class="n">config_manager</span><span class="o">.</span><span class="n">add_template_source</span><span class="p">(</span>
+                <span class="n">template</span><span class="p">,</span>
+                <span class="n">config_path</span><span class="p">,</span>
+                <span class="n">target_version</span><span class="o">=</span><span class="n">target_version</span><span class="p">,</span>
+                <span class="n">project_root</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="n">repo</span><span class="o">.</span><span class="n">working_dir</span><span class="p">),</span>  <span class="c1"># type: ignore</span>
+            <span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="c1"># Local or project config, add in git</span>
         <span class="n">_add_operation_via_branches</span><span class="p">(</span>
             <span class="k">lambda</span><span class="p">:</span> <span class="n">config_manager</span><span class="o">.</span><span class="n">add_template_source</span><span class="p">(</span>
                 <span class="n">template</span><span class="p">,</span>
@@ -243,24 +255,63 @@
 
         <span class="n">project_root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">repo</span><span class="o">.</span><span class="n">working_dir</span><span class="p">)</span>
         <span class="n">config_path</span> <span class="o">=</span> <span class="n">_determine_config_path</span><span class="p">(</span><span class="n">out_root</span><span class="p">,</span> <span class="n">project_root</span><span class="p">,</span> <span class="n">add_mode</span><span class="p">)</span>
+        <span class="n">expanded_out_root</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">out_root</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span> <span class="k">if</span> <span class="n">add_mode</span> <span class="o">==</span> <span class="n">AddMode</span><span class="o">.</span><span class="n">USER</span> <span class="k">else</span> <span class="n">out_root</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">add_mode</span> <span class="o">==</span> <span class="n">AddMode</span><span class="o">.</span><span class="n">USER</span><span class="p">:</span>
+            <span class="c1"># No need to commit config changes for user</span>
+            <span class="n">config_manager</span><span class="o">.</span><span class="n">add_applied_template</span><span class="p">(</span>
+                <span class="n">template</span><span class="p">,</span>
+                <span class="n">config_path</span><span class="p">,</span>
+                <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+                <span class="n">project_root</span><span class="o">=</span><span class="n">project_root</span><span class="p">,</span>
+                <span class="n">out_root</span><span class="o">=</span><span class="n">expanded_out_root</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># TODO: restructure the current path logic into _add_operation_via_branches</span>
+            <span class="c1">#  as it will also be needed for other operations.</span>
+            <span class="c1"># Commit changes for local and project</span>
+            <span class="n">cwd</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span>
+            <span class="n">absolute_out_root</span> <span class="o">=</span> <span class="n">out_root</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span>
+            <span class="k">def</span> <span class="nf">make_dirs_add_applied_template</span><span class="p">():</span>
+                <span class="c1"># Need to ensure that both cwd and out root exist on the template branch</span>
+                <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="p">[</span><span class="n">cwd</span><span class="p">,</span> <span class="n">absolute_out_root</span><span class="p">]:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">p</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                        <span class="n">p</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="c1"># If cwd was deleted when switching branches, need to navigate back there</span>
+                <span class="c1"># or os.getcwd will throw a FileNotExistsError (which also breaks path.absolute())</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">cwd</span><span class="p">)</span>
+
+                <span class="n">config_manager</span><span class="o">.</span><span class="n">add_applied_template</span><span class="p">(</span>
+                    <span class="n">template</span><span class="p">,</span>
+                    <span class="n">config_path</span><span class="p">,</span>
+                    <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+                    <span class="n">project_root</span><span class="o">=</span><span class="n">project_root</span><span class="p">,</span>
+                    <span class="n">out_root</span><span class="o">=</span><span class="n">expanded_out_root</span><span class="p">,</span>
+                <span class="p">)</span>
+
+            <span class="n">_add_operation_via_branches</span><span class="p">(</span>
+                <span class="n">make_dirs_add_applied_template</span><span class="p">,</span>
+                <span class="n">repo</span><span class="p">,</span>
+                <span class="n">_add_template_commit_message</span><span class="p">(</span>
+                    <span class="n">template</span><span class="p">,</span> <span class="n">out_root</span><span class="p">,</span> <span class="n">Path</span><span class="p">(</span><span class="n">repo</span><span class="o">.</span><span class="n">working_dir</span><span class="p">)</span>
+                <span class="p">),</span>
+                <span class="n">merged_branch_name</span><span class="o">=</span><span class="n">merged_branch_name</span><span class="p">,</span>
+                <span class="n">template_branch_name</span><span class="o">=</span><span class="n">template_branch_name</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Folder may have been deleted again while switching branches, so</span>
+            <span class="c1"># need to set cwd again</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">cwd</span><span class="p">)</span>
 
         <span class="n">template_update</span> <span class="o">=</span> <span class="n">TemplateUpdate</span><span class="p">(</span>
             <span class="n">template</span><span class="o">=</span><span class="n">template</span><span class="p">,</span>
             <span class="n">config_location</span><span class="o">=</span><span class="n">config_path</span><span class="p">,</span>
             <span class="n">index</span><span class="o">=</span><span class="n">config_manager</span><span class="o">.</span><span class="n">get_num_applied_templates_in_child_config</span><span class="p">(</span>
                 <span class="n">config_path</span><span class="p">,</span> <span class="n">project_root</span><span class="o">=</span><span class="n">project_root</span>
-            <span class="p">),</span>
+            <span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
             <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
-        <span class="p">)</span>
-
-        <span class="n">_add_operation_via_branches</span><span class="p">(</span>
-            <span class="k">lambda</span><span class="p">:</span> <span class="n">config_manager</span><span class="o">.</span><span class="n">add_applied_template</span><span class="p">(</span>
-                <span class="n">template</span><span class="p">,</span> <span class="n">config_path</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">project_root</span><span class="o">=</span><span class="n">project_root</span>
-            <span class="p">),</span>
-            <span class="n">repo</span><span class="p">,</span>
-            <span class="n">_add_template_commit_message</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="n">out_root</span><span class="p">,</span> <span class="n">Path</span><span class="p">(</span><span class="n">repo</span><span class="o">.</span><span class="n">working_dir</span><span class="p">)),</span>
-            <span class="n">merged_branch_name</span><span class="o">=</span><span class="n">merged_branch_name</span><span class="p">,</span>
-            <span class="n">template_branch_name</span><span class="o">=</span><span class="n">template_branch_name</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="n">updater</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
@@ -288,6 +339,18 @@
 
         <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">repo</span><span class="o">.</span><span class="n">working_dir</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="n">user</span><span class="p">:</span>
+            <span class="c1"># Simply init the project for the user</span>
+            <span class="n">config_manager</span><span class="o">.</span><span class="n">add_project</span><span class="p">(</span>
+                <span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">,</span>
+                <span class="n">default_add_mode</span><span class="o">=</span><span class="n">default_add_mode</span><span class="p">,</span>
+                <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span>
+                <span class="n">merged_branch_name</span><span class="o">=</span><span class="n">merged_branch_name</span><span class="p">,</span>
+                <span class="n">template_branch_name</span><span class="o">=</span><span class="n">template_branch_name</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="c1"># Config resides in project, so add it via branches</span>
         <span class="n">_add_operation_via_branches</span><span class="p">(</span>
             <span class="k">lambda</span><span class="p">:</span> <span class="n">config_manager</span><span class="o">.</span><span class="n">add_project</span><span class="p">(</span>
                 <span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">,</span>

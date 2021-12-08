@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.update.main &mdash; flexlate 0.1.1 documentation</title>
+  <title>flexlate.update.main &mdash; flexlate 0.1.2 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.1.1
+                0.1.2
               </div>
             
           
@@ -177,6 +177,7 @@
 <span class="kn">from</span> <span class="nn">flexlate.exc</span> <span class="kn">import</span> <span class="n">GitRepoDirtyException</span>
 <span class="kn">from</span> <span class="nn">flexlate.finder.multi</span> <span class="kn">import</span> <span class="n">MultiFinder</span>
 <span class="kn">from</span> <span class="nn">flexlate.render.multi</span> <span class="kn">import</span> <span class="n">MultiRenderer</span>
+<span class="kn">from</span> <span class="nn">flexlate.render.renderable</span> <span class="kn">import</span> <span class="n">Renderable</span>
 <span class="kn">from</span> <span class="nn">flexlate.template.base</span> <span class="kn">import</span> <span class="n">Template</span>
 <span class="kn">from</span> <span class="nn">flexlate.ext_git</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">delete_tracked_files</span><span class="p">,</span>
@@ -184,7 +185,8 @@
     <span class="n">merge_branch_into_current</span><span class="p">,</span>
     <span class="n">checked_out_template_branch</span><span class="p">,</span>
     <span class="n">checkout_template_branch</span><span class="p">,</span>
-    <span class="n">repo_has_merge_conflicts</span><span class="p">,</span> <span class="n">assert_repo_is_in_clean_state</span><span class="p">,</span>
+    <span class="n">repo_has_merge_conflicts</span><span class="p">,</span>
+    <span class="n">assert_repo_is_in_clean_state</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">flexlate.template_data</span> <span class="kn">import</span> <span class="n">TemplateData</span><span class="p">,</span> <span class="n">merge_data</span>
 <span class="kn">from</span> <span class="nn">flexlate.update.template</span> <span class="kn">import</span> <span class="p">(</span>
@@ -215,15 +217,13 @@
         <span class="c1"># Create it from the initial commit if it does not exist</span>
         <span class="k">with</span> <span class="n">checked_out_template_branch</span><span class="p">(</span><span class="n">repo</span><span class="p">,</span> <span class="n">branch_name</span><span class="o">=</span><span class="n">template_branch_name</span><span class="p">):</span>
             <span class="n">config_manager</span><span class="o">.</span><span class="n">update_templates</span><span class="p">(</span><span class="n">updates</span><span class="p">,</span> <span class="n">project_root</span><span class="o">=</span><span class="n">out_path</span><span class="p">)</span>
-            <span class="n">templates</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">config_manager</span><span class="o">.</span><span class="n">get_templates_with_data</span><span class="p">(</span>
-                <span class="n">project_root</span><span class="o">=</span><span class="n">out_path</span>
-            <span class="p">)</span>
+            <span class="n">renderables</span> <span class="o">=</span> <span class="n">config_manager</span><span class="o">.</span><span class="n">get_renderables</span><span class="p">(</span><span class="n">project_root</span><span class="o">=</span><span class="n">out_path</span><span class="p">)</span>
             <span class="n">updated_data</span> <span class="o">=</span> <span class="n">renderer</span><span class="o">.</span><span class="n">render</span><span class="p">(</span>
-                <span class="n">templates</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">out_path</span><span class="o">=</span><span class="n">out_path</span><span class="p">,</span> <span class="n">no_input</span><span class="o">=</span><span class="n">no_input</span>
+                <span class="n">renderables</span><span class="p">,</span> <span class="n">project_root</span><span class="o">=</span><span class="n">out_path</span><span class="p">,</span> <span class="n">no_input</span><span class="o">=</span><span class="n">no_input</span>
             <span class="p">)</span>
             <span class="n">new_updates</span> <span class="o">=</span> <span class="n">updates_with_updated_data</span><span class="p">(</span><span class="n">updates</span><span class="p">,</span> <span class="n">updated_data</span><span class="p">)</span>
             <span class="n">config_manager</span><span class="o">.</span><span class="n">update_templates</span><span class="p">(</span><span class="n">new_updates</span><span class="p">,</span> <span class="n">project_root</span><span class="o">=</span><span class="n">out_path</span><span class="p">)</span>
-            <span class="n">stage_and_commit_all</span><span class="p">(</span><span class="n">repo</span><span class="p">,</span> <span class="n">_commit_message</span><span class="p">(</span><span class="n">templates</span><span class="p">))</span>
+            <span class="n">stage_and_commit_all</span><span class="p">(</span><span class="n">repo</span><span class="p">,</span> <span class="n">_commit_message</span><span class="p">(</span><span class="n">renderables</span><span class="p">))</span>
 
         <span class="c1"># Now prepare the merged (output) branch, by merging the current</span>
         <span class="c1"># branch into it and then the template branch into it.</span>
@@ -289,9 +289,10 @@
                 <span class="n">template</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">new_template</span><span class="o">.</span><span class="n">version</span></div></div>
 
 
-<span class="k">def</span> <span class="nf">_commit_message</span><span class="p">(</span><span class="n">templates</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Template</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">_commit_message</span><span class="p">(</span><span class="n">renderables</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Renderable</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Update flexlate templates</span><span class="se">\n\n</span><span class="s2">&quot;</span>
-    <span class="k">for</span> <span class="n">template</span> <span class="ow">in</span> <span class="n">templates</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">renderable</span> <span class="ow">in</span> <span class="n">renderables</span><span class="p">:</span>
+        <span class="n">template</span> <span class="o">=</span> <span class="n">renderable</span><span class="o">.</span><span class="n">template</span>
         <span class="n">message</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">template</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">template</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="k">return</span> <span class="n">message</span>
 </pre></div>

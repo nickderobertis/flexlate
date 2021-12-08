@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.config &mdash; flexlate 0.1.1 documentation</title>
+  <title>flexlate.config &mdash; flexlate 0.1.2 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.1.1
+                0.1.2
               </div>
             
           
@@ -253,11 +253,17 @@
     <span class="p">)</span>
 
 <div class="viewcode-block" id="FlexlateConfig.from_dir_including_nested"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config.FlexlateConfig.from_dir_including_nested">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_dir_including_nested</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">root</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;FlexlateConfig&quot;</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">from_dir_including_nested</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span> <span class="n">root</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">adjust_applied_paths</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;FlexlateConfig&quot;</span><span class="p">:</span>
         <span class="n">file_name</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_settings</span><span class="o">.</span><span class="n">config_file_name</span>
-        <span class="n">configs</span> <span class="o">=</span> <span class="n">_load_nested_configs</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+        <span class="n">configs</span> <span class="o">=</span> <span class="n">_load_nested_configs</span><span class="p">(</span>
+            <span class="n">root</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">root</span><span class="p">,</span> <span class="n">adjust_applied_paths</span><span class="o">=</span><span class="n">adjust_applied_paths</span>
+        <span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">configs</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">FlexlateConfig</span><span class="o">.</span><span class="n">load_or_create</span><span class="p">(</span><span class="n">root</span> <span class="o">/</span> <span class="n">file_name</span><span class="p">)</span>
+            <span class="c1"># Fall back to user config if it exists</span>
+            <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_settings</span><span class="o">.</span><span class="n">config_location</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                <span class="n">configs</span> <span class="o">=</span> <span class="p">[</span><span class="bp">cls</span><span class="o">.</span><span class="n">load</span><span class="p">()]</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_multiple</span><span class="p">(</span><span class="n">configs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="FlexlateConfig.from_multiple"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config.FlexlateConfig.from_multiple">[docs]</a>    <span class="nd">@classmethod</span>
@@ -303,7 +309,7 @@
 
 
 <span class="k">def</span> <span class="nf">_load_nested_configs</span><span class="p">(</span>
-    <span class="n">root</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">orig_root</span><span class="p">:</span> <span class="n">Path</span>
+    <span class="n">root</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">orig_root</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">adjust_applied_paths</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;FlexlateConfig&quot;</span><span class="p">]:</span>
     <span class="n">configs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;FlexlateConfig&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">path</span> <span class="o">=</span> <span class="n">root</span> <span class="o">/</span> <span class="n">file_name</span>
@@ -311,12 +317,20 @@
         <span class="n">relative_path</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">relative_to</span><span class="p">(</span><span class="n">orig_root</span><span class="p">)</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">FlexlateConfig</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
         <span class="c1"># Because we are combining configs, need to update the root for the applied templates</span>
-        <span class="k">for</span> <span class="n">applied_template</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">applied_templates</span><span class="p">:</span>
-            <span class="n">applied_template</span><span class="o">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">relative_path</span> <span class="o">/</span> <span class="n">applied_template</span><span class="o">.</span><span class="n">root</span>
+        <span class="k">if</span> <span class="n">adjust_applied_paths</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">applied_template</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">applied_templates</span><span class="p">:</span>
+                <span class="n">applied_template</span><span class="o">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">relative_path</span> <span class="o">/</span> <span class="n">applied_template</span><span class="o">.</span><span class="n">root</span>
         <span class="n">configs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">folder_or_file</span> <span class="ow">in</span> <span class="n">root</span><span class="o">.</span><span class="n">iterdir</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">folder_or_file</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
-            <span class="n">configs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">_load_nested_configs</span><span class="p">(</span><span class="n">folder_or_file</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">orig_root</span><span class="p">))</span>
+            <span class="n">configs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                <span class="n">_load_nested_configs</span><span class="p">(</span>
+                    <span class="n">folder_or_file</span><span class="p">,</span>
+                    <span class="n">file_name</span><span class="p">,</span>
+                    <span class="n">orig_root</span><span class="p">,</span>
+                    <span class="n">adjust_applied_paths</span><span class="o">=</span><span class="n">adjust_applied_paths</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
     <span class="k">return</span> <span class="n">configs</span>
 
 
