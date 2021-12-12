@@ -18,6 +18,6 @@ def get_expanded_out_root(
         # Return a project-relative path for project
         return out_root.absolute().relative_to(project_root.absolute())
     if add_mode == AddMode.LOCAL:
-        # Return the relative path for local
-        return out_root
+        # Local out path is always .
+        return Path(".")
     raise ValueError(f"unsupported add mode {add_mode}")

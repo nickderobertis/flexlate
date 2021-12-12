@@ -1,5 +1,6 @@
 # Integration tests
 import os
+from enum import Enum
 from pathlib import Path
 from unittest.mock import patch
 
@@ -82,10 +83,31 @@ def test_init_project_for_user_and_add_source_and_template(
     _assert_project_config_is_correct(project_config_path, user=True, add_mode=add_mode)
 
 
+
+class SubdirStyle(str, Enum):
+    CD = "cd"
+    PROVIDE_RELATIVE = "provide relative"
+    PROVIDE_ABSOLUTE = "provide absolute"
+
+
 @patch.object(appdirs, "user_config_dir", lambda name: GENERATED_FILES_DIR)
-@pytest.mark.parametrize("add_mode", [AddMode.LOCAL, AddMode.PROJECT, AddMode.USER])
+@pytest.mark.parametrize(
+    "add_mode, subdir_style",
+    [
+        (AddMode.LOCAL, SubdirStyle.CD),
+        (AddMode.PROJECT, SubdirStyle.CD),
+        (AddMode.USER, SubdirStyle.CD),
+        (AddMode.LOCAL, SubdirStyle.PROVIDE_RELATIVE),
+        (AddMode.PROJECT, SubdirStyle.PROVIDE_RELATIVE),
+        (AddMode.USER, SubdirStyle.PROVIDE_RELATIVE),
+        (AddMode.LOCAL, SubdirStyle.PROVIDE_ABSOLUTE),
+        (AddMode.PROJECT, SubdirStyle.PROVIDE_ABSOLUTE),
+        (AddMode.USER, SubdirStyle.PROVIDE_ABSOLUTE),
+    ],
+)
 def test_init_project_and_add_source_and_template_in_subdir(
     add_mode: AddMode,
+    subdir_style: SubdirStyle,
     repo_with_placeholder_committed: Repo,
 ):
     repo = repo_with_placeholder_committed
@@ -95,8 +117,19 @@ def test_init_project_and_add_source_and_template_in_subdir(
         fxt.add_template_source(COOKIECUTTER_REMOTE_URL)
         subdir = GENERATED_REPO_DIR / "subdir"
         subdir.mkdir()
-        with change_directory_to(subdir):
-            fxt.apply_template_and_add(COOKIECUTTER_REMOTE_NAME, no_input=True)
+        if subdir_style == SubdirStyle.CD:
+            with change_directory_to(subdir):
+                fxt.apply_template_and_add(COOKIECUTTER_REMOTE_NAME, no_input=True)
+        elif subdir_style == SubdirStyle.PROVIDE_RELATIVE:
+            fxt.apply_template_and_add(
+                COOKIECUTTER_REMOTE_NAME,
+                out_root=subdir.relative_to(os.getcwd()),
+                no_input=True,
+            )
+        elif subdir_style == SubdirStyle.PROVIDE_ABSOLUTE:
+            fxt.apply_template_and_add(
+                COOKIECUTTER_REMOTE_NAME, out_root=subdir.absolute(), no_input=True
+            )
 
     _assert_project_files_are_correct(GENERATED_REPO_DIR / "subdir")
 

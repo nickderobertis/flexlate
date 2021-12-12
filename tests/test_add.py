@@ -1,5 +1,9 @@
+from unittest.mock import patch
+
+import appdirs
 from git import Repo, Head
 
+from flexlate.add_mode import AddMode
 from flexlate.adder import Adder
 from flexlate.config import FlexlateConfig, FlexlateProjectConfig
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
@@ -34,7 +38,13 @@ def test_add_template_source_to_repo(
     assert source.target_version == "some version"
 
 
+# TODO: add AddMode.USER to tests by creating user config fixture
+
+
+@patch.object(appdirs, "user_config_dir", lambda name: GENERATED_FILES_DIR)
+@pytest.mark.parametrize("add_mode", [AddMode.LOCAL, AddMode.PROJECT])
 def test_add_local_cookiecutter_applied_template_to_repo(
+    add_mode: AddMode,
     repo_with_cookiecutter_one_template_source: Repo,
     cookiecutter_one_template: CookiecutterTemplate,
 ):
@@ -42,10 +52,15 @@ def test_add_local_cookiecutter_applied_template_to_repo(
     template = cookiecutter_one_template
     adder = Adder()
     adder.apply_template_and_add(
-        repo, template, out_root=GENERATED_REPO_DIR, no_input=True
+        repo, template, out_root=GENERATED_REPO_DIR, add_mode=add_mode, no_input=True
     )
 
-    config_path = GENERATED_REPO_DIR / "flexlate.json"
+    config_dir = GENERATED_FILES_DIR if add_mode == AddMode.USER else GENERATED_REPO_DIR
+    template_root = (
+        GENERATED_REPO_DIR.absolute() if add_mode == AddMode.USER else Path(".")
+    )
+
+    config_path = config_dir / "flexlate.json"
     config = FlexlateConfig.load(config_path)
     assert len(config.applied_templates) == 1
     assert len(config.template_sources) == 1
@@ -53,10 +68,13 @@ def test_add_local_cookiecutter_applied_template_to_repo(
     assert at.name == template.name
     assert at.version == template.version
     assert at.data == {"a": "b", "c": ""}
-    assert at.root == GENERATED_REPO_DIR
+    assert at.root == template_root
 
 
+@patch.object(appdirs, "user_config_dir", lambda name: GENERATED_FILES_DIR)
+@pytest.mark.parametrize("add_mode", [AddMode.LOCAL, AddMode.PROJECT])
 def test_add_remote_cookiecutter_applied_template_to_repo(
+    add_mode: AddMode,
     repo_with_remote_cookiecutter_template_source: Repo,
     cookiecutter_remote_template: CookiecutterTemplate,
 ):
@@ -64,10 +82,15 @@ def test_add_remote_cookiecutter_applied_template_to_repo(
     template = cookiecutter_remote_template
     adder = Adder()
     adder.apply_template_and_add(
-        repo, template, out_root=GENERATED_REPO_DIR, no_input=True
+        repo, template, out_root=GENERATED_REPO_DIR, add_mode=add_mode, no_input=True
     )
 
-    config_path = GENERATED_REPO_DIR / "flexlate.json"
+    config_dir = GENERATED_FILES_DIR if add_mode == AddMode.USER else GENERATED_REPO_DIR
+    template_root = (
+        GENERATED_REPO_DIR.absolute() if add_mode == AddMode.USER else Path(".")
+    )
+
+    config_path = config_dir / "flexlate.json"
     config = FlexlateConfig.load(config_path)
     assert len(config.applied_templates) == 1
     assert len(config.template_sources) == 1
@@ -75,11 +98,10 @@ def test_add_remote_cookiecutter_applied_template_to_repo(
     assert at.name == template.name
     assert at.version == template.version
     assert at.data == {"name": "abc", "key": "value"}
-    assert at.root == GENERATED_REPO_DIR
+    assert at.root == template_root
 
 
-# TODO: tests for different add modes, different out roots
-# TODO: ensure it uses a relative path when it is a project or local config
+# TODO: tests for different out roots
 # TODO: test for adding to existing
 
 
