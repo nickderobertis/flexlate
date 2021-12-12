@@ -54,26 +54,32 @@ def test_init_project_for_user_and_add_source_and_template(
 
 
 @patch.object(appdirs, "user_config_dir", lambda name: GENERATED_FILES_DIR)
-def test_init_project_for_user_with_user_add_mode_and_add_source_and_template(
+@pytest.mark.parametrize("add_mode", [AddMode.LOCAL, AddMode.PROJECT, AddMode.USER])
+def test_init_project_for_user_and_add_source_and_template(
+    add_mode: AddMode,
     repo_with_placeholder_committed: Repo,
 ):
     repo = repo_with_placeholder_committed
     fxt = Flexlate()
     with change_directory_to(GENERATED_REPO_DIR):
-        fxt.init_project(user=True, default_add_mode=AddMode.USER)
+        fxt.init_project(user=True, default_add_mode=add_mode)
         fxt.add_template_source(COOKIECUTTER_REMOTE_URL)
         fxt.apply_template_and_add(COOKIECUTTER_REMOTE_NAME, no_input=True)
 
     _assert_project_files_are_correct()
+
+    config_root = (
+        GENERATED_FILES_DIR if add_mode == AddMode.USER else GENERATED_REPO_DIR
+    )
+    template_root = GENERATED_REPO_DIR if add_mode == AddMode.USER else Path(".")
+
     _assert_config_is_correct(
-        GENERATED_FILES_DIR / "flexlate.json",
-        expect_applied_template_root=GENERATED_REPO_DIR,
+        config_root / "flexlate.json",
+        expect_applied_template_root=template_root,
     )
 
     project_config_path = GENERATED_FILES_DIR / "flexlate-project.json"
-    _assert_project_config_is_correct(
-        project_config_path, user=True, add_mode=AddMode.USER
-    )
+    _assert_project_config_is_correct(project_config_path, user=True, add_mode=add_mode)
 
 
 @patch.object(appdirs, "user_config_dir", lambda name: GENERATED_FILES_DIR)
