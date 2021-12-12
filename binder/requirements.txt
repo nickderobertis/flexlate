@@ -1,5 +1,5 @@
-typer
-py-app-conf
 gitpython
+py-app-conf
 cookiecutter
+typer
 flexlate

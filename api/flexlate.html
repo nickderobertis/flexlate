@@ -8,7 +8,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate package &mdash; flexlate 0.1.2 documentation</title>
+  <title>flexlate package &mdash; flexlate 0.1.3 documentation</title>
   
 
   
@@ -73,7 +73,7 @@
             
             
               <div class="version">
-                0.1.2
+                0.1.3
               </div>
             
           
@@ -125,6 +125,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#module-flexlate.exc">flexlate.exc module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-flexlate.ext_git">flexlate.ext_git module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-flexlate.main">flexlate.main module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-flexlate.path_ops">flexlate.path_ops module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-flexlate.template_data">flexlate.template_data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-flexlate.types">flexlate.types module</a></li>
 </ul>
@@ -283,6 +284,16 @@
 <span class="sig-name descname"><span class="pre">USER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'user'</span></em><a class="headerlink" href="#flexlate.add_mode.AddMode.USER" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="flexlate.add_mode.get_expanded_out_root">
+<span class="sig-prename descclassname"><span class="pre">flexlate.add_mode.</span></span><span class="sig-name descname"><span class="pre">get_expanded_out_root</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">out_root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project_root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_mode</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/add_mode.html#get_expanded_out_root"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.add_mode.get_expanded_out_root" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code></a></p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -893,6 +904,22 @@
 <span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('.')</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/main.html#Flexlate.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.main.Flexlate.update" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+</dd></dl>
+
+</section>
+<section id="module-flexlate.path_ops">
+<span id="flexlate-path-ops-module"></span><h2>flexlate.path_ops module<a class="headerlink" href="#module-flexlate.path_ops" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="flexlate.path_ops.make_all_dirs">
+<span class="sig-prename descclassname"><span class="pre">flexlate.path_ops.</span></span><span class="sig-name descname"><span class="pre">make_all_dirs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">paths</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/path_ops.html#make_all_dirs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.path_ops.make_all_dirs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="flexlate.path_ops.make_func_that_creates_cwd_and_out_root_before_running">
+<span class="sig-prename descclassname"><span class="pre">flexlate.path_ops.</span></span><span class="sig-name descname"><span class="pre">make_func_that_creates_cwd_and_out_root_before_running</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">out_root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/path_ops.html#make_func_that_creates_cwd_and_out_root_before_running"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.path_ops.make_func_that_creates_cwd_and_out_root_before_running" title="Permalink to this definition">¶</a></dt>
+<dd><p>When switching branches, the CWD or target out_root may no longer exist.
+Pass a function to this function to create a function that
+creates those directories as needed before running the logic</p>
 </dd></dl>
 
 </section>

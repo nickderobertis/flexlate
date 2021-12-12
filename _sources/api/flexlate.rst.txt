@@ -92,6 +92,14 @@ flexlate.main module
    :undoc-members:
    :show-inheritance:
 
+flexlate.path\_ops module
+-------------------------
+
+.. automodule:: flexlate.path_ops
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 flexlate.template\_data module
 ------------------------------
 
