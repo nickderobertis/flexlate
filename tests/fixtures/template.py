@@ -12,12 +12,23 @@ from tests.config import (
     COOKIECUTTER_ONE_DIR,
     COOKIECUTTER_TWO_DIR,
     COOKIECUTTER_REMOTE_URL,
+    COOKIECUTTER_REMOTE_VERSION_2,
+    COOKIECUTTER_REMOTE_VERSION_1,
 )
 
 
 class CookiecutterRemoteTemplateData(TypedDict):
     name: str
     key: str
+
+
+def get_header_for_cookiecutter_remote_template(version: str) -> str:
+    if version == COOKIECUTTER_REMOTE_VERSION_2:
+        return "some new header\n"
+    elif version == COOKIECUTTER_REMOTE_VERSION_1:
+        return ""
+    else:
+        raise ValueError(f"unknown cookiecutter remote version {version}")
 
 
 @pytest.fixture

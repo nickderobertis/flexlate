@@ -19,10 +19,14 @@ from tests.config import (
     COOKIECUTTER_REMOTE_NAME,
     COOKIECUTTER_REMOTE_VERSION_2,
     GENERATED_REPO_DIR,
+    COOKIECUTTER_REMOTE_VERSION_1,
 )
 from tests.dirutils import change_directory_to
 from tests.fixtures.git import *
-from tests.fixtures.template import CookiecutterRemoteTemplateData
+from tests.fixtures.template import (
+    CookiecutterRemoteTemplateData,
+    get_header_for_cookiecutter_remote_template,
+)
 
 runner = CliRunner()
 
@@ -185,19 +189,54 @@ def test_init_project_and_add_source_and_template_in_subdir(
     )
 
 
+def test_update_project(
+    repo_with_placeholder_committed: Repo,
+):
+    repo = repo_with_placeholder_committed
+    expect_data: CookiecutterRemoteTemplateData = dict(name="woo", key="it works")
+    with change_directory_to(GENERATED_REPO_DIR):
+        fxt("init")
+        fxt(
+            [
+                "add",
+                "source",
+                COOKIECUTTER_REMOTE_URL,
+                "--version",
+                COOKIECUTTER_REMOTE_VERSION_1,
+            ]
+        )
+        fxt(["add", "output", COOKIECUTTER_REMOTE_NAME], input_data=expect_data)
+        _assert_project_files_are_correct(
+            expect_data=expect_data, version=COOKIECUTTER_REMOTE_VERSION_1
+        )
+        _assert_config_is_correct(
+            expect_data=expect_data, version=COOKIECUTTER_REMOTE_VERSION_1
+        )
+        fxt(["update", "--no-input"])
+
+    _assert_project_files_are_correct(expect_data=expect_data)
+    _assert_config_is_correct(expect_data=expect_data)
+
+    project_config_path = GENERATED_REPO_DIR / "flexlate-project.json"
+    _assert_project_config_is_correct(project_config_path, user=False)
+
+
 def _assert_project_files_are_correct(
     root: Path = GENERATED_REPO_DIR,
     expect_data: Optional[CookiecutterRemoteTemplateData] = None,
+    version: str = COOKIECUTTER_REMOTE_VERSION_2,
 ):
     data: CookiecutterRemoteTemplateData = expect_data or dict(name="abc", key="value")
+    header = get_header_for_cookiecutter_remote_template(version)
     out_path = root / data["name"] / f"{data['name']}.txt"
     assert out_path.exists()
     content = out_path.read_text()
-    assert content == f"some new header\n{data['key']}"
+    assert content == f"{header}{data['key']}"
 
 
 def _assert_template_sources_config_is_correct(
     config_path: Path = GENERATED_REPO_DIR / "flexlate.json",
+    version: str = COOKIECUTTER_REMOTE_VERSION_2,
 ):
     assert config_path.exists()
     config = FlexlateConfig.load(config_path)
@@ -205,7 +244,7 @@ def _assert_template_sources_config_is_correct(
     assert len(config.template_sources) == 1
     template_source = config.template_sources[0]
     assert template_source.name == COOKIECUTTER_REMOTE_NAME
-    assert template_source.version == COOKIECUTTER_REMOTE_VERSION_2
+    assert template_source.version == version
     assert template_source.git_url == COOKIECUTTER_REMOTE_URL
 
 
@@ -213,6 +252,7 @@ def _assert_applied_templates_config_is_correct(
     config_path: Path = GENERATED_REPO_DIR / "flexlate.json",
     expect_applied_template_root: Path = Path("."),
     expect_data: Optional[CookiecutterRemoteTemplateData] = None,
+    version: str = COOKIECUTTER_REMOTE_VERSION_2,
 ):
     data: CookiecutterRemoteTemplateData = expect_data or {
         "name": "abc",
@@ -225,7 +265,7 @@ def _assert_applied_templates_config_is_correct(
     applied_template = config.applied_templates[0]
     assert applied_template.name == COOKIECUTTER_REMOTE_NAME
     assert applied_template.data == data
-    assert applied_template.version == COOKIECUTTER_REMOTE_VERSION_2
+    assert applied_template.version == version
     assert applied_template.root == expect_applied_template_root
 
 
@@ -233,11 +273,15 @@ def _assert_config_is_correct(
     config_path: Path = GENERATED_REPO_DIR / "flexlate.json",
     expect_applied_template_root: Path = Path("."),
     expect_data: Optional[CookiecutterRemoteTemplateData] = None,
+    version: str = COOKIECUTTER_REMOTE_VERSION_2,
 ):
     _assert_applied_templates_config_is_correct(
-        config_path, expect_applied_template_root, expect_data=expect_data
+        config_path,
+        expect_applied_template_root,
+        expect_data=expect_data,
+        version=version,
     )
-    _assert_template_sources_config_is_correct(config_path)
+    _assert_template_sources_config_is_correct(config_path, version=version)
 
 
 def _assert_project_config_is_correct(

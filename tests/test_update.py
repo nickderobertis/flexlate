@@ -63,10 +63,16 @@ def test_update_modify_template(
         repo.commit().message
         == "Update flexlate templates\n\none: 7e18a6cc14856c8558ac999efa01e5e8\n"
     )
-    assert cookiecutter_one_generated_text_content(gen_dir=GENERATED_REPO_DIR) == " and extra"
+    assert (
+        cookiecutter_one_generated_text_content(gen_dir=GENERATED_REPO_DIR)
+        == " and extra"
+    )
     template_branch.checkout()
     assert repo.active_branch == template_branch
-    assert cookiecutter_one_generated_text_content(gen_dir=GENERATED_REPO_DIR) == " and extra"
+    assert (
+        cookiecutter_one_generated_text_content(gen_dir=GENERATED_REPO_DIR)
+        == " and extra"
+    )
 
 
 def test_update_modify_template_conflict(

@@ -29,5 +29,3 @@ def dirty_repo(repo_with_placeholder_committed: Repo) -> Repo:
     repo = repo_with_placeholder_committed
     add_dummy_file2_to_repo(repo)
     yield repo
-
-
