@@ -30,35 +30,6 @@ def stage_and_commit_all(repo: Repo, commit_message: str):
     repo.git.commit("-m", commit_message)
 
 
-def list_tracked_files(repo: Repo) -> Set[Path]:
-    if repo.working_dir is None:
-        raise ValueError("repo working dir should not be none")
-    return _list_tracked_files(repo.tree(), Path(repo.working_dir))
-
-
-def _list_tracked_files(tree: Tree, root_path: Path) -> Set[Path]:
-    # TODO: Fix multiple iterations over files for git traverse
-    #  For now just using a set to keep it working, but should optimize
-    files: Set[Path] = set()
-    for tree_or_blob in tree.traverse():
-        if hasattr(tree_or_blob, "traverse"):
-            # Got another tree
-            tree = cast(Tree, tree_or_blob)
-            files.update(_list_tracked_files(tree, root_path))
-        else:
-            # Got a blob
-            blob = cast(Blob, tree_or_blob)
-            files.add(root_path / Path(blob.path))
-    return files
-
-
-def delete_tracked_files(repo: Repo):
-    for path in list_tracked_files(repo):
-        if path.name == "flexlate.json":
-            continue
-        os.remove(path)
-
-
 def merge_branch_into_current(
     repo: Repo, branch_name: str, allow_conflicts: bool = True
 ):

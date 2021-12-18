@@ -6,14 +6,12 @@ from git import Repo
 
 from flexlate.config_manager import ConfigManager
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
-from flexlate.exc import GitRepoDirtyException
 from flexlate.finder.multi import MultiFinder
 from flexlate.path_ops import make_all_dirs
 from flexlate.render.multi import MultiRenderer
 from flexlate.render.renderable import Renderable
 from flexlate.template.base import Template
 from flexlate.ext_git import (
-    delete_tracked_files,
     stage_and_commit_all,
     merge_branch_into_current,
     checked_out_template_branch,
