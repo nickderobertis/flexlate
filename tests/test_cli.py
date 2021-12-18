@@ -2,7 +2,7 @@
 import os
 from enum import Enum
 from pathlib import Path
-from typing import Sequence, Union
+from typing import Sequence, Union, Optional
 from unittest.mock import patch
 
 import appdirs
@@ -12,6 +12,7 @@ from typer.testing import CliRunner
 from flexlate.add_mode import AddMode
 from flexlate.config import FlexlateConfig, FlexlateProjectConfig
 from flexlate.cli import cli
+from flexlate.template_data import TemplateData
 from tests.config import (
     GENERATED_FILES_DIR,
     COOKIECUTTER_REMOTE_URL,
@@ -21,25 +22,30 @@ from tests.config import (
 )
 from tests.dirutils import change_directory_to
 from tests.fixtures.git import *
+from tests.fixtures.template import CookiecutterRemoteTemplateData
 
 runner = CliRunner()
 
 
-def fxt(args: Union[str, Sequence[str]]) -> Result:
-    return runner.invoke(cli, args)
+def fxt(
+    args: Union[str, Sequence[str]], input_data: Optional[TemplateData] = None
+) -> Result:
+    text_input = "\n".join(input_data.values()) if input_data is not None else None
+    return runner.invoke(cli, args, input=text_input)
 
 
 def test_init_project_and_add_source_and_template(
     repo_with_placeholder_committed: Repo,
 ):
     repo = repo_with_placeholder_committed
+    expect_data: CookiecutterRemoteTemplateData = dict(name="woo", key="it works")
     with change_directory_to(GENERATED_REPO_DIR):
         fxt("init")
         fxt(["add", "source", COOKIECUTTER_REMOTE_URL])
-        fxt(["add", "output", COOKIECUTTER_REMOTE_NAME, "--no-input"])
+        fxt(["add", "output", COOKIECUTTER_REMOTE_NAME], input_data=expect_data)
 
-    _assert_project_files_are_correct()
-    _assert_config_is_correct()
+    _assert_project_files_are_correct(expect_data=expect_data)
+    _assert_config_is_correct(expect_data=expect_data)
 
     project_config_path = GENERATED_REPO_DIR / "flexlate-project.json"
     _assert_project_config_is_correct(project_config_path, user=False)
@@ -179,11 +185,15 @@ def test_init_project_and_add_source_and_template_in_subdir(
     )
 
 
-def _assert_project_files_are_correct(root: Path = GENERATED_REPO_DIR):
-    out_path = root / "abc" / "abc.txt"
+def _assert_project_files_are_correct(
+    root: Path = GENERATED_REPO_DIR,
+    expect_data: Optional[CookiecutterRemoteTemplateData] = None,
+):
+    data: CookiecutterRemoteTemplateData = expect_data or dict(name="abc", key="value")
+    out_path = root / data["name"] / f"{data['name']}.txt"
     assert out_path.exists()
     content = out_path.read_text()
-    assert content == "some new header\nvalue"
+    assert content == f"some new header\n{data['key']}"
 
 
 def _assert_template_sources_config_is_correct(
@@ -202,14 +212,19 @@ def _assert_template_sources_config_is_correct(
 def _assert_applied_templates_config_is_correct(
     config_path: Path = GENERATED_REPO_DIR / "flexlate.json",
     expect_applied_template_root: Path = Path("."),
+    expect_data: Optional[CookiecutterRemoteTemplateData] = None,
 ):
+    data: CookiecutterRemoteTemplateData = expect_data or {
+        "name": "abc",
+        "key": "value",
+    }
     assert config_path.exists()
     config = FlexlateConfig.load(config_path)
     # Applied template
     assert len(config.applied_templates) == 1
     applied_template = config.applied_templates[0]
     assert applied_template.name == COOKIECUTTER_REMOTE_NAME
-    assert applied_template.data == {"name": "abc", "key": "value"}
+    assert applied_template.data == data
     assert applied_template.version == COOKIECUTTER_REMOTE_VERSION_2
     assert applied_template.root == expect_applied_template_root
 
@@ -217,9 +232,10 @@ def _assert_applied_templates_config_is_correct(
 def _assert_config_is_correct(
     config_path: Path = GENERATED_REPO_DIR / "flexlate.json",
     expect_applied_template_root: Path = Path("."),
+    expect_data: Optional[CookiecutterRemoteTemplateData] = None,
 ):
     _assert_applied_templates_config_is_correct(
-        config_path, expect_applied_template_root
+        config_path, expect_applied_template_root, expect_data=expect_data
     )
     _assert_template_sources_config_is_correct(config_path)
 
