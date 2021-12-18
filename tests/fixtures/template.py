@@ -2,7 +2,7 @@ import shutil
 import tempfile
 from copy import deepcopy
 from pathlib import Path
-from typing import List
+from typing import List, TypedDict
 
 import pytest
 
@@ -13,6 +13,11 @@ from tests.config import (
     COOKIECUTTER_TWO_DIR,
     COOKIECUTTER_REMOTE_URL,
 )
+
+
+class CookiecutterRemoteTemplateData(TypedDict):
+    name: str
+    key: str
 
 
 @pytest.fixture
