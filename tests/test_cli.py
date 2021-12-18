@@ -2,13 +2,16 @@
 import os
 from enum import Enum
 from pathlib import Path
+from typing import Sequence, Union
 from unittest.mock import patch
 
 import appdirs
+from click.testing import Result
+from typer.testing import CliRunner
 
 from flexlate.add_mode import AddMode
 from flexlate.config import FlexlateConfig, FlexlateProjectConfig
-from flexlate.main import Flexlate
+from flexlate.cli import cli
 from tests.config import (
     GENERATED_FILES_DIR,
     COOKIECUTTER_REMOTE_URL,
@@ -19,16 +22,21 @@ from tests.config import (
 from tests.dirutils import change_directory_to
 from tests.fixtures.git import *
 
+runner = CliRunner()
+
+
+def fxt(args: Union[str, Sequence[str]]) -> Result:
+    return runner.invoke(cli, args)
+
 
 def test_init_project_and_add_source_and_template(
     repo_with_placeholder_committed: Repo,
 ):
     repo = repo_with_placeholder_committed
-    fxt = Flexlate()
     with change_directory_to(GENERATED_REPO_DIR):
-        fxt.init_project()
-        fxt.add_template_source(COOKIECUTTER_REMOTE_URL)
-        fxt.apply_template_and_add(COOKIECUTTER_REMOTE_NAME, no_input=True)
+        fxt("init")
+        fxt(["add", "source", COOKIECUTTER_REMOTE_URL])
+        fxt(["add", "output", COOKIECUTTER_REMOTE_NAME, "--no-input"])
 
     _assert_project_files_are_correct()
     _assert_config_is_correct()
@@ -42,11 +50,11 @@ def test_init_project_for_user_and_add_source_and_template(
     repo_with_placeholder_committed: Repo,
 ):
     repo = repo_with_placeholder_committed
-    fxt = Flexlate()
     with change_directory_to(GENERATED_REPO_DIR):
-        fxt.init_project(user=True)
-        fxt.add_template_source(COOKIECUTTER_REMOTE_URL)
-        fxt.apply_template_and_add(COOKIECUTTER_REMOTE_NAME, no_input=True)
+        fxt(["init", "--user"])
+        fxt(["add", "source", COOKIECUTTER_REMOTE_URL])
+        fxt(["add", "output", COOKIECUTTER_REMOTE_NAME, "--no-input"])
+
     _assert_project_files_are_correct()
     _assert_config_is_correct()
 
@@ -61,11 +69,10 @@ def test_init_project_for_user_and_add_source_and_template(
     repo_with_placeholder_committed: Repo,
 ):
     repo = repo_with_placeholder_committed
-    fxt = Flexlate()
     with change_directory_to(GENERATED_REPO_DIR):
-        fxt.init_project(user=True, default_add_mode=add_mode)
-        fxt.add_template_source(COOKIECUTTER_REMOTE_URL)
-        fxt.apply_template_and_add(COOKIECUTTER_REMOTE_NAME, no_input=True)
+        fxt(["init", "--user", "--add-mode", add_mode])
+        fxt(["add", "source", COOKIECUTTER_REMOTE_URL])
+        fxt(["add", "output", COOKIECUTTER_REMOTE_NAME, "--no-input"])
 
     _assert_project_files_are_correct()
 
@@ -81,7 +88,6 @@ def test_init_project_for_user_and_add_source_and_template(
 
     project_config_path = GENERATED_FILES_DIR / "flexlate-project.json"
     _assert_project_config_is_correct(project_config_path, user=True, add_mode=add_mode)
-
 
 
 class SubdirStyle(str, Enum):
@@ -111,24 +117,35 @@ def test_init_project_and_add_source_and_template_in_subdir(
     repo_with_placeholder_committed: Repo,
 ):
     repo = repo_with_placeholder_committed
-    fxt = Flexlate()
     with change_directory_to(GENERATED_REPO_DIR):
-        fxt.init_project(default_add_mode=add_mode)
-        fxt.add_template_source(COOKIECUTTER_REMOTE_URL)
+        fxt(["init", "--add-mode", add_mode])
+        fxt(["add", "source", COOKIECUTTER_REMOTE_URL])
         subdir = GENERATED_REPO_DIR / "subdir"
         subdir.mkdir()
         if subdir_style == SubdirStyle.CD:
             with change_directory_to(subdir):
-                fxt.apply_template_and_add(COOKIECUTTER_REMOTE_NAME, no_input=True)
+                fxt(["add", "output", COOKIECUTTER_REMOTE_NAME, "--no-input"])
         elif subdir_style == SubdirStyle.PROVIDE_RELATIVE:
-            fxt.apply_template_and_add(
-                COOKIECUTTER_REMOTE_NAME,
-                out_root=subdir.relative_to(os.getcwd()),
-                no_input=True,
+            fxt(
+                [
+                    "add",
+                    "output",
+                    COOKIECUTTER_REMOTE_NAME,
+                    "--no-input",
+                    "--root",
+                    str(subdir.relative_to(os.getcwd())),
+                ]
             )
         elif subdir_style == SubdirStyle.PROVIDE_ABSOLUTE:
-            fxt.apply_template_and_add(
-                COOKIECUTTER_REMOTE_NAME, out_root=subdir.absolute(), no_input=True
+            fxt(
+                [
+                    "add",
+                    "output",
+                    COOKIECUTTER_REMOTE_NAME,
+                    "--no-input",
+                    "--root",
+                    str(subdir.absolute()),
+                ]
             )
 
     _assert_project_files_are_correct(GENERATED_REPO_DIR / "subdir")
