@@ -59,7 +59,9 @@ def location_relative_to_new_parent(
         raise ValueError(
             f"must pass path_is_relative_to when passing relative path {path}"
         )
-    abs_path = path if path.is_absolute() else path_is_relative_to.absolute() / path
+    abs_path: Path = path
+    if not path.is_absolute() and path_is_relative_to is not None:
+        abs_path = path_is_relative_to.absolute() / path
     try:
         return new_parent / abs_path.relative_to(orig_parent)
     except ValueError as e:

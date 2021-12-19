@@ -93,14 +93,17 @@ def fast_forward_branch_without_checkout(repo: Repo, base_branch: str, ff_branch
     repo.git.fetch(repo.working_dir, f"{ff_branch}:{base_branch}")
 
 
-@contextmanager
-def temp_repo_that_pushes_to_branch(
+@contextmanager  # type: ignore
+def temp_repo_that_pushes_to_branch(  # type: ignore
     repo: Repo, branch_name: str
 ) -> ContextManager[Repo]:
     with tempfile.TemporaryDirectory() as tmp_dir:
         tmp_path = Path(tmp_dir)
         temp_repo = _clone_single_branch_from_local_repo(repo, tmp_path, branch_name)
         delete_tracked_files_excluding_initial_commit(temp_repo)
+        # For type narrowing
+        if repo.working_dir is None or temp_repo.working_dir is None:
+            raise ValueError("repo working dir cannot be None")
         copy_flexlate_configs(
             Path(repo.working_dir), Path(temp_repo.working_dir), Path(repo.working_dir)
         )

@@ -219,10 +219,10 @@ def _add_operation_via_branches(
     )
 
     # Update the template only branch with the new template
-    with temp_repo_that_pushes_to_branch(
+    with temp_repo_that_pushes_to_branch(  # type: ignore
         repo, branch_name=template_branch_name
     ) as temp_repo:
-        make_dirs_add_operation(Path(temp_repo.working_dir))
+        make_dirs_add_operation(Path(temp_repo.working_dir))  # type: ignore
         stage_and_commit_all(temp_repo, commit_message)
 
     # Bring the change into the merged branch
