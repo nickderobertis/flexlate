@@ -45,6 +45,16 @@ def merge_branch_into_current(
 def get_current_version(repo: Repo) -> str:
     return repo.head.commit.hexsha
 
+# TODO: rework template branch update process
+#  For the template branch
+#  1. Clone the local repo into a temporary directory, but only the templates branch
+#  - git clone <project path> --branch <template branch> --single-branch <temp dir>
+#  2. Wipe all non-flexlate files in the temp dir
+#  3. Render templates in temp dir
+#  4. from temp dir: git push <project path> <template branch>
+#  For the merged branch
+#  - Before checking out the branch, fast forward it without checking out via
+#  `git fetch . <current branch>:<merged branch>`
 
 @contextmanager
 def checked_out_template_branch(repo: Repo, branch_name: str):
