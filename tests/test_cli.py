@@ -12,6 +12,7 @@ from typer.testing import CliRunner
 from flexlate.add_mode import AddMode
 from flexlate.config import FlexlateConfig, FlexlateProjectConfig
 from flexlate.cli import cli
+from flexlate.main import Flexlate
 from flexlate.template_data import TemplateData
 from tests.config import (
     GENERATED_FILES_DIR,
@@ -227,7 +228,9 @@ def test_update_project(
         source = config.template_sources[0]
         source.target_version = COOKIECUTTER_REMOTE_VERSION_2
         config.save()
-        stage_and_commit_all(repo, "Update target version for cookiecutter to version 2")
+        stage_and_commit_all(
+            repo, "Update target version for cookiecutter to version 2"
+        )
         # Now update should go to new version
         fxt(["update", "--no-input"])
 

@@ -4,7 +4,7 @@ from contextlib import contextmanager
 from pathlib import Path
 from typing import cast, Set, Generator, ContextManager
 
-from git import Repo, Blob, Tree, GitCommandError  # type: ignore
+from git import Repo, Blob, Tree, GitCommandError, Commit  # type: ignore
 
 from flexlate.exc import GitRepoDirtyException, GitRepoHasNoCommitsException
 from flexlate.path_ops import copy_flexlate_configs
@@ -25,6 +25,14 @@ def checkout_template_branch(repo: Repo, branch_name: str):
             raise e
 
     branch.checkout()
+
+
+def _get_initial_commit_sha(repo: Repo) -> str:
+    return repo.git.rev_list("HEAD", max_parents=0)
+
+
+def _get_initial_commit(repo: Repo) -> Commit:
+    return repo.commit(_get_initial_commit_sha(repo))
 
 
 def stage_and_commit_all(repo: Repo, commit_message: str):
@@ -54,9 +62,15 @@ def _list_tracked_files(tree: Tree, root_path: Path) -> Set[Path]:
     return files
 
 
-def delete_tracked_files(repo: Repo):
+def delete_tracked_files_excluding_initial_commit(repo: Repo):
+    if repo.working_dir is None:
+        raise ValueError("repo working dir should not be none")
+    initial_commit_files = _list_tracked_files(
+        _get_initial_commit(repo).tree, Path(repo.working_dir)
+    )
     for path in list_tracked_files(repo):
-        os.remove(path)
+        if path not in initial_commit_files:
+            os.remove(path)
 
 
 def merge_branch_into_current(
@@ -88,15 +102,11 @@ def temp_repo_that_pushes_to_branch(
     with tempfile.TemporaryDirectory() as tmp_dir:
         tmp_path = Path(tmp_dir)
         temp_repo = _clone_single_branch_from_local_repo(repo, tmp_path, branch_name)
-        delete_tracked_files(temp_repo)
+        delete_tracked_files_excluding_initial_commit(temp_repo)
         copy_flexlate_configs(
             Path(repo.working_dir), Path(temp_repo.working_dir), Path(repo.working_dir)
         )
         yield temp_repo
-        if not _branch_exists(temp_repo, branch_name):
-            # Branch doesn't exist because this is the first template update
-            branch = temp_repo.create_head(branch_name)
-            branch.checkout()
         _push_branch_from_one_local_repo_to_another(temp_repo, repo, branch_name)
 
 
@@ -113,7 +123,13 @@ def _clone_single_branch_from_local_repo(
     repo.git.clone(
         repo.working_dir, "--branch", use_branch_name, "--single-branch", out_dir
     )
-    return Repo(out_dir)
+    temp_repo = Repo(out_dir)
+
+    if not _branch_exists(temp_repo, branch_name):
+        # Now create the new branch
+        checkout_template_branch(temp_repo, branch_name)
+
+    return temp_repo
 
 
 def _push_branch_from_one_local_repo_to_another(

@@ -1,5 +1,4 @@
 import os
-import shutil
 from pathlib import Path
 from typing import Sequence, Optional, List, Dict, Any
 
@@ -7,17 +6,14 @@ from git import Repo
 
 from flexlate.config_manager import ConfigManager
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
-from flexlate.exc import GitRepoDirtyException
 from flexlate.finder.multi import MultiFinder
-from flexlate.path_ops import make_all_dirs
+from flexlate.path_ops import make_all_dirs, location_relative_to_new_parent
 from flexlate.render.multi import MultiRenderer
 from flexlate.render.renderable import Renderable
 from flexlate.template.base import Template
 from flexlate.ext_git import (
-    delete_tracked_files,
     stage_and_commit_all,
     merge_branch_into_current,
-    checked_out_template_branch,
     checkout_template_branch,
     repo_has_merge_conflicts,
     assert_repo_is_in_clean_state,
@@ -164,7 +160,7 @@ def _move_update_config_locations_to_new_parent(
     return [
         update.copy(
             update=dict(
-                config_location=_config_location_relative_to_new_parent(
+                config_location=location_relative_to_new_parent(
                     update.config_location, orig_parent, new_parent, cwd
                 )
             )
@@ -179,25 +175,10 @@ def _move_renderable_out_roots_to_new_parent(
     return [
         renderable.copy(
             update=dict(
-                out_root=_config_location_relative_to_new_parent(
+                out_root=location_relative_to_new_parent(
                     renderable.out_root, orig_parent, new_parent, orig_parent
                 )
             )
         )
         for renderable in renderbales
     ]
-
-
-def _config_location_relative_to_new_parent(
-    path: Path, orig_parent: Path, new_parent: Path, path_is_relative_to: Path
-):
-    abs_path = path if path.is_absolute() else path_is_relative_to.absolute() / path
-    try:
-        return new_parent / abs_path.relative_to(orig_parent)
-    except ValueError as e:
-        if "is not in the subpath of" in str(e):
-            # Path is not in project, must be user path, return as is
-            return path
-
-
-

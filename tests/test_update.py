@@ -50,9 +50,9 @@ def test_update_template_dirty_repo(
 
 def test_update_modify_template(
     cookiecutter_one_modified_template: CookiecutterTemplate,
-    repo_with_template_branch_from_cookiecutter_one: Repo,
+    repo_with_gitignore_and_template_branch_from_cookiecutter_one: Repo,
 ):
-    repo = repo_with_template_branch_from_cookiecutter_one
+    repo = repo_with_gitignore_and_template_branch_from_cookiecutter_one
     updater = Updater()
     template_updates = updater.get_updates_for_templates(
         [cookiecutter_one_modified_template], project_root=GENERATED_REPO_DIR
@@ -63,12 +63,18 @@ def test_update_modify_template(
     assert repo.active_branch == main_branch
     assert (
         repo.commit().message
+        == "Merge branch 'flexlate-templates' into flexlate-output\n"
+    )
+    assert (
+        repo.commit().parents[1].message
         == f"Update flexlate templates\n\none: {COOKIECUTTER_ONE_MODIFIED_TEMPLATE_VERSION}\n"
     )
     assert (
         cookiecutter_one_generated_text_content(gen_dir=GENERATED_REPO_DIR)
         == "b and extra"
     )
+    assert (GENERATED_REPO_DIR / "ignored" / "ignored.txt").exists()
+    assert (GENERATED_REPO_DIR / ".gitignore").exists()
     template_branch.checkout()
     assert repo.active_branch == template_branch
     assert (

@@ -7,6 +7,7 @@ from tests.gitutils import (
     create_empty_repo,
     add_dummy_file_to_repo,
     add_dummy_file2_to_repo,
+    add_gitignore_and_ignored_file_to_repo,
 )
 
 
@@ -28,4 +29,12 @@ def repo_with_placeholder_committed(empty_generated_repo: Repo) -> Repo:
 def dirty_repo(repo_with_placeholder_committed: Repo) -> Repo:
     repo = repo_with_placeholder_committed
     add_dummy_file2_to_repo(repo)
+    yield repo
+
+
+@pytest.fixture
+def repo_with_gitignore(repo_with_placeholder_committed: Repo) -> Repo:
+    repo = repo_with_placeholder_committed
+    add_gitignore_and_ignored_file_to_repo(repo)
+    stage_and_commit_all(repo, "Add sample .gitignore with ignored file")
     yield repo
