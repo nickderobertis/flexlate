@@ -32,6 +32,8 @@ from tests.fixtures.templated_repo import *
 from tests.fixtures.updates import *
 from flexlate.ext_git import repo_has_merge_conflicts
 
+# TODO: Add tests for projects with .gitignore and ensure files preserved
+
 
 # TODO: check that config is updated after tests
 
