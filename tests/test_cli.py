@@ -22,7 +22,7 @@ from tests.config import (
     GENERATED_REPO_DIR,
     COOKIECUTTER_REMOTE_VERSION_1,
 )
-from tests.dirutils import change_directory_to
+from tests.dirutils import change_directory_to, display_contents_of_all_files_in_folder
 from tests.fixtures.git import *
 from tests.fixtures.template import (
     CookiecutterRemoteTemplateData,
@@ -62,11 +62,14 @@ def test_init_project_for_user_and_add_source_and_template(
     add_mode: AddMode,
     repo_with_placeholder_committed: Repo,
 ):
+    print(f"user config dir {appdirs.user_config_dir('something')}")
+
     repo = repo_with_placeholder_committed
     with change_directory_to(GENERATED_REPO_DIR):
         fxt(["init", "--user", "--add-mode", add_mode])
         fxt(["add", "source", COOKIECUTTER_REMOTE_URL])
         fxt(["add", "output", COOKIECUTTER_REMOTE_NAME, "--no-input"])
+        display_contents_of_all_files_in_folder(GENERATED_REPO_DIR)
 
     _assert_project_files_are_correct()
 
@@ -110,6 +113,8 @@ def test_init_project_and_add_source_and_template_in_subdir(
     subdir_style: SubdirStyle,
     repo_with_placeholder_committed: Repo,
 ):
+    print(f"user config dir {appdirs.user_config_dir('something')}")
+
     repo = repo_with_placeholder_committed
     with change_directory_to(GENERATED_REPO_DIR):
         fxt(["init", "--add-mode", add_mode])
@@ -141,6 +146,7 @@ def test_init_project_and_add_source_and_template_in_subdir(
                     str(subdir.absolute()),
                 ]
             )
+        display_contents_of_all_files_in_folder(GENERATED_REPO_DIR)
 
     _assert_project_files_are_correct(GENERATED_REPO_DIR / "subdir")
 
