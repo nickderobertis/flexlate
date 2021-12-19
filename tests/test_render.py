@@ -22,7 +22,7 @@ def test_render_cookiecutter_with_defaults(
     renderer = CookiecutterRenderer()
     data = renderer.render(cookiecutter_one_renderable, no_input=True)
     assert data == {"a": "b", "c": ""}
-    assert cookiecutter_one_generated_text_content() == ""
+    assert cookiecutter_one_generated_text_content() == "b"
 
 
 def test_render_cookiecutter_with_data(
@@ -35,7 +35,7 @@ def test_render_cookiecutter_with_data(
         no_input=True,
     )
     assert data == {"a": "b", "c": "something"}
-    assert cookiecutter_one_generated_text_content() == "something"
+    assert cookiecutter_one_generated_text_content() == "bsomething"
 
 
 def test_render_multi_with_defaults(cookiecutter_local_renderables: List[Renderable]):
@@ -44,7 +44,7 @@ def test_render_multi_with_defaults(cookiecutter_local_renderables: List[Rendera
         cookiecutter_local_renderables, project_root=GENERATED_FILES_DIR, no_input=True
     )
     assert data == [{"a": "b", "c": ""}, {"a": "b", "d": "e"}]
-    assert cookiecutter_one_generated_text_content() == ""
+    assert cookiecutter_one_generated_text_content() == "b"
     assert cookiecutter_two_generated_text_content() == "e"
 
 
@@ -58,7 +58,7 @@ def test_render_multi_with_data(cookiecutter_local_renderables: List[Renderable]
         no_input=True,
     )
     assert data == [{"a": "z", "c": "something"}, {"a": "z", "d": "f"}]
-    assert cookiecutter_one_generated_text_content(folder="z") == "something"
+    assert cookiecutter_one_generated_text_content(folder="z") == "zsomething"
     assert cookiecutter_two_generated_text_content(folder="z") == "f"
 
 
@@ -75,4 +75,4 @@ def test_render_multi_with_overlap(
         no_input=True,
     )
     assert data == [{"a": "b", "c": "something"}, {"a": "b", "c": "something else"}]
-    assert cookiecutter_one_generated_text_content() == "somethingsomething else"
+    assert cookiecutter_one_generated_text_content() == "bsomethingbsomething else"

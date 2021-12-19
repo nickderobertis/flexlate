@@ -16,6 +16,8 @@ from tests.config import (
     COOKIECUTTER_REMOTE_VERSION_1,
 )
 
+COOKIECUTTER_ONE_MODIFIED_TEMPLATE_VERSION = "2dc435b3d7e256fbdcc78e62faaabff4"
+
 
 class CookiecutterRemoteTemplateData(TypedDict):
     name: str
@@ -67,7 +69,7 @@ def cookiecutter_one_modified_template(
         shutil.copytree(template.path, out_path, dirs_exist_ok=True)
         template.path = out_path
         text_path = out_path / "{{ cookiecutter.a }}" / "text.txt"
-        text_path.write_text("{{ cookiecutter.c }} and extra")
+        text_path.write_text("{{ cookiecutter.a }}{{ cookiecutter.c }} and extra")
         # Update version
         template.version = template.folder_hash
         yield template
