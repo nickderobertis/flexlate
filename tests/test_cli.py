@@ -65,10 +65,14 @@ def test_init_project_for_user_and_add_source_and_template(
     print(f"user config dir {appdirs.user_config_dir('something')}")
 
     repo = repo_with_placeholder_committed
+    fxt = Flexlate()
     with change_directory_to(GENERATED_REPO_DIR):
-        fxt(["init", "--user", "--add-mode", add_mode])
-        fxt(["add", "source", COOKIECUTTER_REMOTE_URL])
-        fxt(["add", "output", COOKIECUTTER_REMOTE_NAME, "--no-input"])
+        fxt.init_project(user=True, default_add_mode=add_mode)
+        fxt.add_template_source(COOKIECUTTER_REMOTE_URL)
+        fxt.apply_template_and_add(COOKIECUTTER_REMOTE_NAME, no_input=True)
+        # fxt(["init", "--user", "--add-mode", add_mode])
+        # fxt(["add", "source", COOKIECUTTER_REMOTE_URL])
+        # fxt(["add", "output", COOKIECUTTER_REMOTE_NAME, "--no-input"])
         print("Contents of main repo")
         display_contents_of_all_files_in_folder(GENERATED_FILES_DIR)
         print("Main repo branches", repo.branches)
