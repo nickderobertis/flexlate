@@ -6,6 +6,8 @@ from tests.config import GENERATED_REPO_DIR
 
 
 def create_empty_repo(out_dir: Path = GENERATED_REPO_DIR) -> Repo:
+    if not out_dir.exists():
+        out_dir.mkdir(parents=True)
     return Repo.init(out_dir)
 
 
