@@ -53,9 +53,11 @@ class Updater:
             repo, branch_name=template_branch_name
         ) as temp_repo:
             temp_out_path = Path(temp_repo.working_dir)  # type: ignore
+            print("updates before move config locations", updates[0])
             temp_updates = _move_update_config_locations_to_new_parent(
                 updates, out_path, temp_out_path
             )
+            print("updates after move config locations", temp_updates[0])
             config_manager.update_templates(temp_updates, project_root=temp_out_path)
             renderables = _move_renderable_out_roots_to_new_parent(
                 config_manager.get_renderables(project_root=temp_out_path),
