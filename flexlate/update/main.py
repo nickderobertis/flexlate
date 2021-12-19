@@ -18,6 +18,7 @@ from flexlate.ext_git import (
     checkout_template_branch,
     repo_has_merge_conflicts,
     assert_repo_is_in_clean_state,
+    temp_repo_that_pushes_to_branch,
 )
 from flexlate.template_data import TemplateData, merge_data
 from flexlate.update.template import (
@@ -47,18 +48,28 @@ class Updater:
         # Prepare the template branch, this is the branch that stores only the template files
         # Create it from the initial commit if it does not exist
         cwd = Path(os.getcwd())
-        with checked_out_template_branch(repo, branch_name=template_branch_name):
-            config_manager.update_templates(updates, project_root=out_path)
-            renderables = config_manager.get_renderables(project_root=out_path)
+        with temp_repo_that_pushes_to_branch(
+            repo, branch_name=template_branch_name
+        ) as temp_repo:
+            temp_out_path = Path(temp_repo.working_dir)
+            temp_updates = _move_update_config_locations_to_new_parent(
+                updates, out_path, temp_out_path
+            )
+            config_manager.update_templates(temp_updates, project_root=temp_out_path)
+            renderables = _move_renderable_out_roots_to_new_parent(
+                config_manager.get_renderables(project_root=temp_out_path),
+                out_path,
+                temp_out_path,
+            )
             _create_cwd_and_directories_if_needed(
                 cwd, [renderable.out_root for renderable in renderables]
             )
             updated_data = renderer.render(
-                renderables, project_root=out_path, no_input=no_input
+                renderables, project_root=temp_out_path, no_input=no_input
             )
-            new_updates = updates_with_updated_data(updates, updated_data)
-            config_manager.update_templates(new_updates, project_root=out_path)
-            stage_and_commit_all(repo, _commit_message(renderables))
+            new_updates = updates_with_updated_data(temp_updates, updated_data)
+            config_manager.update_templates(new_updates, project_root=temp_out_path)
+            stage_and_commit_all(temp_repo, _commit_message(renderables))
 
         # Now prepare the merged (output) branch, by merging the current
         # branch into it and then the template branch into it.
@@ -140,3 +151,46 @@ def _create_cwd_and_directories_if_needed(cwd: Path, directories: Sequence[Path]
     os.chdir(cwd)
 
     make_all_dirs(directories)
+
+
+def _move_update_config_locations_to_new_parent(
+    updates: Sequence[TemplateUpdate], orig_parent: Path, new_parent: Path
+) -> List[TemplateUpdate]:
+    cwd = Path(os.getcwd())
+    return [
+        update.copy(
+            update=dict(
+                config_location=_config_location_relative_to_new_parent(
+                    update.config_location, orig_parent, new_parent, cwd
+                )
+            )
+        )
+        for update in updates
+    ]
+
+
+def _move_renderable_out_roots_to_new_parent(
+    renderbales: Sequence[Renderable], orig_parent: Path, new_parent: Path
+) -> List[Renderable]:
+    return [
+        renderable.copy(
+            update=dict(
+                out_root=_config_location_relative_to_new_parent(
+                    renderable.out_root, orig_parent, new_parent, orig_parent
+                )
+            )
+        )
+        for renderable in renderbales
+    ]
+
+
+def _config_location_relative_to_new_parent(
+    path: Path, orig_parent: Path, new_parent: Path, path_is_relative_to: Path
+):
+    abs_path = path if path.is_absolute() else path_is_relative_to.absolute() / path
+    try:
+        return new_parent / abs_path.relative_to(orig_parent)
+    except ValueError as e:
+        if "is not in the subpath of" in str(e):
+            # Path is not in project, must be user path, return as is
+            return path

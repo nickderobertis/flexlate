@@ -1,7 +1,8 @@
 import os
+import tempfile
 from contextlib import contextmanager
 from pathlib import Path
-from typing import cast, Set
+from typing import cast, Set, Generator, ContextManager
 
 from git import Repo, Blob, Tree, GitCommandError  # type: ignore
 
@@ -45,6 +46,7 @@ def merge_branch_into_current(
 def get_current_version(repo: Repo) -> str:
     return repo.head.commit.hexsha
 
+
 # TODO: rework template branch update process
 #  For the template branch
 #  1. Clone the local repo into a temporary directory, but only the templates branch
@@ -55,6 +57,52 @@ def get_current_version(repo: Repo) -> str:
 #  For the merged branch
 #  - Before checking out the branch, fast forward it without checking out via
 #  `git fetch . <current branch>:<merged branch>`
+
+
+@contextmanager
+def temp_repo_that_pushes_to_branch(
+    repo: Repo, branch_name: str
+) -> ContextManager[Repo]:
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        tmp_path = Path(tmp_dir)
+        temp_repo = _clone_single_branch_from_local_repo(repo, tmp_path, branch_name)
+        yield temp_repo
+        if not _branch_exists(temp_repo, branch_name):
+            # Branch doesn't exist because this is the first template update
+            branch = temp_repo.create_head(branch_name)
+            branch.checkout()
+        _push_branch_from_one_local_repo_to_another(temp_repo, repo, branch_name)
+
+
+def _clone_single_branch_from_local_repo(
+    repo: Repo, out_dir: Path, branch_name: str
+) -> Repo:
+    use_branch_name = branch_name
+    if not _branch_exists(repo, branch_name):
+        # Branch doesn't exist, instead clone the current one
+        # Will need to do the checkout later after adding files
+        use_branch_name = repo.active_branch.name
+
+    # Branch exists, clone only that branch
+    repo.git.clone(
+        repo.working_dir, "--branch", use_branch_name, "--single-branch", out_dir
+    )
+    return Repo(out_dir)
+
+
+def _push_branch_from_one_local_repo_to_another(
+    from_repo: Repo, to_repo: Repo, branch_name: str
+):
+    from_repo.git.push(to_repo.working_dir, branch_name)
+
+
+def _branch_exists(repo: Repo, branch_name: str) -> bool:
+    try:
+        repo.branches[branch_name]  # type: ignore
+        return True
+    except IndexError:
+        return False
+
 
 @contextmanager
 def checked_out_template_branch(repo: Repo, branch_name: str):
