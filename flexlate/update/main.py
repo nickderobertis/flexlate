@@ -18,6 +18,7 @@ from flexlate.ext_git import (
     repo_has_merge_conflicts,
     assert_repo_is_in_clean_state,
     temp_repo_that_pushes_to_branch,
+    fast_forward_branch_without_checkout,
 )
 from flexlate.template_data import TemplateData, merge_data
 from flexlate.update.template import (
@@ -73,10 +74,12 @@ class Updater:
 
         # Now prepare the merged (output) branch, by merging the current
         # branch into it and then the template branch into it.
-        checkout_template_branch(repo, merged_branch_name)
         # Update with changes from the main repo
-        merge_branch_into_current(repo, current_branch.name)
+        fast_forward_branch_without_checkout(
+            repo, merged_branch_name, current_branch.name
+        )
         # Update with template changes
+        checkout_template_branch(repo, merged_branch_name)
         merge_branch_into_current(repo, template_branch_name)
 
         if not repo_has_merge_conflicts(repo):

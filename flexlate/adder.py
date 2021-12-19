@@ -8,13 +8,13 @@ from flexlate.add_mode import AddMode, get_expanded_out_root
 from flexlate.config import FlexlateConfig
 from flexlate.config_manager import ConfigManager
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
-from flexlate.exc import GitRepoDirtyException
 from flexlate.ext_git import (
     checked_out_template_branch,
     stage_and_commit_all,
     merge_branch_into_current,
     assert_repo_is_in_clean_state,
     temp_repo_that_pushes_to_branch,
+    fast_forward_branch_without_checkout,
 )
 from flexlate.path_ops import (
     make_func_that_creates_cwd_and_out_root_before_running,
@@ -226,9 +226,9 @@ def _add_operation_via_branches(
         stage_and_commit_all(temp_repo, commit_message)
 
     # Bring the change into the merged branch
+    # Update with changes from the main repo
+    fast_forward_branch_without_checkout(repo, merged_branch_name, current_branch.name)
     with checked_out_template_branch(repo, branch_name=merged_branch_name):
-        # Update with changes from the main repo
-        merge_branch_into_current(repo, current_branch.name)
         # Update with the new template
         merge_branch_into_current(repo, template_branch_name)
 

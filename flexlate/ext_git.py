@@ -89,10 +89,8 @@ def get_current_version(repo: Repo) -> str:
     return repo.head.commit.hexsha
 
 
-# TODO: rework template branch update process
-#  For the merged branch
-#  - Before checking out the branch, fast forward it without checking out via
-#  `git fetch . <current branch>:<merged branch>`
+def fast_forward_branch_without_checkout(repo: Repo, base_branch: str, ff_branch: str):
+    repo.git.fetch(repo.working_dir, f"{ff_branch}:{base_branch}")
 
 
 @contextmanager
