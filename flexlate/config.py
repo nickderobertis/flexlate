@@ -21,8 +21,8 @@ class TemplateSource(BaseModel):
     path: str
     type: TemplateType
     version: Optional[str] = None
-    target_version: Optional[str] = None
     git_url: Optional[str] = None
+    target_version: Optional[str] = None
 
     @classmethod
     def from_template(

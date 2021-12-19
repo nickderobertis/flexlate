@@ -146,3 +146,4 @@ class Flexlate:
         )
 
     # TODO: list template sources, list applied templates, remove applied templates and sources
+    # TODO: Update target versions in template sources

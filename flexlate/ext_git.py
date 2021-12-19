@@ -55,8 +55,6 @@ def _list_tracked_files(tree: Tree, root_path: Path) -> Set[Path]:
 
 def delete_tracked_files(repo: Repo):
     for path in list_tracked_files(repo):
-        if path.name in ("flexlate.json", "flexlate-project.json"):
-            continue
         os.remove(path)
 
 
@@ -77,12 +75,6 @@ def get_current_version(repo: Repo) -> str:
 
 
 # TODO: rework template branch update process
-#  For the template branch
-#  1. Clone the local repo into a temporary directory, but only the templates branch
-#  - git clone <project path> --branch <template branch> --single-branch <temp dir>
-#  2. Wipe all non-flexlate files in the temp dir
-#  3. Render templates in temp dir
-#  4. from temp dir: git push <project path> <template branch>
 #  For the merged branch
 #  - Before checking out the branch, fast forward it without checking out via
 #  `git fetch . <current branch>:<merged branch>`

@@ -213,6 +213,23 @@ def test_update_project(
             expect_data=expect_data, version=COOKIECUTTER_REMOTE_VERSION_1
         )
         fxt(["update", "--no-input"])
+        # First update does nothing, because version is at target version
+        _assert_project_files_are_correct(
+            expect_data=expect_data, version=COOKIECUTTER_REMOTE_VERSION_1
+        )
+        _assert_config_is_correct(
+            expect_data=expect_data, version=COOKIECUTTER_REMOTE_VERSION_1
+        )
+        # Now update the target version
+        # TODO: replace with cli command to update target version once it exists
+        config_path = GENERATED_REPO_DIR / "flexlate.json"
+        config = FlexlateConfig.load(config_path)
+        source = config.template_sources[0]
+        source.target_version = COOKIECUTTER_REMOTE_VERSION_2
+        config.save()
+        stage_and_commit_all(repo, "Update target version for cookiecutter to version 2")
+        # Now update should go to new version
+        fxt(["update", "--no-input"])
 
     _assert_project_files_are_correct(expect_data=expect_data)
     _assert_config_is_correct(expect_data=expect_data)
