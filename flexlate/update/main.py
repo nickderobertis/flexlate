@@ -25,6 +25,7 @@ from flexlate.update.template import (
     TemplateUpdate,
     updates_with_updated_data,
 )
+from tests.dirutils import display_contents_of_all_files_in_folder
 
 
 class Updater:
@@ -71,6 +72,8 @@ class Updater:
             new_updates = updates_with_updated_data(temp_updates, updated_data)
             config_manager.update_templates(new_updates, project_root=temp_out_path)
             stage_and_commit_all(temp_repo, _commit_message(renderables))
+            print("\n\nContents of temp repo before push to main repo\n\n")
+            display_contents_of_all_files_in_folder(temp_out_path)
 
         # Now prepare the merged (output) branch, by merging the current
         # branch into it and then the template branch into it.
