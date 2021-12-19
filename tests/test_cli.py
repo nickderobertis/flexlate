@@ -69,7 +69,7 @@ def test_init_project_for_user_and_add_source_and_template(
         fxt(["init", "--user", "--add-mode", add_mode])
         fxt(["add", "source", COOKIECUTTER_REMOTE_URL])
         fxt(["add", "output", COOKIECUTTER_REMOTE_NAME, "--no-input"])
-        display_contents_of_all_files_in_folder(GENERATED_REPO_DIR)
+        display_contents_of_all_files_in_folder(GENERATED_FILES_DIR)
 
     _assert_project_files_are_correct()
 
@@ -146,7 +146,7 @@ def test_init_project_and_add_source_and_template_in_subdir(
                     str(subdir.absolute()),
                 ]
             )
-        display_contents_of_all_files_in_folder(GENERATED_REPO_DIR)
+        display_contents_of_all_files_in_folder(GENERATED_FILES_DIR)
 
     _assert_project_files_are_correct(GENERATED_REPO_DIR / "subdir")
 
