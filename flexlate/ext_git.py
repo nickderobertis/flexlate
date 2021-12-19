@@ -7,6 +7,7 @@ from typing import cast, Set, Generator, ContextManager
 from git import Repo, Blob, Tree, GitCommandError  # type: ignore
 
 from flexlate.exc import GitRepoDirtyException, GitRepoHasNoCommitsException
+from flexlate.path_ops import copy_flexlate_configs
 
 
 def checkout_template_branch(repo: Repo, branch_name: str):
@@ -87,6 +88,10 @@ def temp_repo_that_pushes_to_branch(
     with tempfile.TemporaryDirectory() as tmp_dir:
         tmp_path = Path(tmp_dir)
         temp_repo = _clone_single_branch_from_local_repo(repo, tmp_path, branch_name)
+        delete_tracked_files(temp_repo)
+        copy_flexlate_configs(
+            Path(repo.working_dir), Path(temp_repo.working_dir), Path(repo.working_dir)
+        )
         yield temp_repo
         if not _branch_exists(temp_repo, branch_name):
             # Branch doesn't exist because this is the first template update

@@ -64,8 +64,7 @@ class Updater:
                 out_path,
                 temp_out_path,
             )
-            delete_tracked_files(temp_repo)
-            _copy_flexlate_configs(out_path, temp_out_path, out_path)
+
             _create_cwd_and_directories_if_needed(
                 cwd, [renderable.out_root for renderable in renderables]
             )
@@ -201,15 +200,4 @@ def _config_location_relative_to_new_parent(
             return path
 
 
-def _copy_flexlate_configs(src: Path, dst: Path, root: Path):
-    relative_path = src.absolute().relative_to(root.absolute())
-    for path in src.absolute().iterdir():
-        if path.name in ("flexlate.json", "flexlate-project.json"):
-            shutil.copy(path, dst)
-        elif path.name == ".git":
-            continue
-        elif path.is_dir():
-            dst_dir = dst / relative_path / path.name
-            if not dst_dir.exists():
-                dst_dir.mkdir()
-            _copy_flexlate_configs(path, dst_dir, root)
+
