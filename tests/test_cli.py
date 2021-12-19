@@ -57,23 +57,6 @@ def test_init_project_and_add_source_and_template(
 
 
 @patch.object(appdirs, "user_config_dir", lambda name: GENERATED_FILES_DIR)
-def test_init_project_for_user_and_add_source_and_template(
-    repo_with_placeholder_committed: Repo,
-):
-    repo = repo_with_placeholder_committed
-    with change_directory_to(GENERATED_REPO_DIR):
-        fxt(["init", "--user"])
-        fxt(["add", "source", COOKIECUTTER_REMOTE_URL])
-        fxt(["add", "output", COOKIECUTTER_REMOTE_NAME, "--no-input"])
-
-    _assert_project_files_are_correct()
-    _assert_config_is_correct()
-
-    project_config_path = GENERATED_FILES_DIR / "flexlate-project.json"
-    _assert_project_config_is_correct(project_config_path, user=True)
-
-
-@patch.object(appdirs, "user_config_dir", lambda name: GENERATED_FILES_DIR)
 @pytest.mark.parametrize("add_mode", [AddMode.LOCAL, AddMode.PROJECT, AddMode.USER])
 def test_init_project_for_user_and_add_source_and_template(
     add_mode: AddMode,
