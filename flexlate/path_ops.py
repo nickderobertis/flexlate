@@ -60,7 +60,6 @@ def location_relative_to_new_parent(  # type: ignore
     print("orig parent", orig_parent)
     print("new parent", new_parent)
     print("path is relative to", path_is_relative_to)
-    breakpoint()
     if path_is_relative_to is None and not path.is_absolute():
         print("hit value error")
         raise ValueError(
