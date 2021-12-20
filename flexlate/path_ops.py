@@ -78,3 +78,5 @@ def location_relative_to_new_parent(  # type: ignore
             # Path is not in project, must be user path, return as is
             print("not in subpath, returning", path)
             return path
+        else:
+            raise e
