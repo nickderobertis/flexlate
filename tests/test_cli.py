@@ -62,21 +62,11 @@ def test_init_project_for_user_and_add_source_and_template(
     add_mode: AddMode,
     repo_with_placeholder_committed: Repo,
 ):
-    print(f"user config dir {appdirs.user_config_dir('something')}")
-
     repo = repo_with_placeholder_committed
-    fxt = Flexlate()
     with change_directory_to(GENERATED_REPO_DIR):
-        fxt.init_project(user=True, default_add_mode=add_mode)
-        fxt.add_template_source(COOKIECUTTER_REMOTE_URL)
-        fxt.apply_template_and_add(COOKIECUTTER_REMOTE_NAME, no_input=True)
-        # fxt(["init", "--user", "--add-mode", add_mode])
-        # fxt(["add", "source", COOKIECUTTER_REMOTE_URL])
-        # fxt(["add", "output", COOKIECUTTER_REMOTE_NAME, "--no-input"])
-        print("Contents of main repo")
-        display_contents_of_all_files_in_folder(GENERATED_FILES_DIR)
-        print("Main repo branches", repo.branches)
-        print("Active branch", repo.active_branch)
+        fxt(["init", "--user", "--add-mode", add_mode])
+        fxt(["add", "source", COOKIECUTTER_REMOTE_URL])
+        fxt(["add", "output", COOKIECUTTER_REMOTE_NAME, "--no-input"])
 
     _assert_project_files_are_correct()
 
@@ -120,8 +110,6 @@ def test_init_project_and_add_source_and_template_in_subdir(
     subdir_style: SubdirStyle,
     repo_with_placeholder_committed: Repo,
 ):
-    print(f"user config dir {appdirs.user_config_dir('something')}")
-
     repo = repo_with_placeholder_committed
     with change_directory_to(GENERATED_REPO_DIR):
         fxt(["init", "--add-mode", add_mode])
@@ -153,10 +141,6 @@ def test_init_project_and_add_source_and_template_in_subdir(
                     str(subdir.absolute()),
                 ]
             )
-        print("Contents of main repo")
-        display_contents_of_all_files_in_folder(GENERATED_FILES_DIR)
-        print("Main repo branches", repo.branches)
-        print("Active branch", repo.active_branch)
 
     _assert_project_files_are_correct(GENERATED_REPO_DIR / "subdir")
 

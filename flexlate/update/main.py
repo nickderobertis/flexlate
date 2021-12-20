@@ -53,11 +53,9 @@ class Updater:
             repo, branch_name=template_branch_name
         ) as temp_repo:
             temp_out_path = Path(temp_repo.working_dir)  # type: ignore
-            print("updates before move config locations", updates[0])
             temp_updates = _move_update_config_locations_to_new_parent(
                 updates, out_path, temp_out_path
             )
-            print("updates after move config locations", temp_updates[0])
             config_manager.update_templates(temp_updates, project_root=temp_out_path)
             renderables = _move_renderable_out_roots_to_new_parent(
                 config_manager.get_renderables(project_root=temp_out_path),
@@ -74,8 +72,6 @@ class Updater:
             new_updates = updates_with_updated_data(temp_updates, updated_data)
             config_manager.update_templates(new_updates, project_root=temp_out_path)
             stage_and_commit_all(temp_repo, _commit_message(renderables))
-            print("\n\nContents of temp repo before push to main repo\n\n")
-            display_contents_of_all_files_in_folder(temp_out_path)
 
         # Now prepare the merged (output) branch, by merging the current
         # branch into it and then the template branch into it.
