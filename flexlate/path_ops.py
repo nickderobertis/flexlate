@@ -49,7 +49,7 @@ def copy_flexlate_configs(src: Path, dst: Path, root: Path):
             copy_flexlate_configs(path, dst_dir, root)
 
 
-def location_relative_to_new_parent(
+def location_relative_to_new_parent(  # type: ignore
     path: Path,
     orig_parent: Path,
     new_parent: Path,
