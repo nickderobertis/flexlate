@@ -60,6 +60,7 @@ def location_relative_to_new_parent(  # type: ignore
     print("orig parent", orig_parent)
     print("new parent", new_parent)
     print("path is relative to", path_is_relative_to)
+    breakpoint()
     if path_is_relative_to is None and not path.is_absolute():
         print("hit value error")
         raise ValueError(
@@ -74,7 +75,9 @@ def location_relative_to_new_parent(  # type: ignore
         print("got result", result)
         return result
     except ValueError as e:
-        if "is not in the subpath of" in str(e):
+        # python >= 3.9: is not in the subpath of
+        # python <= 3.8: does not start with
+        if "is not in the subpath of" in str(e) or "does not start with" in str(e):
             # Path is not in project, must be user path, return as is
             print("not in subpath, returning", path)
             return path
