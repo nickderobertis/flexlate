@@ -8,14 +8,18 @@ from flexlate.add_mode import AddMode, get_expanded_out_root
 from flexlate.config import FlexlateConfig
 from flexlate.config_manager import ConfigManager
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
-from flexlate.exc import GitRepoDirtyException
 from flexlate.ext_git import (
     checked_out_template_branch,
     stage_and_commit_all,
     merge_branch_into_current,
     assert_repo_is_in_clean_state,
+    temp_repo_that_pushes_to_branch,
+    fast_forward_branch_without_checkout,
 )
-from flexlate.path_ops import make_func_that_creates_cwd_and_out_root_before_running
+from flexlate.path_ops import (
+    make_func_that_creates_cwd_and_out_root_before_running,
+    location_relative_to_new_parent,
+)
 from flexlate.render.multi import MultiRenderer
 from flexlate.template.base import Template
 from flexlate.template_data import TemplateData
@@ -40,6 +44,7 @@ class Adder:
             raise ValueError("repo working dir should not be none")
 
         config_path = _determine_config_path(out_root, Path(repo.working_dir), add_mode)
+        project_root = Path(repo.working_dir)
 
         if add_mode == AddMode.USER:
             # No need to use git if adding for user
@@ -53,11 +58,13 @@ class Adder:
 
         # Local or project config, add in git
         _add_operation_via_branches(
-            lambda: config_manager.add_template_source(
+            lambda temp_path: config_manager.add_template_source(
                 template,
-                config_path,
+                location_relative_to_new_parent(
+                    config_path, project_root, temp_path, Path(os.getcwd())
+                ),
                 target_version=target_version,
-                project_root=Path(repo.working_dir),  # type: ignore
+                project_root=temp_path,
             ),
             repo,
             _add_template_source_commit_message(
@@ -102,11 +109,13 @@ class Adder:
         else:
             # Commit changes for local and project
             _add_operation_via_branches(
-                lambda: config_manager.add_applied_template(
+                lambda temp_path: config_manager.add_applied_template(
                     template,
-                    config_path,
+                    location_relative_to_new_parent(
+                        config_path, project_root, temp_path, Path(os.getcwd())
+                    ),
                     data=data,
-                    project_root=project_root,
+                    project_root=temp_path,
                     out_root=expanded_out_root,
                 ),
                 repo,
@@ -117,7 +126,6 @@ class Adder:
                 merged_branch_name=merged_branch_name,
                 template_branch_name=template_branch_name,
             )
-
         template_update = TemplateUpdate(
             template=template,
             config_location=config_path,
@@ -166,8 +174,8 @@ class Adder:
 
         # Config resides in project, so add it via branches
         _add_operation_via_branches(
-            lambda: config_manager.add_project(
-                path=path,
+            lambda temp_path: config_manager.add_project(
+                path=temp_path,
                 default_add_mode=default_add_mode,
                 user=user,
                 merged_branch_name=merged_branch_name,
@@ -196,7 +204,7 @@ def _determine_config_path(
 
 
 def _add_operation_via_branches(
-    add_operation: Callable[[], None],
+    add_operation: Callable[[Path], None],
     repo: Repo,
     commit_message: str,
     out_root: Path,
@@ -211,14 +219,16 @@ def _add_operation_via_branches(
     )
 
     # Update the template only branch with the new template
-    with checked_out_template_branch(repo, branch_name=template_branch_name):
-        make_dirs_add_operation()
-        stage_and_commit_all(repo, commit_message)
+    with temp_repo_that_pushes_to_branch(  # type: ignore
+        repo, branch_name=template_branch_name
+    ) as temp_repo:
+        make_dirs_add_operation(Path(temp_repo.working_dir))  # type: ignore
+        stage_and_commit_all(temp_repo, commit_message)
 
     # Bring the change into the merged branch
+    # Update with changes from the main repo
+    fast_forward_branch_without_checkout(repo, merged_branch_name, current_branch.name)
     with checked_out_template_branch(repo, branch_name=merged_branch_name):
-        # Update with changes from the main repo
-        merge_branch_into_current(repo, current_branch.name)
         # Update with the new template
         merge_branch_into_current(repo, template_branch_name)
 

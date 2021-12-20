@@ -12,12 +12,25 @@ from tests.config import (
     COOKIECUTTER_ONE_DIR,
     COOKIECUTTER_TWO_DIR,
     COOKIECUTTER_REMOTE_URL,
+    COOKIECUTTER_REMOTE_VERSION_2,
+    COOKIECUTTER_REMOTE_VERSION_1,
 )
+
+COOKIECUTTER_ONE_MODIFIED_TEMPLATE_VERSION = "2dc435b3d7e256fbdcc78e62faaabff4"
 
 
 class CookiecutterRemoteTemplateData(TypedDict):
     name: str
     key: str
+
+
+def get_header_for_cookiecutter_remote_template(version: str) -> str:
+    if version == COOKIECUTTER_REMOTE_VERSION_2:
+        return "some new header\n"
+    elif version == COOKIECUTTER_REMOTE_VERSION_1:
+        return ""
+    else:
+        raise ValueError(f"unknown cookiecutter remote version {version}")
 
 
 @pytest.fixture
@@ -56,7 +69,7 @@ def cookiecutter_one_modified_template(
         shutil.copytree(template.path, out_path, dirs_exist_ok=True)
         template.path = out_path
         text_path = out_path / "{{ cookiecutter.a }}" / "text.txt"
-        text_path.write_text("{{ cookiecutter.c }} and extra")
+        text_path.write_text("{{ cookiecutter.a }}{{ cookiecutter.c }} and extra")
         # Update version
         template.version = template.folder_hash
         yield template

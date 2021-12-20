@@ -11,8 +11,11 @@ from tests.config import (
     CONFIGS_DIR,
     GENERATED_FILES_DIR,
     PROJECT_CONFIGS_PROJECT_1_PATH,
-    PROJECT_CONFIGS_PROJECT_1_SUBDIR, PROJECT_CONFIGS_PROJECT_2_PATH, PROJECT_CONFIGS_PROJECT_2_SUBDIR,
-    PROJECT_CONFIGS_DIR, GENERATED_REPO_DIR,
+    PROJECT_CONFIGS_PROJECT_1_SUBDIR,
+    PROJECT_CONFIGS_PROJECT_2_PATH,
+    PROJECT_CONFIGS_PROJECT_2_SUBDIR,
+    PROJECT_CONFIGS_DIR,
+    GENERATED_REPO_DIR,
 )
 from tests.dirutils import wipe_generated_folder
 from tests.fixtures.config import generated_dir_with_configs
@@ -55,7 +58,7 @@ def test_update_and_save_multi_config(
 
     def assert_is_updated_template_one(template: AppliedTemplateConfig):
         assert template.name == "one"
-        assert template.version == "7e18a6cc14856c8558ac999efa01e5e8"
+        assert template.version == COOKIECUTTER_ONE_MODIFIED_TEMPLATE_VERSION
         assert template.data["a"] == "yeah"
         assert template.data["c"] == "woo"
 
