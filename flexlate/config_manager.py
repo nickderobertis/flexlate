@@ -20,6 +20,7 @@ from flexlate.exc import (
     CannotLoadConfigException,
     FlexlateProjectConfigFileNotExistsException,
     CannotRemoveTemplateSourceException,
+    CannotRemoveAppliedTemplateException,
 )
 from flexlate.render.renderable import Renderable
 from flexlate.template.base import Template
@@ -261,6 +262,30 @@ class ConfigManager:
             root=out_root,
         )
         child_config.applied_templates.append(applied)
+        self.save_config(config)
+
+    def remove_applied_template(
+        self,
+        template_name: str,
+        config_path: Path,
+        project_root: Path = Path("."),
+        out_root: Path = Path("."),
+    ):
+        config = self.load_config(project_root=project_root)
+        child_config = _get_or_create_child_config_by_path(config, config_path)
+        template_index: Optional[int] = None
+        for i, applied_template in enumerate(child_config.applied_templates):
+            if (
+                applied_template.name == template_name
+                and applied_template.root == out_root
+            ):
+                template_index = i
+                break
+        if template_index is None:
+            raise CannotRemoveAppliedTemplateException(
+                f"Cannot find any applied template with name {template_name} and root {out_root}"
+            )
+        child_config.applied_templates.pop(template_index)
         self.save_config(config)
 
     def get_num_applied_templates_in_child_config(
