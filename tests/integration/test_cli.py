@@ -1,17 +1,14 @@
 # Integration tests
 import os
-from enum import Enum
 from pathlib import Path
 from typing import Optional
 from unittest.mock import patch
 
 import appdirs
-import pytest
 from git import GitCommandError
 
 from flexlate.add_mode import AddMode
 from flexlate.config import FlexlateConfig, FlexlateProjectConfig
-from flexlate.main import Flexlate
 from tests.config import (
     GENERATED_FILES_DIR,
     COOKIECUTTER_REMOTE_URL,
@@ -20,11 +17,13 @@ from tests.config import (
     COOKIECUTTER_REMOTE_VERSION_1,
 )
 from tests.fixtures.git import *
+from tests.fixtures.subdir_style import SubdirStyle, subdir_style
 from tests.fixtures.template import (
     CookiecutterRemoteTemplateData,
     get_header_for_cookiecutter_remote_template,
 )
-from tests.fixtures.cli import flexlates, FlexlateFixture, FlexlateType
+from tests.fixtures.cli import FlexlateFixture, FlexlateType, flexlates
+from tests.fixtures.add_mode import add_mode
 
 
 def test_init_project_and_add_source_and_template(
@@ -50,7 +49,6 @@ def test_init_project_and_add_source_and_template(
 
 
 @patch.object(appdirs, "user_config_dir", lambda name: GENERATED_FILES_DIR)
-@pytest.mark.parametrize("add_mode", [AddMode.LOCAL, AddMode.PROJECT, AddMode.USER])
 def test_init_project_for_user_and_add_source_and_template(
     flexlates: FlexlateFixture,
     add_mode: AddMode,
@@ -79,27 +77,7 @@ def test_init_project_for_user_and_add_source_and_template(
     _assert_project_config_is_correct(project_config_path, user=True, add_mode=add_mode)
 
 
-class SubdirStyle(str, Enum):
-    CD = "cd"
-    PROVIDE_RELATIVE = "provide relative"
-    PROVIDE_ABSOLUTE = "provide absolute"
-
-
 @patch.object(appdirs, "user_config_dir", lambda name: GENERATED_FILES_DIR)
-@pytest.mark.parametrize(
-    "add_mode, subdir_style",
-    [
-        (AddMode.LOCAL, SubdirStyle.CD),
-        (AddMode.PROJECT, SubdirStyle.CD),
-        (AddMode.USER, SubdirStyle.CD),
-        (AddMode.LOCAL, SubdirStyle.PROVIDE_RELATIVE),
-        (AddMode.PROJECT, SubdirStyle.PROVIDE_RELATIVE),
-        (AddMode.USER, SubdirStyle.PROVIDE_RELATIVE),
-        (AddMode.LOCAL, SubdirStyle.PROVIDE_ABSOLUTE),
-        (AddMode.PROJECT, SubdirStyle.PROVIDE_ABSOLUTE),
-        (AddMode.USER, SubdirStyle.PROVIDE_ABSOLUTE),
-    ],
-)
 def test_init_project_and_add_source_and_template_in_subdir(
     flexlates: FlexlateFixture,
     add_mode: AddMode,
