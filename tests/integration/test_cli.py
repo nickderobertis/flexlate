@@ -196,6 +196,30 @@ def test_update_project(
     _assert_project_config_is_correct(project_config_path, user=False)
 
 
+@patch.object(appdirs, "user_config_dir", lambda name: GENERATED_FILES_DIR)
+@pytest.mark.parametrize("user", [False, True])
+def test_remove_template_source(
+    user: bool,
+    flexlates: FlexlateFixture,
+    add_mode: AddMode,
+    repo_with_placeholder_committed: Repo,
+):
+    fxt = flexlates.flexlate
+    with change_directory_to(GENERATED_REPO_DIR):
+        fxt.init_project(user=user, default_add_mode=add_mode)
+        fxt.add_template_source(COOKIECUTTER_REMOTE_URL)
+        fxt.remove_template_source(COOKIECUTTER_REMOTE_NAME)
+
+    config_root = (
+        GENERATED_FILES_DIR if add_mode == AddMode.USER else GENERATED_REPO_DIR
+    )
+    project_config_root = GENERATED_FILES_DIR if user else GENERATED_REPO_DIR
+
+    _assert_template_sources_config_is_empty(config_root / "flexlate.json")
+    project_config_path = project_config_root / "flexlate-project.json"
+    _assert_project_config_is_correct(project_config_path, user=user, add_mode=add_mode)
+
+
 def _assert_project_files_are_correct(
     root: Path = GENERATED_REPO_DIR,
     expect_data: Optional[CookiecutterRemoteTemplateData] = None,
@@ -221,6 +245,14 @@ def _assert_template_sources_config_is_correct(
     assert template_source.name == COOKIECUTTER_REMOTE_NAME
     assert template_source.version == version
     assert template_source.git_url == COOKIECUTTER_REMOTE_URL
+
+
+def _assert_template_sources_config_is_empty(
+    config_path: Path = GENERATED_REPO_DIR / "flexlate.json",
+):
+    assert config_path.exists()
+    config = FlexlateConfig.load(config_path)
+    assert len(config.template_sources) == 0
 
 
 def _assert_applied_templates_config_is_correct(

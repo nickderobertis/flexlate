@@ -16,7 +16,7 @@ add_cli = typer.Typer(
 )
 
 TEMPLATE_ROOT_DOC = (
-    "The root directory to render the template from, defaults to current"
+    "The root directory the template should be rendered from, defaults to current"
 )
 ADD_MODE_DOC = (
     "Local adds the config to the template root, project adds it to the project "
@@ -94,6 +94,23 @@ def generate_applied_template(
 
 
 cli.add_typer(add_cli, name="add")
+
+remove_cli = typer.Typer(
+    help="Remove template sources and previously generated outputs"
+)
+
+
+@remove_cli.command(name="source")
+def remove_template_source(
+    template_name: str = typer.Argument(
+        ..., help="The name of the template source to remove"
+    ),
+    template_root: Path = TEMPLATE_ROOT_OPTION,
+):
+    app.remove_template_source(template_name, template_root=template_root)
+
+
+cli.add_typer(remove_cli, name="remove")
 
 
 @cli.command(name="init")
