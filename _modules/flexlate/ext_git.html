@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.ext_git &mdash; flexlate 0.1.4 documentation</title>
+  <title>flexlate.ext_git &mdash; flexlate 0.2.0 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.1.4
+                0.2.0
               </div>
             
           
@@ -264,12 +264,13 @@
 
 <div class="viewcode-block" id="temp_repo_that_pushes_to_branch"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.ext_git.temp_repo_that_pushes_to_branch">[docs]</a><span class="nd">@contextmanager</span>  <span class="c1"># type: ignore</span>
 <span class="k">def</span> <span class="nf">temp_repo_that_pushes_to_branch</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
-    <span class="n">repo</span><span class="p">:</span> <span class="n">Repo</span><span class="p">,</span> <span class="n">branch_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">repo</span><span class="p">:</span> <span class="n">Repo</span><span class="p">,</span> <span class="n">branch_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">delete_tracked_files</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ContextManager</span><span class="p">[</span><span class="n">Repo</span><span class="p">]:</span>
     <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">tmp_dir</span><span class="p">:</span>
         <span class="n">tmp_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">tmp_dir</span><span class="p">)</span>
         <span class="n">temp_repo</span> <span class="o">=</span> <span class="n">_clone_single_branch_from_local_repo</span><span class="p">(</span><span class="n">repo</span><span class="p">,</span> <span class="n">tmp_path</span><span class="p">,</span> <span class="n">branch_name</span><span class="p">)</span>
-        <span class="n">delete_tracked_files_excluding_initial_commit</span><span class="p">(</span><span class="n">temp_repo</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">delete_tracked_files</span><span class="p">:</span>
+            <span class="n">delete_tracked_files_excluding_initial_commit</span><span class="p">(</span><span class="n">temp_repo</span><span class="p">)</span>
         <span class="c1"># For type narrowing</span>
         <span class="k">if</span> <span class="n">repo</span><span class="o">.</span><span class="n">working_dir</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">temp_repo</span><span class="o">.</span><span class="n">working_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;repo working dir cannot be None&quot;</span><span class="p">)</span>
@@ -343,6 +344,15 @@
         <span class="k">raise</span> <span class="n">GitRepoHasNoCommitsException</span><span class="p">(</span>
             <span class="s2">&quot;git repo has no commits. Please initialize it with a commit&quot;</span>
         <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_repo_remote_name_from_repo"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.ext_git.get_repo_remote_name_from_repo">[docs]</a><span class="k">def</span> <span class="nf">get_repo_remote_name_from_repo</span><span class="p">(</span><span class="n">repo</span><span class="p">:</span> <span class="n">Repo</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">repo</span><span class="o">.</span><span class="n">remote</span><span class="p">()</span><span class="o">.</span><span class="n">urls</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">parts</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+    <span class="n">name_part</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="c1"># Remove .git on end</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">name_part</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">name</span></div>
 </pre></div>
 
            </div>

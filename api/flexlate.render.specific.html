@@ -8,7 +8,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.render.specific package &mdash; flexlate 0.1.4 documentation</title>
+  <title>flexlate.render.specific package &mdash; flexlate 0.2.0 documentation</title>
   
 
   
@@ -73,7 +73,7 @@
             
             
               <div class="version">
-                0.1.4
+                0.2.0
               </div>
             
           
@@ -118,6 +118,7 @@
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#submodules">Submodules</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.add_mode">flexlate.add_mode module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.adder">flexlate.adder module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.branch_update">flexlate.branch_update module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.cli">flexlate.cli module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.config">flexlate.config module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.config_manager">flexlate.config_manager module</a></li>
@@ -126,6 +127,7 @@
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.ext_git">flexlate.ext_git module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.main">flexlate.main module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.path_ops">flexlate.path_ops module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.remover">flexlate.remover module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.template_data">flexlate.template_data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.types">flexlate.types module</a></li>
 </ul>
@@ -241,6 +243,25 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="flexlate.render.specific.cookiecutter.CookiecutterRenderer.render">
 <span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">renderable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/render/specific/cookiecutter.html#CookiecutterRenderer.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.render.specific.cookiecutter.CookiecutterRenderer.render" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-flexlate.render.specific.copier">
+<span id="flexlate-render-specific-copier-module"></span><h2>flexlate.render.specific.copier module<a class="headerlink" href="#module-flexlate.render.specific.copier" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="flexlate.render.specific.copier.CopierRenderer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">flexlate.render.specific.copier.</span></span><span class="sig-name descname"><span class="pre">CopierRenderer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/render/specific/copier.html#CopierRenderer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.render.specific.copier.CopierRenderer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#flexlate.render.specific.base.SpecificTemplateRenderer" title="flexlate.render.specific.base.SpecificTemplateRenderer"><code class="xref py py-class docutils literal notranslate"><span class="pre">flexlate.render.specific.base.SpecificTemplateRenderer</span></code></a>[<a class="reference internal" href="flexlate.template.html#flexlate.template.copier.CopierTemplate" title="flexlate.template.copier.CopierTemplate"><code class="xref py py-class docutils literal notranslate"><span class="pre">flexlate.template.copier.CopierTemplate</span></code></a>]</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="flexlate.render.specific.copier.CopierRenderer.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">renderable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/render/specific/copier.html#CopierRenderer.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.render.specific.copier.CopierRenderer.render" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]</p>

@@ -36,6 +36,14 @@ flexlate.adder module
    :undoc-members:
    :show-inheritance:
 
+flexlate.branch\_update module
+------------------------------
+
+.. automodule:: flexlate.branch_update
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 flexlate.cli module
 -------------------
 
@@ -96,6 +104,14 @@ flexlate.path\_ops module
 -------------------------
 
 .. automodule:: flexlate.path_ops
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+flexlate.remover module
+-----------------------
+
+.. automodule:: flexlate.remover
    :members:
    :undoc-members:
    :show-inheritance:

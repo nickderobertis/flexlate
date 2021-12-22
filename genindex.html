@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Index &mdash; flexlate 0.1.4 documentation</title>
+  <title>Index &mdash; flexlate 0.2.0 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.1.4
+                0.2.0
               </div>
             
           
@@ -205,6 +205,8 @@
 </li>
         <li><a href="api/flexlate.template.html#flexlate.template.cookiecutter.CookiecutterTemplate.__init__">(flexlate.template.cookiecutter.CookiecutterTemplate method)</a>
 </li>
+        <li><a href="api/flexlate.template.html#flexlate.template.copier.CopierTemplate.__init__">(flexlate.template.copier.CopierTemplate method)</a>
+</li>
         <li><a href="api/flexlate.template_config.html#flexlate.template_config.base.TemplateConfig.__init__">(flexlate.template_config.base.TemplateConfig method)</a>
 </li>
       </ul></li>
@@ -268,7 +270,15 @@
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/flexlate.html#flexlate.exc.CannotFindTemplateSourceException">CannotFindTemplateSourceException</a>
+</li>
       <li><a href="api/flexlate.html#flexlate.exc.CannotLoadConfigException">CannotLoadConfigException</a>
+</li>
+      <li><a href="api/flexlate.html#flexlate.exc.CannotRemoveAppliedTemplateException">CannotRemoveAppliedTemplateException</a>
+</li>
+      <li><a href="api/flexlate.html#flexlate.exc.CannotRemoveConfigItemException">CannotRemoveConfigItemException</a>
+</li>
+      <li><a href="api/flexlate.html#flexlate.exc.CannotRemoveTemplateSourceException">CannotRemoveTemplateSourceException</a>
 </li>
       <li><a href="api/flexlate.html#flexlate.ext_git.checked_out_template_branch">checked_out_template_branch() (in module flexlate.ext_git)</a>
 </li>
@@ -292,6 +302,16 @@
 </li>
       <li><a href="api/flexlate.template.html#flexlate.template.cookiecutter.CookiecutterTemplate">CookiecutterTemplate (class in flexlate.template.cookiecutter)</a>
 </li>
+      <li><a href="api/flexlate.template.html#flexlate.template.types.TemplateType.COPIER">COPIER (flexlate.template.types.TemplateType attribute)</a>
+</li>
+      <li><a href="api/flexlate.template_config.html#flexlate.template_config.copier.CopierConfig">CopierConfig (class in flexlate.template_config.copier)</a>
+</li>
+      <li><a href="api/flexlate.finder.specific.html#flexlate.finder.specific.copier.CopierFinder">CopierFinder (class in flexlate.finder.specific.copier)</a>
+</li>
+      <li><a href="api/flexlate.render.specific.html#flexlate.render.specific.copier.CopierRenderer">CopierRenderer (class in flexlate.render.specific.copier)</a>
+</li>
+      <li><a href="api/flexlate.template.html#flexlate.template.copier.CopierTemplate">CopierTemplate (class in flexlate.template.copier)</a>
+</li>
       <li><a href="api/flexlate.html#flexlate.path_ops.copy_flexlate_configs">copy_flexlate_configs() (in module flexlate.path_ops)</a>
 </li>
   </ul></td>
@@ -308,21 +328,31 @@
         <li><a href="api/flexlate.update.html#flexlate.update.template.TemplateUpdate.data">(flexlate.update.template.TemplateUpdate attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/flexlate.update.html#flexlate.update.template.data_from_template_updates">data_from_template_updates() (in module flexlate.update.template)</a>
 </li>
+      <li><a href="api/flexlate.finder.specific.html#flexlate.finder.specific.copier.DefaultData.default">default (flexlate.finder.specific.copier.DefaultData attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/flexlate.html#flexlate.config.ProjectConfig.default_add_mode">default_add_mode (flexlate.config.ProjectConfig attribute)</a>
 </li>
       <li><a href="api/flexlate.template.html#flexlate.template.base.Template.default_name">default_name (flexlate.template.base.Template property)</a>
 </li>
+      <li><a href="api/flexlate.finder.specific.html#flexlate.finder.specific.copier.DefaultData">DefaultData (class in flexlate.finder.specific.copier)</a>
+</li>
       <li><a href="api/flexlate.html#flexlate.ext_git.delete_tracked_files_excluding_initial_commit">delete_tracked_files_excluding_initial_commit() (in module flexlate.ext_git)</a>
+</li>
+      <li><a href="api/flexlate.html#flexlate.config_manager.determine_config_path_from_roots_and_add_mode">determine_config_path_from_roots_and_add_mode() (in module flexlate.config_manager)</a>
 </li>
   </ul></td>
 </tr></table>
 
 <h2 id="E">E</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/flexlate.html#flexlate.config.FlexlateConfig.empty">empty (flexlate.config.FlexlateConfig property)</a>
+</li>
+  </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/flexlate.html#flexlate.config.FlexlateConfig.Config.extra">extra (flexlate.config.FlexlateConfig.Config attribute)</a>
 </li>
@@ -340,6 +370,8 @@
         <li><a href="api/flexlate.finder.specific.html#flexlate.finder.specific.base.TemplateFinder.find">(flexlate.finder.specific.base.TemplateFinder method)</a>
 </li>
         <li><a href="api/flexlate.finder.specific.html#flexlate.finder.specific.cookiecutter.CookiecutterFinder.find">(flexlate.finder.specific.cookiecutter.CookiecutterFinder method)</a>
+</li>
+        <li><a href="api/flexlate.finder.specific.html#flexlate.finder.specific.copier.CopierFinder.find">(flexlate.finder.specific.copier.CopierFinder method)</a>
 </li>
       </ul></li>
       <li>
@@ -363,6 +395,13 @@
 
       <ul>
         <li><a href="api/flexlate.html#module-flexlate.adder">module</a>
+</li>
+      </ul></li>
+      <li>
+    flexlate.branch_update
+
+      <ul>
+        <li><a href="api/flexlate.html#module-flexlate.branch_update">module</a>
 </li>
       </ul></li>
       <li>
@@ -443,6 +482,13 @@
 </li>
       </ul></li>
       <li>
+    flexlate.finder.specific.copier
+
+      <ul>
+        <li><a href="api/flexlate.finder.specific.html#module-flexlate.finder.specific.copier">module</a>
+</li>
+      </ul></li>
+      <li>
     flexlate.finder.specific.git
 
       <ul>
@@ -461,6 +507,13 @@
 
       <ul>
         <li><a href="api/flexlate.html#module-flexlate.path_ops">module</a>
+</li>
+      </ul></li>
+      <li>
+    flexlate.remover
+
+      <ul>
+        <li><a href="api/flexlate.html#module-flexlate.remover">module</a>
 </li>
       </ul></li>
       <li>
@@ -508,6 +561,13 @@
 </li>
       </ul></li>
       <li>
+    flexlate.render.specific.copier
+
+      <ul>
+        <li><a href="api/flexlate.render.specific.html#module-flexlate.render.specific.copier">module</a>
+</li>
+      </ul></li>
+      <li>
     flexlate.template
 
       <ul>
@@ -526,6 +586,13 @@
 
       <ul>
         <li><a href="api/flexlate.template.html#module-flexlate.template.cookiecutter">module</a>
+</li>
+      </ul></li>
+      <li>
+    flexlate.template.copier
+
+      <ul>
+        <li><a href="api/flexlate.template.html#module-flexlate.template.copier">module</a>
 </li>
       </ul></li>
       <li>
@@ -561,6 +628,13 @@
 
       <ul>
         <li><a href="api/flexlate.template_config.html#module-flexlate.template_config.cookiecutter">module</a>
+</li>
+      </ul></li>
+      <li>
+    flexlate.template_config.copier
+
+      <ul>
+        <li><a href="api/flexlate.template_config.html#module-flexlate.template_config.copier">module</a>
 </li>
       </ul></li>
       <li>
@@ -637,6 +711,8 @@
       <ul>
         <li><a href="api/flexlate.finder.specific.html#flexlate.finder.specific.cookiecutter.CookiecutterFinder.get_config">(flexlate.finder.specific.cookiecutter.CookiecutterFinder method)</a>
 </li>
+        <li><a href="api/flexlate.finder.specific.html#flexlate.finder.specific.copier.CopierFinder.get_config">(flexlate.finder.specific.copier.CopierFinder method)</a>
+</li>
       </ul></li>
       <li><a href="api/flexlate.html#flexlate.ext_git.get_current_version">get_current_version() (in module flexlate.ext_git)</a>
 </li>
@@ -655,6 +731,8 @@
       <li><a href="api/flexlate.html#flexlate.config.FlexlateProjectConfig.get_project_for_path">get_project_for_path() (flexlate.config.FlexlateProjectConfig method)</a>
 </li>
       <li><a href="api/flexlate.html#flexlate.config_manager.ConfigManager.get_renderables">get_renderables() (flexlate.config_manager.ConfigManager method)</a>
+</li>
+      <li><a href="api/flexlate.html#flexlate.ext_git.get_repo_remote_name_from_repo">get_repo_remote_name_from_repo() (in module flexlate.ext_git)</a>
 </li>
       <li><a href="api/flexlate.html#flexlate.config_manager.ConfigManager.get_sources_for_templates">get_sources_for_templates() (flexlate.config_manager.ConfigManager method)</a>
 </li>
@@ -729,6 +807,8 @@
       <ul>
         <li><a href="api/flexlate.finder.specific.html#flexlate.finder.specific.cookiecutter.CookiecutterFinder.matches_template_type">(flexlate.finder.specific.cookiecutter.CookiecutterFinder method)</a>
 </li>
+        <li><a href="api/flexlate.finder.specific.html#flexlate.finder.specific.copier.CopierFinder.matches_template_type">(flexlate.finder.specific.copier.CopierFinder method)</a>
+</li>
       </ul></li>
       <li><a href="api/flexlate.template.html#flexlate.template.hashing.md5_dir">md5_dir() (in module flexlate.template.hashing)</a>
 </li>
@@ -744,6 +824,8 @@
 </li>
       <li><a href="api/flexlate.html#flexlate.config.ProjectConfig.merged_branch_name">merged_branch_name (flexlate.config.ProjectConfig attribute)</a>
 </li>
+      <li><a href="api/flexlate.html#flexlate.branch_update.modify_files_via_branches_and_temp_repo">modify_files_via_branches_and_temp_repo() (in module flexlate.branch_update)</a>
+</li>
       <li>
     module
 
@@ -753,6 +835,8 @@
         <li><a href="api/flexlate.html#module-flexlate.add_mode">flexlate.add_mode</a>
 </li>
         <li><a href="api/flexlate.html#module-flexlate.adder">flexlate.adder</a>
+</li>
+        <li><a href="api/flexlate.html#module-flexlate.branch_update">flexlate.branch_update</a>
 </li>
         <li><a href="api/flexlate.html#module-flexlate.cli">flexlate.cli</a>
 </li>
@@ -776,11 +860,15 @@
 </li>
         <li><a href="api/flexlate.finder.specific.html#module-flexlate.finder.specific.cookiecutter">flexlate.finder.specific.cookiecutter</a>
 </li>
+        <li><a href="api/flexlate.finder.specific.html#module-flexlate.finder.specific.copier">flexlate.finder.specific.copier</a>
+</li>
         <li><a href="api/flexlate.finder.specific.html#module-flexlate.finder.specific.git">flexlate.finder.specific.git</a>
 </li>
         <li><a href="api/flexlate.html#module-flexlate.main">flexlate.main</a>
 </li>
         <li><a href="api/flexlate.html#module-flexlate.path_ops">flexlate.path_ops</a>
+</li>
+        <li><a href="api/flexlate.html#module-flexlate.remover">flexlate.remover</a>
 </li>
         <li><a href="api/flexlate.render.html#module-flexlate.render">flexlate.render</a>
 </li>
@@ -794,11 +882,15 @@
 </li>
         <li><a href="api/flexlate.render.specific.html#module-flexlate.render.specific.cookiecutter">flexlate.render.specific.cookiecutter</a>
 </li>
+        <li><a href="api/flexlate.render.specific.html#module-flexlate.render.specific.copier">flexlate.render.specific.copier</a>
+</li>
         <li><a href="api/flexlate.template.html#module-flexlate.template">flexlate.template</a>
 </li>
         <li><a href="api/flexlate.template.html#module-flexlate.template.base">flexlate.template.base</a>
 </li>
         <li><a href="api/flexlate.template.html#module-flexlate.template.cookiecutter">flexlate.template.cookiecutter</a>
+</li>
+        <li><a href="api/flexlate.template.html#module-flexlate.template.copier">flexlate.template.copier</a>
 </li>
         <li><a href="api/flexlate.template.html#module-flexlate.template.hashing">flexlate.template.hashing</a>
 </li>
@@ -809,6 +901,8 @@
         <li><a href="api/flexlate.template_config.html#module-flexlate.template_config.base">flexlate.template_config.base</a>
 </li>
         <li><a href="api/flexlate.template_config.html#module-flexlate.template_config.cookiecutter">flexlate.template_config.cookiecutter</a>
+</li>
+        <li><a href="api/flexlate.template_config.html#module-flexlate.template_config.copier">flexlate.template_config.copier</a>
 </li>
         <li><a href="api/flexlate.html#module-flexlate.template_data">flexlate.template_data</a>
 </li>
@@ -873,6 +967,24 @@
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/flexlate.html#flexlate.config_manager.ConfigManager.remove_applied_template">remove_applied_template() (flexlate.config_manager.ConfigManager method)</a>
+</li>
+      <li><a href="api/flexlate.html#flexlate.main.Flexlate.remove_applied_template_and_output">remove_applied_template_and_output() (flexlate.main.Flexlate method)</a>
+
+      <ul>
+        <li><a href="api/flexlate.html#flexlate.remover.Remover.remove_applied_template_and_output">(flexlate.remover.Remover method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/flexlate.html#flexlate.config_manager.ConfigManager.remove_template_source">remove_template_source() (flexlate.config_manager.ConfigManager method)</a>
+
+      <ul>
+        <li><a href="api/flexlate.html#flexlate.main.Flexlate.remove_template_source">(flexlate.main.Flexlate method)</a>
+</li>
+        <li><a href="api/flexlate.html#flexlate.remover.Remover.remove_template_source">(flexlate.remover.Remover method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/flexlate.html#flexlate.remover.Remover">Remover (class in flexlate.remover)</a>
+</li>
       <li><a href="api/flexlate.render.html#flexlate.render.multi.MultiRenderer.render">render() (flexlate.render.multi.MultiRenderer method)</a>
 
       <ul>
@@ -880,11 +992,13 @@
 </li>
         <li><a href="api/flexlate.render.specific.html#flexlate.render.specific.cookiecutter.CookiecutterRenderer.render">(flexlate.render.specific.cookiecutter.CookiecutterRenderer method)</a>
 </li>
-      </ul></li>
-      <li><a href="api/flexlate.render.html#flexlate.render.renderable.Renderable">Renderable (class in flexlate.render.renderable)</a>
+        <li><a href="api/flexlate.render.specific.html#flexlate.render.specific.copier.CopierRenderer.render">(flexlate.render.specific.copier.CopierRenderer method)</a>
 </li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/flexlate.render.html#flexlate.render.renderable.Renderable">Renderable (class in flexlate.render.renderable)</a>
+</li>
       <li><a href="api/flexlate.render.html#flexlate.render.renderable.Renderable.Config">Renderable.Config (class in flexlate.render.renderable)</a>
 </li>
       <li><a href="api/flexlate.html#flexlate.exc.RendererNotFoundException">RendererNotFoundException</a>

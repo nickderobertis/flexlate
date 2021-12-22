@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.template.cookiecutter &mdash; flexlate 0.2.0 documentation</title>
+  <title>flexlate.template.copier &mdash; flexlate 0.2.0 documentation</title>
   
 
   
@@ -151,7 +151,7 @@
         
           <li><a href="../../index.html">Module code</a> &raquo;</li>
         
-      <li>flexlate.template.cookiecutter</li>
+      <li>flexlate.template.copier</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -166,21 +166,21 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for flexlate.template.cookiecutter</h1><div class="highlight"><pre>
+  <h1>Source code for flexlate.template.copier</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
 
 <span class="kn">from</span> <span class="nn">flexlate.template.base</span> <span class="kn">import</span> <span class="n">Template</span>
 <span class="kn">from</span> <span class="nn">flexlate.template.types</span> <span class="kn">import</span> <span class="n">TemplateType</span>
-<span class="kn">from</span> <span class="nn">flexlate.template_config.cookiecutter</span> <span class="kn">import</span> <span class="n">CookiecutterConfig</span>
+<span class="kn">from</span> <span class="nn">flexlate.template_config.copier</span> <span class="kn">import</span> <span class="n">CopierConfig</span>
 
 
-<div class="viewcode-block" id="CookiecutterTemplate"><a class="viewcode-back" href="../../../api/flexlate.template.html#flexlate.template.cookiecutter.CookiecutterTemplate">[docs]</a><span class="k">class</span> <span class="nc">CookiecutterTemplate</span><span class="p">(</span><span class="n">Template</span><span class="p">):</span>
-    <span class="n">_type</span> <span class="o">=</span> <span class="n">TemplateType</span><span class="o">.</span><span class="n">COOKIECUTTER</span>
+<div class="viewcode-block" id="CopierTemplate"><a class="viewcode-back" href="../../../api/flexlate.template.html#flexlate.template.copier.CopierTemplate">[docs]</a><span class="k">class</span> <span class="nc">CopierTemplate</span><span class="p">(</span><span class="n">Template</span><span class="p">):</span>
+    <span class="n">_type</span> <span class="o">=</span> <span class="n">TemplateType</span><span class="o">.</span><span class="n">COPIER</span>
 
-<div class="viewcode-block" id="CookiecutterTemplate.__init__"><a class="viewcode-back" href="../../../api/flexlate.template.html#flexlate.template.cookiecutter.CookiecutterTemplate.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+<div class="viewcode-block" id="CopierTemplate.__init__"><a class="viewcode-back" href="../../../api/flexlate.template.html#flexlate.template.copier.CopierTemplate.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">config</span><span class="p">:</span> <span class="n">CookiecutterConfig</span><span class="p">,</span>
+        <span class="n">config</span><span class="p">:</span> <span class="n">CopierConfig</span><span class="p">,</span>
         <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
         <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">version</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>

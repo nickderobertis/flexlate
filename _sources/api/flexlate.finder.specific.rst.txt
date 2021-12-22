@@ -25,6 +25,14 @@ flexlate.finder.specific.cookiecutter module
    :undoc-members:
    :show-inheritance:
 
+flexlate.finder.specific.copier module
+--------------------------------------
+
+.. automodule:: flexlate.finder.specific.copier
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 flexlate.finder.specific.git module
 -----------------------------------
 

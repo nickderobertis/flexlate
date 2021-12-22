@@ -25,3 +25,11 @@ flexlate.template\_config.cookiecutter module
    :undoc-members:
    :show-inheritance:
 
+flexlate.template\_config.copier module
+---------------------------------------
+
+.. automodule:: flexlate.template_config.copier
+   :members:
+   :undoc-members:
+   :show-inheritance:
+

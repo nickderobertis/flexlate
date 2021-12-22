@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.main &mdash; flexlate 0.1.4 documentation</title>
+  <title>flexlate.main &mdash; flexlate 0.2.0 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.1.4
+                0.2.0
               </div>
             
           
@@ -177,6 +177,7 @@
 <span class="kn">from</span> <span class="nn">flexlate.config_manager</span> <span class="kn">import</span> <span class="n">ConfigManager</span>
 <span class="kn">from</span> <span class="nn">flexlate.constants</span> <span class="kn">import</span> <span class="n">DEFAULT_MERGED_BRANCH_NAME</span><span class="p">,</span> <span class="n">DEFAULT_TEMPLATE_BRANCH_NAME</span>
 <span class="kn">from</span> <span class="nn">flexlate.finder.multi</span> <span class="kn">import</span> <span class="n">MultiFinder</span>
+<span class="kn">from</span> <span class="nn">flexlate.remover</span> <span class="kn">import</span> <span class="n">Remover</span>
 <span class="kn">from</span> <span class="nn">flexlate.render.multi</span> <span class="kn">import</span> <span class="n">MultiRenderer</span>
 <span class="kn">from</span> <span class="nn">flexlate.template.base</span> <span class="kn">import</span> <span class="n">Template</span>
 <span class="kn">from</span> <span class="nn">flexlate.template_data</span> <span class="kn">import</span> <span class="n">TemplateData</span>
@@ -187,12 +188,14 @@
 <div class="viewcode-block" id="Flexlate.__init__"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.main.Flexlate.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">adder</span><span class="p">:</span> <span class="n">Adder</span> <span class="o">=</span> <span class="n">Adder</span><span class="p">(),</span>
+        <span class="n">remover</span><span class="p">:</span> <span class="n">Remover</span> <span class="o">=</span> <span class="n">Remover</span><span class="p">(),</span>
         <span class="n">config_manager</span><span class="p">:</span> <span class="n">ConfigManager</span> <span class="o">=</span> <span class="n">ConfigManager</span><span class="p">(),</span>
         <span class="n">finder</span><span class="p">:</span> <span class="n">MultiFinder</span> <span class="o">=</span> <span class="n">MultiFinder</span><span class="p">(),</span>
         <span class="n">renderer</span><span class="p">:</span> <span class="n">MultiRenderer</span> <span class="o">=</span> <span class="n">MultiRenderer</span><span class="p">(),</span>
         <span class="n">updater</span><span class="p">:</span> <span class="n">Updater</span> <span class="o">=</span> <span class="n">Updater</span><span class="p">(),</span>
     <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">adder</span> <span class="o">=</span> <span class="n">adder</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">remover</span> <span class="o">=</span> <span class="n">remover</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config_manager</span> <span class="o">=</span> <span class="n">config_manager</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">finder</span> <span class="o">=</span> <span class="n">finder</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span> <span class="o">=</span> <span class="n">renderer</span>
@@ -240,6 +243,23 @@
             <span class="n">config_manager</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config_manager</span><span class="p">,</span>
         <span class="p">)</span></div>
 
+<div class="viewcode-block" id="Flexlate.remove_template_source"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.main.Flexlate.remove_template_source">[docs]</a>    <span class="k">def</span> <span class="nf">remove_template_source</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">template_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">template_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
+    <span class="p">):</span>
+        <span class="n">project_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_manager</span><span class="o">.</span><span class="n">load_project_config</span><span class="p">(</span><span class="n">template_root</span><span class="p">)</span>
+        <span class="n">repo</span> <span class="o">=</span> <span class="n">Repo</span><span class="p">(</span><span class="n">project_config</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">remover</span><span class="o">.</span><span class="n">remove_template_source</span><span class="p">(</span>
+            <span class="n">repo</span><span class="p">,</span>
+            <span class="n">template_name</span><span class="p">,</span>
+            <span class="n">out_root</span><span class="o">=</span><span class="n">template_root</span><span class="p">,</span>
+            <span class="n">merged_branch_name</span><span class="o">=</span><span class="n">project_config</span><span class="o">.</span><span class="n">merged_branch_name</span><span class="p">,</span>
+            <span class="n">template_branch_name</span><span class="o">=</span><span class="n">project_config</span><span class="o">.</span><span class="n">template_branch_name</span><span class="p">,</span>
+            <span class="n">add_mode</span><span class="o">=</span><span class="n">project_config</span><span class="o">.</span><span class="n">default_add_mode</span><span class="p">,</span>
+            <span class="n">config_manager</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config_manager</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
 <div class="viewcode-block" id="Flexlate.apply_template_and_add"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.main.Flexlate.apply_template_and_add">[docs]</a>    <span class="k">def</span> <span class="nf">apply_template_and_add</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -266,6 +286,26 @@
             <span class="n">config_manager</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config_manager</span><span class="p">,</span>
             <span class="n">renderer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="p">,</span>
             <span class="n">updater</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">updater</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Flexlate.remove_applied_template_and_output"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.main.Flexlate.remove_applied_template_and_output">[docs]</a>    <span class="k">def</span> <span class="nf">remove_applied_template_and_output</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">template_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">out_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
+    <span class="p">):</span>
+        <span class="n">project_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_manager</span><span class="o">.</span><span class="n">load_project_config</span><span class="p">(</span><span class="n">out_root</span><span class="p">)</span>
+        <span class="n">repo</span> <span class="o">=</span> <span class="n">Repo</span><span class="p">(</span><span class="n">project_config</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">remover</span><span class="o">.</span><span class="n">remove_applied_template_and_output</span><span class="p">(</span>
+            <span class="n">repo</span><span class="p">,</span>
+            <span class="n">template_name</span><span class="p">,</span>
+            <span class="n">out_root</span><span class="o">=</span><span class="n">out_root</span><span class="p">,</span>
+            <span class="n">add_mode</span><span class="o">=</span><span class="n">project_config</span><span class="o">.</span><span class="n">default_add_mode</span><span class="p">,</span>
+            <span class="n">merged_branch_name</span><span class="o">=</span><span class="n">project_config</span><span class="o">.</span><span class="n">merged_branch_name</span><span class="p">,</span>
+            <span class="n">template_branch_name</span><span class="o">=</span><span class="n">project_config</span><span class="o">.</span><span class="n">template_branch_name</span><span class="p">,</span>
+            <span class="n">config_manager</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config_manager</span><span class="p">,</span>
+            <span class="n">updater</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">updater</span><span class="p">,</span>
+            <span class="n">renderer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="p">,</span>
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="Flexlate.update"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.main.Flexlate.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span>
@@ -314,7 +354,7 @@
             <span class="n">config_manager</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config_manager</span><span class="p">,</span>
         <span class="p">)</span></div></div>
 
-    <span class="c1"># TODO: list template sources, list applied templates, remove applied templates and sources</span>
+    <span class="c1"># TODO: list template sources, list applied templates</span>
     <span class="c1"># TODO: Update target versions in template sources</span>
 </pre></div>
 

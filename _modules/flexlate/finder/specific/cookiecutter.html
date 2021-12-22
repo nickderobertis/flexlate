@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.finder.specific.cookiecutter &mdash; flexlate 0.1.4 documentation</title>
+  <title>flexlate.finder.specific.cookiecutter &mdash; flexlate 0.2.0 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.1.4
+                0.2.0
               </div>
             
           
@@ -172,10 +172,9 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="kn">from</span> <span class="nn">cookiecutter.config</span> <span class="kn">import</span> <span class="n">get_user_config</span>
-<span class="kn">from</span> <span class="nn">cookiecutter.repository</span> <span class="kn">import</span> <span class="n">determine_repo_dir</span><span class="p">,</span> <span class="n">is_repo_url</span>
-<span class="kn">from</span> <span class="nn">git</span> <span class="kn">import</span> <span class="n">Repo</span>
+<span class="kn">from</span> <span class="nn">cookiecutter.exceptions</span> <span class="kn">import</span> <span class="n">RepositoryNotFound</span>
+<span class="kn">from</span> <span class="nn">cookiecutter.repository</span> <span class="kn">import</span> <span class="n">determine_repo_dir</span>
 
-<span class="kn">from</span> <span class="nn">flexlate.ext_git</span> <span class="kn">import</span> <span class="n">get_current_version</span>
 <span class="kn">from</span> <span class="nn">flexlate.finder.specific.base</span> <span class="kn">import</span> <span class="n">TemplateFinder</span>
 <span class="kn">from</span> <span class="nn">flexlate.finder.specific.git</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">get_version_from_source_path</span><span class="p">,</span>
@@ -211,8 +210,12 @@
         <span class="k">return</span> <span class="n">CookiecutterConfig</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="CookiecutterFinder.matches_template_type"><a class="viewcode-back" href="../../../../api/flexlate.finder.specific.html#flexlate.finder.specific.cookiecutter.CookiecutterFinder.matches_template_type">[docs]</a>    <span class="k">def</span> <span class="nf">matches_template_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="n">repo_path</span> <span class="o">=</span> <span class="n">_download_repo_if_necessary_get_local_path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">repo_path</span> <span class="o">/</span> <span class="s2">&quot;cookiecutter.json&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span></div></div>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">repo_path</span> <span class="o">=</span> <span class="n">_download_repo_if_necessary_get_local_path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">RepositoryNotFound</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">repo_path</span> <span class="o">/</span> <span class="s2">&quot;cookiecutter.json&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span></div></div>
 
 
 <span class="k">def</span> <span class="nf">_download_repo_if_necessary_get_local_path</span><span class="p">(</span>

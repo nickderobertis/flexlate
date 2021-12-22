@@ -8,7 +8,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.finder.specific package &mdash; flexlate 0.1.4 documentation</title>
+  <title>flexlate.finder.specific package &mdash; flexlate 0.2.0 documentation</title>
   
 
   
@@ -73,7 +73,7 @@
             
             
               <div class="version">
-                0.1.4
+                0.2.0
               </div>
             
           
@@ -118,6 +118,7 @@
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#submodules">Submodules</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.add_mode">flexlate.add_mode module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.adder">flexlate.adder module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.branch_update">flexlate.branch_update module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.cli">flexlate.cli module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.config">flexlate.config module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.config_manager">flexlate.config_manager module</a></li>
@@ -126,6 +127,7 @@
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.ext_git">flexlate.ext_git module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.main">flexlate.main module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.path_ops">flexlate.path_ops module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.remover">flexlate.remover module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.template_data">flexlate.template_data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.types">flexlate.types module</a></li>
 </ul>
@@ -287,6 +289,56 @@
 </dd>
 </dl>
 </dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-flexlate.finder.specific.copier">
+<span id="flexlate-finder-specific-copier-module"></span><h2>flexlate.finder.specific.copier module<a class="headerlink" href="#module-flexlate.finder.specific.copier" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="flexlate.finder.specific.copier.CopierFinder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">flexlate.finder.specific.copier.</span></span><span class="sig-name descname"><span class="pre">CopierFinder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/finder/specific/copier.html#CopierFinder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.finder.specific.copier.CopierFinder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#flexlate.finder.specific.base.TemplateFinder" title="flexlate.finder.specific.base.TemplateFinder"><code class="xref py py-class docutils literal notranslate"><span class="pre">flexlate.finder.specific.base.TemplateFinder</span></code></a>[<a class="reference internal" href="flexlate.template.html#flexlate.template.copier.CopierTemplate" title="flexlate.template.copier.CopierTemplate"><code class="xref py py-class docutils literal notranslate"><span class="pre">flexlate.template.copier.CopierTemplate</span></code></a>]</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="flexlate.finder.specific.copier.CopierFinder.find">
+<span class="sig-name descname"><span class="pre">find</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">template_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/finder/specific/copier.html#CopierFinder.find"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.finder.specific.copier.CopierFinder.find" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="flexlate.template.html#flexlate.template.copier.CopierTemplate" title="flexlate.template.copier.CopierTemplate"><code class="xref py py-class docutils literal notranslate"><span class="pre">CopierTemplate</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flexlate.finder.specific.copier.CopierFinder.get_config">
+<span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/finder/specific/copier.html#CopierFinder.get_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.finder.specific.copier.CopierFinder.get_config" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="flexlate.template_config.html#flexlate.template_config.copier.CopierConfig" title="flexlate.template_config.copier.CopierConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">CopierConfig</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flexlate.finder.specific.copier.CopierFinder.matches_template_type">
+<span class="sig-name descname"><span class="pre">matches_template_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/finder/specific/copier.html#CopierFinder.matches_template_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.finder.specific.copier.CopierFinder.matches_template_type" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="flexlate.finder.specific.copier.DefaultData">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">flexlate.finder.specific.copier.</span></span><span class="sig-name descname"><span class="pre">DefaultData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/finder/specific/copier.html#DefaultData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.finder.specific.copier.DefaultData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flexlate.finder.specific.copier.DefaultData.default">
+<span class="sig-name descname"><span class="pre">default</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></em><a class="headerlink" href="#flexlate.finder.specific.copier.DefaultData.default" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 

@@ -25,6 +25,14 @@ flexlate.template.cookiecutter module
    :undoc-members:
    :show-inheritance:
 
+flexlate.template.copier module
+-------------------------------
+
+.. automodule:: flexlate.template.copier
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 flexlate.template.hashing module
 --------------------------------
 

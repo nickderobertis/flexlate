@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.update.main &mdash; flexlate 0.1.4 documentation</title>
+  <title>flexlate.update.main &mdash; flexlate 0.2.0 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.1.4
+                0.2.0
               </div>
             
           
@@ -219,7 +219,7 @@
         <span class="c1"># Create it from the initial commit if it does not exist</span>
         <span class="n">cwd</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span>
         <span class="k">with</span> <span class="n">temp_repo_that_pushes_to_branch</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
-            <span class="n">repo</span><span class="p">,</span> <span class="n">branch_name</span><span class="o">=</span><span class="n">template_branch_name</span>
+            <span class="n">repo</span><span class="p">,</span> <span class="n">branch_name</span><span class="o">=</span><span class="n">template_branch_name</span><span class="p">,</span> <span class="n">delete_tracked_files</span><span class="o">=</span><span class="kc">True</span>
         <span class="p">)</span> <span class="k">as</span> <span class="n">temp_repo</span><span class="p">:</span>
             <span class="n">temp_out_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">temp_repo</span><span class="o">.</span><span class="n">working_dir</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
             <span class="n">temp_updates</span> <span class="o">=</span> <span class="n">_move_update_config_locations_to_new_parent</span><span class="p">(</span>

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.render.specific.cookiecutter &mdash; flexlate 0.2.0 documentation</title>
+  <title>flexlate.render.specific.copier &mdash; flexlate 0.2.0 documentation</title>
   
 
   
@@ -151,7 +151,7 @@
         
           <li><a href="../../../index.html">Module code</a> &raquo;</li>
         
-      <li>flexlate.render.specific.cookiecutter</li>
+      <li>flexlate.render.specific.copier</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -166,55 +166,48 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for flexlate.render.specific.cookiecutter</h1><div class="highlight"><pre>
+  <h1>Source code for flexlate.render.specific.copier</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Final</span>
 
-<span class="kn">from</span> <span class="nn">cookiecutter.config</span> <span class="kn">import</span> <span class="n">get_user_config</span>
-<span class="kn">from</span> <span class="nn">cookiecutter.generate</span> <span class="kn">import</span> <span class="n">generate_context</span><span class="p">,</span> <span class="n">generate_files</span>
-<span class="kn">from</span> <span class="nn">cookiecutter.main</span> <span class="kn">import</span> <span class="n">cookiecutter</span>
-<span class="kn">from</span> <span class="nn">cookiecutter.prompt</span> <span class="kn">import</span> <span class="n">prompt_for_config</span>
+<span class="kn">from</span> <span class="nn">copier</span> <span class="kn">import</span> <span class="n">copy_local</span>
+<span class="kn">from</span> <span class="nn">copier.config</span> <span class="kn">import</span> <span class="n">make_config</span>
+<span class="kn">from</span> <span class="nn">copier.config.objects</span> <span class="kn">import</span> <span class="n">ConfigData</span>
 
 <span class="kn">from</span> <span class="nn">flexlate.render.renderable</span> <span class="kn">import</span> <span class="n">Renderable</span>
 <span class="kn">from</span> <span class="nn">flexlate.render.specific.base</span> <span class="kn">import</span> <span class="n">SpecificTemplateRenderer</span>
-<span class="kn">from</span> <span class="nn">flexlate.template.cookiecutter</span> <span class="kn">import</span> <span class="n">CookiecutterTemplate</span>
+<span class="kn">from</span> <span class="nn">flexlate.template.copier</span> <span class="kn">import</span> <span class="n">CopierTemplate</span>
 <span class="kn">from</span> <span class="nn">flexlate.template.types</span> <span class="kn">import</span> <span class="n">TemplateType</span>
 <span class="kn">from</span> <span class="nn">flexlate.template_data</span> <span class="kn">import</span> <span class="n">TemplateData</span>
 
+<span class="n">exclude_copier_keys</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;now&quot;</span><span class="p">,</span> <span class="s2">&quot;make_secret&quot;</span><span class="p">,</span> <span class="s2">&quot;_folder_name&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="CookiecutterRenderer"><a class="viewcode-back" href="../../../../api/flexlate.render.specific.html#flexlate.render.specific.cookiecutter.CookiecutterRenderer">[docs]</a><span class="k">class</span> <span class="nc">CookiecutterRenderer</span><span class="p">(</span><span class="n">SpecificTemplateRenderer</span><span class="p">[</span><span class="n">CookiecutterTemplate</span><span class="p">]):</span>
-    <span class="n">_template_cls</span> <span class="o">=</span> <span class="n">CookiecutterTemplate</span>
-    <span class="n">_template_type</span> <span class="o">=</span> <span class="n">TemplateType</span><span class="o">.</span><span class="n">COOKIECUTTER</span>
 
-<div class="viewcode-block" id="CookiecutterRenderer.render"><a class="viewcode-back" href="../../../../api/flexlate.render.specific.html#flexlate.render.specific.cookiecutter.CookiecutterRenderer.render">[docs]</a>    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span>
+<div class="viewcode-block" id="CopierRenderer"><a class="viewcode-back" href="../../../../api/flexlate.render.specific.html#flexlate.render.specific.copier.CopierRenderer">[docs]</a><span class="k">class</span> <span class="nc">CopierRenderer</span><span class="p">(</span><span class="n">SpecificTemplateRenderer</span><span class="p">[</span><span class="n">CopierTemplate</span><span class="p">]):</span>
+    <span class="n">_template_cls</span> <span class="o">=</span> <span class="n">CopierTemplate</span>
+    <span class="n">_template_type</span> <span class="o">=</span> <span class="n">TemplateType</span><span class="o">.</span><span class="n">COPIER</span>
+
+<div class="viewcode-block" id="CopierRenderer.render"><a class="viewcode-back" href="../../../../api/flexlate.render.specific.html#flexlate.render.specific.copier.CopierRenderer.render">[docs]</a>    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">renderable</span><span class="p">:</span> <span class="n">Renderable</span><span class="p">[</span><span class="n">CookiecutterTemplate</span><span class="p">],</span>
+        <span class="n">renderable</span><span class="p">:</span> <span class="n">Renderable</span><span class="p">[</span><span class="n">CopierTemplate</span><span class="p">],</span>
         <span class="n">no_input</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TemplateData</span><span class="p">:</span>
         <span class="n">template</span> <span class="o">=</span> <span class="n">renderable</span><span class="o">.</span><span class="n">template</span>
-        <span class="n">config_dict</span> <span class="o">=</span> <span class="n">get_user_config</span><span class="p">()</span>
-        <span class="n">context_file</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">path</span> <span class="o">/</span> <span class="s2">&quot;cookiecutter.json&quot;</span>
-
-        <span class="n">context</span> <span class="o">=</span> <span class="n">generate_context</span><span class="p">(</span>
-            <span class="n">context_file</span><span class="o">=</span><span class="n">context_file</span><span class="p">,</span>
-            <span class="n">default_context</span><span class="o">=</span><span class="n">config_dict</span><span class="p">[</span><span class="s2">&quot;default_context&quot;</span><span class="p">],</span>
-            <span class="n">extra_context</span><span class="o">=</span><span class="n">renderable</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
+        <span class="n">conf</span> <span class="o">=</span> <span class="n">make_config</span><span class="p">(</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">path</span><span class="p">),</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">renderable</span><span class="o">.</span><span class="n">out_root</span><span class="p">),</span>
+            <span class="n">force</span><span class="o">=</span><span class="n">no_input</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">renderable</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;cookiecutter&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prompt_for_config</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">no_input</span><span class="p">)</span>
-        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;cookiecutter&quot;</span><span class="p">][</span><span class="s2">&quot;_template&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">path</span>
+        <span class="n">copy_local</span><span class="p">(</span><span class="n">conf</span><span class="o">=</span><span class="n">conf</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_extract_template_data_from_copier_config</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span></div></div>
 
-        <span class="n">generate_files</span><span class="p">(</span>
-            <span class="n">repo_dir</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">path</span><span class="p">),</span>
-            <span class="n">context</span><span class="o">=</span><span class="n">context</span><span class="p">,</span>
-            <span class="n">overwrite_if_exists</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-            <span class="n">skip_if_file_exists</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-            <span class="n">output_dir</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">renderable</span><span class="o">.</span><span class="n">out_root</span><span class="p">),</span>
-        <span class="p">)</span>
 
-        <span class="n">used_data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;cookiecutter&quot;</span><span class="p">])</span>
-        <span class="n">used_data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;_template&quot;</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">used_data</span></div></div>
+<span class="k">def</span> <span class="nf">_extract_template_data_from_copier_config</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">ConfigData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TemplateData</span><span class="p">:</span>
+    <span class="n">raw_data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="n">key</span><span class="p">:</span> <span class="n">value</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">raw_data</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">exclude_copier_keys</span>
+    <span class="p">}</span>
 </pre></div>
 
            </div>

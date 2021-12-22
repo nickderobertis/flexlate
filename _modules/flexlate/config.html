@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.config &mdash; flexlate 0.1.4 documentation</title>
+  <title>flexlate.config &mdash; flexlate 0.2.0 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.1.4
+                0.2.0
               </div>
             
           
@@ -167,7 +167,8 @@
            <div itemprop="articleBody">
             
   <h1>Source code for flexlate.config</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">from</span> <span class="nn">pyappconf</span> <span class="kn">import</span> <span class="n">BaseConfig</span><span class="p">,</span> <span class="n">AppConfig</span><span class="p">,</span> <span class="n">ConfigFormats</span>
@@ -179,7 +180,9 @@
     <span class="n">InvalidTemplateTypeException</span><span class="p">,</span>
     <span class="n">FlexlateProjectConfigFileNotExistsException</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">from</span> <span class="nn">flexlate.finder.specific.base</span> <span class="kn">import</span> <span class="n">TemplateFinder</span>
 <span class="kn">from</span> <span class="nn">flexlate.finder.specific.cookiecutter</span> <span class="kn">import</span> <span class="n">CookiecutterFinder</span>
+<span class="kn">from</span> <span class="nn">flexlate.finder.specific.copier</span> <span class="kn">import</span> <span class="n">CopierFinder</span>
 <span class="kn">from</span> <span class="nn">flexlate.template.base</span> <span class="kn">import</span> <span class="n">Template</span>
 <span class="kn">from</span> <span class="nn">flexlate.template.types</span> <span class="kn">import</span> <span class="n">TemplateType</span>
 <span class="kn">from</span> <span class="nn">flexlate.template_data</span> <span class="kn">import</span> <span class="n">TemplateData</span>
@@ -211,8 +214,11 @@
             <span class="k">raise</span> <span class="n">InvalidTemplateTypeException</span><span class="p">(</span>
                 <span class="s2">&quot;base type is not allowed for concrete templates&quot;</span>
             <span class="p">)</span>
+        <span class="n">finder</span><span class="p">:</span> <span class="n">TemplateFinder</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">TemplateType</span><span class="o">.</span><span class="n">COOKIECUTTER</span><span class="p">:</span>
             <span class="n">finder</span> <span class="o">=</span> <span class="n">CookiecutterFinder</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">TemplateType</span><span class="o">.</span><span class="n">COPIER</span><span class="p">:</span>
+            <span class="n">finder</span> <span class="o">=</span> <span class="n">CopierFinder</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">InvalidTemplateTypeException</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;no handling for template type </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="si">}</span><span class="s2"> in creating template from source&quot;</span>
@@ -296,12 +302,24 @@
     <span class="k">def</span> <span class="nf">child_configs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;FlexlateConfig&quot;</span><span class="p">]:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_child_configs</span> <span class="ow">or</span> <span class="p">[]</span>
 
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">empty</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">template_sources</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">applied_templates</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+
 <div class="viewcode-block" id="FlexlateConfig.save"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config.FlexlateConfig.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">serializer_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">child_configs</span><span class="p">:</span>
             <span class="c1"># Normal singular config, fall back to py-app-conf behavior</span>
             <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">serializer_kwargs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="c1"># Parent pseudo-config holding actual child configs, save those instead</span>
         <span class="k">for</span> <span class="n">config</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">child_configs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+                <span class="c1"># User must have removed all the sources and applied templates,</span>
+                <span class="c1"># therefore we don&#39;t want the config file anymore</span>
+                <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">config_location</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">config_location</span><span class="p">)</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># Normal case, non-empty config, save it</span>
             <span class="n">config</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">serializer_kwargs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="FlexlateConfig.Config"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config.FlexlateConfig.Config">[docs]</a>    <span class="k">class</span> <span class="nc">Config</span><span class="p">:</span>
