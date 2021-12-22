@@ -101,6 +101,30 @@ def test_add_remote_cookiecutter_applied_template_to_repo(
     assert at.root == template_root
 
 
+def test_add_source_to_project_with_existing_outputs(
+    repo_with_cookiecutter_one_template_source_and_output: Repo,
+    cookiecutter_two_template: CookiecutterTemplate,
+):
+    repo = repo_with_cookiecutter_one_template_source_and_output
+    adder = Adder()
+    adder.add_template_source(
+        repo,
+        cookiecutter_two_template,
+        out_root=GENERATED_REPO_DIR,
+        target_version="some version",
+    )
+    config_path = GENERATED_REPO_DIR / "flexlate.json"
+    config = FlexlateConfig.load(config_path)
+    assert len(config.applied_templates) == 1
+    assert len(config.template_sources) == 2
+    source = config.template_sources[1]
+    assert source.name == cookiecutter_two_template.name
+    assert source.path == str(cookiecutter_two_template.path)
+    assert source.version == cookiecutter_two_template.version
+    assert source.type == TemplateType.COOKIECUTTER
+    assert source.target_version == "some version"
+
+
 # TODO: tests for different out roots
 # TODO: test for adding to existing
 
