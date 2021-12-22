@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from typing import List, Optional, Sequence, Dict, Any, Tuple, Union
 
@@ -127,12 +128,24 @@ class FlexlateConfig(BaseConfig):
     def child_configs(self) -> List["FlexlateConfig"]:
         return self._child_configs or []
 
+    @property
+    def empty(self) -> bool:
+        return len(self.template_sources) == 0 and len(self.applied_templates) == 0
+
     def save(self, serializer_kwargs: Optional[Dict[str, Any]] = None, **kwargs):
         if not self.child_configs:
             # Normal singular config, fall back to py-app-conf behavior
             return super().save(serializer_kwargs, **kwargs)
         # Parent pseudo-config holding actual child configs, save those instead
         for config in self.child_configs:
+            if config.empty:
+                # User must have removed all the sources and applied templates,
+                # therefore we don't want the config file anymore
+                if config.settings.config_location.exists():
+                    os.remove(config.settings.config_location)
+                continue
+
+            # Normal case, non-empty config, save it
             config.save(serializer_kwargs, **kwargs)
 
     class Config:

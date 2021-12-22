@@ -205,18 +205,19 @@ def test_remove_template_source(
     repo_with_placeholder_committed: Repo,
 ):
     fxt = flexlates.flexlate
-    with change_directory_to(GENERATED_REPO_DIR):
-        fxt.init_project(user=user, default_add_mode=add_mode)
-        fxt.add_template_source(COOKIECUTTER_REMOTE_URL)
-        fxt.remove_template_source(COOKIECUTTER_REMOTE_NAME)
-
     config_root = (
         GENERATED_FILES_DIR if add_mode == AddMode.USER else GENERATED_REPO_DIR
     )
     project_config_root = GENERATED_FILES_DIR if user else GENERATED_REPO_DIR
-
-    _assert_template_sources_config_is_empty(config_root / "flexlate.json")
+    config_path = config_root / "flexlate.json"
     project_config_path = project_config_root / "flexlate-project.json"
+    with change_directory_to(GENERATED_REPO_DIR):
+        fxt.init_project(user=user, default_add_mode=add_mode)
+        fxt.add_template_source(COOKIECUTTER_REMOTE_URL)
+        assert config_path.exists()
+        fxt.remove_template_source(COOKIECUTTER_REMOTE_NAME)
+        assert not config_path.exists()
+
     _assert_project_config_is_correct(project_config_path, user=user, add_mode=add_mode)
 
 
