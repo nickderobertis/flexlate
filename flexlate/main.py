@@ -119,6 +119,26 @@ class Flexlate:
             updater=self.updater,
         )
 
+    def remove_applied_template_and_output(
+        self,
+        template_name: str,
+        out_root: Path = Path("."),
+    ):
+        project_config = self.config_manager.load_project_config(out_root)
+        repo = Repo(project_config.path)
+
+        self.remover.remove_applied_template_and_output(
+            repo,
+            template_name,
+            out_root=out_root,
+            add_mode=project_config.default_add_mode,
+            merged_branch_name=project_config.merged_branch_name,
+            template_branch_name=project_config.template_branch_name,
+            config_manager=self.config_manager,
+            updater=self.updater,
+            renderer=self.renderer,
+        )
+
     def update(
         self,
         names: Optional[List[str]] = None,
@@ -165,5 +185,5 @@ class Flexlate:
             config_manager=self.config_manager,
         )
 
-    # TODO: list template sources, list applied templates, remove applied templates and sources
+    # TODO: list template sources, list applied templates
     # TODO: Update target versions in template sources

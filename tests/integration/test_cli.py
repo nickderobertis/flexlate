@@ -221,6 +221,37 @@ def test_remove_template_source(
     _assert_project_config_is_correct(project_config_path, user=user, add_mode=add_mode)
 
 
+@patch.object(appdirs, "user_config_dir", lambda name: GENERATED_FILES_DIR)
+@pytest.mark.parametrize("user", [False, True])
+def test_remove_applied_template(
+    user: bool,
+    flexlates: FlexlateFixture,
+    add_mode: AddMode,
+    repo_with_placeholder_committed: Repo,
+):
+    fxt = flexlates.flexlate
+    no_input = flexlates.type == FlexlateType.APP
+    config_root = (
+        GENERATED_FILES_DIR if add_mode == AddMode.USER else GENERATED_REPO_DIR
+    )
+    project_config_root = GENERATED_FILES_DIR if user else GENERATED_REPO_DIR
+    config_path = config_root / "flexlate.json"
+    project_config_path = project_config_root / "flexlate-project.json"
+    expect_data: CookiecutterRemoteTemplateData = dict(name="woo", key="it works")
+    with change_directory_to(GENERATED_REPO_DIR):
+        fxt.init_project(user=user, default_add_mode=add_mode)
+        fxt.add_template_source(COOKIECUTTER_REMOTE_URL)
+        fxt.apply_template_and_add(
+            COOKIECUTTER_REMOTE_NAME, data=expect_data, no_input=no_input
+        )
+        _assert_project_files_are_correct(expect_data=expect_data)
+        fxt.remove_applied_template_and_output(COOKIECUTTER_REMOTE_NAME)
+
+    _assert_project_files_do_not_exist(expect_data=expect_data)
+    _assert_project_config_is_correct(project_config_path, user=user, add_mode=add_mode)
+    _assert_applied_templates_config_is_empty(config_path)
+
+
 def _assert_project_files_are_correct(
     root: Path = GENERATED_REPO_DIR,
     expect_data: Optional[CookiecutterRemoteTemplateData] = None,
@@ -232,6 +263,15 @@ def _assert_project_files_are_correct(
     assert out_path.exists()
     content = out_path.read_text()
     assert content == f"{header}{data['key']}"
+
+
+def _assert_project_files_do_not_exist(
+    root: Path = GENERATED_REPO_DIR,
+    expect_data: Optional[CookiecutterRemoteTemplateData] = None,
+):
+    data: CookiecutterRemoteTemplateData = expect_data or dict(name="abc", key="value")
+    out_path = root / data["name"] / f"{data['name']}.txt"
+    assert not out_path.exists()
 
 
 def _assert_template_sources_config_is_correct(
@@ -275,6 +315,14 @@ def _assert_applied_templates_config_is_correct(
     assert applied_template.data == data
     assert applied_template.version == version
     assert applied_template.root == expect_applied_template_root
+
+
+def _assert_applied_templates_config_is_empty(
+    config_path: Path = GENERATED_REPO_DIR / "flexlate.json",
+):
+    assert config_path.exists()
+    config = FlexlateConfig.load(config_path)
+    assert len(config.applied_templates) == 0
 
 
 def _assert_config_is_correct(

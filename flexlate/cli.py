@@ -110,6 +110,18 @@ def remove_template_source(
     app.remove_template_source(template_name, template_root=template_root)
 
 
+@remove_cli.command(name="output")
+def remove_template_output(
+    template_name: str = typer.Argument(
+        ...,
+        help="The name of the template source corresponding to "
+        "the applied template output to remove",
+    ),
+    template_root: Path = TEMPLATE_ROOT_OPTION,
+):
+    app.remove_applied_template_and_output(template_name, out_root=template_root)
+
+
 cli.add_typer(remove_cli, name="remove")
 
 

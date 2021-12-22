@@ -97,6 +97,13 @@ class CLIStubFlexlate(Flexlate):
             input_data=data,
         )
 
+    def remove_applied_template_and_output(
+        self,
+        template_name: str,
+        out_root: Path = Path("."),
+    ):
+        fxt(["remove", "output", template_name, "--root", str(out_root)])
+
     def update(
         self,
         names: Optional[List[str]] = None,
