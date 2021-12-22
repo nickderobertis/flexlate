@@ -50,7 +50,7 @@ class Updater:
         # Create it from the initial commit if it does not exist
         cwd = Path(os.getcwd())
         with temp_repo_that_pushes_to_branch(  # type: ignore
-            repo, branch_name=template_branch_name
+            repo, branch_name=template_branch_name, delete_tracked_files=True
         ) as temp_repo:
             temp_out_path = Path(temp_repo.working_dir)  # type: ignore
             temp_updates = _move_update_config_locations_to_new_parent(
