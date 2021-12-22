@@ -2,52 +2,45 @@
 import os
 from enum import Enum
 from pathlib import Path
-from typing import Sequence, Union, Optional
+from typing import Optional
 from unittest.mock import patch
 
 import appdirs
-from click.testing import Result
-from typer.testing import CliRunner
+import pytest
+from git import GitCommandError
 
 from flexlate.add_mode import AddMode
 from flexlate.config import FlexlateConfig, FlexlateProjectConfig
-from flexlate.cli import cli
 from flexlate.main import Flexlate
-from flexlate.template_data import TemplateData
 from tests.config import (
     GENERATED_FILES_DIR,
     COOKIECUTTER_REMOTE_URL,
     COOKIECUTTER_REMOTE_NAME,
     COOKIECUTTER_REMOTE_VERSION_2,
-    GENERATED_REPO_DIR,
     COOKIECUTTER_REMOTE_VERSION_1,
 )
-from tests.dirutils import change_directory_to, display_contents_of_all_files_in_folder
 from tests.fixtures.git import *
 from tests.fixtures.template import (
     CookiecutterRemoteTemplateData,
     get_header_for_cookiecutter_remote_template,
 )
-
-runner = CliRunner()
-
-
-def fxt(
-    args: Union[str, Sequence[str]], input_data: Optional[TemplateData] = None
-) -> Result:
-    text_input = "\n".join(input_data.values()) if input_data is not None else None
-    return runner.invoke(cli, args, input=text_input)
+from tests.fixtures.cli import flexlates, FlexlateFixture, FlexlateType
 
 
 def test_init_project_and_add_source_and_template(
+    flexlates: FlexlateFixture,
     repo_with_placeholder_committed: Repo,
 ):
+    fxt = flexlates.flexlate
+    no_input = flexlates.type == FlexlateType.APP
     repo = repo_with_placeholder_committed
     expect_data: CookiecutterRemoteTemplateData = dict(name="woo", key="it works")
     with change_directory_to(GENERATED_REPO_DIR):
-        fxt("init")
-        fxt(["add", "source", COOKIECUTTER_REMOTE_URL])
-        fxt(["add", "output", COOKIECUTTER_REMOTE_NAME], input_data=expect_data)
+        fxt.init_project()
+        fxt.add_template_source(COOKIECUTTER_REMOTE_URL)
+        fxt.apply_template_and_add(
+            COOKIECUTTER_REMOTE_NAME, data=expect_data, no_input=no_input
+        )
 
     _assert_project_files_are_correct(expect_data=expect_data)
     _assert_config_is_correct(expect_data=expect_data)
@@ -59,14 +52,16 @@ def test_init_project_and_add_source_and_template(
 @patch.object(appdirs, "user_config_dir", lambda name: GENERATED_FILES_DIR)
 @pytest.mark.parametrize("add_mode", [AddMode.LOCAL, AddMode.PROJECT, AddMode.USER])
 def test_init_project_for_user_and_add_source_and_template(
+    flexlates: FlexlateFixture,
     add_mode: AddMode,
     repo_with_placeholder_committed: Repo,
 ):
+    fxt = flexlates.flexlate
     repo = repo_with_placeholder_committed
     with change_directory_to(GENERATED_REPO_DIR):
-        fxt(["init", "--user", "--add-mode", add_mode])
-        fxt(["add", "source", COOKIECUTTER_REMOTE_URL])
-        fxt(["add", "output", COOKIECUTTER_REMOTE_NAME, "--no-input"])
+        fxt.init_project(user=True, default_add_mode=add_mode)
+        fxt.add_template_source(COOKIECUTTER_REMOTE_URL)
+        fxt.apply_template_and_add(COOKIECUTTER_REMOTE_NAME, no_input=True)
 
     _assert_project_files_are_correct()
 
@@ -106,40 +101,30 @@ class SubdirStyle(str, Enum):
     ],
 )
 def test_init_project_and_add_source_and_template_in_subdir(
+    flexlates: FlexlateFixture,
     add_mode: AddMode,
     subdir_style: SubdirStyle,
     repo_with_placeholder_committed: Repo,
 ):
+    fxt = flexlates.flexlate
     repo = repo_with_placeholder_committed
     with change_directory_to(GENERATED_REPO_DIR):
-        fxt(["init", "--add-mode", add_mode])
-        fxt(["add", "source", COOKIECUTTER_REMOTE_URL])
+        fxt.init_project(default_add_mode=add_mode)
+        fxt.add_template_source(COOKIECUTTER_REMOTE_URL)
         subdir = GENERATED_REPO_DIR / "subdir"
         subdir.mkdir()
         if subdir_style == SubdirStyle.CD:
             with change_directory_to(subdir):
-                fxt(["add", "output", COOKIECUTTER_REMOTE_NAME, "--no-input"])
+                fxt.apply_template_and_add(COOKIECUTTER_REMOTE_NAME, no_input=True)
         elif subdir_style == SubdirStyle.PROVIDE_RELATIVE:
-            fxt(
-                [
-                    "add",
-                    "output",
-                    COOKIECUTTER_REMOTE_NAME,
-                    "--no-input",
-                    "--root",
-                    str(subdir.relative_to(os.getcwd())),
-                ]
+            fxt.apply_template_and_add(
+                COOKIECUTTER_REMOTE_NAME,
+                no_input=True,
+                out_root=subdir.relative_to(os.getcwd()),
             )
         elif subdir_style == SubdirStyle.PROVIDE_ABSOLUTE:
-            fxt(
-                [
-                    "add",
-                    "output",
-                    COOKIECUTTER_REMOTE_NAME,
-                    "--no-input",
-                    "--root",
-                    str(subdir.absolute()),
-                ]
+            fxt.apply_template_and_add(
+                COOKIECUTTER_REMOTE_NAME, no_input=True, out_root=subdir.absolute()
             )
 
     _assert_project_files_are_correct(GENERATED_REPO_DIR / "subdir")
@@ -174,36 +159,45 @@ def test_init_project_and_add_source_and_template_in_subdir(
 
 
 def test_update_project(
+    flexlates: FlexlateFixture,
     repo_with_placeholder_committed: Repo,
 ):
+    fxt = flexlates.flexlate
+    no_input = flexlates.type == FlexlateType.APP
     repo = repo_with_placeholder_committed
     expect_data: CookiecutterRemoteTemplateData = dict(name="woo", key="it works")
     with change_directory_to(GENERATED_REPO_DIR):
-        fxt("init")
-        fxt(
-            [
-                "add",
-                "source",
-                COOKIECUTTER_REMOTE_URL,
-                "--version",
-                COOKIECUTTER_REMOTE_VERSION_1,
-            ]
+        fxt.init_project()
+        fxt.add_template_source(
+            COOKIECUTTER_REMOTE_URL, target_version=COOKIECUTTER_REMOTE_VERSION_1
         )
-        fxt(["add", "output", COOKIECUTTER_REMOTE_NAME], input_data=expect_data)
+        fxt.apply_template_and_add(
+            COOKIECUTTER_REMOTE_NAME, data=expect_data, no_input=no_input
+        )
         _assert_project_files_are_correct(
             expect_data=expect_data, version=COOKIECUTTER_REMOTE_VERSION_1
         )
         _assert_config_is_correct(
             expect_data=expect_data, version=COOKIECUTTER_REMOTE_VERSION_1
         )
-        fxt(["update", "--no-input"])
+
         # First update does nothing, because version is at target version
+        # When using app, it will throw an error
+        if flexlates.type == FlexlateType.APP:
+            with pytest.raises(GitCommandError) as excinfo:
+                fxt.update(no_input=True)
+            assert "Your branch is up to date" in str(excinfo.value)
+        else:
+            # When using CLI, it will not throw an error, just display the message
+            fxt.update(no_input=True)
+
         _assert_project_files_are_correct(
             expect_data=expect_data, version=COOKIECUTTER_REMOTE_VERSION_1
         )
         _assert_config_is_correct(
             expect_data=expect_data, version=COOKIECUTTER_REMOTE_VERSION_1
         )
+
         # Now update the target version
         # TODO: replace with cli command to update target version once it exists
         config_path = GENERATED_REPO_DIR / "flexlate.json"
@@ -215,7 +209,7 @@ def test_update_project(
             repo, "Update target version for cookiecutter to version 2"
         )
         # Now update should go to new version
-        fxt(["update", "--no-input"])
+        fxt.update(no_input=True)
 
     _assert_project_files_are_correct(expect_data=expect_data)
     _assert_config_is_correct(expect_data=expect_data)
