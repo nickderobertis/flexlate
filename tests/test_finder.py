@@ -10,7 +10,9 @@ from tests.config import (
     COOKIECUTTER_REMOTE_URL,
     COOKIECUTTER_REMOTE_VERSION_1,
     COOKIECUTTER_REMOTE_VERSION_2,
-    COOKIECUTTER_ONE_VERSION, COPIER_ONE_DIR,
+    COOKIECUTTER_ONE_VERSION,
+    COPIER_ONE_DIR,
+    COPIER_ONE_VERSION,
 )
 
 
@@ -33,6 +35,15 @@ def test_get_cookiecutter_local_template():
     assert template.git_url is None
     assert template.version == COOKIECUTTER_ONE_VERSION
     assert template.config.defaults == {"a": "b", "c": ""}
+
+
+def test_get_copier_local_template():
+    finder = CopierFinder()
+    template = finder.find(COPIER_ONE_DIR)
+    assert template.path == COPIER_ONE_DIR
+    assert template.git_url is None
+    assert template.version == COPIER_ONE_VERSION
+    assert template.config.defaults == {"q1": "a1", "q2": 1, "q3": None}
 
 
 @pytest.mark.parametrize(
