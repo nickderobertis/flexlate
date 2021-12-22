@@ -3,9 +3,6 @@ import shutil
 from pathlib import Path
 from typing import Callable, Sequence, Optional
 
-from flexlate.add_mode import AddMode
-from flexlate.config import FlexlateConfig
-
 
 def make_func_that_creates_cwd_and_out_root_before_running(
     out_root: Path, func: Callable[[Path], None]
@@ -76,17 +73,3 @@ def location_relative_to_new_parent(
             return path
         else:
             raise e
-
-
-def determine_config_path_from_roots_and_add_mode(
-    out_root: Path = Path("."),
-    project_root: Path = Path("."),
-    add_mode: AddMode = AddMode.LOCAL,
-) -> Path:
-    if add_mode == AddMode.USER:
-        return FlexlateConfig._settings.config_location
-    if add_mode == AddMode.PROJECT:
-        return project_root / "flexlate.json"
-    if add_mode == AddMode.LOCAL:
-        return out_root / "flexlate.json"
-    raise ValueError(f"unexpected add mode {add_mode}")

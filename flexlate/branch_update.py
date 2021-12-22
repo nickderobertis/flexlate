@@ -5,8 +5,13 @@ from typing import Callable
 from git import Repo
 
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
-from flexlate.ext_git import temp_repo_that_pushes_to_branch, stage_and_commit_all, \
-    fast_forward_branch_without_checkout, checked_out_template_branch, merge_branch_into_current
+from flexlate.ext_git import (
+    temp_repo_that_pushes_to_branch,
+    stage_and_commit_all,
+    fast_forward_branch_without_checkout,
+    checked_out_template_branch,
+    merge_branch_into_current,
+)
 from flexlate.path_ops import make_func_that_creates_cwd_and_out_root_before_running
 
 

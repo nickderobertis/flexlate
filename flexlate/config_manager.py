@@ -19,6 +19,7 @@ from flexlate.exc import (
     TemplateNotRegisteredException,
     CannotLoadConfigException,
     FlexlateProjectConfigFileNotExistsException,
+    CannotRemoveTemplateSourceException,
 )
 from flexlate.render.renderable import Renderable
 from flexlate.template.base import Template
@@ -200,6 +201,49 @@ class ConfigManager:
         child_config.template_sources.append(source)
         self.save_config(config)
 
+    def remove_template_source(
+        self,
+        template_name: str,
+        config_path: Path,
+        project_root: Path = Path("."),
+    ):
+        config = self.load_config(project_root=project_root)
+        if self._applied_template_exists_in_project(
+            template_name, project_root=project_root, config=config
+        ):
+            # TODO: Improve error message for can't remove template source
+            #  When can't remove template source due to existing applied template, determine paths where
+            #  the existing applied templates are to inform the user what needs to be removed
+            raise CannotRemoveTemplateSourceException(
+                f"Cannot remove template source {template_name} as it has existing outputs"
+            )
+
+        child_config = _get_or_create_child_config_by_path(config, config_path)
+        template_index: Optional[int] = None
+        for i, template_source in enumerate(child_config.template_sources):
+            if template_source.name == template_name:
+                template_index = i
+                break
+        if template_index is None:
+            raise CannotRemoveTemplateSourceException(
+                f"Cannot find any template source with name {template_name}"
+            )
+        child_config.template_sources.pop(template_index)
+        self.save_config(config)
+
+    def _applied_template_exists_in_project(
+        self,
+        template_name: str,
+        project_root: Path = Path("."),
+        config: Optional[FlexlateConfig] = None,
+    ):
+        config = config or self.load_config(project_root=project_root)
+        for child_config in config.child_configs:
+            for applied_template in child_config.applied_templates:
+                if applied_template.name == template_name:
+                    return True
+        return False
+
     def add_applied_template(
         self,
         template: Template,
@@ -318,3 +362,17 @@ def _get_template_source_from_config(
     raise TemplateLookupException(
         f"could not find source with name {update.template.name} in any child config"
     )
+
+
+def determine_config_path_from_roots_and_add_mode(
+    out_root: Path = Path("."),
+    project_root: Path = Path("."),
+    add_mode: AddMode = AddMode.LOCAL,
+) -> Path:
+    if add_mode == AddMode.USER:
+        return FlexlateConfig._settings.config_location
+    if add_mode == AddMode.PROJECT:
+        return project_root / "flexlate.json"
+    if add_mode == AddMode.LOCAL:
+        return out_root / "flexlate.json"
+    raise ValueError(f"unexpected add mode {add_mode}")

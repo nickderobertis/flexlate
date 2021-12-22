@@ -6,13 +6,16 @@ from git import Repo
 
 from flexlate.add_mode import AddMode, get_expanded_out_root
 from flexlate.branch_update import modify_files_via_branches_and_temp_repo
-from flexlate.config_manager import ConfigManager
+from flexlate.config_manager import (
+    ConfigManager,
+    determine_config_path_from_roots_and_add_mode,
+)
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.ext_git import (
     assert_repo_is_in_clean_state,
 )
 from flexlate.path_ops import (
-    location_relative_to_new_parent, determine_config_path_from_roots_and_add_mode,
+    location_relative_to_new_parent,
 )
 from flexlate.render.multi import MultiRenderer
 from flexlate.template.base import Template
@@ -37,7 +40,9 @@ class Adder:
         if repo.working_dir is None:
             raise ValueError("repo working dir should not be none")
 
-        config_path = determine_config_path_from_roots_and_add_mode(out_root, Path(repo.working_dir), add_mode)
+        config_path = determine_config_path_from_roots_and_add_mode(
+            out_root, Path(repo.working_dir), add_mode
+        )
         project_root = Path(repo.working_dir)
 
         if add_mode == AddMode.USER:
@@ -88,7 +93,9 @@ class Adder:
             raise ValueError("repo working dir should not be none")
 
         project_root = Path(repo.working_dir)
-        config_path = determine_config_path_from_roots_and_add_mode(out_root, project_root, add_mode)
+        config_path = determine_config_path_from_roots_and_add_mode(
+            out_root, project_root, add_mode
+        )
         expanded_out_root = get_expanded_out_root(out_root, project_root, add_mode)
 
         if add_mode == AddMode.USER:
