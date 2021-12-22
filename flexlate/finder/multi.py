@@ -1,4 +1,4 @@
-from typing import Sequence, Optional
+from typing import Sequence, Optional, List, Final
 
 from flexlate.exc import InvalidTemplatePathException
 from flexlate.finder.specific.base import TemplateFinder
@@ -8,7 +8,7 @@ from flexlate.finder.specific.cookiecutter import CookiecutterFinder
 from flexlate.finder.specific.copier import CopierFinder
 from flexlate.template.base import Template
 
-SPECIFIC_FINDERS = [
+SPECIFIC_FINDERS: Final[List[TemplateFinder]] = [
     CookiecutterFinder(),
     CopierFinder(),
 ]

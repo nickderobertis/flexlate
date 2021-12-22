@@ -78,9 +78,9 @@ def _download_repo_if_necessary_get_local_path_and_name(
     if isinstance(path, Path):
         return path, path.name
 
-    repo = _get_repo_url_if_is_repo(path)
-    if repo:
-        src_path = vcs.clone(repo, version or "HEAD")
+    repo_url = _get_repo_url_if_is_repo(path)
+    if repo_url:
+        src_path = vcs.clone(repo_url, version or "HEAD")
         repo = Repo(src_path)
         name = get_repo_remote_name_from_repo(repo)
         user_repo_dir = _copy_local_repo_to_user_directory_and_replace(

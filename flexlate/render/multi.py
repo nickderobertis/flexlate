@@ -2,7 +2,7 @@ import os
 import shutil
 import tempfile
 from pathlib import Path
-from typing import Sequence, Optional, List, Dict
+from typing import Sequence, Optional, List, Dict, Final
 
 from flexlate.exc import InvalidTemplateClassException, RendererNotFoundException
 from flexlate.render.renderable import Renderable
@@ -13,7 +13,10 @@ from flexlate.template.base import Template
 from flexlate.template.types import TemplateType
 from flexlate.template_data import TemplateData
 
-renderers = [CookiecutterRenderer(), CopierRenderer()]
+renderers: Final[List[SpecificTemplateRenderer]] = [
+    CookiecutterRenderer(),
+    CopierRenderer(),
+]
 
 
 class MultiRenderer:
