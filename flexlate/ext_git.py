@@ -175,3 +175,12 @@ def assert_repo_is_in_clean_state(repo: Repo):
         raise GitRepoHasNoCommitsException(
             "git repo has no commits. Please initialize it with a commit"
         )
+
+
+def get_repo_remote_name_from_repo(repo: Repo) -> str:
+    url = list(repo.remote().urls)[0]
+    parts = url.split("/")
+    name_part = parts[-1]
+    # Remove .git on end
+    name = ".".join(name_part.split(".")[:-1])
+    return name
