@@ -21,7 +21,9 @@ def change_directory_to(path: Path):
     os.chdir(current_path)
 
 
-def display_contents_of_all_files_in_folder(folder: Path, nested: bool = True, ignores: Sequence[str] = (".git",)):
+def display_contents_of_all_files_in_folder(
+    folder: Path, nested: bool = True, ignores: Sequence[str] = (".git",)
+):
     outer_divider = "================================================"
     divider = "--------------------------------------------------"
     for path in folder.absolute().iterdir():

@@ -67,6 +67,13 @@ class CLIStubFlexlate(Flexlate):
             ]
         )
 
+    def remove_template_source(
+        self,
+        template_name: str,
+        template_root: Path = Path("."),
+    ):
+        fxt(["remove", "source", template_name, "--root", str(template_root)])
+
     def apply_template_and_add(
         self,
         name: str,

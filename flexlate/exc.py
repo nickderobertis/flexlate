@@ -54,6 +54,14 @@ class CannotLoadConfigException(FlexlateConfigException):
     pass
 
 
+class CannotRemoveException(FlexlateConfigException):
+    pass
+
+
+class CannotRemoveTemplateSourceException(CannotRemoveException):
+    pass
+
+
 class FlexlateConfigFileNotExistsException(CannotLoadConfigException):
     pass
 

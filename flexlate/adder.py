@@ -1,23 +1,20 @@
 import os
 from pathlib import Path
-from typing import Optional, Callable
+from typing import Optional
 
 from git import Repo
 
 from flexlate.add_mode import AddMode, get_expanded_out_root
-from flexlate.config import FlexlateConfig
-from flexlate.config_manager import ConfigManager
+from flexlate.branch_update import modify_files_via_branches_and_temp_repo
+from flexlate.config_manager import (
+    ConfigManager,
+    determine_config_path_from_roots_and_add_mode,
+)
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.ext_git import (
-    checked_out_template_branch,
-    stage_and_commit_all,
-    merge_branch_into_current,
     assert_repo_is_in_clean_state,
-    temp_repo_that_pushes_to_branch,
-    fast_forward_branch_without_checkout,
 )
 from flexlate.path_ops import (
-    make_func_that_creates_cwd_and_out_root_before_running,
     location_relative_to_new_parent,
 )
 from flexlate.render.multi import MultiRenderer
@@ -43,7 +40,9 @@ class Adder:
         if repo.working_dir is None:
             raise ValueError("repo working dir should not be none")
 
-        config_path = _determine_config_path(out_root, Path(repo.working_dir), add_mode)
+        config_path = determine_config_path_from_roots_and_add_mode(
+            out_root, Path(repo.working_dir), add_mode
+        )
         project_root = Path(repo.working_dir)
 
         if add_mode == AddMode.USER:
@@ -57,7 +56,7 @@ class Adder:
             return
 
         # Local or project config, add in git
-        _add_operation_via_branches(
+        modify_files_via_branches_and_temp_repo(
             lambda temp_path: config_manager.add_template_source(
                 template,
                 location_relative_to_new_parent(
@@ -94,7 +93,9 @@ class Adder:
             raise ValueError("repo working dir should not be none")
 
         project_root = Path(repo.working_dir)
-        config_path = _determine_config_path(out_root, project_root, add_mode)
+        config_path = determine_config_path_from_roots_and_add_mode(
+            out_root, project_root, add_mode
+        )
         expanded_out_root = get_expanded_out_root(out_root, project_root, add_mode)
 
         if add_mode == AddMode.USER:
@@ -108,7 +109,7 @@ class Adder:
             )
         else:
             # Commit changes for local and project
-            _add_operation_via_branches(
+            modify_files_via_branches_and_temp_repo(
                 lambda temp_path: config_manager.add_applied_template(
                     template,
                     location_relative_to_new_parent(
@@ -173,7 +174,7 @@ class Adder:
             return
 
         # Config resides in project, so add it via branches
-        _add_operation_via_branches(
+        modify_files_via_branches_and_temp_repo(
             lambda temp_path: config_manager.add_project(
                 path=temp_path,
                 default_add_mode=default_add_mode,
@@ -187,57 +188,6 @@ class Adder:
             merged_branch_name=merged_branch_name,
             template_branch_name=template_branch_name,
         )
-
-
-def _determine_config_path(
-    out_root: Path = Path("."),
-    project_root: Path = Path("."),
-    add_mode: AddMode = AddMode.LOCAL,
-) -> Path:
-    if add_mode == AddMode.USER:
-        return FlexlateConfig._settings.config_location
-    if add_mode == AddMode.PROJECT:
-        return project_root / "flexlate.json"
-    if add_mode == AddMode.LOCAL:
-        return out_root / "flexlate.json"
-    raise ValueError(f"unexpected add mode {add_mode}")
-
-
-def _add_operation_via_branches(
-    add_operation: Callable[[Path], None],
-    repo: Repo,
-    commit_message: str,
-    out_root: Path,
-    merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
-    template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
-):
-    cwd = os.getcwd()
-    current_branch = repo.active_branch
-
-    make_dirs_add_operation = make_func_that_creates_cwd_and_out_root_before_running(
-        out_root, add_operation
-    )
-
-    # Update the template only branch with the new template
-    with temp_repo_that_pushes_to_branch(  # type: ignore
-        repo, branch_name=template_branch_name
-    ) as temp_repo:
-        make_dirs_add_operation(Path(temp_repo.working_dir))  # type: ignore
-        stage_and_commit_all(temp_repo, commit_message)
-
-    # Bring the change into the merged branch
-    # Update with changes from the main repo
-    fast_forward_branch_without_checkout(repo, merged_branch_name, current_branch.name)
-    with checked_out_template_branch(repo, branch_name=merged_branch_name):
-        # Update with the new template
-        merge_branch_into_current(repo, template_branch_name)
-
-    # Merge back into current branch
-    merge_branch_into_current(repo, merged_branch_name)
-
-    # Folder may have been deleted again while switching branches, so
-    # need to set cwd again
-    os.chdir(cwd)
 
 
 def _add_template_commit_message(

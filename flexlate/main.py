@@ -8,6 +8,7 @@ from flexlate.add_mode import AddMode
 from flexlate.config_manager import ConfigManager
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.finder.multi import MultiFinder
+from flexlate.remover import Remover
 from flexlate.render.multi import MultiRenderer
 from flexlate.template.base import Template
 from flexlate.template_data import TemplateData
@@ -18,12 +19,14 @@ class Flexlate:
     def __init__(
         self,
         adder: Adder = Adder(),
+        remover: Remover = Remover(),
         config_manager: ConfigManager = ConfigManager(),
         finder: MultiFinder = MultiFinder(),
         renderer: MultiRenderer = MultiRenderer(),
         updater: Updater = Updater(),
     ):
         self.adder = adder
+        self.remover = remover
         self.config_manager = config_manager
         self.finder = finder
         self.renderer = renderer
@@ -68,6 +71,23 @@ class Flexlate:
             merged_branch_name=project_config.merged_branch_name,
             template_branch_name=project_config.template_branch_name,
             add_mode=add_mode,
+            config_manager=self.config_manager,
+        )
+
+    def remove_template_source(
+        self,
+        template_name: str,
+        template_root: Path = Path("."),
+    ):
+        project_config = self.config_manager.load_project_config(template_root)
+        repo = Repo(project_config.path)
+        self.remover.remove_template_source(
+            repo,
+            template_name,
+            out_root=template_root,
+            merged_branch_name=project_config.merged_branch_name,
+            template_branch_name=project_config.template_branch_name,
+            add_mode=project_config.default_add_mode,
             config_manager=self.config_manager,
         )
 

@@ -96,3 +96,15 @@ def repo_from_cookiecutter_one_with_modifications(
         preprend_cookiecutter_one_generated_text("hello\n")
         stage_and_commit_all(repo, "Prepend cookiecutter text with hello")
     yield repo
+
+
+@pytest.fixture
+def repo_with_cookiecutter_one_template_source_and_output(
+    repo_with_cookiecutter_one_template_source: Repo,
+    cookiecutter_one_template: CookiecutterTemplate,
+) -> Repo:
+    repo = repo_with_cookiecutter_one_template_source
+    adder = Adder()
+    with change_directory_to(GENERATED_REPO_DIR):
+        adder.apply_template_and_add(repo, cookiecutter_one_template, no_input=True)
+    yield repo
