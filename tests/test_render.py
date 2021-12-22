@@ -1,6 +1,7 @@
 from flexlate.render.multi import MultiRenderer
 from flexlate.render.renderable import Renderable
 from flexlate.render.specific.cookiecutter import CookiecutterRenderer
+from flexlate.render.specific.copier import CopierRenderer
 from tests.config import GENERATED_FILES_DIR
 from tests.dirutils import wipe_generated_folder
 from tests.fileutils import (
@@ -25,6 +26,14 @@ def test_render_cookiecutter_with_defaults(
     assert cookiecutter_one_generated_text_content() == "b"
 
 
+def test_render_copier_with_defaults(copier_one_renderable: Renderable):
+    renderer = CopierRenderer()
+    data = renderer.render(copier_one_renderable, no_input=True)
+    assert data == {"q1": "a1", "q2": 1, "q3": None}
+    rendered_path = GENERATED_FILES_DIR / "a1.txt"
+    assert rendered_path.read_text() == "1"
+
+
 def test_render_cookiecutter_with_data(
     cookiecutter_one_renderable: Renderable,
 ):
@@ -36,6 +45,15 @@ def test_render_cookiecutter_with_data(
     )
     assert data == {"a": "b", "c": "something"}
     assert cookiecutter_one_generated_text_content() == "bsomething"
+
+
+def test_render_copier_with_data(copier_one_renderable: Renderable):
+    renderer = CopierRenderer()
+    copier_one_renderable.data = {"q2": 2, "q3": "a3"}
+    data = renderer.render(copier_one_renderable, no_input=True)
+    assert data == {"q1": "a1", "q2": 2, "q3": "a3"}
+    rendered_path = GENERATED_FILES_DIR / "a1.txt"
+    assert rendered_path.read_text() == "2"
 
 
 def test_render_multi_with_defaults(cookiecutter_local_renderables: List[Renderable]):

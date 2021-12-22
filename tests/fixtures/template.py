@@ -7,6 +7,7 @@ from typing import List, TypedDict
 import pytest
 
 from flexlate.finder.specific.cookiecutter import CookiecutterFinder
+from flexlate.finder.specific.copier import CopierFinder
 from flexlate.template.cookiecutter import CookiecutterTemplate
 from tests.config import (
     COOKIECUTTER_ONE_DIR,
@@ -14,6 +15,7 @@ from tests.config import (
     COOKIECUTTER_REMOTE_URL,
     COOKIECUTTER_REMOTE_VERSION_2,
     COOKIECUTTER_REMOTE_VERSION_1,
+    COPIER_ONE_DIR,
 )
 
 COOKIECUTTER_ONE_MODIFIED_TEMPLATE_VERSION = "2dc435b3d7e256fbdcc78e62faaabff4"
@@ -37,6 +39,12 @@ def get_header_for_cookiecutter_remote_template(version: str) -> str:
 def cookiecutter_one_template() -> CookiecutterTemplate:
     finder = CookiecutterFinder()
     yield finder.find(COOKIECUTTER_ONE_DIR)
+
+
+@pytest.fixture
+def copier_one_template() -> CookiecutterTemplate:
+    finder = CopierFinder()
+    yield finder.find(COPIER_ONE_DIR)
 
 
 @pytest.fixture
