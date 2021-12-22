@@ -9,6 +9,7 @@ from flexlate.config import FlexlateConfig, FlexlateProjectConfig
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.template.types import TemplateType
 from tests.config import GENERATED_FILES_DIR, GENERATED_REPO_DIR
+from tests.fileutils import cookiecutter_one_generated_text_content
 from tests.fixtures.git import *
 from tests.fixtures.template import *
 from tests.fixtures.templated_repo import *
@@ -113,6 +114,7 @@ def test_add_source_to_project_with_existing_outputs(
         out_root=GENERATED_REPO_DIR,
         target_version="some version",
     )
+    assert cookiecutter_one_generated_text_content(gen_dir=GENERATED_REPO_DIR) == "b"
     config_path = GENERATED_REPO_DIR / "flexlate.json"
     config = FlexlateConfig.load(config_path)
     assert len(config.applied_templates) == 1
