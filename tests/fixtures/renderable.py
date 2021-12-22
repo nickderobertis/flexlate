@@ -1,4 +1,5 @@
 from flexlate.render.renderable import Renderable
+from flexlate.template.copier import CopierTemplate
 from tests.config import GENERATED_FILES_DIR
 from tests.fixtures.template import *
 
@@ -8,6 +9,13 @@ def cookiecutter_one_renderable(
     cookiecutter_one_template: CookiecutterTemplate,
 ) -> Renderable:
     return Renderable(template=cookiecutter_one_template, out_root=GENERATED_FILES_DIR)
+
+
+@pytest.fixture
+def copier_one_renderable(
+    copier_one_template: CopierTemplate,
+) -> Renderable:
+    return Renderable(template=copier_one_template, out_root=GENERATED_FILES_DIR)
 
 
 @pytest.fixture

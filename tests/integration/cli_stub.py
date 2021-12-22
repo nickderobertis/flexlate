@@ -16,7 +16,11 @@ runner = CliRunner()
 def fxt(
     args: Union[str, Sequence[str]], input_data: Optional[TemplateData] = None
 ) -> Result:
-    text_input = "\n".join(input_data.values()) if input_data is not None else None
+    text_input = (
+        "\n".join(str(value) for value in input_data.values())
+        if input_data is not None
+        else None
+    )
     print(f"Running {args} with input {text_input}")
     return runner.invoke(cli, args, input=text_input)
 

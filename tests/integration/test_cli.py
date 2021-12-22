@@ -9,6 +9,7 @@ from git import GitCommandError
 
 from flexlate.add_mode import AddMode
 from flexlate.config import FlexlateConfig, FlexlateProjectConfig
+from flexlate.template_data import TemplateData
 from tests.config import (
     GENERATED_FILES_DIR,
     COOKIECUTTER_REMOTE_URL,
@@ -21,28 +22,44 @@ from tests.fixtures.subdir_style import SubdirStyle, subdir_style
 from tests.fixtures.template import (
     CookiecutterRemoteTemplateData,
     get_header_for_cookiecutter_remote_template,
+    get_footer_for_copier_remote_template,
 )
 from tests.fixtures.cli import FlexlateFixture, FlexlateType, flexlates
 from tests.fixtures.add_mode import add_mode
+from tests.fixtures.template_source import (
+    TemplateSourceFixture,
+    template_source,
+    TemplateSourceType,
+)
 
 
 def test_init_project_and_add_source_and_template(
     flexlates: FlexlateFixture,
     repo_with_placeholder_committed: Repo,
+    template_source: TemplateSourceFixture,
 ):
     fxt = flexlates.flexlate
     no_input = flexlates.type == FlexlateType.APP
     repo = repo_with_placeholder_committed
-    expect_data: CookiecutterRemoteTemplateData = dict(name="woo", key="it works")
     with change_directory_to(GENERATED_REPO_DIR):
         fxt.init_project()
-        fxt.add_template_source(COOKIECUTTER_REMOTE_URL)
+        fxt.add_template_source(template_source.path)
         fxt.apply_template_and_add(
-            COOKIECUTTER_REMOTE_NAME, data=expect_data, no_input=no_input
+            template_source.name, data=template_source.input_data, no_input=no_input
         )
 
-    _assert_project_files_are_correct(expect_data=expect_data)
-    _assert_config_is_correct(expect_data=expect_data)
+    _assert_project_files_are_correct(
+        expect_data=template_source.input_data,
+        template_source_type=template_source.type,
+        version=template_source.version_2,
+    )
+    _assert_config_is_correct(
+        expect_data=template_source.input_data,
+        template_source_type=template_source.type,
+        version=template_source.version_2,
+        name=template_source.name,
+        url=template_source.path,
+    )
 
     project_config_path = GENERATED_REPO_DIR / "flexlate-project.json"
     _assert_project_config_is_correct(project_config_path, user=False)
@@ -139,24 +156,30 @@ def test_init_project_and_add_source_and_template_in_subdir(
 def test_update_project(
     flexlates: FlexlateFixture,
     repo_with_placeholder_committed: Repo,
+    template_source: TemplateSourceFixture,
 ):
     fxt = flexlates.flexlate
     no_input = flexlates.type == FlexlateType.APP
     repo = repo_with_placeholder_committed
-    expect_data: CookiecutterRemoteTemplateData = dict(name="woo", key="it works")
     with change_directory_to(GENERATED_REPO_DIR):
         fxt.init_project()
         fxt.add_template_source(
-            COOKIECUTTER_REMOTE_URL, target_version=COOKIECUTTER_REMOTE_VERSION_1
+            template_source.path, target_version=template_source.version_1
         )
         fxt.apply_template_and_add(
-            COOKIECUTTER_REMOTE_NAME, data=expect_data, no_input=no_input
+            template_source.name, data=template_source.input_data, no_input=no_input
         )
         _assert_project_files_are_correct(
-            expect_data=expect_data, version=COOKIECUTTER_REMOTE_VERSION_1
+            expect_data=template_source.input_data,
+            version=template_source.version_1,
+            template_source_type=template_source.type,
         )
         _assert_config_is_correct(
-            expect_data=expect_data, version=COOKIECUTTER_REMOTE_VERSION_1
+            expect_data=template_source.input_data,
+            version=template_source.version_1,
+            template_source_type=template_source.type,
+            name=template_source.name,
+            url=template_source.path,
         )
 
         # First update does nothing, because version is at target version
@@ -170,10 +193,16 @@ def test_update_project(
             fxt.update(no_input=True)
 
         _assert_project_files_are_correct(
-            expect_data=expect_data, version=COOKIECUTTER_REMOTE_VERSION_1
+            expect_data=template_source.input_data,
+            version=template_source.version_1,
+            template_source_type=template_source.type,
         )
         _assert_config_is_correct(
-            expect_data=expect_data, version=COOKIECUTTER_REMOTE_VERSION_1
+            expect_data=template_source.input_data,
+            version=template_source.version_1,
+            template_source_type=template_source.type,
+            name=template_source.name,
+            url=template_source.path,
         )
 
         # Now update the target version
@@ -181,7 +210,7 @@ def test_update_project(
         config_path = GENERATED_REPO_DIR / "flexlate.json"
         config = FlexlateConfig.load(config_path)
         source = config.template_sources[0]
-        source.target_version = COOKIECUTTER_REMOTE_VERSION_2
+        source.target_version = template_source.version_2
         config.save()
         stage_and_commit_all(
             repo, "Update target version for cookiecutter to version 2"
@@ -189,8 +218,18 @@ def test_update_project(
         # Now update should go to new version
         fxt.update(no_input=True)
 
-    _assert_project_files_are_correct(expect_data=expect_data)
-    _assert_config_is_correct(expect_data=expect_data)
+    _assert_project_files_are_correct(
+        expect_data=template_source.input_data,
+        template_source_type=template_source.type,
+        version=template_source.version_2,
+    )
+    _assert_config_is_correct(
+        expect_data=template_source.input_data,
+        version=template_source.version_2,
+        template_source_type=template_source.type,
+        name=template_source.name,
+        url=template_source.path,
+    )
 
     project_config_path = GENERATED_REPO_DIR / "flexlate-project.json"
     _assert_project_config_is_correct(project_config_path, user=False)
@@ -254,15 +293,27 @@ def test_remove_applied_template(
 
 def _assert_project_files_are_correct(
     root: Path = GENERATED_REPO_DIR,
-    expect_data: Optional[CookiecutterRemoteTemplateData] = None,
+    expect_data: Optional[TemplateData] = None,
     version: str = COOKIECUTTER_REMOTE_VERSION_2,
+    template_source_type: TemplateSourceType = TemplateSourceType.COOKIECUTTER_REMOTE,
 ):
-    data: CookiecutterRemoteTemplateData = expect_data or dict(name="abc", key="value")
-    header = get_header_for_cookiecutter_remote_template(version)
-    out_path = root / data["name"] / f"{data['name']}.txt"
+    default_data = _get_default_data(template_source_type)
+    data: TemplateData = expect_data or default_data
+
+    if template_source_type == TemplateSourceType.COOKIECUTTER_REMOTE:
+        out_path = root / data["name"] / f"{data['name']}.txt"
+        header = get_header_for_cookiecutter_remote_template(version)
+        expect_content = f"{header}{data['key']}"
+    elif template_source_type == TemplateSourceType.COPIER_REMOTE:
+        out_path = root / f"{data['question1']}.txt"
+        footer = get_footer_for_copier_remote_template(version)
+        expect_content = f"{data['question2']}{footer}"
+    else:
+        raise ValueError(f"unexpected template source type {template_source_type}")
+
     assert out_path.exists()
     content = out_path.read_text()
-    assert content == f"{header}{data['key']}"
+    assert content == expect_content
 
 
 def _assert_project_files_do_not_exist(
@@ -277,15 +328,17 @@ def _assert_project_files_do_not_exist(
 def _assert_template_sources_config_is_correct(
     config_path: Path = GENERATED_REPO_DIR / "flexlate.json",
     version: str = COOKIECUTTER_REMOTE_VERSION_2,
+    name: str = COOKIECUTTER_REMOTE_NAME,
+    url: str = COOKIECUTTER_REMOTE_URL,
 ):
     assert config_path.exists()
     config = FlexlateConfig.load(config_path)
     # Template source
     assert len(config.template_sources) == 1
     template_source = config.template_sources[0]
-    assert template_source.name == COOKIECUTTER_REMOTE_NAME
+    assert template_source.name == name
     assert template_source.version == version
-    assert template_source.git_url == COOKIECUTTER_REMOTE_URL
+    assert template_source.git_url == url
 
 
 def _assert_template_sources_config_is_empty(
@@ -299,19 +352,18 @@ def _assert_template_sources_config_is_empty(
 def _assert_applied_templates_config_is_correct(
     config_path: Path = GENERATED_REPO_DIR / "flexlate.json",
     expect_applied_template_root: Path = Path("."),
-    expect_data: Optional[CookiecutterRemoteTemplateData] = None,
+    expect_data: Optional[TemplateData] = None,
     version: str = COOKIECUTTER_REMOTE_VERSION_2,
+    template_source_type: TemplateSourceType = TemplateSourceType.COOKIECUTTER_REMOTE,
+    name: str = COOKIECUTTER_REMOTE_NAME,
 ):
-    data: CookiecutterRemoteTemplateData = expect_data or {
-        "name": "abc",
-        "key": "value",
-    }
+    data: TemplateData = expect_data or _get_default_data(template_source_type)
     assert config_path.exists()
     config = FlexlateConfig.load(config_path)
     # Applied template
     assert len(config.applied_templates) == 1
     applied_template = config.applied_templates[0]
-    assert applied_template.name == COOKIECUTTER_REMOTE_NAME
+    assert applied_template.name == name
     assert applied_template.data == data
     assert applied_template.version == version
     assert applied_template.root == expect_applied_template_root
@@ -330,14 +382,21 @@ def _assert_config_is_correct(
     expect_applied_template_root: Path = Path("."),
     expect_data: Optional[CookiecutterRemoteTemplateData] = None,
     version: str = COOKIECUTTER_REMOTE_VERSION_2,
+    template_source_type: TemplateSourceType = TemplateSourceType.COOKIECUTTER_REMOTE,
+    name: str = COOKIECUTTER_REMOTE_NAME,
+    url: str = COOKIECUTTER_REMOTE_URL,
 ):
     _assert_applied_templates_config_is_correct(
         config_path,
         expect_applied_template_root,
         expect_data=expect_data,
         version=version,
+        template_source_type=template_source_type,
+        name=name,
     )
-    _assert_template_sources_config_is_correct(config_path, version=version)
+    _assert_template_sources_config_is_correct(
+        config_path, version=version, name=name, url=url
+    )
 
 
 def _assert_project_config_is_correct(
@@ -353,3 +412,12 @@ def _assert_project_config_is_correct(
         assert project.path != project.path.absolute()
         assert (path.parent / project.path).absolute() == GENERATED_REPO_DIR
     assert project.default_add_mode == add_mode
+
+
+def _get_default_data(template_source_type: TemplateSourceType) -> TemplateData:
+    if template_source_type == TemplateSourceType.COOKIECUTTER_REMOTE:
+        return dict(name="abc", key="value")
+    elif template_source_type == TemplateSourceType.COPIER_REMOTE:
+        return dict(question1="answer1", question2=2.7)
+    else:
+        raise ValueError(f"unexpected template source type {template_source_type}")

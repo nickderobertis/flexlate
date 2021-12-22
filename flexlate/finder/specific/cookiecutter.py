@@ -3,10 +3,9 @@ from pathlib import Path
 from typing import Union, Optional
 
 from cookiecutter.config import get_user_config
-from cookiecutter.repository import determine_repo_dir, is_repo_url
-from git import Repo
+from cookiecutter.exceptions import RepositoryNotFound
+from cookiecutter.repository import determine_repo_dir
 
-from flexlate.ext_git import get_current_version
 from flexlate.finder.specific.base import TemplateFinder
 from flexlate.finder.specific.git import (
     get_version_from_source_path,
@@ -42,8 +41,12 @@ class CookiecutterFinder(TemplateFinder[CookiecutterTemplate]):
         return CookiecutterConfig(data)
 
     def matches_template_type(self, path: str) -> bool:
-        repo_path = _download_repo_if_necessary_get_local_path(path)
-        return (repo_path / "cookiecutter.json").exists()
+        try:
+            repo_path = _download_repo_if_necessary_get_local_path(path)
+        except RepositoryNotFound:
+            return False
+        else:
+            return (repo_path / "cookiecutter.json").exists()
 
 
 def _download_repo_if_necessary_get_local_path(
