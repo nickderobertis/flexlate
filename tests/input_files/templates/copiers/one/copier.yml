@@ -1,0 +1,12 @@
+q1: a1
+
+q2:
+  type: int
+  choices:
+    1: null
+    2: null
+    "three": 3
+  default: 1
+
+q3:
+  type: str

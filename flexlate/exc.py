@@ -34,6 +34,10 @@ class TemplateNotRegisteredException(FlexlateTemplateException):
     pass
 
 
+class CannotFindTemplateSourceException(FlexlateTemplateException):
+    pass
+
+
 class FlexlateGitException(FlexlateException):
     pass
 

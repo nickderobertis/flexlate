@@ -4,12 +4,13 @@ import pytest
 
 from flexlate.finder.multi import MultiFinder
 from flexlate.finder.specific.cookiecutter import CookiecutterFinder
+from flexlate.finder.specific.copier import CopierFinder
 from tests.config import (
     COOKIECUTTER_ONE_DIR,
     COOKIECUTTER_REMOTE_URL,
     COOKIECUTTER_REMOTE_VERSION_1,
     COOKIECUTTER_REMOTE_VERSION_2,
-    COOKIECUTTER_ONE_VERSION,
+    COOKIECUTTER_ONE_VERSION, COPIER_ONE_DIR,
 )
 
 
@@ -17,6 +18,12 @@ def test_get_cookiecutter_config():
     finder = CookiecutterFinder()
     config = finder.get_config(COOKIECUTTER_ONE_DIR)
     assert config.defaults == {"a": "b", "c": ""}
+
+
+def test_get_copier_config():
+    finder = CopierFinder()
+    config = finder.get_config(COPIER_ONE_DIR)
+    assert config.defaults == {"q1": "a1", "q2": 1, "q3": None}
 
 
 def test_get_cookiecutter_local_template():

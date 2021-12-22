@@ -3,10 +3,8 @@ from pathlib import Path
 from typing import Union, Optional
 
 from cookiecutter.config import get_user_config
-from cookiecutter.repository import determine_repo_dir, is_repo_url
-from git import Repo
+from cookiecutter.repository import determine_repo_dir
 
-from flexlate.ext_git import get_current_version
 from flexlate.finder.specific.base import TemplateFinder
 from flexlate.finder.specific.git import (
     get_version_from_source_path,

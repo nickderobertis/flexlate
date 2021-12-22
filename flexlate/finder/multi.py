@@ -5,10 +5,12 @@ from flexlate.finder.specific.base import TemplateFinder
 from flexlate.finder.specific.cookiecutter import CookiecutterFinder
 
 # TODO: add a way for user to extend specific finders
+from flexlate.finder.specific.copier import CopierFinder
 from flexlate.template.base import Template
 
 SPECIFIC_FINDERS = [
     CookiecutterFinder(),
+    CopierFinder(),
 ]
 
 # TODO: move downloading of vcs projects into multi finder, so they don't
