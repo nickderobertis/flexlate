@@ -76,7 +76,9 @@ def test_render_multi_with_copier_defaults(copier_one_renderable: Renderable):
     assert rendered_path.read_text() == "1"
 
 
-def test_render_multi_with_data(cookiecutter_local_renderables: List[Renderable], copier_one_renderable: Renderable):
+def test_render_multi_with_data(
+    cookiecutter_local_renderables: List[Renderable], copier_one_renderable: Renderable
+):
     renderer = MultiRenderer()
     cookiecutter_local_renderables[0].data = {"a": "z", "c": "something"}
     cookiecutter_local_renderables[1].data = {"a": "z", "d": "f"}
@@ -86,7 +88,11 @@ def test_render_multi_with_data(cookiecutter_local_renderables: List[Renderable]
         project_root=GENERATED_FILES_DIR,
         no_input=True,
     )
-    assert data == [{"a": "z", "c": "something"}, {"a": "z", "d": "f"}, {"q1": "a1", "q2": 2, "q3": "a3"}]
+    assert data == [
+        {"a": "z", "c": "something"},
+        {"a": "z", "d": "f"},
+        {"q1": "a1", "q2": 2, "q3": "a3"},
+    ]
     assert cookiecutter_one_generated_text_content(folder="z") == "zsomething"
     assert cookiecutter_two_generated_text_content(folder="z") == "f"
     copier_rendered_path = GENERATED_FILES_DIR / "a1.txt"

@@ -12,6 +12,7 @@ from flexlate.exc import (
     FlexlateProjectConfigFileNotExistsException,
 )
 from flexlate.finder.specific.cookiecutter import CookiecutterFinder
+from flexlate.finder.specific.copier import CopierFinder
 from flexlate.template.base import Template
 from flexlate.template.types import TemplateType
 from flexlate.template_data import TemplateData
@@ -45,6 +46,8 @@ class TemplateSource(BaseModel):
             )
         if self.type == TemplateType.COOKIECUTTER:
             finder = CookiecutterFinder()
+        elif self.type == TemplateType.COPIER:
+            finder = CopierFinder()
         else:
             raise InvalidTemplateTypeException(
                 f"no handling for template type {self.type} in creating template from source"

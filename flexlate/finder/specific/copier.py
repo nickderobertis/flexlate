@@ -1,7 +1,9 @@
 import json
+import shutil
 from pathlib import Path
 from typing import Union, Optional, TypedDict, Dict, Tuple
 
+import appdirs
 from copier import vcs
 from copier.config import make_config
 from copier.config.factory import filter_config
@@ -22,12 +24,12 @@ from flexlate.template_data import TemplateData
 
 class CopierFinder(TemplateFinder[CopierTemplate]):
     def find(self, path: Union[str, Path], **template_kwargs) -> CopierTemplate:
-        git_version: Optional[str] = None
-        if "version" in template_kwargs:
-            git_version = template_kwargs.pop("version")
-        repo_path, name = _download_repo_if_necessary_get_local_path_and_name(
+        git_version: Optional[str] = template_kwargs.get("version")
+        custom_name: Optional[str] = template_kwargs.get("name")
+        repo_path, detected_name = _download_repo_if_necessary_get_local_path_and_name(
             path, version=git_version
         )
+        name = custom_name or detected_name
         config = self.get_config(repo_path)
         version = get_version_from_source_path(path, repo_path) or git_version
         git_url = get_git_url_from_source_path(path, template_kwargs)
@@ -81,7 +83,10 @@ def _download_repo_if_necessary_get_local_path_and_name(
         src_path = vcs.clone(repo, version or "HEAD")
         repo = Repo(src_path)
         name = get_repo_remote_name_from_repo(repo)
-        return Path(src_path), name
+        user_repo_dir = _copy_local_repo_to_user_directory_and_replace(
+            Path(src_path), name
+        )
+        return user_repo_dir, name
 
     raise CannotFindTemplateSourceException(
         f"Could not find template source {path} at version {version}"
@@ -91,3 +96,12 @@ def _download_repo_if_necessary_get_local_path_and_name(
 def _get_repo_url_if_is_repo(url: str) -> str:
     # Copier requires .git to be on the end of the url, add it if the user did not
     return vcs.get_repo(url) or vcs.get_repo(url + ".git")
+
+
+def _copy_local_repo_to_user_directory_and_replace(path: Path, name: str) -> Path:
+    root_folder = Path(appdirs.user_data_dir("flexlate-copier"))
+    folder = root_folder / name
+    if folder.exists():
+        shutil.rmtree(folder)
+    shutil.copytree(path, folder)
+    return folder

@@ -16,6 +16,8 @@ from tests.config import (
     COOKIECUTTER_REMOTE_VERSION_2,
     COOKIECUTTER_REMOTE_VERSION_1,
     COPIER_ONE_DIR,
+    COPIER_REMOTE_VERSION_2,
+    COPIER_REMOTE_VERSION_1,
 )
 
 COOKIECUTTER_ONE_MODIFIED_TEMPLATE_VERSION = "2dc435b3d7e256fbdcc78e62faaabff4"
@@ -33,6 +35,15 @@ def get_header_for_cookiecutter_remote_template(version: str) -> str:
         return ""
     else:
         raise ValueError(f"unknown cookiecutter remote version {version}")
+
+
+def get_footer_for_copier_remote_template(version: str) -> str:
+    if version == COPIER_REMOTE_VERSION_2:
+        return "\nsome new footer"
+    elif version == COPIER_REMOTE_VERSION_1:
+        return ""
+    else:
+        raise ValueError(f"unknown copier remote version {version}")
 
 
 @pytest.fixture
