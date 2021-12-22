@@ -24,25 +24,26 @@ from tests.fixtures.template import (
 )
 from tests.fixtures.cli import FlexlateFixture, FlexlateType, flexlates
 from tests.fixtures.add_mode import add_mode
+from tests.fixtures.template_source import TemplateSourceFixture, template_source
 
 
 def test_init_project_and_add_source_and_template(
     flexlates: FlexlateFixture,
     repo_with_placeholder_committed: Repo,
+    template_source: TemplateSourceFixture,
 ):
     fxt = flexlates.flexlate
     no_input = flexlates.type == FlexlateType.APP
     repo = repo_with_placeholder_committed
-    expect_data: CookiecutterRemoteTemplateData = dict(name="woo", key="it works")
     with change_directory_to(GENERATED_REPO_DIR):
         fxt.init_project()
-        fxt.add_template_source(COOKIECUTTER_REMOTE_URL)
+        fxt.add_template_source(template_source.path)
         fxt.apply_template_and_add(
-            COOKIECUTTER_REMOTE_NAME, data=expect_data, no_input=no_input
+            template_source.name, data=template_source.input_data, no_input=no_input
         )
 
-    _assert_project_files_are_correct(expect_data=expect_data)
-    _assert_config_is_correct(expect_data=expect_data)
+    _assert_project_files_are_correct(expect_data=template_source.input_data)
+    _assert_config_is_correct(expect_data=template_source.input_data)
 
     project_config_path = GENERATED_REPO_DIR / "flexlate-project.json"
     _assert_project_config_is_correct(project_config_path, user=False)
@@ -139,24 +140,24 @@ def test_init_project_and_add_source_and_template_in_subdir(
 def test_update_project(
     flexlates: FlexlateFixture,
     repo_with_placeholder_committed: Repo,
+    template_source: TemplateSourceFixture,
 ):
     fxt = flexlates.flexlate
     no_input = flexlates.type == FlexlateType.APP
     repo = repo_with_placeholder_committed
-    expect_data: CookiecutterRemoteTemplateData = dict(name="woo", key="it works")
     with change_directory_to(GENERATED_REPO_DIR):
         fxt.init_project()
         fxt.add_template_source(
-            COOKIECUTTER_REMOTE_URL, target_version=COOKIECUTTER_REMOTE_VERSION_1
+            template_source.path, target_version=template_source.version_1
         )
         fxt.apply_template_and_add(
-            COOKIECUTTER_REMOTE_NAME, data=expect_data, no_input=no_input
+            template_source.name, data=template_source.input_data, no_input=no_input
         )
         _assert_project_files_are_correct(
-            expect_data=expect_data, version=COOKIECUTTER_REMOTE_VERSION_1
+            expect_data=template_source.input_data, version=template_source.version_1
         )
         _assert_config_is_correct(
-            expect_data=expect_data, version=COOKIECUTTER_REMOTE_VERSION_1
+            expect_data=template_source.input_data, version=template_source.version_1
         )
 
         # First update does nothing, because version is at target version
@@ -170,10 +171,10 @@ def test_update_project(
             fxt.update(no_input=True)
 
         _assert_project_files_are_correct(
-            expect_data=expect_data, version=COOKIECUTTER_REMOTE_VERSION_1
+            expect_data=template_source.input_data, version=template_source.version_1
         )
         _assert_config_is_correct(
-            expect_data=expect_data, version=COOKIECUTTER_REMOTE_VERSION_1
+            expect_data=template_source.input_data, version=template_source.version_1
         )
 
         # Now update the target version
@@ -181,7 +182,7 @@ def test_update_project(
         config_path = GENERATED_REPO_DIR / "flexlate.json"
         config = FlexlateConfig.load(config_path)
         source = config.template_sources[0]
-        source.target_version = COOKIECUTTER_REMOTE_VERSION_2
+        source.target_version = template_source.version_2
         config.save()
         stage_and_commit_all(
             repo, "Update target version for cookiecutter to version 2"
@@ -189,8 +190,8 @@ def test_update_project(
         # Now update should go to new version
         fxt.update(no_input=True)
 
-    _assert_project_files_are_correct(expect_data=expect_data)
-    _assert_config_is_correct(expect_data=expect_data)
+    _assert_project_files_are_correct(expect_data=template_source.input_data)
+    _assert_config_is_correct(expect_data=template_source.input_data)
 
     project_config_path = GENERATED_REPO_DIR / "flexlate-project.json"
     _assert_project_config_is_correct(project_config_path, user=False)
