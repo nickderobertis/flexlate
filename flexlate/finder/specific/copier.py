@@ -74,7 +74,7 @@ def _download_repo_if_necessary_get_local_path(
     if isinstance(path, Path):
         return path
 
-    repo = vcs.get_repo(path)
+    repo = _get_repo_url_if_is_repo(path)
     if repo:
         src_path = vcs.clone(repo, version or "HEAD")
         return Path(src_path)
@@ -82,3 +82,8 @@ def _download_repo_if_necessary_get_local_path(
     raise CannotFindTemplateSourceException(
         f"Could not find template source {path} at version {version}"
     )
+
+
+def _get_repo_url_if_is_repo(url: str) -> str:
+    # Copier requires .git to be on the end of the url, add it if the user did not
+    return vcs.get_repo(url) or vcs.get_repo(url + ".git")

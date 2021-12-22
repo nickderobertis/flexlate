@@ -13,6 +13,9 @@ from tests.config import (
     COOKIECUTTER_ONE_VERSION,
     COPIER_ONE_DIR,
     COPIER_ONE_VERSION,
+    COPIER_REMOTE_VERSION_1,
+    COPIER_REMOTE_VERSION_2,
+    COPIER_REMOTE_URL,
 )
 
 
@@ -69,6 +72,23 @@ def test_get_cookiecutter_remote_template(version: str, expect_contents: str):
     assert template_file.read_text() == expect_contents
 
 
+@pytest.mark.parametrize(
+    "version, expect_contents",
+    [
+        (COPIER_REMOTE_VERSION_1, "{{ question2 }}"),
+        (COPIER_REMOTE_VERSION_2, "{{ question2 }}\nsome new footer"),
+    ],
+)
+def test_get_copier_remote_template(version: str, expect_contents: str):
+    finder = CopierFinder()
+    template = finder.find(COPIER_REMOTE_URL, version=version)
+    assert template.git_url == COPIER_REMOTE_URL
+    assert template.version == version
+    assert template.config.defaults == {"question1": "answer1", "question2": 2.7}
+    template_file = template.path / "output" / "{{ question1 }}.txt.jinja"
+    assert template_file.read_text() == expect_contents
+
+
 def test_multi_finder_get_cookiecutter_local_template():
     finder = MultiFinder()
     template = finder.find(COOKIECUTTER_ONE_DIR)
@@ -109,4 +129,21 @@ def test_multi_finder_get_cookiecutter_remote_template(
     template_file = (
         template.path / "{{ cookiecutter.name }}" / "{{ cookiecutter.name }}.txt"
     )
+    assert template_file.read_text() == expect_contents
+
+
+@pytest.mark.parametrize(
+    "version, expect_contents",
+    [
+        (COPIER_REMOTE_VERSION_1, "{{ question2 }}"),
+        (COPIER_REMOTE_VERSION_2, "{{ question2 }}\nsome new footer"),
+    ],
+)
+def test_multi_finder_get_copier_remote_template(version: str, expect_contents: str):
+    finder = MultiFinder()
+    template = finder.find(COPIER_REMOTE_URL, version=version)
+    assert template.git_url == COPIER_REMOTE_URL
+    assert template.version == version
+    assert template.config.defaults == {"question1": "answer1", "question2": 2.7}
+    template_file = template.path / "output" / "{{ question1 }}.txt.jinja"
     assert template_file.read_text() == expect_contents
