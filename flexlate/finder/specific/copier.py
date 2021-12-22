@@ -51,10 +51,14 @@ class CopierFinder(TemplateFinder[CopierTemplate]):
         return CopierConfig(data)
 
     def matches_template_type(self, path: str) -> bool:
-        repo_path = _download_repo_if_necessary_get_local_path(path)
-        return (repo_path / "copier.yml").exists() or (
-            repo_path / "copier.yaml"
-        ).exists()
+        try:
+            repo_path = _download_repo_if_necessary_get_local_path(path)
+        except CannotFindTemplateSourceException:
+            return False
+        else:
+            return (repo_path / "copier.yml").exists() or (
+                repo_path / "copier.yaml"
+            ).exists()
 
 
 class DefaultData(TypedDict, total=False):

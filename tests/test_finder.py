@@ -78,6 +78,15 @@ def test_multi_finder_get_cookiecutter_local_template():
     assert template.config.defaults == {"a": "b", "c": ""}
 
 
+def test_multi_finder_get_copier_local_template():
+    finder = MultiFinder()
+    template = finder.find(COPIER_ONE_DIR)
+    assert template.path == COPIER_ONE_DIR
+    assert template.git_url is None
+    assert template.version == COPIER_ONE_VERSION
+    assert template.config.defaults == {"q1": "a1", "q2": 1, "q3": None}
+
+
 @pytest.mark.parametrize(
     "version, expect_contents",
     [
