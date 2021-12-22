@@ -8,11 +8,12 @@ from flexlate.exc import InvalidTemplateClassException, RendererNotFoundExceptio
 from flexlate.render.renderable import Renderable
 from flexlate.render.specific.base import SpecificTemplateRenderer
 from flexlate.render.specific.cookiecutter import CookiecutterRenderer
+from flexlate.render.specific.copier import CopierRenderer
 from flexlate.template.base import Template
 from flexlate.template.types import TemplateType
 from flexlate.template_data import TemplateData
 
-renderers = [CookiecutterRenderer()]
+renderers = [CookiecutterRenderer(), CopierRenderer()]
 
 
 class MultiRenderer:
