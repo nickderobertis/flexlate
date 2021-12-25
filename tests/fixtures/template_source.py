@@ -1,5 +1,6 @@
 import shutil
 import tempfile
+from copy import deepcopy
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
@@ -88,15 +89,15 @@ all_template_source_fixtures: Final[List[TemplateSourceFixture]] = [
 ]
 
 
-@pytest.fixture(scope="module", params=all_template_source_fixtures)
+@pytest.fixture(scope="function", params=all_template_source_fixtures)
 def template_source(request) -> TemplateSourceFixture:
-    template_source: TemplateSourceFixture = request.param
+    template_source: TemplateSourceFixture = deepcopy(request.param)
     if template_source.type == TemplateSourceType.COOKIECUTTER_LOCAL:
         # Move into temporary directory so it can be updated locally
         with tempfile.TemporaryDirectory() as temp_dir:
             template_dir = Path(temp_dir) / template_source.name
             shutil.copytree(template_source.path, template_dir)
             template_source.path = str(template_dir)
-            yield request.param
+            yield template_source
     else:
-        yield request.param
+        yield template_source
