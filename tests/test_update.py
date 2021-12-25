@@ -65,7 +65,7 @@ def test_update_modify_template(
     )
     assert (
         repo.commit().parents[1].message
-        == f"Update flexlate templates\n\none: {COOKIECUTTER_ONE_MODIFIED_TEMPLATE_VERSION}\n"
+        == f"Update flexlate templates\n\none: {COOKIECUTTER_ONE_MODIFIED_VERSION}\n"
     )
     assert (
         cookiecutter_one_generated_text_content(gen_dir=GENERATED_REPO_DIR)

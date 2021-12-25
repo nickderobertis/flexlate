@@ -2,7 +2,7 @@ import shutil
 import tempfile
 from copy import deepcopy
 from pathlib import Path
-from typing import List, TypedDict
+from typing import List, TypedDict, Union
 
 import pytest
 
@@ -18,9 +18,9 @@ from tests.config import (
     COPIER_ONE_DIR,
     COPIER_REMOTE_VERSION_2,
     COPIER_REMOTE_VERSION_1,
+    COOKIECUTTER_ONE_VERSION,
+    COOKIECUTTER_ONE_MODIFIED_VERSION,
 )
-
-COOKIECUTTER_ONE_MODIFIED_TEMPLATE_VERSION = "2dc435b3d7e256fbdcc78e62faaabff4"
 
 
 class CookiecutterRemoteTemplateData(TypedDict):
@@ -41,6 +41,15 @@ def get_footer_for_copier_remote_template(version: str) -> str:
     if version == COPIER_REMOTE_VERSION_2:
         return "\nsome new footer"
     elif version == COPIER_REMOTE_VERSION_1:
+        return ""
+    else:
+        raise ValueError(f"unknown copier remote version {version}")
+
+
+def get_footer_for_cookiecutter_local_template(version: str) -> str:
+    if version == COOKIECUTTER_ONE_MODIFIED_VERSION:
+        return " and extra"
+    elif version == COOKIECUTTER_ONE_VERSION:
         return ""
     else:
         raise ValueError(f"unknown copier remote version {version}")
@@ -78,6 +87,11 @@ def cookiecutter_local_templates(
     yield [cookiecutter_one_template, cookiecutter_two_template]
 
 
+def modify_cookiecutter_one(root: Union[str, Path]):
+    text_path = Path(root) / "{{ cookiecutter.a }}" / "text.txt"
+    text_path.write_text("{{ cookiecutter.a }}{{ cookiecutter.c }} and extra")
+
+
 @pytest.fixture
 def cookiecutter_one_modified_template(
     cookiecutter_one_template: CookiecutterTemplate,
@@ -87,8 +101,7 @@ def cookiecutter_one_modified_template(
         out_path = Path(directory)
         shutil.copytree(template.path, out_path, dirs_exist_ok=True)
         template.path = out_path
-        text_path = out_path / "{{ cookiecutter.a }}" / "text.txt"
-        text_path.write_text("{{ cookiecutter.a }}{{ cookiecutter.c }} and extra")
+        modify_cookiecutter_one(out_path)
         # Update version
         template.version = template.folder_hash
         yield template

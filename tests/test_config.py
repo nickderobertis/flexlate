@@ -58,7 +58,7 @@ def test_update_and_save_multi_config(
 
     def assert_is_updated_template_one(template: AppliedTemplateConfig):
         assert template.name == "one"
-        assert template.version == COOKIECUTTER_ONE_MODIFIED_TEMPLATE_VERSION
+        assert template.version == COOKIECUTTER_ONE_MODIFIED_VERSION
         assert template.data["a"] == "yeah"
         assert template.data["c"] == "woo"
 

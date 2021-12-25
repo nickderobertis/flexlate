@@ -23,6 +23,7 @@ from tests.fixtures.template import (
     CookiecutterRemoteTemplateData,
     get_header_for_cookiecutter_remote_template,
     get_footer_for_copier_remote_template,
+    get_footer_for_cookiecutter_local_template,
 )
 from tests.fixtures.cli import FlexlateFixture, FlexlateType, flexlates
 from tests.fixtures.add_mode import add_mode
@@ -51,14 +52,14 @@ def test_init_project_and_add_source_and_template(
     _assert_project_files_are_correct(
         expect_data=template_source.input_data,
         template_source_type=template_source.type,
-        version=template_source.version_2,
+        version=template_source.default_version,
     )
     _assert_config_is_correct(
         expect_data=template_source.input_data,
         template_source_type=template_source.type,
-        version=template_source.version_2,
+        version=template_source.default_version,
         name=template_source.name,
-        url=template_source.path,
+        url=template_source.url,
     )
 
     project_config_path = GENERATED_REPO_DIR / "flexlate-project.json"
@@ -179,7 +180,7 @@ def test_update_project(
             version=template_source.version_1,
             template_source_type=template_source.type,
             name=template_source.name,
-            url=template_source.path,
+            url=template_source.url,
         )
 
         # First update does nothing, because version is at target version
@@ -202,7 +203,7 @@ def test_update_project(
             version=template_source.version_1,
             template_source_type=template_source.type,
             name=template_source.name,
-            url=template_source.path,
+            url=template_source.url,
         )
 
         # Now update the target version
@@ -215,6 +216,10 @@ def test_update_project(
         stage_and_commit_all(
             repo, "Update target version for cookiecutter to version 2"
         )
+
+        # Make changes to update local templates to new version (no-op for remote templates)
+        template_source.version_migrate_func(template_source.path)
+
         # Now update should go to new version
         fxt.update(no_input=True)
 
@@ -228,7 +233,7 @@ def test_update_project(
         version=template_source.version_2,
         template_source_type=template_source.type,
         name=template_source.name,
-        url=template_source.path,
+        url=template_source.url,
     )
 
     project_config_path = GENERATED_REPO_DIR / "flexlate-project.json"
@@ -308,6 +313,10 @@ def _assert_project_files_are_correct(
         out_path = root / f"{data['question1']}.txt"
         footer = get_footer_for_copier_remote_template(version)
         expect_content = f"{data['question2']}{footer}"
+    elif template_source_type == TemplateSourceType.COOKIECUTTER_LOCAL:
+        out_path = root / data["a"] / "text.txt"
+        footer = get_footer_for_cookiecutter_local_template(version)
+        expect_content = f"{data['a']}{data['c']}{footer}"
     else:
         raise ValueError(f"unexpected template source type {template_source_type}")
 
@@ -419,5 +428,7 @@ def _get_default_data(template_source_type: TemplateSourceType) -> TemplateData:
         return dict(name="abc", key="value")
     elif template_source_type == TemplateSourceType.COPIER_REMOTE:
         return dict(question1="answer1", question2=2.7)
+    elif template_source_type == TemplateSourceType.COOKIECUTTER_LOCAL:
+        return dict(a="b", c="")
     else:
         raise ValueError(f"unexpected template source type {template_source_type}")
