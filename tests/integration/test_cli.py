@@ -122,19 +122,19 @@ def test_init_project_and_add_source_and_template_in_subdir(
                 COOKIECUTTER_REMOTE_NAME, no_input=True, out_root=subdir.absolute()
             )
 
-    _assert_project_files_are_correct(GENERATED_REPO_DIR / "subdir")
+    _assert_project_files_are_correct(subdir)
 
     if add_mode == AddMode.LOCAL:
-        applied_config_dir = GENERATED_REPO_DIR / "subdir"
+        applied_config_dir = subdir
         expect_applied_template_root = Path(".")
         template_sources_config_dir = GENERATED_REPO_DIR
     elif add_mode == AddMode.PROJECT:
         applied_config_dir = GENERATED_REPO_DIR
-        expect_applied_template_root = Path("subdir")
+        expect_applied_template_root = subdir.relative_to(GENERATED_REPO_DIR)
         template_sources_config_dir = GENERATED_REPO_DIR
     elif add_mode == AddMode.USER:
         applied_config_dir = GENERATED_FILES_DIR
-        expect_applied_template_root = (GENERATED_REPO_DIR / Path("subdir")).absolute()
+        expect_applied_template_root = subdir.absolute()
         template_sources_config_dir = GENERATED_FILES_DIR
     else:
         raise ValueError(f"unsupported add mode {add_mode}")

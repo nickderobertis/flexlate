@@ -23,7 +23,7 @@ class FlexlateFixture:
 #  fixture while debugging, as the CLI tests are the same but much harder to debug
 flexlate_fixtures: Final[List[FlexlateFixture]] = [
     FlexlateFixture(flexlate=Flexlate(), type=FlexlateType.APP),
-    FlexlateFixture(flexlate=CLIStubFlexlate(), type=FlexlateType.CLI),
+    # FlexlateFixture(flexlate=CLIStubFlexlate(), type=FlexlateType.CLI),
 ]
 
 
