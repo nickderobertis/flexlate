@@ -1,3 +1,4 @@
+import os
 from unittest.mock import patch
 
 import appdirs
@@ -11,8 +12,11 @@ from flexlate.template.types import TemplateType
 from tests.config import GENERATED_FILES_DIR, GENERATED_REPO_DIR
 from tests.fileutils import cookiecutter_one_generated_text_content
 from tests.fixtures.git import *
+from tests.fixtures.subdir_style import SubdirStyle
 from tests.fixtures.template import *
 from tests.fixtures.templated_repo import *
+from tests.fixtures.add_mode import add_mode
+from tests.fixtures.subdir_style import subdir_style
 
 
 def test_add_template_source_to_repo(
@@ -39,11 +43,7 @@ def test_add_template_source_to_repo(
     assert source.target_version == "some version"
 
 
-# TODO: add AddMode.USER to tests by creating user config fixture
-
-
 @patch.object(appdirs, "user_config_dir", lambda name: GENERATED_FILES_DIR)
-@pytest.mark.parametrize("add_mode", [AddMode.LOCAL, AddMode.PROJECT])
 def test_add_local_cookiecutter_applied_template_to_repo(
     add_mode: AddMode,
     repo_with_cookiecutter_one_template_source: Repo,
@@ -64,7 +64,6 @@ def test_add_local_cookiecutter_applied_template_to_repo(
     config_path = config_dir / "flexlate.json"
     config = FlexlateConfig.load(config_path)
     assert len(config.applied_templates) == 1
-    assert len(config.template_sources) == 1
     at = config.applied_templates[0]
     assert at.name == template.name
     assert at.version == template.version
@@ -73,7 +72,6 @@ def test_add_local_cookiecutter_applied_template_to_repo(
 
 
 @patch.object(appdirs, "user_config_dir", lambda name: GENERATED_FILES_DIR)
-@pytest.mark.parametrize("add_mode", [AddMode.LOCAL, AddMode.PROJECT])
 def test_add_remote_cookiecutter_applied_template_to_repo(
     add_mode: AddMode,
     repo_with_remote_cookiecutter_template_source: Repo,
@@ -94,12 +92,67 @@ def test_add_remote_cookiecutter_applied_template_to_repo(
     config_path = config_dir / "flexlate.json"
     config = FlexlateConfig.load(config_path)
     assert len(config.applied_templates) == 1
-    assert len(config.template_sources) == 1
     at = config.applied_templates[0]
     assert at.name == template.name
     assert at.version == template.version
     assert at.data == {"name": "abc", "key": "value"}
     assert at.root == template_root
+
+
+@patch.object(appdirs, "user_config_dir", lambda name: GENERATED_FILES_DIR)
+def test_add_applied_template_to_subdir(
+    add_mode: AddMode,
+    subdir_style: SubdirStyle,
+    repo_with_cookiecutter_one_template_source: Repo,
+    cookiecutter_one_template: CookiecutterTemplate,
+):
+    repo = repo_with_cookiecutter_one_template_source
+    template = cookiecutter_one_template
+    subdir = GENERATED_REPO_DIR / "subdir1" / "subdir2"
+    subdir.mkdir(parents=True)
+    adder = Adder()
+    if subdir_style == SubdirStyle.CD:
+        with change_directory_to(subdir):
+            adder.apply_template_and_add(
+                repo, template, add_mode=add_mode, no_input=True
+            )
+    elif subdir_style == SubdirStyle.PROVIDE_RELATIVE:
+        with change_directory_to(GENERATED_REPO_DIR):
+            adder.apply_template_and_add(
+                repo,
+                template,
+                out_root=subdir.relative_to(os.getcwd()),
+                add_mode=add_mode,
+                no_input=True,
+            )
+    elif subdir_style == SubdirStyle.PROVIDE_ABSOLUTE:
+        adder.apply_template_and_add(
+            repo, template, out_root=subdir.absolute(), add_mode=add_mode, no_input=True
+        )
+
+    if add_mode == AddMode.LOCAL:
+        config_dir = subdir
+        template_root = Path(".")
+    elif add_mode == AddMode.PROJECT:
+        config_dir = GENERATED_REPO_DIR
+        template_root = subdir.relative_to(GENERATED_REPO_DIR)
+    elif add_mode == AddMode.USER:
+        config_dir = GENERATED_FILES_DIR
+        template_root = subdir.absolute()
+    else:
+        raise ValueError(f"unsupported add mode {add_mode}")
+
+    config_path = config_dir / "flexlate.json"
+    config = FlexlateConfig.load(config_path)
+    assert len(config.applied_templates) == 1
+    at = config.applied_templates[0]
+    assert at.name == template.name
+    assert at.version == template.version
+    assert at.data == {"a": "b", "c": ""}
+    assert at.root == template_root
+
+    output_file_path = subdir / "b" / "text.txt"
+    assert output_file_path.read_text() == "b"
 
 
 def test_add_source_to_project_with_existing_outputs(
@@ -127,7 +180,6 @@ def test_add_source_to_project_with_existing_outputs(
     assert source.target_version == "some version"
 
 
-# TODO: tests for different out roots
 # TODO: test for adding to existing
 
 

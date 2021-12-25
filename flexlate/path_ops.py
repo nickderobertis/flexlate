@@ -36,14 +36,13 @@ def make_all_dirs(paths: Sequence[Path]):
 
 
 def copy_flexlate_configs(src: Path, dst: Path, root: Path):
-    relative_path = src.absolute().relative_to(root.absolute())
     for path in src.absolute().iterdir():
         if path.name in ("flexlate.json", "flexlate-project.json"):
             shutil.copy(path, dst)
         elif path.name == ".git":
             continue
         elif path.is_dir():
-            dst_dir = dst / relative_path / path.name
+            dst_dir = dst / path.name
             if not dst_dir.exists():
                 dst_dir.mkdir()
             copy_flexlate_configs(path, dst_dir, root)

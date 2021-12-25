@@ -97,10 +97,9 @@ class FlexlateConfig(BaseConfig):
         configs = _load_nested_configs(
             root, file_name, root, adjust_applied_paths=adjust_applied_paths
         )
-        if not configs:
-            # Fall back to user config if it exists
-            if cls._settings.config_location.exists():
-                configs = [cls.load()]
+        # Add user config if it exists
+        if cls._settings.config_location.exists():
+            configs.append(cls.load())
         return cls.from_multiple(configs)
 
     @classmethod
