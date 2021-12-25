@@ -13,6 +13,7 @@ from tests.fileutils import cookiecutter_one_generated_text_content
 from tests.fixtures.git import *
 from tests.fixtures.template import *
 from tests.fixtures.templated_repo import *
+from tests.fixtures.add_mode import *
 
 
 def test_add_template_source_to_repo(
@@ -39,11 +40,7 @@ def test_add_template_source_to_repo(
     assert source.target_version == "some version"
 
 
-# TODO: add AddMode.USER to tests by creating user config fixture
-
-
 @patch.object(appdirs, "user_config_dir", lambda name: GENERATED_FILES_DIR)
-@pytest.mark.parametrize("add_mode", [AddMode.LOCAL, AddMode.PROJECT])
 def test_add_local_cookiecutter_applied_template_to_repo(
     add_mode: AddMode,
     repo_with_cookiecutter_one_template_source: Repo,
@@ -64,7 +61,6 @@ def test_add_local_cookiecutter_applied_template_to_repo(
     config_path = config_dir / "flexlate.json"
     config = FlexlateConfig.load(config_path)
     assert len(config.applied_templates) == 1
-    assert len(config.template_sources) == 1
     at = config.applied_templates[0]
     assert at.name == template.name
     assert at.version == template.version
@@ -73,7 +69,6 @@ def test_add_local_cookiecutter_applied_template_to_repo(
 
 
 @patch.object(appdirs, "user_config_dir", lambda name: GENERATED_FILES_DIR)
-@pytest.mark.parametrize("add_mode", [AddMode.LOCAL, AddMode.PROJECT])
 def test_add_remote_cookiecutter_applied_template_to_repo(
     add_mode: AddMode,
     repo_with_remote_cookiecutter_template_source: Repo,
@@ -94,7 +89,6 @@ def test_add_remote_cookiecutter_applied_template_to_repo(
     config_path = config_dir / "flexlate.json"
     config = FlexlateConfig.load(config_path)
     assert len(config.applied_templates) == 1
-    assert len(config.template_sources) == 1
     at = config.applied_templates[0]
     assert at.name == template.name
     assert at.version == template.version
