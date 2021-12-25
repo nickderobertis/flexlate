@@ -64,6 +64,7 @@ PACKAGE_INSTALL_REQUIRES = [
     # 'otherpackage>=1,<2'
     "py-app-conf",
     "cookiecutter",
+    "copier",
     "gitpython",
     "typer",
 ]
