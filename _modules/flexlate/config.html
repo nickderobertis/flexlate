@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.config &mdash; flexlate 0.2.1 documentation</title>
+  <title>flexlate.config &mdash; flexlate 0.2.2 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.2.1
+                0.2.2
               </div>
             
           
@@ -266,10 +266,9 @@
         <span class="n">configs</span> <span class="o">=</span> <span class="n">_load_nested_configs</span><span class="p">(</span>
             <span class="n">root</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">root</span><span class="p">,</span> <span class="n">adjust_applied_paths</span><span class="o">=</span><span class="n">adjust_applied_paths</span>
         <span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">configs</span><span class="p">:</span>
-            <span class="c1"># Fall back to user config if it exists</span>
-            <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_settings</span><span class="o">.</span><span class="n">config_location</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-                <span class="n">configs</span> <span class="o">=</span> <span class="p">[</span><span class="bp">cls</span><span class="o">.</span><span class="n">load</span><span class="p">()]</span>
+        <span class="c1"># Add user config if it exists</span>
+        <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_settings</span><span class="o">.</span><span class="n">config_location</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="n">configs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">load</span><span class="p">())</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_multiple</span><span class="p">(</span><span class="n">configs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="FlexlateConfig.from_multiple"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config.FlexlateConfig.from_multiple">[docs]</a>    <span class="nd">@classmethod</span>
