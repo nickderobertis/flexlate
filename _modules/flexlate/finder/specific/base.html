@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.finder.specific.base &mdash; flexlate 0.2.2 documentation</title>
+  <title>flexlate.finder.specific.base &mdash; flexlate 0.2.3 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.2.2
+                0.2.3
               </div>
             
           
@@ -178,13 +178,13 @@
 
 <span class="c1"># TODO: figure out how to type TemplateFinder properly</span>
 <div class="viewcode-block" id="TemplateFinder"><a class="viewcode-back" href="../../../../api/flexlate.finder.specific.html#flexlate.finder.specific.base.TemplateFinder">[docs]</a><span class="k">class</span> <span class="nc">TemplateFinder</span><span class="p">(</span><span class="n">Protocol</span><span class="p">[</span><span class="n">T</span><span class="p">]):</span>  <span class="c1"># type: ignore</span>
-<div class="viewcode-block" id="TemplateFinder.find"><a class="viewcode-back" href="../../../../api/flexlate.finder.specific.html#flexlate.finder.specific.base.TemplateFinder.find">[docs]</a>    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span> <span class="o">**</span><span class="n">template_kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
+<div class="viewcode-block" id="TemplateFinder.find"><a class="viewcode-back" href="../../../../api/flexlate.finder.specific.html#flexlate.finder.specific.base.TemplateFinder.find">[docs]</a>    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">local_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="o">**</span><span class="n">template_kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
         <span class="o">...</span></div>
 
 <div class="viewcode-block" id="TemplateFinder.get_config"><a class="viewcode-back" href="../../../../api/flexlate.finder.specific.html#flexlate.finder.specific.base.TemplateFinder.get_config">[docs]</a>    <span class="k">def</span> <span class="nf">get_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directory</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TemplateConfig</span><span class="p">:</span>
         <span class="o">...</span></div>
 
-<div class="viewcode-block" id="TemplateFinder.matches_template_type"><a class="viewcode-back" href="../../../../api/flexlate.finder.specific.html#flexlate.finder.specific.base.TemplateFinder.matches_template_type">[docs]</a>    <span class="k">def</span> <span class="nf">matches_template_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="TemplateFinder.matches_template_type"><a class="viewcode-back" href="../../../../api/flexlate.finder.specific.html#flexlate.finder.specific.base.TemplateFinder.matches_template_type">[docs]</a>    <span class="k">def</span> <span class="nf">matches_template_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="o">...</span></div></div>
 </pre></div>
 

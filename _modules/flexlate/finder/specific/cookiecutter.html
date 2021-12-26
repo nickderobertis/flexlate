@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.finder.specific.cookiecutter &mdash; flexlate 0.2.2 documentation</title>
+  <title>flexlate.finder.specific.cookiecutter &mdash; flexlate 0.2.3 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.2.2
+                0.2.3
               </div>
             
           
@@ -169,11 +169,7 @@
   <h1>Source code for flexlate.finder.specific.cookiecutter</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span>
-
-<span class="kn">from</span> <span class="nn">cookiecutter.config</span> <span class="kn">import</span> <span class="n">get_user_config</span>
-<span class="kn">from</span> <span class="nn">cookiecutter.exceptions</span> <span class="kn">import</span> <span class="n">RepositoryNotFound</span>
-<span class="kn">from</span> <span class="nn">cookiecutter.repository</span> <span class="kn">import</span> <span class="n">determine_repo_dir</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
 
 <span class="kn">from</span> <span class="nn">flexlate.finder.specific.base</span> <span class="kn">import</span> <span class="n">TemplateFinder</span>
 <span class="kn">from</span> <span class="nn">flexlate.finder.specific.git</span> <span class="kn">import</span> <span class="p">(</span>
@@ -185,23 +181,17 @@
 
 
 <div class="viewcode-block" id="CookiecutterFinder"><a class="viewcode-back" href="../../../../api/flexlate.finder.specific.html#flexlate.finder.specific.cookiecutter.CookiecutterFinder">[docs]</a><span class="k">class</span> <span class="nc">CookiecutterFinder</span><span class="p">(</span><span class="n">TemplateFinder</span><span class="p">[</span><span class="n">CookiecutterTemplate</span><span class="p">]):</span>
-<div class="viewcode-block" id="CookiecutterFinder.find"><a class="viewcode-back" href="../../../../api/flexlate.finder.specific.html#flexlate.finder.specific.cookiecutter.CookiecutterFinder.find">[docs]</a>    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span> <span class="o">**</span><span class="n">template_kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CookiecutterTemplate</span><span class="p">:</span>
+<div class="viewcode-block" id="CookiecutterFinder.find"><a class="viewcode-back" href="../../../../api/flexlate.finder.specific.html#flexlate.finder.specific.cookiecutter.CookiecutterFinder.find">[docs]</a>    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">local_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="o">**</span><span class="n">template_kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CookiecutterTemplate</span><span class="p">:</span>
         <span class="n">git_version</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="s2">&quot;version&quot;</span> <span class="ow">in</span> <span class="n">template_kwargs</span><span class="p">:</span>
             <span class="n">git_version</span> <span class="o">=</span> <span class="n">template_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;version&quot;</span><span class="p">)</span>
-        <span class="n">repo_path</span> <span class="o">=</span> <span class="n">_download_repo_if_necessary_get_local_path</span><span class="p">(</span>
-            <span class="n">path</span><span class="p">,</span> <span class="n">checkout</span><span class="o">=</span><span class="n">git_version</span>
-        <span class="p">)</span>
-        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_config</span><span class="p">(</span><span class="n">repo_path</span><span class="p">)</span>
-        <span class="n">version</span> <span class="o">=</span> <span class="n">get_version_from_source_path</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">repo_path</span><span class="p">)</span> <span class="ow">or</span> <span class="n">git_version</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_config</span><span class="p">(</span><span class="n">local_path</span><span class="p">)</span>
+        <span class="n">version</span> <span class="o">=</span> <span class="n">get_version_from_source_path</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">local_path</span><span class="p">)</span> <span class="ow">or</span> <span class="n">git_version</span>
         <span class="n">git_url</span> <span class="o">=</span> <span class="n">get_git_url_from_source_path</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">template_kwargs</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">CookiecutterTemplate</span><span class="p">(</span>
-            <span class="n">config</span><span class="p">,</span>
-            <span class="n">repo_path</span><span class="p">,</span>
-            <span class="n">version</span><span class="o">=</span><span class="n">version</span><span class="p">,</span>
-            <span class="n">target_version</span><span class="o">=</span><span class="n">git_version</span><span class="p">,</span>
-            <span class="n">git_url</span><span class="o">=</span><span class="n">git_url</span><span class="p">,</span>
-            <span class="o">**</span><span class="n">template_kwargs</span>
+            <span class="n">config</span><span class="p">,</span> <span class="n">local_path</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="n">version</span><span class="p">,</span> <span class="n">git_url</span><span class="o">=</span><span class="n">git_url</span><span class="p">,</span> <span class="o">**</span><span class="n">template_kwargs</span>
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="CookiecutterFinder.get_config"><a class="viewcode-back" href="../../../../api/flexlate.finder.specific.html#flexlate.finder.specific.cookiecutter.CookiecutterFinder.get_config">[docs]</a>    <span class="k">def</span> <span class="nf">get_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directory</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CookiecutterConfig</span><span class="p">:</span>
@@ -209,27 +199,8 @@
         <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">config_path</span><span class="o">.</span><span class="n">read_text</span><span class="p">())</span>
         <span class="k">return</span> <span class="n">CookiecutterConfig</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="CookiecutterFinder.matches_template_type"><a class="viewcode-back" href="../../../../api/flexlate.finder.specific.html#flexlate.finder.specific.cookiecutter.CookiecutterFinder.matches_template_type">[docs]</a>    <span class="k">def</span> <span class="nf">matches_template_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">repo_path</span> <span class="o">=</span> <span class="n">_download_repo_if_necessary_get_local_path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-        <span class="k">except</span> <span class="n">RepositoryNotFound</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">False</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">(</span><span class="n">repo_path</span> <span class="o">/</span> <span class="s2">&quot;cookiecutter.json&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span></div></div>
-
-
-<span class="k">def</span> <span class="nf">_download_repo_if_necessary_get_local_path</span><span class="p">(</span>
-    <span class="n">path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span> <span class="n">checkout</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
-    <span class="n">config_dict</span> <span class="o">=</span> <span class="n">get_user_config</span><span class="p">()</span>
-    <span class="n">repo_dir</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">determine_repo_dir</span><span class="p">(</span>
-        <span class="n">template</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">),</span>
-        <span class="n">abbreviations</span><span class="o">=</span><span class="n">config_dict</span><span class="p">[</span><span class="s2">&quot;abbreviations&quot;</span><span class="p">],</span>
-        <span class="n">clone_to_dir</span><span class="o">=</span><span class="n">config_dict</span><span class="p">[</span><span class="s2">&quot;cookiecutters_dir&quot;</span><span class="p">],</span>
-        <span class="n">checkout</span><span class="o">=</span><span class="n">checkout</span><span class="p">,</span>
-        <span class="n">no_input</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="n">repo_dir</span><span class="p">)</span>
+<div class="viewcode-block" id="CookiecutterFinder.matches_template_type"><a class="viewcode-back" href="../../../../api/flexlate.finder.specific.html#flexlate.finder.specific.cookiecutter.CookiecutterFinder.matches_template_type">[docs]</a>    <span class="k">def</span> <span class="nf">matches_template_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">path</span> <span class="o">/</span> <span class="s2">&quot;cookiecutter.json&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span></div></div>
 </pre></div>
 
            </div>

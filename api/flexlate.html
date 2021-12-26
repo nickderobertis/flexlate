@@ -8,7 +8,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate package &mdash; flexlate 0.2.2 documentation</title>
+  <title>flexlate package &mdash; flexlate 0.2.3 documentation</title>
   
 
   
@@ -73,7 +73,7 @@
             
             
               <div class="version">
-                0.2.2
+                0.2.3
               </div>
             
           
@@ -129,6 +129,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#module-flexlate.path_ops">flexlate.path_ops module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-flexlate.remover">flexlate.remover module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-flexlate.template_data">flexlate.template_data module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-flexlate.template_path">flexlate.template_path module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-flexlate.types">flexlate.types module</a></li>
 </ul>
 </li>
@@ -758,6 +759,12 @@
 <section id="module-flexlate.exc">
 <span id="flexlate-exc-module"></span><h2>flexlate.exc module<a class="headerlink" href="#module-flexlate.exc" title="Permalink to this headline">¶</a></h2>
 <dl class="py exception">
+<dt class="sig sig-object py" id="flexlate.exc.CannotFindClonedTemplateException">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">flexlate.exc.</span></span><span class="sig-name descname"><span class="pre">CannotFindClonedTemplateException</span></span><a class="reference internal" href="../_modules/flexlate/exc.html#CannotFindClonedTemplateException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.exc.CannotFindClonedTemplateException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#flexlate.exc.FlexlateTemplateException" title="flexlate.exc.FlexlateTemplateException"><code class="xref py py-class docutils literal notranslate"><span class="pre">flexlate.exc.FlexlateTemplateException</span></code></a></p>
+</dd></dl>
+
+<dl class="py exception">
 <dt class="sig sig-object py" id="flexlate.exc.CannotFindTemplateSourceException">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">flexlate.exc.</span></span><span class="sig-name descname"><span class="pre">CannotFindTemplateSourceException</span></span><a class="reference internal" href="../_modules/flexlate/exc.html#CannotFindTemplateSourceException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.exc.CannotFindTemplateSourceException" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#flexlate.exc.FlexlateTemplateException" title="flexlate.exc.FlexlateTemplateException"><code class="xref py py-class docutils literal notranslate"><span class="pre">flexlate.exc.FlexlateTemplateException</span></code></a></p>
@@ -896,6 +903,21 @@
 <dd></dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="flexlate.ext_git.checkout_version">
+<span class="sig-prename descclassname"><span class="pre">flexlate.ext_git.</span></span><span class="sig-name descname"><span class="pre">checkout_version</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">repo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">version</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/ext_git.html#checkout_version"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.ext_git.checkout_version" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="flexlate.ext_git.clone_repo_at_version_get_repo_and_name">
+<span class="sig-prename descclassname"><span class="pre">flexlate.ext_git.</span></span><span class="sig-name descname"><span class="pre">clone_repo_at_version_get_repo_and_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dst_folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/ext_git.html#clone_repo_at_version_get_repo_and_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.ext_git.clone_repo_at_version_get_repo_and_name" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Repo</span></code>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="flexlate.ext_git.delete_tracked_files_excluding_initial_commit">
 <span class="sig-prename descclassname"><span class="pre">flexlate.ext_git.</span></span><span class="sig-name descname"><span class="pre">delete_tracked_files_excluding_initial_commit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">repo</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/ext_git.html#delete_tracked_files_excluding_initial_commit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.ext_git.delete_tracked_files_excluding_initial_commit" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -1013,6 +1035,11 @@
 <section id="module-flexlate.path_ops">
 <span id="flexlate-path-ops-module"></span><h2>flexlate.path_ops module<a class="headerlink" href="#module-flexlate.path_ops" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
+<dt class="sig sig-object py" id="flexlate.path_ops.change_directory_to">
+<span class="sig-prename descclassname"><span class="pre">flexlate.path_ops.</span></span><span class="sig-name descname"><span class="pre">change_directory_to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/path_ops.html#change_directory_to"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.path_ops.change_directory_to" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="flexlate.path_ops.copy_flexlate_configs">
 <span class="sig-prename descclassname"><span class="pre">flexlate.path_ops.</span></span><span class="sig-name descname"><span class="pre">copy_flexlate_configs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">src</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/path_ops.html#copy_flexlate_configs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.path_ops.copy_flexlate_configs" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -1070,6 +1097,35 @@ creates those directories as needed before running the logic</p>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]]</p>
 </dd>
 </dl>
+</dd></dl>
+
+</section>
+<section id="module-flexlate.template_path">
+<span id="flexlate-template-path-module"></span><h2>flexlate.template_path module<a class="headerlink" href="#module-flexlate.template_path" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="flexlate.template_path.get_local_repo_path_and_name_cloning_if_repo_url">
+<span class="sig-prename descclassname"><span class="pre">flexlate.template_path.</span></span><span class="sig-name descname"><span class="pre">get_local_repo_path_and_name_cloning_if_repo_url</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dst_folder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/template_path.html#get_local_repo_path_and_name_cloning_if_repo_url"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.template_path.get_local_repo_path_and_name_cloning_if_repo_url" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="flexlate.template_path.is_local_template">
+<span class="sig-prename descclassname"><span class="pre">flexlate.template_path.</span></span><span class="sig-name descname"><span class="pre">is_local_template</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/template_path.html#is_local_template"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.template_path.is_local_template" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="flexlate.template_path.is_repo_url">
+<span class="sig-prename descclassname"><span class="pre">flexlate.template_path.</span></span><span class="sig-name descname"><span class="pre">is_repo_url</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/template_path.html#is_repo_url"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.template_path.is_repo_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True if value is a repository URL.</p>
 </dd></dl>
 
 </section>

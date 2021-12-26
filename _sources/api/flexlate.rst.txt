@@ -124,6 +124,14 @@ flexlate.template\_data module
    :undoc-members:
    :show-inheritance:
 
+flexlate.template\_path module
+------------------------------
+
+.. automodule:: flexlate.template_path
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 flexlate.types module
 ---------------------
 

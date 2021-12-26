@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Index &mdash; flexlate 0.2.2 documentation</title>
+  <title>Index &mdash; flexlate 0.2.3 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.2.2
+                0.2.3
               </div>
             
           
@@ -270,6 +270,8 @@
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/flexlate.html#flexlate.exc.CannotFindClonedTemplateException">CannotFindClonedTemplateException</a>
+</li>
       <li><a href="api/flexlate.html#flexlate.exc.CannotFindTemplateSourceException">CannotFindTemplateSourceException</a>
 </li>
       <li><a href="api/flexlate.html#flexlate.exc.CannotLoadConfigException">CannotLoadConfigException</a>
@@ -280,18 +282,24 @@
 </li>
       <li><a href="api/flexlate.html#flexlate.exc.CannotRemoveTemplateSourceException">CannotRemoveTemplateSourceException</a>
 </li>
+      <li><a href="api/flexlate.html#flexlate.path_ops.change_directory_to">change_directory_to() (in module flexlate.path_ops)</a>
+</li>
       <li><a href="api/flexlate.html#flexlate.ext_git.checked_out_template_branch">checked_out_template_branch() (in module flexlate.ext_git)</a>
 </li>
       <li><a href="api/flexlate.html#flexlate.ext_git.checkout_template_branch">checkout_template_branch() (in module flexlate.ext_git)</a>
 </li>
+      <li><a href="api/flexlate.html#flexlate.ext_git.checkout_version">checkout_version() (in module flexlate.ext_git)</a>
+</li>
       <li><a href="api/flexlate.html#flexlate.config.FlexlateConfig.child_configs">child_configs (flexlate.config.FlexlateConfig property)</a>
 </li>
+      <li><a href="api/flexlate.html#flexlate.ext_git.clone_repo_at_version_get_repo_and_name">clone_repo_at_version_get_repo_and_name() (in module flexlate.ext_git)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/flexlate.update.html#flexlate.update.template.TemplateUpdate.config_location">config_location (flexlate.update.template.TemplateUpdate attribute)</a>
 </li>
       <li><a href="api/flexlate.html#flexlate.config_manager.ConfigManager">ConfigManager (class in flexlate.config_manager)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/flexlate.template.html#flexlate.template.types.TemplateType.COOKIECUTTER">COOKIECUTTER (flexlate.template.types.TemplateType attribute)</a>
 </li>
       <li><a href="api/flexlate.template_config.html#flexlate.template_config.cookiecutter.CookiecutterConfig">CookiecutterConfig (class in flexlate.template_config.cookiecutter)</a>
@@ -645,6 +653,13 @@
 </li>
       </ul></li>
       <li>
+    flexlate.template_path
+
+      <ul>
+        <li><a href="api/flexlate.html#module-flexlate.template_path">module</a>
+</li>
+      </ul></li>
+      <li>
     flexlate.types
 
       <ul>
@@ -722,12 +737,14 @@
 </li>
       <li><a href="api/flexlate.finder.specific.html#flexlate.finder.specific.git.get_git_url_from_source_path">get_git_url_from_source_path() (in module flexlate.finder.specific.git)</a>
 </li>
-      <li><a href="api/flexlate.html#flexlate.config_manager.ConfigManager.get_no_op_updates">get_no_op_updates() (flexlate.config_manager.ConfigManager method)</a>
+      <li><a href="api/flexlate.html#flexlate.template_path.get_local_repo_path_and_name_cloning_if_repo_url">get_local_repo_path_and_name_cloning_if_repo_url() (in module flexlate.template_path)</a>
 </li>
-      <li><a href="api/flexlate.html#flexlate.config_manager.ConfigManager.get_num_applied_templates_in_child_config">get_num_applied_templates_in_child_config() (flexlate.config_manager.ConfigManager method)</a>
+      <li><a href="api/flexlate.html#flexlate.config_manager.ConfigManager.get_no_op_updates">get_no_op_updates() (flexlate.config_manager.ConfigManager method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/flexlate.html#flexlate.config_manager.ConfigManager.get_num_applied_templates_in_child_config">get_num_applied_templates_in_child_config() (flexlate.config_manager.ConfigManager method)</a>
+</li>
       <li><a href="api/flexlate.html#flexlate.config.FlexlateProjectConfig.get_project_for_path">get_project_for_path() (flexlate.config.FlexlateProjectConfig method)</a>
 </li>
       <li><a href="api/flexlate.html#flexlate.config_manager.ConfigManager.get_renderables">get_renderables() (flexlate.config_manager.ConfigManager method)</a>
@@ -760,15 +777,19 @@
 </li>
       <li><a href="api/flexlate.html#flexlate.adder.Adder.init_project_and_add_to_branches">init_project_and_add_to_branches() (flexlate.adder.Adder method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/flexlate.html#flexlate.exc.InvalidTemplateClassException">InvalidTemplateClassException</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/flexlate.html#flexlate.exc.InvalidTemplateDataException">InvalidTemplateDataException</a>
 </li>
       <li><a href="api/flexlate.html#flexlate.exc.InvalidTemplatePathException">InvalidTemplatePathException</a>
 </li>
       <li><a href="api/flexlate.html#flexlate.exc.InvalidTemplateTypeException">InvalidTemplateTypeException</a>
+</li>
+      <li><a href="api/flexlate.html#flexlate.template_path.is_local_template">is_local_template() (in module flexlate.template_path)</a>
+</li>
+      <li><a href="api/flexlate.html#flexlate.template_path.is_repo_url">is_repo_url() (in module flexlate.template_path)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -905,6 +926,8 @@
         <li><a href="api/flexlate.template_config.html#module-flexlate.template_config.copier">flexlate.template_config.copier</a>
 </li>
         <li><a href="api/flexlate.html#module-flexlate.template_data">flexlate.template_data</a>
+</li>
+        <li><a href="api/flexlate.html#module-flexlate.template_path">flexlate.template_path</a>
 </li>
         <li><a href="api/flexlate.html#module-flexlate.types">flexlate.types</a>
 </li>

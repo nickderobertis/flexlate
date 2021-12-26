@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.finder.multi &mdash; flexlate 0.2.2 documentation</title>
+  <title>flexlate.finder.multi &mdash; flexlate 0.2.3 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.2.2
+                0.2.3
               </div>
             
           
@@ -176,14 +176,12 @@
 <span class="c1"># TODO: add a way for user to extend specific finders</span>
 <span class="kn">from</span> <span class="nn">flexlate.finder.specific.copier</span> <span class="kn">import</span> <span class="n">CopierFinder</span>
 <span class="kn">from</span> <span class="nn">flexlate.template.base</span> <span class="kn">import</span> <span class="n">Template</span>
+<span class="kn">from</span> <span class="nn">flexlate.template_path</span> <span class="kn">import</span> <span class="n">get_local_repo_path_and_name_cloning_if_repo_url</span>
 
 <span class="n">SPECIFIC_FINDERS</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">TemplateFinder</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span>
     <span class="n">CookiecutterFinder</span><span class="p">(),</span>
     <span class="n">CopierFinder</span><span class="p">(),</span>
 <span class="p">]</span>
-
-<span class="c1"># TODO: move downloading of vcs projects into multi finder, so they don&#39;t</span>
-<span class="c1">#  each have to pull them down while checking if they match the finder</span>
 
 
 <div class="viewcode-block" id="MultiFinder"><a class="viewcode-back" href="../../../api/flexlate.finder.html#flexlate.finder.multi.MultiFinder">[docs]</a><span class="k">class</span> <span class="nc">MultiFinder</span><span class="p">:</span>
@@ -193,10 +191,13 @@
         <span class="n">version</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">finders</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="n">TemplateFinder</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Template</span><span class="p">:</span>
+        <span class="n">local_path</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="n">get_local_repo_path_and_name_cloning_if_repo_url</span><span class="p">(</span>
+            <span class="n">path</span><span class="p">,</span> <span class="n">version</span>
+        <span class="p">)</span>
         <span class="n">finders</span> <span class="o">=</span> <span class="n">finders</span> <span class="ow">or</span> <span class="n">SPECIFIC_FINDERS</span>
         <span class="k">for</span> <span class="n">finder</span> <span class="ow">in</span> <span class="n">finders</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">finder</span><span class="o">.</span><span class="n">matches_template_type</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
-                <span class="k">return</span> <span class="n">finder</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="n">version</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">finder</span><span class="o">.</span><span class="n">matches_template_type</span><span class="p">(</span><span class="n">local_path</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">finder</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">local_path</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="n">version</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
         <span class="k">raise</span> <span class="n">InvalidTemplatePathException</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;could not find a template at </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2"> with any of the registered template finders&quot;</span>
         <span class="p">)</span></div></div>
