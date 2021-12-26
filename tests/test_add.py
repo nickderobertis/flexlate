@@ -2,21 +2,19 @@ import os
 from unittest.mock import patch
 
 import appdirs
-from git import Repo, Head
+from git import Head
 
 from flexlate.add_mode import AddMode
-from flexlate.adder import Adder
 from flexlate.config import FlexlateConfig, FlexlateProjectConfig
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.template.types import TemplateType
-from tests.config import GENERATED_FILES_DIR, GENERATED_REPO_DIR
+from tests.config import GENERATED_FILES_DIR
 from tests.fileutils import cookiecutter_one_generated_text_content
 from tests.fixtures.git import *
-from tests.fixtures.subdir_style import SubdirStyle
+from tests.fixtures.subdir_style import SubdirStyle, subdir_style
 from tests.fixtures.template import *
 from tests.fixtures.templated_repo import *
 from tests.fixtures.add_mode import add_mode
-from tests.fixtures.subdir_style import subdir_style
 
 
 def test_add_template_source_to_repo(

@@ -1,10 +1,4 @@
-import pytest
-from git import Repo
-
 from flexlate.adder import Adder
-from flexlate.template.cookiecutter import CookiecutterTemplate
-from flexlate.update.main import Updater
-from tests.config import GENERATED_REPO_DIR
 from tests.fileutils import preprend_cookiecutter_one_generated_text
 
 from tests.fixtures.git import *

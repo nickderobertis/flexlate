@@ -1,6 +1,3 @@
-import pytest
-from git import Repo
-
 from flexlate.config import FlexlateConfig
 from flexlate.exc import (
     CannotRemoveTemplateSourceException,
@@ -8,7 +5,6 @@ from flexlate.exc import (
 )
 from flexlate.remover import Remover
 from tests.config import COOKIECUTTER_ONE_NAME, COOKIECUTTER_TWO_NAME
-from tests.fileutils import cookiecutter_one_generated_text_content
 from tests.fixtures.templated_repo import *
 
 

@@ -4,10 +4,14 @@ from contextlib import contextmanager
 from pathlib import Path
 from typing import cast, Set, Generator, ContextManager
 
-from git import Repo, Blob, Tree, GitCommandError, Commit  # type: ignore
+from git import Repo, Blob, Tree, GitCommandError, Commit, Git  # type: ignore
 
-from flexlate.exc import GitRepoDirtyException, GitRepoHasNoCommitsException
-from flexlate.path_ops import copy_flexlate_configs
+from flexlate.exc import (
+    GitRepoDirtyException,
+    GitRepoHasNoCommitsException,
+    CannotFindClonedTemplateException,
+)
+from flexlate.path_ops import copy_flexlate_configs, change_directory_to
 
 
 def checkout_template_branch(repo: Repo, branch_name: str):
@@ -184,3 +188,25 @@ def get_repo_remote_name_from_repo(repo: Repo) -> str:
     # Remove .git on end
     name = ".".join(name_part.split(".")[:-1])
     return name
+
+
+def clone_repo(path: str, dst_folder: Path) -> Repo:
+    git = Git()
+    with change_directory_to(dst_folder):
+        # TODO: parse name from git urls to avoid scanning directory
+        existing_folders: Set[Path] = {
+            path for path in dst_folder.iterdir() if path.is_dir()
+        }
+        git.clone(path)
+        after_clone_folders: Set[Path] = {
+            path for path in dst_folder.iterdir() if path.is_dir()
+        }
+        new_folders: Set[Path] = after_clone_folders.difference(existing_folders)
+        for folder in new_folders:
+            if folder.name in path:
+                return Repo(folder)
+
+    raise CannotFindClonedTemplateException(
+        f"Could not find the cloned repo for {path} in {dst_folder} "
+        f"out of the newly created folders {new_folders}"
+    )

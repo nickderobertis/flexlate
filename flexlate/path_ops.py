@@ -1,5 +1,6 @@
 import os
 import shutil
+from contextlib import contextmanager
 from pathlib import Path
 from typing import Callable, Sequence, Optional
 
@@ -72,3 +73,11 @@ def location_relative_to_new_parent(
             return path
         else:
             raise e
+
+
+@contextmanager
+def change_directory_to(path: Path):
+    current_path = os.getcwd()
+    os.chdir(path)
+    yield
+    os.chdir(current_path)

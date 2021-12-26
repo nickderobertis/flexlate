@@ -15,7 +15,6 @@ from tests.config import (
     COOKIECUTTER_REMOTE_URL,
     COOKIECUTTER_REMOTE_NAME,
     COOKIECUTTER_REMOTE_VERSION_2,
-    COOKIECUTTER_REMOTE_VERSION_1,
 )
 from tests.fixtures.git import *
 from tests.fixtures.subdir_style import SubdirStyle, subdir_style
