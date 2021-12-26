@@ -2,7 +2,8 @@ import os
 
 import pytest
 
-from tests.config import PROJECT_DIR
+from flexlate import template_path
+from tests.config import PROJECT_DIR, GENERATED_FILES_DIR
 from tests.dirutils import wipe_generated_folder
 
 
@@ -15,9 +16,11 @@ def before_each(monkeypatch):
     monkeypatch.setenv("GIT_COMMITTER_EMAIL", "flexlate-git@nickderobertis.com")
     # Fix for pycharm test runner that runs tests in tests folder
     os.chdir(PROJECT_DIR)
+    # Save templates in generated folder rather than user dir
+    monkeypatch.setattr(template_path, "CLONED_REPO_FOLDER", GENERATED_FILES_DIR)
 
 
-@pytest.fixture(scope="session", autouse=True)
-def after_all():
+@pytest.fixture(scope="function", autouse=True)
+def after_each():
     yield
     wipe_generated_folder()

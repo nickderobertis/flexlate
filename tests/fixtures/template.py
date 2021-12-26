@@ -9,6 +9,7 @@ import pytest
 from flexlate.finder.specific.cookiecutter import CookiecutterFinder
 from flexlate.finder.specific.copier import CopierFinder
 from flexlate.template.cookiecutter import CookiecutterTemplate
+from flexlate.template_path import get_local_repo_path_and_name_cloning_if_repo_url
 from tests.config import (
     COOKIECUTTER_ONE_DIR,
     COOKIECUTTER_TWO_DIR,
@@ -69,25 +70,30 @@ def get_footer_for_copier_local_template(version: str) -> str:
 @pytest.fixture
 def cookiecutter_one_template() -> CookiecutterTemplate:
     finder = CookiecutterFinder()
-    yield finder.find(COOKIECUTTER_ONE_DIR)
+    yield finder.find(str(COOKIECUTTER_ONE_DIR), COOKIECUTTER_ONE_DIR)
 
 
 @pytest.fixture
 def copier_one_template() -> CookiecutterTemplate:
     finder = CopierFinder()
-    yield finder.find(COPIER_ONE_DIR)
+    yield finder.find(str(COPIER_ONE_DIR), COPIER_ONE_DIR)
 
 
 @pytest.fixture
 def cookiecutter_two_template() -> CookiecutterTemplate:
     finder = CookiecutterFinder()
-    yield finder.find(COOKIECUTTER_TWO_DIR)
+    yield finder.find(str(COOKIECUTTER_TWO_DIR), COOKIECUTTER_TWO_DIR)
 
 
 @pytest.fixture()
 def cookiecutter_remote_template() -> CookiecutterTemplate:
     finder = CookiecutterFinder()
-    yield finder.find(COOKIECUTTER_REMOTE_URL)
+    with tempfile.TemporaryDirectory() as temp_dir:
+        temp_path = Path(temp_dir)
+        local_path, name = get_local_repo_path_and_name_cloning_if_repo_url(
+            COOKIECUTTER_REMOTE_URL, dst_folder=temp_path
+        )
+        yield finder.find(COOKIECUTTER_REMOTE_URL, local_path, name=name)
 
 
 @pytest.fixture

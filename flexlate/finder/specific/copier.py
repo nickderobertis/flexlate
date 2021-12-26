@@ -23,19 +23,16 @@ from flexlate.template_data import TemplateData
 
 
 class CopierFinder(TemplateFinder[CopierTemplate]):
-    def find(self, path: str, **template_kwargs) -> CopierTemplate:
+    def find(self, path: str, local_path: Path, **template_kwargs) -> CopierTemplate:
         git_version: Optional[str] = template_kwargs.get("version")
         custom_name: Optional[str] = template_kwargs.get("name")
-        repo_path, detected_name = _download_repo_if_necessary_get_local_path_and_name(
-            path, version=git_version
-        )
-        name = custom_name or detected_name
-        config = self.get_config(repo_path)
-        version = get_version_from_source_path(path, repo_path) or git_version
+        name = custom_name or local_path.name
+        config = self.get_config(local_path)
+        version = get_version_from_source_path(path, local_path) or git_version
         git_url = get_git_url_from_source_path(path, template_kwargs)
         return CopierTemplate(
             config,
-            repo_path,
+            local_path,
             name=name,
             version=version,
             target_version=git_version,
@@ -54,15 +51,8 @@ class CopierFinder(TemplateFinder[CopierTemplate]):
                 data[key] = None
         return CopierConfig(data)
 
-    def matches_template_type(self, path: str) -> bool:
-        try:
-            repo_path, _ = _download_repo_if_necessary_get_local_path_and_name(path)
-        except CannotFindTemplateSourceException:
-            return False
-        else:
-            return (repo_path / "copier.yml").exists() or (
-                repo_path / "copier.yaml"
-            ).exists()
+    def matches_template_type(self, path: Path) -> bool:
+        return (path / "copier.yml").exists() or (path / "copier.yaml").exists()
 
 
 class DefaultData(TypedDict, total=False):

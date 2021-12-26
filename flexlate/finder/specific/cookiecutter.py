@@ -16,19 +16,18 @@ from flexlate.template_config.cookiecutter import CookiecutterConfig
 
 
 class CookiecutterFinder(TemplateFinder[CookiecutterTemplate]):
-    def find(self, path: str, **template_kwargs) -> CookiecutterTemplate:
+    def find(
+        self, path: str, local_path: Path, **template_kwargs
+    ) -> CookiecutterTemplate:
         git_version: Optional[str] = None
         if "version" in template_kwargs:
             git_version = template_kwargs.pop("version")
-        repo_path = _download_repo_if_necessary_get_local_path(
-            path, checkout=git_version
-        )
-        config = self.get_config(repo_path)
-        version = get_version_from_source_path(path, repo_path) or git_version
+        config = self.get_config(local_path)
+        version = get_version_from_source_path(path, local_path) or git_version
         git_url = get_git_url_from_source_path(path, template_kwargs)
         return CookiecutterTemplate(
             config,
-            repo_path,
+            local_path,
             version=version,
             target_version=git_version,
             git_url=git_url,
@@ -40,13 +39,8 @@ class CookiecutterFinder(TemplateFinder[CookiecutterTemplate]):
         data = json.loads(config_path.read_text())
         return CookiecutterConfig(data)
 
-    def matches_template_type(self, path: str) -> bool:
-        try:
-            repo_path = _download_repo_if_necessary_get_local_path(path)
-        except RepositoryNotFound:
-            return False
-        else:
-            return (repo_path / "cookiecutter.json").exists()
+    def matches_template_type(self, path: Path) -> bool:
+        return (path / "cookiecutter.json").exists()
 
 
 def _download_repo_if_necessary_get_local_path(

@@ -9,11 +9,11 @@ T = TypeVar("T", bound=Template)
 
 # TODO: figure out how to type TemplateFinder properly
 class TemplateFinder(Protocol[T]):  # type: ignore
-    def find(self, path: str, **template_kwargs) -> T:
+    def find(self, path: str, local_path: Path, **template_kwargs) -> T:
         ...
 
     def get_config(self, directory: Path) -> TemplateConfig:
         ...
 
-    def matches_template_type(self, path: str) -> bool:
+    def matches_template_type(self, path: Path) -> bool:
         ...

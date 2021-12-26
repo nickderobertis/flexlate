@@ -1,11 +1,11 @@
 import re
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Tuple
 
 import appdirs
 
 from flexlate.exc import InvalidTemplatePathException
-from flexlate.ext_git import clone_repo, checkout_version
+from flexlate.ext_git import clone_repo_at_version_get_repo_and_name, checkout_version
 
 CLONED_REPO_FOLDER = Path(appdirs.user_data_dir("flexlate"))
 
@@ -30,11 +30,17 @@ def is_local_template(path: str) -> bool:
     return Path(path).exists()
 
 
-def get_local_repo_path_cloning_if_repo_url(
-    path: str, version: Optional[str] = None, dst_folder: Path = CLONED_REPO_FOLDER
-) -> Path:
+def get_local_repo_path_and_name_cloning_if_repo_url(
+    path: str, version: Optional[str] = None, dst_folder: Optional[Path] = None
+) -> Tuple[Path, str]:
+    if dst_folder is None:
+        # Setting here rather than in default params so that mocking
+        # during tests is possible
+        dst_folder = CLONED_REPO_FOLDER
+
     if is_local_template(path):
-        return Path(path)
+        local_path = Path(path)
+        return local_path, local_path.name
 
     if not is_repo_url(path):
         raise InvalidTemplatePathException(
@@ -42,13 +48,11 @@ def get_local_repo_path_cloning_if_repo_url(
         )
 
     # Must be a repo url, clone it and return the cloned path
-    repo = clone_repo(path, dst_folder)
-
-    # Check out version if necessary
-    if version is not None:
-        checkout_version(repo, version)
+    repo, name = clone_repo_at_version_get_repo_and_name(
+        path, dst_folder, version=version
+    )
 
     # For type narrowing
     if repo.working_dir is None:
         raise ValueError("repo working dir cannot be None")
-    return Path(repo.working_dir)
+    return Path(repo.working_dir), name

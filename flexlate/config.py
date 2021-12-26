@@ -59,7 +59,7 @@ class TemplateSource(BaseModel):
             kwargs.update(version=self.version)
         if self.git_url is not None:
             kwargs.update(git_url=self.git_url)
-        return finder.find(self.path, **kwargs)
+        return finder.find(self.git_url or self.path, Path(self.path), **kwargs)
 
     @property
     def update_location(self) -> Union[str, Path]:

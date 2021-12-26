@@ -28,6 +28,7 @@ class RepoPathFixture:
     is_repo_url: bool
     is_local_path: bool
     is_ssh_url: bool = False
+    default_version: Optional[str] = None
     versions: List[Optional[str]] = field(default_factory=lambda: [None])
     assert_was_cloned_correctly: Optional[Callable[[Path, Optional[str]], None]] = None
 
@@ -54,6 +55,7 @@ repo_path_fixtures: Final[List[RepoPathFixture]] = [
         COOKIECUTTER_REMOTE_NAME,
         True,
         False,
+        default_version=COOKIECUTTER_REMOTE_VERSION_2,
         versions=[COOKIECUTTER_REMOTE_VERSION_1, None],
         assert_was_cloned_correctly=assert_cookiecutter_remote_was_cloned_correctly,
     ),
@@ -62,6 +64,7 @@ repo_path_fixtures: Final[List[RepoPathFixture]] = [
         COOKIECUTTER_REMOTE_NAME,
         True,
         False,
+        default_version=COOKIECUTTER_REMOTE_VERSION_2,
         versions=[COOKIECUTTER_REMOTE_VERSION_1, None],
         assert_was_cloned_correctly=assert_cookiecutter_remote_was_cloned_correctly,
     ),
@@ -71,6 +74,7 @@ repo_path_fixtures: Final[List[RepoPathFixture]] = [
         True,
         False,
         is_ssh_url=True,
+        default_version=COPIER_REMOTE_VERSION_2,
         versions=[COPIER_REMOTE_VERSION_1, None],
         assert_was_cloned_correctly=assert_copier_remote_was_cloned_correctly,
     ),
@@ -80,6 +84,7 @@ repo_path_fixtures: Final[List[RepoPathFixture]] = [
         True,
         False,
         is_ssh_url=True,
+        default_version=COPIER_REMOTE_VERSION_2,
         versions=[COPIER_REMOTE_VERSION_1, None],
         assert_was_cloned_correctly=assert_copier_remote_was_cloned_correctly,
     ),
