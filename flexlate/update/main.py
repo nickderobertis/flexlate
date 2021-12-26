@@ -137,6 +137,7 @@ class Updater:
                 # Template needs to be upgraded
                 # As finder already updates the local files, just update the template object
                 template.version = new_template.version
+                template.path = new_template.path
 
 
 def _commit_message(renderables: Sequence[Renderable]) -> str:

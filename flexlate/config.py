@@ -57,6 +57,8 @@ class TemplateSource(BaseModel):
         kwargs = dict(name=self.name)
         if self.version is not None:
             kwargs.update(version=self.version)
+        if self.target_version is not None:
+            kwargs.update(target_version=self.target_version)
         if self.git_url is not None:
             kwargs.update(git_url=self.git_url)
         return finder.find(self.git_url or self.path, Path(self.path), **kwargs)

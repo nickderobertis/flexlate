@@ -16,6 +16,8 @@ from flexlate.template_data import TemplateData
 
 class CopierFinder(TemplateFinder[CopierTemplate]):
     def find(self, path: str, local_path: Path, **template_kwargs) -> CopierTemplate:
+        # TODO: determine why passing target_version through kwargs was not necessary for copier
+        #  Had to do that for cookiecutter, but tests were passing without any changes here.
         git_version: Optional[str] = template_kwargs.get("version")
         custom_name: Optional[str] = template_kwargs.get("name")
         name = custom_name or local_path.name
