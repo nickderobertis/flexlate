@@ -2,6 +2,7 @@ import shutil
 import tempfile
 from pathlib import Path
 from typing import Optional, Sequence
+from unittest.mock import patch
 
 import pytest
 from git import Repo, Head
@@ -21,6 +22,7 @@ from tests.config import (
     COOKIECUTTER_REMOTE_VERSION_1,
     COOKIECUTTER_REMOTE_VERSION_2,
     COOKIECUTTER_ONE_VERSION,
+    COOKIECUTTER_ONE_NAME,
 )
 from tests.fileutils import (
     cookiecutter_one_generated_text_content,
@@ -103,7 +105,7 @@ def test_update_passed_templates_to_newest_versions(
 ):
     wipe_generated_folder()
     local_template = cookiecutter_one_template
-    _modify_template_in_generated_folder(local_template)
+    _modify_cookiecutter_one_template_in_generated_folder(local_template)
     updater = Updater()
     finder = MultiFinder()
     remote_template = finder.find(
@@ -138,7 +140,7 @@ def test_update_passed_templates_to_newest_versions_but_already_at_targets(
 ):
     wipe_generated_folder()
     local_template = cookiecutter_one_template
-    _modify_template_in_generated_folder(local_template)
+    _modify_cookiecutter_one_template_in_generated_folder(local_template)
     updater = Updater()
     finder = MultiFinder()
     remote_template = finder.find(
@@ -174,7 +176,8 @@ def test_update_passed_templates_to_newest_versions_but_already_at_targets(
     assert local_template.version == COOKIECUTTER_ONE_VERSION
 
 
-def _modify_template_in_generated_folder(template: Template):
-    shutil.copytree(template.path, GENERATED_FILES_DIR, dirs_exist_ok=True)
-    template.path = GENERATED_FILES_DIR
-    (GENERATED_FILES_DIR / "some file.txt").touch()
+def _modify_cookiecutter_one_template_in_generated_folder(template: Template):
+    template_folder = GENERATED_FILES_DIR / COOKIECUTTER_ONE_NAME
+    shutil.copytree(template.path, template_folder, dirs_exist_ok=True)
+    template.path = template_folder
+    (template_folder / "some file.txt").touch()

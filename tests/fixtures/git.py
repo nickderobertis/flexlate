@@ -3,7 +3,8 @@ from git import Repo
 
 from flexlate.ext_git import stage_and_commit_all
 from tests.config import GENERATED_REPO_DIR
-from tests.dirutils import wipe_generated_folder, change_directory_to
+from tests.dirutils import wipe_generated_folder
+from flexlate.path_ops import change_directory_to
 from tests.gitutils import (
     create_empty_repo,
     add_dummy_file_to_repo,

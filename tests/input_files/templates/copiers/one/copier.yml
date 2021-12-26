@@ -15,7 +15,7 @@ q2:
   type: int
   choices:
     1: null
-    2: null
+    2: 2
     "three": 3
   default: 1
 

@@ -1,13 +1,19 @@
 import os
+import re
+import shutil
 import tempfile
 from contextlib import contextmanager
 from pathlib import Path
-from typing import cast, Set, Generator, ContextManager
+from typing import cast, Set, Generator, ContextManager, Optional, Tuple
 
-from git import Repo, Blob, Tree, GitCommandError, Commit  # type: ignore
+from git import Repo, Blob, Tree, GitCommandError, Commit, Git  # type: ignore
 
-from flexlate.exc import GitRepoDirtyException, GitRepoHasNoCommitsException
-from flexlate.path_ops import copy_flexlate_configs
+from flexlate.exc import (
+    GitRepoDirtyException,
+    GitRepoHasNoCommitsException,
+    CannotFindClonedTemplateException,
+)
+from flexlate.path_ops import copy_flexlate_configs, change_directory_to
 
 
 def checkout_template_branch(repo: Repo, branch_name: str):
@@ -181,6 +187,32 @@ def get_repo_remote_name_from_repo(repo: Repo) -> str:
     url = list(repo.remote().urls)[0]
     parts = url.split("/")
     name_part = parts[-1]
-    # Remove .git on end
-    name = ".".join(name_part.split(".")[:-1])
-    return name
+    # Remove .git on end if it exists
+    if ".git" in name_part:
+        return ".".join(name_part.split(".")[:-1])
+    # Otherwise return name as-is
+    return name_part
+
+
+def clone_repo_at_version_get_repo_and_name(
+    path: str, dst_folder: Path, version: Optional[str] = None
+) -> Tuple[Repo, str]:
+    with tempfile.TemporaryDirectory() as temp_dir:
+        repo = Repo.clone_from(path, temp_dir)
+        name = get_repo_remote_name_from_repo(repo)
+        if version:
+            checkout_version(repo, version)
+        else:
+            version = get_current_version(repo)
+        template_root = dst_folder / name
+        full_destination = template_root / version
+        if not template_root.exists():
+            template_root.mkdir(parents=True)
+        if not full_destination.exists():
+            # Have not cloned this version previously
+            shutil.copytree(temp_dir, full_destination)
+    return Repo(full_destination), name
+
+
+def checkout_version(repo: Repo, version: str):
+    repo.git.checkout(version)

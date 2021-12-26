@@ -23,14 +23,19 @@ from tests.config import (
     COOKIECUTTER_ONE_DIR,
     COOKIECUTTER_ONE_VERSION,
     COOKIECUTTER_ONE_MODIFIED_VERSION,
+    COPIER_ONE_NAME,
+    COPIER_ONE_DIR,
+    COPIER_ONE_VERSION,
+    COPIER_ONE_MODIFIED_VERSION,
 )
-from tests.fixtures.template import modify_cookiecutter_one
+from tests.fixtures.template import modify_cookiecutter_one, modify_copier_one
 
 
 class TemplateSourceType(str, Enum):
     COOKIECUTTER_REMOTE = "cookiecutter_remote"
     COPIER_REMOTE = "copier_remote"
     COOKIECUTTER_LOCAL = "cookiecutter_local"
+    COPIER_LOCAL = "copier_local"
 
 
 @dataclass
@@ -86,13 +91,23 @@ all_template_source_fixtures: Final[List[TemplateSourceFixture]] = [
         is_local_template=True,
         version_migrate_func=modify_cookiecutter_one,
     ),
+    TemplateSourceFixture(
+        name=COPIER_ONE_NAME,
+        path=COPIER_ONE_DIR,
+        type=TemplateSourceType.COPIER_LOCAL,
+        input_data=dict(q1="abc", q2=2, q3="def"),
+        version_1=COPIER_ONE_VERSION,
+        version_2=COPIER_ONE_MODIFIED_VERSION,
+        is_local_template=True,
+        version_migrate_func=modify_copier_one,
+    ),
 ]
 
 
 @pytest.fixture(scope="function", params=all_template_source_fixtures)
 def template_source(request) -> TemplateSourceFixture:
     template_source: TemplateSourceFixture = deepcopy(request.param)
-    if template_source.type == TemplateSourceType.COOKIECUTTER_LOCAL:
+    if template_source.is_local_template:
         # Move into temporary directory so it can be updated locally
         with tempfile.TemporaryDirectory() as temp_dir:
             template_dir = Path(temp_dir) / template_source.name

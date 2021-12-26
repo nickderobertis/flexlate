@@ -1,10 +1,10 @@
 from pathlib import Path
 from typing import Union, Optional, Any, Dict
 
-from cookiecutter.repository import is_repo_url
 from git import Repo
 
 from flexlate.ext_git import get_current_version
+from flexlate.template_path import is_repo_url
 
 
 def get_version_from_source_path(

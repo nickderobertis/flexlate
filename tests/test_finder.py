@@ -1,3 +1,4 @@
+import tempfile
 from pathlib import Path
 
 import pytest
@@ -5,6 +6,7 @@ import pytest
 from flexlate.finder.multi import MultiFinder
 from flexlate.finder.specific.cookiecutter import CookiecutterFinder
 from flexlate.finder.specific.copier import CopierFinder
+from flexlate.template_path import get_local_repo_path_and_name_cloning_if_repo_url
 from tests.config import (
     COOKIECUTTER_ONE_DIR,
     COOKIECUTTER_REMOTE_URL,
@@ -20,6 +22,7 @@ from tests.config import (
     COOKIECUTTER_REMOTE_NAME,
     COPIER_ONE_NAME,
     COOKIECUTTER_ONE_NAME,
+    GENERATED_FILES_DIR,
 )
 
 
@@ -37,7 +40,7 @@ def test_get_copier_config():
 
 def test_get_cookiecutter_local_template():
     finder = CookiecutterFinder()
-    template = finder.find(COOKIECUTTER_ONE_DIR)
+    template = finder.find(str(COOKIECUTTER_ONE_DIR), COOKIECUTTER_ONE_DIR)
     assert template.path == COOKIECUTTER_ONE_DIR
     assert template.name == COOKIECUTTER_ONE_NAME
     assert template.git_url is None
@@ -47,7 +50,7 @@ def test_get_cookiecutter_local_template():
 
 def test_get_copier_local_template():
     finder = CopierFinder()
-    template = finder.find(COPIER_ONE_DIR)
+    template = finder.find(str(COPIER_ONE_DIR), COPIER_ONE_DIR)
     assert template.path == COPIER_ONE_DIR
     assert template.name == COPIER_ONE_NAME
     assert template.git_url is None
@@ -64,19 +67,23 @@ def test_get_copier_local_template():
 )
 def test_get_cookiecutter_remote_template(version: str, expect_contents: str):
     finder = CookiecutterFinder()
-    template = finder.find(COOKIECUTTER_REMOTE_URL, version=version)
-    assert (
-        template.path
-        == Path("~").expanduser() / ".cookiecutters" / "cookiecutter-simple-example"
-    )
-    assert template.git_url == COOKIECUTTER_REMOTE_URL
-    assert template.name == COOKIECUTTER_REMOTE_NAME
-    assert template.version == version
-    assert template.config.defaults == {"name": "abc", "key": "value"}
-    template_file = (
-        template.path / "{{ cookiecutter.name }}" / "{{ cookiecutter.name }}.txt"
-    )
-    assert template_file.read_text() == expect_contents
+    with tempfile.TemporaryDirectory() as temp_dir:
+        temp_path = Path(temp_dir)
+        local_path, name = get_local_repo_path_and_name_cloning_if_repo_url(
+            COOKIECUTTER_REMOTE_URL, version, dst_folder=temp_path
+        )
+        template = finder.find(
+            COOKIECUTTER_REMOTE_URL, local_path, version=version, name=name
+        )
+        assert template.path == temp_path / COOKIECUTTER_REMOTE_NAME / version
+        assert template.git_url == COOKIECUTTER_REMOTE_URL
+        assert template.name == COOKIECUTTER_REMOTE_NAME
+        assert template.version == version
+        assert template.config.defaults == {"name": "abc", "key": "value"}
+        template_file = (
+            template.path / "{{ cookiecutter.name }}" / "{{ cookiecutter.name }}.txt"
+        )
+        assert template_file.read_text() == expect_contents
 
 
 @pytest.mark.parametrize(
@@ -88,18 +95,26 @@ def test_get_cookiecutter_remote_template(version: str, expect_contents: str):
 )
 def test_get_copier_remote_template(version: str, expect_contents: str):
     finder = CopierFinder()
-    template = finder.find(COPIER_REMOTE_URL, version=version)
-    assert template.git_url == COPIER_REMOTE_URL
-    assert template.name == COPIER_REMOTE_NAME
-    assert template.version == version
-    assert template.config.defaults == {"question1": "answer1", "question2": 2.7}
-    template_file = template.path / "output" / "{{ question1 }}.txt.jinja"
-    assert template_file.read_text() == expect_contents
+    with tempfile.TemporaryDirectory() as temp_dir:
+        temp_path = Path(temp_dir)
+        local_path, name = get_local_repo_path_and_name_cloning_if_repo_url(
+            COPIER_REMOTE_URL, version, dst_folder=temp_path
+        )
+        template = finder.find(
+            COPIER_REMOTE_URL, local_path, version=version, name=name
+        )
+        assert template.path == temp_path / COPIER_REMOTE_NAME / version
+        assert template.git_url == COPIER_REMOTE_URL
+        assert template.name == COPIER_REMOTE_NAME
+        assert template.version == version
+        assert template.config.defaults == {"question1": "answer1", "question2": 2.7}
+        template_file = template.path / "output" / "{{ question1 }}.txt.jinja"
+        assert template_file.read_text() == expect_contents
 
 
 def test_multi_finder_get_cookiecutter_local_template():
     finder = MultiFinder()
-    template = finder.find(COOKIECUTTER_ONE_DIR)
+    template = finder.find(str(COOKIECUTTER_ONE_DIR))
     assert template.path == COOKIECUTTER_ONE_DIR
     assert template.git_url is None
     assert template.version == COOKIECUTTER_ONE_VERSION
@@ -108,7 +123,7 @@ def test_multi_finder_get_cookiecutter_local_template():
 
 def test_multi_finder_get_copier_local_template():
     finder = MultiFinder()
-    template = finder.find(COPIER_ONE_DIR)
+    template = finder.find(str(COPIER_ONE_DIR))
     assert template.path == COPIER_ONE_DIR
     assert template.git_url is None
     assert template.version == COPIER_ONE_VERSION
@@ -127,10 +142,7 @@ def test_multi_finder_get_cookiecutter_remote_template(
 ):
     finder = MultiFinder()
     template = finder.find(COOKIECUTTER_REMOTE_URL, version=version)
-    assert (
-        template.path
-        == Path("~").expanduser() / ".cookiecutters" / "cookiecutter-simple-example"
-    )
+    assert template.path == GENERATED_FILES_DIR / COOKIECUTTER_REMOTE_NAME / version
     assert template.git_url == COOKIECUTTER_REMOTE_URL
     assert template.version == version
     assert template.config.defaults == {"name": "abc", "key": "value"}
@@ -150,6 +162,7 @@ def test_multi_finder_get_cookiecutter_remote_template(
 def test_multi_finder_get_copier_remote_template(version: str, expect_contents: str):
     finder = MultiFinder()
     template = finder.find(COPIER_REMOTE_URL, version=version)
+    assert template.path == GENERATED_FILES_DIR / COPIER_REMOTE_NAME / version
     assert template.git_url == COPIER_REMOTE_URL
     assert template.version == version
     assert template.config.defaults == {"question1": "answer1", "question2": 2.7}
