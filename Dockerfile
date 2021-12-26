@@ -13,8 +13,8 @@ RUN pipenv sync
 RUN mkdir cli-testing && \
      cd cli-testing && \
      git init && \
-     git config user.email "flexlate-git@nickderobertis.com" && \
-     git config user.name "flexlate-git" && \
+     git config --global user.email "flexlate-git@nickderobertis.com" && \
+     git config --global user.name "flexlate-git" && \
      touch README.md && \
      git add -A && \
      git commit -m "Initial commit"
