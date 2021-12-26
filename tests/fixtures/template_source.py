@@ -95,7 +95,7 @@ all_template_source_fixtures: Final[List[TemplateSourceFixture]] = [
         name=COPIER_ONE_NAME,
         path=COPIER_ONE_DIR,
         type=TemplateSourceType.COPIER_LOCAL,
-        input_data=dict(q1="abc", q2=123, q3="def"),
+        input_data=dict(q1="abc", q2=2, q3="def"),
         version_1=COPIER_ONE_VERSION,
         version_2=COPIER_ONE_MODIFIED_VERSION,
         is_local_template=True,
