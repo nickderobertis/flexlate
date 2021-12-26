@@ -20,6 +20,8 @@ from tests.config import (
     COPIER_REMOTE_VERSION_1,
     COOKIECUTTER_ONE_VERSION,
     COOKIECUTTER_ONE_MODIFIED_VERSION,
+    COPIER_ONE_VERSION,
+    COPIER_ONE_MODIFIED_VERSION,
 )
 
 
@@ -52,7 +54,16 @@ def get_footer_for_cookiecutter_local_template(version: str) -> str:
     elif version == COOKIECUTTER_ONE_VERSION:
         return ""
     else:
-        raise ValueError(f"unknown copier remote version {version}")
+        raise ValueError(f"unknown cookiecutter local version {version}")
+
+
+def get_footer_for_copier_local_template(version: str) -> str:
+    if version == COPIER_ONE_MODIFIED_VERSION:
+        return " and some footer"
+    elif version == COPIER_ONE_VERSION:
+        return ""
+    else:
+        raise ValueError(f"unknown copier local version {version}")
 
 
 @pytest.fixture
@@ -90,6 +101,11 @@ def cookiecutter_local_templates(
 def modify_cookiecutter_one(root: Union[str, Path]):
     text_path = Path(root) / "{{ cookiecutter.a }}" / "text.txt"
     text_path.write_text("{{ cookiecutter.a }}{{ cookiecutter.c }} and extra")
+
+
+def modify_copier_one(root: Union[str, Path]):
+    text_path = Path(root) / "{{ q1 }}.txt.jinja"
+    text_path.write_text("{{ q2 }} and some footer")
 
 
 @pytest.fixture

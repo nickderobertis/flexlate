@@ -24,6 +24,7 @@ from tests.fixtures.template import (
     get_header_for_cookiecutter_remote_template,
     get_footer_for_copier_remote_template,
     get_footer_for_cookiecutter_local_template,
+    get_footer_for_copier_local_template,
 )
 from tests.fixtures.cli import FlexlateFixture, FlexlateType, flexlates
 from tests.fixtures.add_mode import add_mode
@@ -317,6 +318,10 @@ def _assert_project_files_are_correct(
         out_path = root / data["a"] / "text.txt"
         footer = get_footer_for_cookiecutter_local_template(version)
         expect_content = f"{data['a']}{data['c']}{footer}"
+    elif template_source_type == TemplateSourceType.COPIER_LOCAL:
+        out_path = root / f"{data['q1']}.txt"
+        footer = get_footer_for_copier_local_template(version)
+        expect_content = f"{data['q2']}{footer}"
     else:
         raise ValueError(f"unexpected template source type {template_source_type}")
 
@@ -430,5 +435,7 @@ def _get_default_data(template_source_type: TemplateSourceType) -> TemplateData:
         return dict(question1="answer1", question2=2.7)
     elif template_source_type == TemplateSourceType.COOKIECUTTER_LOCAL:
         return dict(a="b", c="")
+    elif template_source_type == TemplateSourceType.COPIER_LOCAL:
+        return dict(q1="a1", q2=1, q3="")
     else:
         raise ValueError(f"unexpected template source type {template_source_type}")
