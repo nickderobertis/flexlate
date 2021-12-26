@@ -1,17 +1,9 @@
-import json
-import shutil
 from pathlib import Path
-from typing import Union, Optional, TypedDict, Dict, Tuple
+from typing import Optional, TypedDict, Dict
 
-import appdirs
-from copier import vcs
-from copier.config import make_config
 from copier.config.factory import filter_config
 from copier.config.user_data import load_config_data
-from git import Repo
 
-from flexlate.exc import CannotFindTemplateSourceException
-from flexlate.ext_git import get_repo_remote_name_from_repo
 from flexlate.finder.specific.base import TemplateFinder
 from flexlate.finder.specific.git import (
     get_version_from_source_path,
@@ -60,38 +52,3 @@ class DefaultData(TypedDict, total=False):
 
 
 QuestionsWithDefaults = Dict[str, DefaultData]
-
-
-def _download_repo_if_necessary_get_local_path_and_name(
-    path: str, version: Optional[str] = None
-) -> Tuple[Path, str]:
-    if isinstance(path, Path):
-        return path, path.name
-
-    repo_url = _get_repo_url_if_is_repo(path)
-    if repo_url:
-        src_path = vcs.clone(repo_url, version or "HEAD")
-        repo = Repo(src_path)
-        name = get_repo_remote_name_from_repo(repo)
-        user_repo_dir = _copy_local_repo_to_user_directory_and_replace(
-            Path(src_path), name
-        )
-        return user_repo_dir, name
-
-    raise CannotFindTemplateSourceException(
-        f"Could not find template source {path} at version {version}"
-    )
-
-
-def _get_repo_url_if_is_repo(url: str) -> str:
-    # Copier requires .git to be on the end of the url, add it if the user did not
-    return vcs.get_repo(url) or vcs.get_repo(url + ".git")
-
-
-def _copy_local_repo_to_user_directory_and_replace(path: Path, name: str) -> Path:
-    root_folder = Path(appdirs.user_data_dir("flexlate-copier"))
-    folder = root_folder / name
-    if folder.exists():
-        shutil.rmtree(folder)
-    shutil.copytree(path, folder)
-    return folder

@@ -1,4 +1,3 @@
-from pathlib import Path
 from typing import Sequence, Optional, List, Final
 
 from flexlate.exc import InvalidTemplatePathException

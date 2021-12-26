@@ -216,15 +216,3 @@ def clone_repo_at_version_get_repo_and_name(
 
 def checkout_version(repo: Repo, version: str):
     repo.git.checkout(version)
-
-
-# CLONE_DESTINATION_EXISTS_NAME_RE = re.compile(r"path '([\w-]+)' already exists")
-#
-#
-# def get_repo_name_from_clone_destination_exists_error(err: GitCommandError) -> str:
-#     stderr = str(err.stderr)
-#     match = CLONE_DESTINATION_EXISTS_NAME_RE.search(stderr)
-#     if not match:
-#         # Must be a different error, raise it
-#         raise err
-#     return match.group(1)
