@@ -16,7 +16,7 @@ from flexlate.template_config.cookiecutter import CookiecutterConfig
 
 
 class CookiecutterFinder(TemplateFinder[CookiecutterTemplate]):
-    def find(self, path: Union[str, Path], **template_kwargs) -> CookiecutterTemplate:
+    def find(self, path: str, **template_kwargs) -> CookiecutterTemplate:
         git_version: Optional[str] = None
         if "version" in template_kwargs:
             git_version = template_kwargs.pop("version")

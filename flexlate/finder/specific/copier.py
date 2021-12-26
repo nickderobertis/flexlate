@@ -23,7 +23,7 @@ from flexlate.template_data import TemplateData
 
 
 class CopierFinder(TemplateFinder[CopierTemplate]):
-    def find(self, path: Union[str, Path], **template_kwargs) -> CopierTemplate:
+    def find(self, path: str, **template_kwargs) -> CopierTemplate:
         git_version: Optional[str] = template_kwargs.get("version")
         custom_name: Optional[str] = template_kwargs.get("name")
         repo_path, detected_name = _download_repo_if_necessary_get_local_path_and_name(
@@ -73,7 +73,7 @@ QuestionsWithDefaults = Dict[str, DefaultData]
 
 
 def _download_repo_if_necessary_get_local_path_and_name(
-    path: Union[str, Path], version: Optional[str] = None
+    path: str, version: Optional[str] = None
 ) -> Tuple[Path, str]:
     if isinstance(path, Path):
         return path, path.name

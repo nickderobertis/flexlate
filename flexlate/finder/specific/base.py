@@ -9,7 +9,7 @@ T = TypeVar("T", bound=Template)
 
 # TODO: figure out how to type TemplateFinder properly
 class TemplateFinder(Protocol[T]):  # type: ignore
-    def find(self, path: Union[str, Path], **template_kwargs) -> T:
+    def find(self, path: str, **template_kwargs) -> T:
         ...
 
     def get_config(self, directory: Path) -> TemplateConfig:

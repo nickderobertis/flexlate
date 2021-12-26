@@ -37,7 +37,7 @@ def test_get_copier_config():
 
 def test_get_cookiecutter_local_template():
     finder = CookiecutterFinder()
-    template = finder.find(COOKIECUTTER_ONE_DIR)
+    template = finder.find(str(COOKIECUTTER_ONE_DIR))
     assert template.path == COOKIECUTTER_ONE_DIR
     assert template.name == COOKIECUTTER_ONE_NAME
     assert template.git_url is None
@@ -47,7 +47,7 @@ def test_get_cookiecutter_local_template():
 
 def test_get_copier_local_template():
     finder = CopierFinder()
-    template = finder.find(COPIER_ONE_DIR)
+    template = finder.find(str(COPIER_ONE_DIR))
     assert template.path == COPIER_ONE_DIR
     assert template.name == COPIER_ONE_NAME
     assert template.git_url is None
@@ -99,7 +99,7 @@ def test_get_copier_remote_template(version: str, expect_contents: str):
 
 def test_multi_finder_get_cookiecutter_local_template():
     finder = MultiFinder()
-    template = finder.find(COOKIECUTTER_ONE_DIR)
+    template = finder.find(str(COOKIECUTTER_ONE_DIR))
     assert template.path == COOKIECUTTER_ONE_DIR
     assert template.git_url is None
     assert template.version == COOKIECUTTER_ONE_VERSION
@@ -108,7 +108,7 @@ def test_multi_finder_get_cookiecutter_local_template():
 
 def test_multi_finder_get_copier_local_template():
     finder = MultiFinder()
-    template = finder.find(COPIER_ONE_DIR)
+    template = finder.find(str(COPIER_ONE_DIR))
     assert template.path == COPIER_ONE_DIR
     assert template.git_url is None
     assert template.version == COPIER_ONE_VERSION
