@@ -210,3 +210,7 @@ def clone_repo(path: str, dst_folder: Path) -> Repo:
         f"Could not find the cloned repo for {path} in {dst_folder} "
         f"out of the newly created folders {new_folders}"
     )
+
+
+def checkout_version(repo: Repo, version: str):
+    repo.git.checkout(version)

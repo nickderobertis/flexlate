@@ -41,11 +41,13 @@ def test_get_local_repo_path_cloning_if_repo_url(
         return
 
     # Must be valid template path, local or remote
-    local_path = get_local_repo_path_cloning_if_repo_url(
-        repo_path_fixture.path, GENERATED_FILES_DIR
-    )
-    if repo_path_fixture.is_local_path:
-        assert local_path == Path(repo_path_fixture.path)
-    elif repo_path_fixture.is_repo_url:
-        assert local_path == GENERATED_FILES_DIR / repo_path_fixture.name
-        assert repo_path_fixture.was_cloned_correctly(local_path)
+    for version in repo_path_fixture.versions:
+        local_path = get_local_repo_path_cloning_if_repo_url(
+            repo_path_fixture.path, version, GENERATED_FILES_DIR
+        )
+        if repo_path_fixture.is_local_path:
+            assert local_path == Path(repo_path_fixture.path)
+        elif repo_path_fixture.is_repo_url:
+            assert local_path == GENERATED_FILES_DIR / repo_path_fixture.name
+            repo_path_fixture.assert_was_cloned_correctly(local_path, version)
+        wipe_generated_folder()

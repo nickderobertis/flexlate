@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Final, List, Callable, Optional
 
@@ -10,6 +10,14 @@ from tests.config import (
     COOKIECUTTER_ONE_NAME,
     COOKIECUTTER_REMOTE_NAME,
     COPIER_REMOTE_NAME,
+    COOKIECUTTER_REMOTE_VERSION_2,
+    COPIER_REMOTE_VERSION_2,
+    COOKIECUTTER_REMOTE_VERSION_1,
+    COPIER_REMOTE_VERSION_1,
+)
+from tests.fixtures.template import (
+    get_header_for_cookiecutter_remote_template,
+    get_footer_for_copier_remote_template,
 )
 
 
@@ -20,17 +28,22 @@ class RepoPathFixture:
     is_repo_url: bool
     is_local_path: bool
     is_ssh_url: bool = False
-    was_cloned_correctly: Optional[Callable[[Path], bool]] = None
+    versions: List[Optional[str]] = field(default_factory=lambda: [None])
+    assert_was_cloned_correctly: Optional[Callable[[Path, Optional[str]], None]] = None
 
 
-def cookiecutter_remote_was_cloned_correctly(path: Path) -> bool:
+def assert_cookiecutter_remote_was_cloned_correctly(path: Path, version: Optional[str]):
     expect_file = path / "{{ cookiecutter.name }}" / "{{ cookiecutter.name }}.txt"
-    return expect_file.read_text() == "some new header\n{{ cookiecutter.key }}"
+    header = get_header_for_cookiecutter_remote_template(
+        version or COOKIECUTTER_REMOTE_VERSION_2
+    )
+    assert expect_file.read_text() == header + "{{ cookiecutter.key }}"
 
 
-def copier_remote_was_cloned_correctly(path: Path) -> bool:
+def assert_copier_remote_was_cloned_correctly(path: Path, version: Optional[str]):
     expect_file = path / "output" / "{{ question1 }}.txt.jinja"
-    return expect_file.read_text() == "{{ question2 }}\nsome new footer"
+    footer = get_footer_for_copier_remote_template(version or COPIER_REMOTE_VERSION_2)
+    assert expect_file.read_text() == "{{ question2 }}" + footer
 
 
 repo_path_fixtures: Final[List[RepoPathFixture]] = [
@@ -41,14 +54,16 @@ repo_path_fixtures: Final[List[RepoPathFixture]] = [
         COOKIECUTTER_REMOTE_NAME,
         True,
         False,
-        was_cloned_correctly=cookiecutter_remote_was_cloned_correctly,
+        versions=[COOKIECUTTER_REMOTE_VERSION_1, None],
+        assert_was_cloned_correctly=assert_cookiecutter_remote_was_cloned_correctly,
     ),
     RepoPathFixture(
         COOKIECUTTER_REMOTE_URL + ".git",
         COOKIECUTTER_REMOTE_NAME,
         True,
         False,
-        was_cloned_correctly=cookiecutter_remote_was_cloned_correctly,
+        versions=[COOKIECUTTER_REMOTE_VERSION_1, None],
+        assert_was_cloned_correctly=assert_cookiecutter_remote_was_cloned_correctly,
     ),
     RepoPathFixture(
         "git@github.com:nickderobertis/copier-simple-example.git",
@@ -56,7 +71,8 @@ repo_path_fixtures: Final[List[RepoPathFixture]] = [
         True,
         False,
         is_ssh_url=True,
-        was_cloned_correctly=copier_remote_was_cloned_correctly,
+        versions=[COPIER_REMOTE_VERSION_1, None],
+        assert_was_cloned_correctly=assert_copier_remote_was_cloned_correctly,
     ),
     RepoPathFixture(
         "git@github.com:nickderobertis/copier-simple-example",
@@ -64,7 +80,8 @@ repo_path_fixtures: Final[List[RepoPathFixture]] = [
         True,
         False,
         is_ssh_url=True,
-        was_cloned_correctly=copier_remote_was_cloned_correctly,
+        versions=[COPIER_REMOTE_VERSION_1, None],
+        assert_was_cloned_correctly=assert_copier_remote_was_cloned_correctly,
     ),
 ]
 
