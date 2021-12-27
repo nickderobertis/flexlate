@@ -29,6 +29,7 @@ from tests.config import (
     COPIER_ONE_VERSION,
     COPIER_ONE_MODIFIED_VERSION,
     GENERATED_REPO_DIR,
+    GENERATED_FILES_DIR,
 )
 from tests.fixtures.template import modify_cookiecutter_one, modify_copier_one
 
@@ -64,6 +65,13 @@ class TemplateSourceFixture:
         if self.is_local_template:
             return None
         return self.path
+
+    def expect_path(self, version: Optional[str] = None) -> str:
+        version = version or self.default_version
+        if self.is_local_template:
+            return self.path
+        # appdirs user data directory is mocked to GENERATED_FILES_DIR in tests
+        return str(GENERATED_FILES_DIR / self.name / version)
 
     def relative(self, to: Path) -> "TemplateSourceFixture":
         new_fixture = deepcopy(self)
@@ -159,3 +167,6 @@ one_remote_all_local_relative_fixtures = [
 @pytest.fixture(scope="function", params=one_remote_all_local_relative_fixtures)
 def template_source_one_remote_and_all_local_relative(request) -> TemplateSourceFixture:
     yield request.param
+
+
+COOKIECUTTER_REMOTE_DEFAULT_EXPECT_PATH = cookiecutter_remote_fixture.expect_path()
