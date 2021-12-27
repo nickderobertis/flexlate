@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.config &mdash; flexlate 0.2.3 documentation</title>
+  <title>flexlate.config &mdash; flexlate 0.2.4 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.2.3
+                0.2.4
               </div>
             
           
@@ -169,10 +169,10 @@
   <h1>Source code for flexlate.config</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">cast</span>
 
 <span class="kn">from</span> <span class="nn">pyappconf</span> <span class="kn">import</span> <span class="n">BaseConfig</span><span class="p">,</span> <span class="n">AppConfig</span><span class="p">,</span> <span class="n">ConfigFormats</span>
-<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span><span class="p">,</span> <span class="n">validator</span><span class="p">,</span> <span class="n">Extra</span>
+<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span><span class="p">,</span> <span class="n">validator</span><span class="p">,</span> <span class="n">Extra</span><span class="p">,</span> <span class="n">PrivateAttr</span>
 
 <span class="kn">from</span> <span class="nn">flexlate.add_mode</span> <span class="kn">import</span> <span class="n">AddMode</span>
 <span class="kn">from</span> <span class="nn">flexlate.constants</span> <span class="kn">import</span> <span class="n">DEFAULT_MERGED_BRANCH_NAME</span><span class="p">,</span> <span class="n">DEFAULT_TEMPLATE_BRANCH_NAME</span>
@@ -195,6 +195,8 @@
     <span class="n">version</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">git_url</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">target_version</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">_config_file_location</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">PrivateAttr</span><span class="p">()</span>
 
 <div class="viewcode-block" id="TemplateSource.from_template"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config.TemplateSource.from_template">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_template</span><span class="p">(</span>
@@ -230,7 +232,13 @@
             <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">target_version</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">target_version</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">git_url</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">git_url</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">git_url</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">finder</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">git_url</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+        <span class="n">local_path</span><span class="p">:</span> <span class="n">Path</span>
+        <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">is_absolute</span><span class="p">():</span>
+            <span class="n">local_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Convert to absolute path</span>
+            <span class="n">local_path</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_config_file_location</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">))</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">finder</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">git_url</span> <span class="ow">or</span> <span class="nb">str</span><span class="p">(</span><span class="n">local_path</span><span class="p">),</span> <span class="n">local_path</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">update_location</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]:</span>
@@ -306,6 +314,16 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">empty</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">template_sources</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">applied_templates</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+
+<div class="viewcode-block" id="FlexlateConfig.load"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config.FlexlateConfig.load">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;FlexlateConfig&quot;</span><span class="p">:</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">FlexlateConfig</span><span class="p">,</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">template_source</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">template_sources</span><span class="p">:</span>
+            <span class="c1"># Add location from which config was loaded so that later template source paths</span>
+            <span class="c1"># can be made absolute before usage</span>
+            <span class="n">loaded_path</span> <span class="o">=</span> <span class="n">path</span> <span class="ow">or</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_settings</span><span class="o">.</span><span class="n">config_location</span>
+            <span class="n">template_source</span><span class="o">.</span><span class="n">_config_file_location</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">loaded_path</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">config</span></div>
 
 <div class="viewcode-block" id="FlexlateConfig.save"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config.FlexlateConfig.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">serializer_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">child_configs</span><span class="p">:</span>
