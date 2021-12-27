@@ -79,6 +79,10 @@ class TemplateSource(BaseModel):
     def update_location(self) -> Union[str, Path]:
         return self.git_url or self.path
 
+    @property
+    def is_local_template(self) -> bool:
+        return self.git_url is None
+
 
 class AppliedTemplateConfig(BaseModel):
     name: str

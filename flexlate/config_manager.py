@@ -184,9 +184,13 @@ class ConfigManager:
             applied_template.version = update.template.version
             template_source = _get_template_source_from_config(config, update)
             template_source.version = update.template.version
+            # For remote templates, always bring over the new path
+            # For local templates, the use_template_source_path option toggles between
+            # using the original string from the template source, and the
+            # detected absolute location in the template.
             template_source.path = (
                 str(update.template.template_source_path)
-                if use_template_source_path
+                if use_template_source_path and template_source.is_local_template
                 else str(update.template.path)
             )
         self.save_config(config)
