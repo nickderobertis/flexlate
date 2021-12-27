@@ -167,6 +167,7 @@ class ConfigManager:
         self,
         updates: Sequence[TemplateUpdate],
         project_root: Path = Path("."),
+        use_template_source_path: bool = True,
     ):
         # Don't adjust applied paths, as we are not doing anything with them and writing them back
         config = self.load_config(project_root, adjust_applied_paths=False)
@@ -183,7 +184,11 @@ class ConfigManager:
             applied_template.version = update.template.version
             template_source = _get_template_source_from_config(config, update)
             template_source.version = update.template.version
-            template_source.path = str(update.template.path)
+            template_source.path = (
+                str(update.template.template_source_path)
+                if use_template_source_path
+                else str(update.template.path)
+            )
         self.save_config(config)
 
     def add_template_source(

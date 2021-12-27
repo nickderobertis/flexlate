@@ -69,7 +69,11 @@ class TemplateSource(BaseModel):
         else:
             # Convert to absolute path
             local_path = (self._config_file_location.parent / Path(self.path)).resolve()
-        return finder.find(self.git_url or str(local_path), local_path, **kwargs)
+        template = finder.find(self.git_url or str(local_path), local_path, **kwargs)
+        # Keep original template source path (may be relative), so that later when
+        # updating templates, it can update the path without forcing it to be absolute
+        template.template_source_path = self.path
+        return template
 
     @property
     def update_location(self) -> Union[str, Path]:

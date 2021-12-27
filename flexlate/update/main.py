@@ -56,7 +56,12 @@ class Updater:
             temp_updates = _move_update_config_locations_to_new_parent(
                 updates, out_path, temp_out_path
             )
-            config_manager.update_templates(temp_updates, project_root=temp_out_path)
+            # On first update, don't use template source path. This means that
+            # the template paths will be absolute, so they can be loaded even though we are
+            # working in a temp directory
+            config_manager.update_templates(
+                temp_updates, project_root=temp_out_path, use_template_source_path=False
+            )
             renderables = _move_renderable_out_roots_to_new_parent(
                 config_manager.get_renderables(project_root=temp_out_path),
                 out_path,
@@ -70,6 +75,9 @@ class Updater:
                 renderables, project_root=temp_out_path, no_input=no_input
             )
             new_updates = updates_with_updated_data(temp_updates, updated_data)
+            # On second update, use template source path. This means that it will set the template
+            # paths back to how they were originally (relative if needed), so that there will not be
+            # unexpected changes from relative to absolute paths in the user configs
             config_manager.update_templates(new_updates, project_root=temp_out_path)
             stage_and_commit_all(temp_repo, _commit_message(renderables))
 

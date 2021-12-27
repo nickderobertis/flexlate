@@ -19,6 +19,7 @@ class Template(abc.ABC):
         version: Optional[str] = None,
         target_version: Optional[str] = None,
         git_url: Optional[str] = None,
+        template_source_path: Optional[Path] = None,
     ):
         self.config = config
         self.path = path
@@ -26,6 +27,7 @@ class Template(abc.ABC):
         self.target_version = target_version
         self.name = name or self.default_name
         self.version = version or self.folder_hash
+        self.template_source_path = template_source_path or path
 
     @property
     def default_name(self) -> str:
