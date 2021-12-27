@@ -153,7 +153,7 @@ class FlexlateConfig(BaseConfig):
             # Add location from which config was loaded so that later template source paths
             # can be made absolute before usage
             loaded_path = path or cls._settings.config_location
-            template_source._config_file_location = loaded_path
+            template_source._config_file_location = Path(loaded_path)
         return config
 
     def save(self, serializer_kwargs: Optional[Dict[str, Any]] = None, **kwargs):
