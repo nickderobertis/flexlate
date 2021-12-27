@@ -30,6 +30,7 @@ from tests.fixtures.add_mode import add_mode
 from tests.fixtures.template_source import (
     TemplateSourceFixture,
     template_source,
+    template_source_one_remote_one_local_relative,
     TemplateSourceType,
 )
 
@@ -101,29 +102,35 @@ def test_init_project_and_add_source_and_template_in_subdir(
     add_mode: AddMode,
     subdir_style: SubdirStyle,
     repo_with_placeholder_committed: Repo,
+    template_source_one_remote_one_local_relative: TemplateSourceFixture,
 ):
     fxt = flexlates.flexlate
+    template_source = template_source_one_remote_one_local_relative
     repo = repo_with_placeholder_committed
     with change_directory_to(GENERATED_REPO_DIR):
         fxt.init_project(default_add_mode=add_mode)
-        fxt.add_template_source(COOKIECUTTER_REMOTE_URL)
+        fxt.add_template_source(template_source.path)
         subdir = GENERATED_REPO_DIR / "subdir1" / "subdir2"
         subdir.mkdir(parents=True)
         if subdir_style == SubdirStyle.CD:
             with change_directory_to(subdir):
-                fxt.apply_template_and_add(COOKIECUTTER_REMOTE_NAME, no_input=True)
+                fxt.apply_template_and_add(template_source.name, no_input=True)
         elif subdir_style == SubdirStyle.PROVIDE_RELATIVE:
             fxt.apply_template_and_add(
-                COOKIECUTTER_REMOTE_NAME,
+                template_source.name,
                 no_input=True,
                 out_root=subdir.relative_to(os.getcwd()),
             )
         elif subdir_style == SubdirStyle.PROVIDE_ABSOLUTE:
             fxt.apply_template_and_add(
-                COOKIECUTTER_REMOTE_NAME, no_input=True, out_root=subdir.absolute()
+                template_source.name, no_input=True, out_root=subdir.absolute()
             )
 
-    _assert_project_files_are_correct(subdir)
+    _assert_project_files_are_correct(
+        subdir,
+        template_source_type=template_source.type,
+        version=template_source.default_version,
+    )
 
     if add_mode == AddMode.LOCAL:
         applied_config_dir = subdir
@@ -141,11 +148,17 @@ def test_init_project_and_add_source_and_template_in_subdir(
         raise ValueError(f"unsupported add mode {add_mode}")
 
     _assert_template_sources_config_is_correct(
-        template_sources_config_dir / "flexlate.json"
+        template_sources_config_dir / "flexlate.json",
+        version=template_source.default_version,
+        name=template_source.name,
+        url=template_source.url,
     )
     _assert_applied_templates_config_is_correct(
         applied_config_dir / "flexlate.json",
         expect_applied_template_root=expect_applied_template_root,
+        version=template_source.default_version,
+        template_source_type=template_source.type,
+        name=template_source.name,
     )
 
     project_config_path = GENERATED_REPO_DIR / "flexlate-project.json"
