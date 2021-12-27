@@ -146,10 +146,10 @@ def template_source(request) -> TemplateSourceFixture:
 
 one_remote_one_local_relative_fixture = [
     cookiecutter_remote_fixture,
-    local_relative_path_fixtures[0],
+    *local_relative_path_fixtures,
 ]
 
 
 @pytest.fixture(scope="function", params=one_remote_one_local_relative_fixture)
-def template_source_one_remote_one_local_relative(request) -> TemplateSourceFixture:
+def template_source_one_remote_and_all_local_relative(request) -> TemplateSourceFixture:
     yield request.param

@@ -30,7 +30,7 @@ from tests.fixtures.add_mode import add_mode
 from tests.fixtures.template_source import (
     TemplateSourceFixture,
     template_source,
-    template_source_one_remote_one_local_relative,
+    template_source_one_remote_and_all_local_relative,
     TemplateSourceType,
 )
 
@@ -102,10 +102,10 @@ def test_init_project_and_add_source_and_template_in_subdir(
     add_mode: AddMode,
     subdir_style: SubdirStyle,
     repo_with_placeholder_committed: Repo,
-    template_source_one_remote_one_local_relative: TemplateSourceFixture,
+    template_source_one_remote_and_all_local_relative: TemplateSourceFixture,
 ):
     fxt = flexlates.flexlate
-    template_source = template_source_one_remote_one_local_relative
+    template_source = template_source_one_remote_and_all_local_relative
     repo = repo_with_placeholder_committed
     with change_directory_to(GENERATED_REPO_DIR):
         fxt.init_project(default_add_mode=add_mode)
@@ -448,6 +448,6 @@ def _get_default_data(template_source_type: TemplateSourceType) -> TemplateData:
     elif template_source_type == TemplateSourceType.COOKIECUTTER_LOCAL:
         return dict(a="b", c="")
     elif template_source_type == TemplateSourceType.COPIER_LOCAL:
-        return dict(q1="a1", q2=1, q3="")
+        return dict(q1="a1", q2=1, q3=None)
     else:
         raise ValueError(f"unexpected template source type {template_source_type}")
