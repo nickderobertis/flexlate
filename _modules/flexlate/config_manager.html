@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.config_manager &mdash; flexlate 0.2.4 documentation</title>
+  <title>flexlate.config_manager &mdash; flexlate 0.2.5 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.2.4
+                0.2.5
               </div>
             
           
@@ -336,6 +336,7 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">updates</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">TemplateUpdate</span><span class="p">],</span>
         <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
+        <span class="n">use_template_source_path</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="c1"># Don&#39;t adjust applied paths, as we are not doing anything with them and writing them back</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="n">project_root</span><span class="p">,</span> <span class="n">adjust_applied_paths</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -352,7 +353,15 @@
             <span class="n">applied_template</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">update</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">version</span>
             <span class="n">template_source</span> <span class="o">=</span> <span class="n">_get_template_source_from_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">update</span><span class="p">)</span>
             <span class="n">template_source</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">update</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">version</span>
-            <span class="n">template_source</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">update</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+            <span class="c1"># For remote templates, always bring over the new path</span>
+            <span class="c1"># For local templates, the use_template_source_path option toggles between</span>
+            <span class="c1"># using the original string from the template source, and the</span>
+            <span class="c1"># detected absolute location in the template.</span>
+            <span class="n">template_source</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">update</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">template_source_path</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">use_template_source_path</span> <span class="ow">and</span> <span class="n">template_source</span><span class="o">.</span><span class="n">is_local_template</span>
+                <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">update</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+            <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">save_config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ConfigManager.add_template_source"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config_manager.ConfigManager.add_template_source">[docs]</a>    <span class="k">def</span> <span class="nf">add_template_source</span><span class="p">(</span>
