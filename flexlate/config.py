@@ -1,9 +1,9 @@
 import os
 from pathlib import Path
-from typing import List, Optional, Sequence, Dict, Any, Tuple, Union
+from typing import List, Optional, Sequence, Dict, Any, Tuple, Union, cast
 
 from pyappconf import BaseConfig, AppConfig, ConfigFormats
-from pydantic import BaseModel, Field, validator, Extra
+from pydantic import BaseModel, Field, validator, Extra, PrivateAttr
 
 from flexlate.add_mode import AddMode
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
@@ -26,6 +26,8 @@ class TemplateSource(BaseModel):
     version: Optional[str] = None
     git_url: Optional[str] = None
     target_version: Optional[str] = None
+
+    _config_file_location: Path = PrivateAttr()
 
     @classmethod
     def from_template(
@@ -61,7 +63,13 @@ class TemplateSource(BaseModel):
             kwargs.update(target_version=self.target_version)
         if self.git_url is not None:
             kwargs.update(git_url=self.git_url)
-        return finder.find(self.git_url or self.path, Path(self.path), **kwargs)
+        local_path: Path
+        if Path(self.path).is_absolute():
+            local_path = Path(self.path)
+        else:
+            # Convert to absolute path
+            local_path = (self._config_file_location.parent / Path(self.path)).resolve()
+        return finder.find(self.git_url or str(local_path), local_path, **kwargs)
 
     @property
     def update_location(self) -> Union[str, Path]:
@@ -137,6 +145,16 @@ class FlexlateConfig(BaseConfig):
     @property
     def empty(self) -> bool:
         return len(self.template_sources) == 0 and len(self.applied_templates) == 0
+
+    @classmethod
+    def load(cls, path: Optional[Union[str, Path]] = None) -> "FlexlateConfig":
+        config = cast(FlexlateConfig, super().load(path))
+        for template_source in config.template_sources:
+            # Add location from which config was loaded so that later template source paths
+            # can be made absolute before usage
+            loaded_path = path or cls._settings.config_location
+            template_source._config_file_location = loaded_path
+        return config
 
     def save(self, serializer_kwargs: Optional[Dict[str, Any]] = None, **kwargs):
         if not self.child_configs:
