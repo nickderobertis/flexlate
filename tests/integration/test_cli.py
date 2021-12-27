@@ -32,6 +32,7 @@ from tests.fixtures.template_source import (
     template_source,
     template_source_one_remote_and_all_local_relative,
     TemplateSourceType,
+    COOKIECUTTER_REMOTE_DEFAULT_EXPECT_PATH,
 )
 
 
@@ -61,6 +62,7 @@ def test_init_project_and_add_source_and_template(
         version=template_source.default_version,
         name=template_source.name,
         url=template_source.url,
+        path=template_source.expect_path(),
     )
 
     project_config_path = GENERATED_REPO_DIR / "flexlate-project.json"
@@ -137,14 +139,24 @@ def test_init_project_and_add_source_and_template_in_subdir(
         applied_config_dir = subdir
         expect_applied_template_root = Path(".")
         template_sources_config_dir = GENERATED_REPO_DIR
+        expect_template_source_path = template_source.expect_path()
     elif add_mode == AddMode.PROJECT:
         applied_config_dir = GENERATED_REPO_DIR
         expect_applied_template_root = subdir.relative_to(GENERATED_REPO_DIR)
         template_sources_config_dir = GENERATED_REPO_DIR
+        expect_template_source_path = template_source.expect_path()
     elif add_mode == AddMode.USER:
         applied_config_dir = GENERATED_FILES_DIR
         expect_applied_template_root = subdir.absolute()
         template_sources_config_dir = GENERATED_FILES_DIR
+        if template_source.is_local_template:
+            # Move the original directory down a level in the relative path
+            # E.g. move ../../input_files/templates/cookiecutters/one to ../input_files/templates/cookiecutters/one
+            expect_template_source_path = str(
+                Path(*Path(template_source.expect_path()).parts[1:])
+            )
+        else:
+            expect_template_source_path = template_source.expect_path()
     else:
         raise ValueError(f"unsupported add mode {add_mode}")
 
@@ -153,6 +165,7 @@ def test_init_project_and_add_source_and_template_in_subdir(
         version=template_source.default_version,
         name=template_source.name,
         url=template_source.url,
+        path=expect_template_source_path,
     )
     _assert_applied_templates_config_is_correct(
         applied_config_dir / "flexlate.json",
@@ -195,6 +208,7 @@ def test_update_project(
             template_source_type=template_source.type,
             name=template_source.name,
             url=template_source.url,
+            path=template_source.expect_path(template_source.version_1),
         )
 
         # First update does nothing, because version is at target version
@@ -218,6 +232,7 @@ def test_update_project(
             template_source_type=template_source.type,
             name=template_source.name,
             url=template_source.url,
+            path=template_source.expect_path(template_source.version_1),
         )
 
         # Now update the target version
@@ -248,6 +263,7 @@ def test_update_project(
         template_source_type=template_source.type,
         name=template_source.name,
         url=template_source.url,
+        path=template_source.expect_path(template_source.version_2),
     )
 
     project_config_path = GENERATED_REPO_DIR / "flexlate-project.json"
@@ -357,6 +373,7 @@ def _assert_template_sources_config_is_correct(
     version: str = COOKIECUTTER_REMOTE_VERSION_2,
     name: str = COOKIECUTTER_REMOTE_NAME,
     url: str = COOKIECUTTER_REMOTE_URL,
+    path: str = COOKIECUTTER_REMOTE_DEFAULT_EXPECT_PATH,
 ):
     assert config_path.exists()
     config = FlexlateConfig.load(config_path)
@@ -366,6 +383,7 @@ def _assert_template_sources_config_is_correct(
     assert template_source.name == name
     assert template_source.version == version
     assert template_source.git_url == url
+    assert template_source.path == path
 
 
 def _assert_template_sources_config_is_empty(
@@ -412,6 +430,7 @@ def _assert_config_is_correct(
     template_source_type: TemplateSourceType = TemplateSourceType.COOKIECUTTER_REMOTE,
     name: str = COOKIECUTTER_REMOTE_NAME,
     url: str = COOKIECUTTER_REMOTE_URL,
+    path: str = COOKIECUTTER_REMOTE_DEFAULT_EXPECT_PATH,
 ):
     _assert_applied_templates_config_is_correct(
         config_path,
@@ -422,7 +441,7 @@ def _assert_config_is_correct(
         name=name,
     )
     _assert_template_sources_config_is_correct(
-        config_path, version=version, name=name, url=url
+        config_path, version=version, name=name, url=url, path=path
     )
 
 
