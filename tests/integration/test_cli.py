@@ -107,6 +107,7 @@ def test_init_project_and_add_source_and_template_in_subdir(
     fxt = flexlates.flexlate
     template_source = template_source_one_remote_and_all_local_relative
     repo = repo_with_placeholder_committed
+
     with change_directory_to(GENERATED_REPO_DIR):
         fxt.init_project(default_add_mode=add_mode)
         fxt.add_template_source(template_source.path)

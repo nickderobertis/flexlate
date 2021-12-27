@@ -65,6 +65,14 @@ class TemplateSourceFixture:
             return None
         return self.path
 
+    def relative(self, to: Path) -> "TemplateSourceFixture":
+        new_fixture = deepcopy(self)
+        if not self.is_local_template:
+            # Nothing to do for remote templates as paths are urls
+            return new_fixture
+        new_fixture.path = os.path.relpath(self.path, to)
+        return new_fixture
+
 
 cookiecutter_remote_fixture: Final[TemplateSourceFixture] = TemplateSourceFixture(
     name=COOKIECUTTER_REMOTE_NAME,
@@ -117,11 +125,9 @@ remote_fixtures: Final[List[TemplateSourceFixture]] = [
 ]
 
 # Create relative path fixtures
-local_relative_path_fixtures: Final[List[TemplateSourceFixture]] = []
-for fixture in local_absolute_path_fixtures:
-    new_fixture = deepcopy(fixture)
-    new_fixture.path = os.path.relpath(fixture.path, GENERATED_REPO_DIR)
-    local_relative_path_fixtures.append(new_fixture)
+local_relative_path_fixtures: Final[List[TemplateSourceFixture]] = [
+    fixture.relative(GENERATED_REPO_DIR) for fixture in local_absolute_path_fixtures
+]
 
 
 all_standard_template_source_fixtures: Final[List[TemplateSourceFixture]] = [
@@ -144,12 +150,12 @@ def template_source(request) -> TemplateSourceFixture:
         yield template_source
 
 
-one_remote_one_local_relative_fixture = [
+one_remote_all_local_relative_fixtures = [
     cookiecutter_remote_fixture,
     *local_relative_path_fixtures,
 ]
 
 
-@pytest.fixture(scope="function", params=one_remote_one_local_relative_fixture)
+@pytest.fixture(scope="function", params=one_remote_all_local_relative_fixtures)
 def template_source_one_remote_and_all_local_relative(request) -> TemplateSourceFixture:
     yield request.param
