@@ -1,4 +1,5 @@
 import os
+from copy import deepcopy
 from pathlib import Path
 from typing import Optional
 
@@ -44,6 +45,16 @@ class Adder:
             out_root, Path(repo.working_dir), add_mode
         )
         project_root = Path(repo.working_dir)
+
+        if not template.path.is_absolute() and not (config_path.parent.resolve() == Path(os.getcwd())):
+            # Relative path, if the config output location is different than the
+            # current directory, need to adjust the path to be relative to
+            # the config output location
+
+            # Don't overwrite existing template
+            template = deepcopy(template)
+            # Make template path relative to its config file rather than current directory
+            template.path = Path(os.path.relpath(template.path.resolve(), config_path.parent.resolve()))
 
         if add_mode == AddMode.USER:
             # No need to use git if adding for user

@@ -2,7 +2,7 @@
   "template_sources": [
     {
       "name": "two",
-      "path": "tests/input_files/templates/cookiecutters/two",
+      "path": "../../input_files/templates/cookiecutters/two",
       "type": "cookiecutter",
       "version": null,
       "target_version": null,
