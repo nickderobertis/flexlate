@@ -111,7 +111,7 @@ class ConfigManager:
             )
         return applied_template_with_sources
 
-    def get_renderables(
+    def get_all_renderables(
         self, project_root: Path = Path("."), config: Optional[FlexlateConfig] = None
     ) -> List[Renderable]:
         config = config or self.load_config(project_root)
@@ -127,6 +127,17 @@ class ConfigManager:
             )
             renderables.append(renderable)
         return renderables
+
+    def get_renderables_for_updates(
+        self,
+        updates: Sequence[TemplateUpdate],
+        project_root: Path = Path("."),
+        adjust_root: bool = True,
+    ):
+        return [
+            update.to_renderable(project_root=project_root, adjust_root=adjust_root)
+            for update in updates
+        ]
 
     def get_data_for_updates(
         self,

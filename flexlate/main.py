@@ -157,7 +157,7 @@ class Flexlate:
             ]
         else:
             # User wants to update all templates
-            renderables = self.config_manager.get_renderables(
+            renderables = self.config_manager.get_all_renderables(
                 project_root=project_config.path
             )
             templates = [renderable.template for renderable in renderables]

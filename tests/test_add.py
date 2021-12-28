@@ -1,4 +1,5 @@
 import os
+from dataclasses import dataclass
 from unittest.mock import patch
 
 import appdirs
@@ -151,6 +152,96 @@ def test_add_applied_template_to_subdir(
 
     output_file_path = subdir / "b" / "text.txt"
     assert output_file_path.read_text() == "b"
+
+
+@patch.object(appdirs, "user_config_dir", lambda name: GENERATED_FILES_DIR)
+def test_add_multiple_applied_templates_for_one_source(
+    add_mode: AddMode,
+    repo_with_cookiecutter_one_template_source: Repo,
+    cookiecutter_one_template: CookiecutterTemplate,
+):
+    repo = repo_with_cookiecutter_one_template_source
+    template = cookiecutter_one_template
+    subdir = GENERATED_REPO_DIR / "subdir1" / "subdir2"
+    subdir.mkdir(parents=True)
+    adder = Adder()
+    with change_directory_to(GENERATED_REPO_DIR):
+        adder.apply_template_and_add(repo, template, add_mode=add_mode, no_input=True)
+    with change_directory_to(subdir):
+        adder.apply_template_and_add(repo, template, add_mode=add_mode, no_input=True)
+
+    @dataclass
+    class OutputOptions:
+        config_dir: Path
+        template_root: Path
+        render_root: Path
+        expect_num_applied_templates: int = 1
+        applied_template_index: int = 0
+
+    output_options: List[OutputOptions] = []
+    if add_mode == AddMode.LOCAL:
+        output_options.extend(
+            [
+                OutputOptions(GENERATED_REPO_DIR, Path("."), GENERATED_REPO_DIR),
+                OutputOptions(subdir, Path("."), subdir),
+            ]
+        )
+    elif add_mode == AddMode.PROJECT:
+        output_options.extend(
+            [
+                OutputOptions(
+                    GENERATED_REPO_DIR,
+                    Path("."),
+                    GENERATED_REPO_DIR,
+                    expect_num_applied_templates=2,
+                ),
+                OutputOptions(
+                    GENERATED_REPO_DIR,
+                    subdir.relative_to(GENERATED_REPO_DIR),
+                    subdir,
+                    expect_num_applied_templates=2,
+                    applied_template_index=1,
+                ),
+            ]
+        )
+    elif add_mode == AddMode.USER:
+        output_options.extend(
+            [
+                OutputOptions(
+                    GENERATED_FILES_DIR,
+                    GENERATED_REPO_DIR.absolute(),
+                    GENERATED_REPO_DIR,
+                    expect_num_applied_templates=2,
+                ),
+                OutputOptions(
+                    GENERATED_FILES_DIR,
+                    subdir.absolute(),
+                    subdir,
+                    expect_num_applied_templates=2,
+                    applied_template_index=1,
+                ),
+            ]
+        )
+    else:
+        raise ValueError(f"unsupported add mode {add_mode}")
+
+    for output_option in output_options:
+        config_dir = output_option.config_dir
+        template_root = output_option.template_root
+        render_root = output_option.render_root
+        expect_num_applied_templates = output_option.expect_num_applied_templates
+        applied_template_index = output_option.applied_template_index
+        config_path = config_dir / "flexlate.json"
+        config = FlexlateConfig.load(config_path)
+        assert len(config.applied_templates) == expect_num_applied_templates
+        at = config.applied_templates[applied_template_index]
+        assert at.name == template.name
+        assert at.version == template.version
+        assert at.data == {"a": "b", "c": ""}
+        assert at.root == template_root
+
+        output_file_path = render_root / "b" / "text.txt"
+        assert output_file_path.read_text() == "b"
 
 
 def test_add_source_to_project_with_existing_outputs(

@@ -194,32 +194,67 @@ def test_update_project(
     template_source = template_source_with_relative
 
     no_input = flexlates.type == FlexlateType.APP
+    subdir = GENERATED_REPO_DIR / "subdir1" / "subdir2"
+    subdir.mkdir(parents=True)
+
+    def assert_root_template_output_is_correct(after_update: bool = False):
+        version = (
+            template_source.version_2 if after_update else template_source.version_1
+        )
+        _assert_project_files_are_correct(
+            expect_data=template_source.input_data,
+            version=version,
+            template_source_type=template_source.type,
+        )
+        _assert_config_is_correct(
+            expect_data=template_source.input_data,
+            version=version,
+            template_source_type=template_source.type,
+            name=template_source.name,
+            url=template_source.url,
+            path=template_source.expect_path(version),
+        )
+
+    def assert_subdir_template_output_is_correct(after_update: bool = False):
+        version = (
+            template_source.version_2 if after_update else template_source.version_1
+        )
+        _assert_project_files_are_correct(
+            subdir,
+            expect_data=template_source.input_data,
+            version=version,
+            template_source_type=template_source.type,
+        )
+        _assert_applied_templates_config_is_correct(
+            subdir / "flexlate.json",
+            expect_applied_template_root=Path("."),
+            expect_data=template_source.input_data,
+            version=version,
+            template_source_type=template_source.type,
+            name=template_source.name,
+        )
+        _assert_template_sources_config_is_empty(subdir / "flexlate.json")
+
     with change_directory_to(GENERATED_REPO_DIR):
         fxt.init_project()
         fxt.add_template_source(
             template_source.path, target_version=template_source.version_1
         )
+        # Add an output in the main directory
         fxt.apply_template_and_add(
             template_source.name, data=template_source.input_data, no_input=no_input
         )
-        _assert_project_files_are_correct(
-            expect_data=template_source.input_data,
-            version=template_source.version_1,
-            template_source_type=template_source.type,
-        )
-        _assert_config_is_correct(
-            expect_data=template_source.input_data,
-            version=template_source.version_1,
-            template_source_type=template_source.type,
-            name=template_source.name,
-            url=template_source.url,
-            path=template_source.expect_path(template_source.version_1),
-        )
+        assert_root_template_output_is_correct()
 
-        subdir = GENERATED_REPO_DIR / "subdir1" / "subdir2"
-        subdir.mkdir(parents=True)
-        new_directory = subdir if update_from_subdir else GENERATED_REPO_DIR
-        with change_directory_to(new_directory):
+        # Add an output of the same template source in a subdirectory
+        with change_directory_to(subdir):
+            fxt.apply_template_and_add(
+                template_source.name, data=template_source.input_data, no_input=no_input
+            )
+            assert_subdir_template_output_is_correct()
+
+        update_directory = subdir if update_from_subdir else GENERATED_REPO_DIR
+        with change_directory_to(update_directory):
             # First update does nothing, because version is at target version
             # When using app, it will throw an error
             if flexlates.type == FlexlateType.APP:
@@ -230,19 +265,8 @@ def test_update_project(
                 # When using CLI, it will not throw an error, just display the message
                 fxt.update(no_input=True)
 
-            _assert_project_files_are_correct(
-                expect_data=template_source.input_data,
-                version=template_source.version_1,
-                template_source_type=template_source.type,
-            )
-            _assert_config_is_correct(
-                expect_data=template_source.input_data,
-                version=template_source.version_1,
-                template_source_type=template_source.type,
-                name=template_source.name,
-                url=template_source.url,
-                path=template_source.expect_path(template_source.version_1),
-            )
+            assert_root_template_output_is_correct()
+            assert_subdir_template_output_is_correct()
 
             # Now update the target version
             # TODO: replace with cli command to update target version once it exists
@@ -261,19 +285,8 @@ def test_update_project(
             # Now update should go to new version
             fxt.update(no_input=True)
 
-    _assert_project_files_are_correct(
-        expect_data=template_source.input_data,
-        template_source_type=template_source.type,
-        version=template_source.version_2,
-    )
-    _assert_config_is_correct(
-        expect_data=template_source.input_data,
-        version=template_source.version_2,
-        template_source_type=template_source.type,
-        name=template_source.name,
-        url=template_source.url,
-        path=template_source.expect_path(template_source.version_2),
-    )
+    assert_root_template_output_is_correct(after_update=True)
+    assert_subdir_template_output_is_correct(after_update=True)
 
     project_config_path = GENERATED_REPO_DIR / "flexlate-project.json"
     _assert_project_config_is_correct(project_config_path, user=False)
