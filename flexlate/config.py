@@ -63,12 +63,7 @@ class TemplateSource(BaseModel):
             kwargs.update(target_version=self.target_version)
         if self.git_url is not None:
             kwargs.update(git_url=self.git_url)
-        local_path: Path
-        if Path(self.path).is_absolute():
-            local_path = Path(self.path)
-        else:
-            # Convert to absolute path
-            local_path = (self._config_file_location.parent / Path(self.path)).resolve()
+        local_path = self.absolute_local_path
         template = finder.find(self.git_url or str(local_path), local_path, **kwargs)
         # Keep original template source path (may be relative), so that later when
         # updating templates, it can update the path without forcing it to be absolute
@@ -77,11 +72,19 @@ class TemplateSource(BaseModel):
 
     @property
     def update_location(self) -> Union[str, Path]:
-        return self.git_url or self.path
+        return self.git_url or self.absolute_local_path
 
     @property
     def is_local_template(self) -> bool:
         return self.git_url is None
+
+    @property
+    def absolute_local_path(self) -> Path:
+        if Path(self.path).is_absolute():
+            return Path(self.path)
+        else:
+            # Convert to absolute path
+            return (self._config_file_location.parent / Path(self.path)).resolve()
 
 
 class AppliedTemplateConfig(BaseModel):
@@ -97,6 +100,14 @@ class AppliedTemplateWithSource(BaseModel):
 
     def to_template_and_data(self) -> Tuple[Template, TemplateData]:
         return self.source.to_template(), self.applied_template.data
+
+
+class TemplateSourceWithTemplates(BaseModel):
+    source: TemplateSource
+    templates: List[Template]
+
+    class Config:
+        arbitrary_types_allowed = True
 
 
 class FlexlateConfig(BaseConfig):

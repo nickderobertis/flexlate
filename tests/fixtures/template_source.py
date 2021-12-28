@@ -82,6 +82,15 @@ class TemplateSourceFixture:
         new_fixture.path = os.path.relpath(self.path, to)
         return new_fixture
 
+    @property
+    def url_or_absolute_path(self) -> str:
+        if not self.is_local_template:
+            return self.path
+        if Path(self.path).is_absolute():
+            return self.path
+        # Must be local relative path. Paths are relative to GENERATED_REPO_DIR
+        return str((GENERATED_REPO_DIR / Path(self.path)).resolve())
+
 
 cookiecutter_remote_fixture: Final[TemplateSourceFixture] = TemplateSourceFixture(
     name=COOKIECUTTER_REMOTE_NAME,

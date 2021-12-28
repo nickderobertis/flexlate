@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from typing import Sequence, List, Optional, Tuple, Set
+from typing import Sequence, List, Optional, Tuple, Set, Dict
 
 from flexlate.add_mode import AddMode
 from flexlate.config import (
@@ -10,6 +10,7 @@ from flexlate.config import (
     AppliedTemplateWithSource,
     FlexlateProjectConfig,
     ProjectConfig,
+    TemplateSourceWithTemplates,
 )
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.exc import (
@@ -329,22 +330,25 @@ class ConfigManager:
             name, project_root=project_root, config=config
         ).to_template()
 
-    def get_sources_for_templates(
+    def get_sources_with_templates(
         self,
         templates: Sequence[Template],
         project_root: Path = Path("."),
         config: Optional[FlexlateConfig] = None,
-    ) -> List[TemplateSource]:
+    ) -> List[TemplateSourceWithTemplates]:
         config = config or self.load_config(project_root)
-        sources: List[TemplateSource] = []
-        seen_names: Set[str] = set()
+        sources_with_templates: Dict[str, TemplateSourceWithTemplates] = {}
+        seen_sources: Set[str] = set()
         for template in templates:
-            if template.name in seen_names:
-                continue
             source = self._get_template_source_by_name(template.name, config=config)
-            sources.append(source)
-            seen_names.add(template.name)
-        return sources
+            if source.name in seen_sources:
+                sources_with_templates[source.name].templates.append(template)
+            else:
+                sources_with_templates[source.name] = TemplateSourceWithTemplates(
+                    source=source, templates=[template]
+                )
+            seen_sources.add(source.name)
+        return list(sources_with_templates.values())
 
 
 def _get_child_config_by_path(config: FlexlateConfig, path: Path) -> FlexlateConfig:

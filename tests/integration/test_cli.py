@@ -256,7 +256,7 @@ def test_update_project(
             )
 
             # Make changes to update local templates to new version (no-op for remote templates)
-            template_source.version_migrate_func(template_source.path)
+            template_source.version_migrate_func(template_source.url_or_absolute_path)
 
             # Now update should go to new version
             fxt.update(no_input=True)
