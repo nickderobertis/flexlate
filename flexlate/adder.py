@@ -157,6 +157,7 @@ class Adder:
             merged_branch_name=merged_branch_name,
             template_branch_name=template_branch_name,
             no_input=no_input,
+            full_rerender=False,
             renderer=renderer,
             config_manager=config_manager,
         )

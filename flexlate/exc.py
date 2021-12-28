@@ -38,6 +38,10 @@ class CannotFindTemplateSourceException(FlexlateTemplateException):
     pass
 
 
+class CannotFindAppliedTemplateException(FlexlateTemplateException):
+    pass
+
+
 class CannotFindClonedTemplateException(FlexlateTemplateException):
     pass
 

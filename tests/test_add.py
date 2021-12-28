@@ -171,52 +171,76 @@ def test_add_multiple_applied_templates_for_one_source(
         adder.apply_template_and_add(repo, template, add_mode=add_mode, no_input=True)
 
     @dataclass
-    class ConfigDirWithTemplateRoot:
+    class OutputOptions:
         config_dir: Path
         template_root: Path
+        render_root: Path
+        expect_num_applied_templates: int = 1
+        applied_template_index: int = 0
 
-    config_dirs_with_template_root: List[ConfigDirWithTemplateRoot] = []
+    output_options: List[OutputOptions] = []
     if add_mode == AddMode.LOCAL:
-        config_dirs_with_template_root.extend(
+        output_options.extend(
             [
-                ConfigDirWithTemplateRoot(GENERATED_REPO_DIR, Path(".")),
-                ConfigDirWithTemplateRoot(subdir, Path(".")),
+                OutputOptions(GENERATED_REPO_DIR, Path("."), GENERATED_REPO_DIR),
+                OutputOptions(subdir, Path("."), subdir),
             ]
         )
     elif add_mode == AddMode.PROJECT:
-        config_dirs_with_template_root.extend(
+        output_options.extend(
             [
-                ConfigDirWithTemplateRoot(GENERATED_REPO_DIR, Path(".")),
-                ConfigDirWithTemplateRoot(
-                    GENERATED_REPO_DIR, subdir.relative_to(GENERATED_REPO_DIR)
+                OutputOptions(
+                    GENERATED_REPO_DIR,
+                    Path("."),
+                    GENERATED_REPO_DIR,
+                    expect_num_applied_templates=2,
+                ),
+                OutputOptions(
+                    GENERATED_REPO_DIR,
+                    subdir.relative_to(GENERATED_REPO_DIR),
+                    subdir,
+                    expect_num_applied_templates=2,
+                    applied_template_index=1,
                 ),
             ]
         )
     elif add_mode == AddMode.USER:
-        config_dirs_with_template_root.extend(
+        output_options.extend(
             [
-                ConfigDirWithTemplateRoot(
-                    GENERATED_FILES_DIR, GENERATED_REPO_DIR.absolute()
+                OutputOptions(
+                    GENERATED_FILES_DIR,
+                    GENERATED_REPO_DIR.absolute(),
+                    GENERATED_REPO_DIR,
+                    expect_num_applied_templates=2,
                 ),
-                ConfigDirWithTemplateRoot(GENERATED_FILES_DIR, subdir.absolute()),
+                OutputOptions(
+                    GENERATED_FILES_DIR,
+                    subdir.absolute(),
+                    subdir,
+                    expect_num_applied_templates=2,
+                    applied_template_index=1,
+                ),
             ]
         )
     else:
         raise ValueError(f"unsupported add mode {add_mode}")
 
-    for config_dir_with_template_root in config_dirs_with_template_root:
-        config_dir = config_dir_with_template_root.config_dir
-        template_root = config_dir_with_template_root.template_root
+    for output_option in output_options:
+        config_dir = output_option.config_dir
+        template_root = output_option.template_root
+        render_root = output_option.render_root
+        expect_num_applied_templates = output_option.expect_num_applied_templates
+        applied_template_index = output_option.applied_template_index
         config_path = config_dir / "flexlate.json"
         config = FlexlateConfig.load(config_path)
-        assert len(config.applied_templates) == 1
-        at = config.applied_templates[0]
+        assert len(config.applied_templates) == expect_num_applied_templates
+        at = config.applied_templates[applied_template_index]
         assert at.name == template.name
         assert at.version == template.version
         assert at.data == {"a": "b", "c": ""}
         assert at.root == template_root
 
-        output_file_path = subdir / "b" / "text.txt"
+        output_file_path = render_root / "b" / "text.txt"
         assert output_file_path.read_text() == "b"
 
 

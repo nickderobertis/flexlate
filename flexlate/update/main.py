@@ -36,6 +36,7 @@ class Updater:
         merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
         template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
         no_input: bool = False,
+        full_rerender: bool = True,
         renderer: MultiRenderer = MultiRenderer(),
         config_manager: ConfigManager = ConfigManager(),
     ):
@@ -50,7 +51,7 @@ class Updater:
         # Create it from the initial commit if it does not exist
         cwd = Path(os.getcwd())
         with temp_repo_that_pushes_to_branch(  # type: ignore
-            repo, branch_name=template_branch_name, delete_tracked_files=True
+            repo, branch_name=template_branch_name, delete_tracked_files=full_rerender
         ) as temp_repo:
             temp_out_path = Path(temp_repo.working_dir)  # type: ignore
             temp_updates = _move_update_config_locations_to_new_parent(
@@ -62,8 +63,15 @@ class Updater:
             config_manager.update_templates(
                 temp_updates, project_root=temp_out_path, use_template_source_path=False
             )
+            orig_renderables = (
+                config_manager.get_all_renderables(project_root=temp_out_path)
+                if full_rerender
+                else config_manager.get_renderables_for_updates(
+                    updates, project_root=out_path
+                )
+            )
             renderables = _move_renderable_out_roots_to_new_parent(
-                config_manager.get_renderables(project_root=temp_out_path),
+                orig_renderables,
                 out_path,
                 temp_out_path,
             )
@@ -74,7 +82,13 @@ class Updater:
             updated_data = renderer.render(
                 renderables, project_root=temp_out_path, no_input=no_input
             )
-            new_updates = updates_with_updated_data(temp_updates, updated_data)
+            new_updates = updates_with_updated_data(
+                temp_updates,
+                updated_data,
+                renderables,
+                project_root=out_path,
+                render_root=temp_out_path,
+            )
             # On second update, use template source path. This means that it will set the template
             # paths back to how they were originally (relative if needed), so that there will not be
             # unexpected changes from relative to absolute paths in the user configs
