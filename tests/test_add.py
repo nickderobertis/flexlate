@@ -1,4 +1,5 @@
 import os
+from dataclasses import dataclass
 from unittest.mock import patch
 
 import appdirs
@@ -151,6 +152,72 @@ def test_add_applied_template_to_subdir(
 
     output_file_path = subdir / "b" / "text.txt"
     assert output_file_path.read_text() == "b"
+
+
+@patch.object(appdirs, "user_config_dir", lambda name: GENERATED_FILES_DIR)
+def test_add_multiple_applied_templates_for_one_source(
+    add_mode: AddMode,
+    repo_with_cookiecutter_one_template_source: Repo,
+    cookiecutter_one_template: CookiecutterTemplate,
+):
+    repo = repo_with_cookiecutter_one_template_source
+    template = cookiecutter_one_template
+    subdir = GENERATED_REPO_DIR / "subdir1" / "subdir2"
+    subdir.mkdir(parents=True)
+    adder = Adder()
+    with change_directory_to(GENERATED_REPO_DIR):
+        adder.apply_template_and_add(repo, template, add_mode=add_mode, no_input=True)
+    with change_directory_to(subdir):
+        adder.apply_template_and_add(repo, template, add_mode=add_mode, no_input=True)
+
+    @dataclass
+    class ConfigDirWithTemplateRoot:
+        config_dir: Path
+        template_root: Path
+
+    config_dirs_with_template_root: List[ConfigDirWithTemplateRoot] = []
+    if add_mode == AddMode.LOCAL:
+        config_dirs_with_template_root.extend(
+            [
+                ConfigDirWithTemplateRoot(GENERATED_REPO_DIR, Path(".")),
+                ConfigDirWithTemplateRoot(subdir, Path(".")),
+            ]
+        )
+    elif add_mode == AddMode.PROJECT:
+        config_dirs_with_template_root.extend(
+            [
+                ConfigDirWithTemplateRoot(GENERATED_REPO_DIR, Path(".")),
+                ConfigDirWithTemplateRoot(
+                    GENERATED_REPO_DIR, subdir.relative_to(GENERATED_REPO_DIR)
+                ),
+            ]
+        )
+    elif add_mode == AddMode.USER:
+        config_dirs_with_template_root.extend(
+            [
+                ConfigDirWithTemplateRoot(
+                    GENERATED_FILES_DIR, GENERATED_REPO_DIR.absolute()
+                ),
+                ConfigDirWithTemplateRoot(GENERATED_FILES_DIR, subdir.absolute()),
+            ]
+        )
+    else:
+        raise ValueError(f"unsupported add mode {add_mode}")
+
+    for config_dir_with_template_root in config_dirs_with_template_root:
+        config_dir = config_dir_with_template_root.config_dir
+        template_root = config_dir_with_template_root.template_root
+        config_path = config_dir / "flexlate.json"
+        config = FlexlateConfig.load(config_path)
+        assert len(config.applied_templates) == 1
+        at = config.applied_templates[0]
+        assert at.name == template.name
+        assert at.version == template.version
+        assert at.data == {"a": "b", "c": ""}
+        assert at.root == template_root
+
+        output_file_path = subdir / "b" / "text.txt"
+        assert output_file_path.read_text() == "b"
 
 
 def test_add_source_to_project_with_existing_outputs(
