@@ -227,7 +227,7 @@ def test_update_project(
         )
         _assert_applied_templates_config_is_correct(
             subdir / "flexlate.json",
-            expect_applied_template_root=subdir,
+            expect_applied_template_root=Path("."),
             expect_data=template_source.input_data,
             version=version,
             template_source_type=template_source.type,
