@@ -7,7 +7,7 @@ from unittest.mock import patch
 import pytest
 from git import Repo, Head
 
-from flexlate.config import FlexlateConfig, TemplateSource
+from flexlate.config import FlexlateConfig, TemplateSource, TemplateSourceWithTemplates
 from flexlate.exc import GitRepoDirtyException
 from flexlate.finder.multi import MultiFinder
 from flexlate.template.base import Template
@@ -113,17 +113,23 @@ def test_update_passed_templates_to_newest_versions(
     )
 
     class MockConfigManager:
-        def get_sources_for_templates(
+        def get_sources_with_templates(
             self,
             templates: Sequence[Template],
             project_root: Path = Path("."),
             config: Optional[FlexlateConfig] = None,
-        ) -> List[TemplateSource]:
+        ) -> List[TemplateSourceWithTemplates]:
             return [
-                TemplateSource.from_template(
-                    remote_template, target_version=remote_target_version
+                TemplateSourceWithTemplates(
+                    source=TemplateSource.from_template(
+                        remote_template, target_version=remote_target_version
+                    ),
+                    templates=[remote_template],
                 ),
-                TemplateSource.from_template(local_template),
+                TemplateSourceWithTemplates(
+                    source=TemplateSource.from_template(local_template),
+                    templates=[local_template],
+                ),
             ]
 
     assert remote_template.version == COOKIECUTTER_REMOTE_VERSION_1
@@ -148,21 +154,26 @@ def test_update_passed_templates_to_newest_versions_but_already_at_targets(
     )
 
     class MockConfigManager:
-        def get_sources_for_templates(
+        def get_sources_with_templates(
             self,
             templates: Sequence[Template],
             project_root: Path = Path("."),
             config: Optional[FlexlateConfig] = None,
-        ) -> List[TemplateSource]:
+        ) -> List[TemplateSourceWithTemplates]:
             return [
-                TemplateSource.from_template(
-                    remote_template, target_version=COOKIECUTTER_REMOTE_VERSION_1
+                TemplateSourceWithTemplates(
+                    source=TemplateSource.from_template(
+                        remote_template, target_version=COOKIECUTTER_REMOTE_VERSION_1
+                    ),
+                    templates=[remote_template],
                 ),
-                TemplateSource.from_template(
+                TemplateSourceWithTemplates(
                     # It is actually useless to put target version in a local template
                     # TODO: throw an error when user tries to target version for a local template
-                    local_template,
-                    target_version=COOKIECUTTER_ONE_VERSION,
+                    source=TemplateSource.from_template(
+                        local_template, target_version=COOKIECUTTER_ONE_VERSION
+                    ),
+                    templates=[local_template],
                 ),
             ]
 
