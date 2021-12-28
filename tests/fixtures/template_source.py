@@ -1,3 +1,4 @@
+import contextlib
 import os.path
 import shutil
 import tempfile
@@ -5,7 +6,7 @@ from copy import deepcopy
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from typing import List, Final, Callable, Optional
+from typing import List, Final, Callable, Optional, ContextManager
 
 import pytest
 
@@ -144,17 +145,50 @@ all_standard_template_source_fixtures: Final[List[TemplateSourceFixture]] = [
 ]
 
 
-@pytest.fixture(scope="function", params=all_standard_template_source_fixtures)
-def template_source(request) -> TemplateSourceFixture:
-    template_source: TemplateSourceFixture = deepcopy(request.param)
+@contextlib.contextmanager
+def _template_source_with_temp_dir_if_local_template(
+    template_source: TemplateSourceFixture,
+) -> ContextManager[TemplateSourceFixture]:
+    template_source = deepcopy(template_source)
     if template_source.is_local_template:
+        path_is_relative = not Path(template_source.path).is_absolute()
         # Move into temporary directory so it can be updated locally
         with tempfile.TemporaryDirectory() as temp_dir:
             template_dir = Path(temp_dir) / template_source.name
-            shutil.copytree(template_source.path, template_dir)
+            source_path = template_source.path
+            if path_is_relative:
+                # Paths are set up to be relative to GENERATED_REPO_DIR
+                # Convert into absolute path so it can be copied appropriately
+                source_path = (GENERATED_REPO_DIR / source_path).resolve()
+            shutil.copytree(source_path, template_dir)
             template_source.path = str(template_dir)
+            if path_is_relative:
+                # Original path was relative, need to make this path relative
+                template_source = template_source.relative(GENERATED_REPO_DIR)
             yield template_source
     else:
+        yield template_source
+
+
+@pytest.fixture(scope="function", params=all_standard_template_source_fixtures)
+def template_source(request) -> TemplateSourceFixture:
+    with _template_source_with_temp_dir_if_local_template(
+        request.param
+    ) as template_source:
+        yield template_source
+
+
+all_template_source_fixtures = [
+    *all_standard_template_source_fixtures,
+    *local_relative_path_fixtures,
+]
+
+
+@pytest.fixture(scope="function", params=all_template_source_fixtures)
+def template_source_with_relative(request) -> TemplateSourceFixture:
+    with _template_source_with_temp_dir_if_local_template(
+        request.param
+    ) as template_source:
         yield template_source
 
 
