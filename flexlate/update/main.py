@@ -128,24 +128,24 @@ class Updater:
         finder: MultiFinder = MultiFinder(),
         config_manager: ConfigManager = ConfigManager(),
     ):
-        sources = config_manager.get_sources_for_templates(
+        sources_with_templates = config_manager.get_sources_with_templates(
             templates, project_root=project_root
         )
-        templates_by_name = {template.name: template for template in templates}
-        for source in sources:
+        for source_with_templates in sources_with_templates:
             # TODO: Separate finding from updating the local version of the repo
             #  If the code failed after the find line but before updating the config,
             #  then the config would not match what is on the disk
+            source = source_with_templates.source
             kwargs: Dict[str, Any] = {}
             if source.target_version:
                 kwargs.update(version=source.target_version)
-            new_template = finder.find(str(source.update_location), **kwargs)
-            template = templates_by_name[source.name]
-            if template.version != new_template.version:
-                # Template needs to be upgraded
-                # As finder already updates the local files, just update the template object
-                template.version = new_template.version
-                template.path = new_template.path
+            for template in source_with_templates.templates:
+                new_template = finder.find(str(source.update_location), **kwargs)
+                if template.version != new_template.version:
+                    # Template needs to be upgraded
+                    # As finder already updates the local files, just update the template object
+                    template.version = new_template.version
+                    template.path = new_template.path
 
 
 def _commit_message(renderables: Sequence[Renderable]) -> str:

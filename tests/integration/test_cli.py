@@ -17,7 +17,7 @@ from tests.config import (
     COOKIECUTTER_REMOTE_VERSION_2,
 )
 from tests.fixtures.git import *
-from tests.fixtures.subdir_style import SubdirStyle, subdir_style
+from tests.fixtures.subdir_style import SubdirStyle, subdir_style, subdir_style_or_none
 from tests.fixtures.template import (
     CookiecutterRemoteTemplateData,
     get_header_for_cookiecutter_remote_template,
@@ -31,6 +31,7 @@ from tests.fixtures.template_source import (
     TemplateSourceFixture,
     template_source,
     template_source_one_remote_and_all_local_relative,
+    template_source_with_relative,
     TemplateSourceType,
     COOKIECUTTER_REMOTE_DEFAULT_EXPECT_PATH,
 )
@@ -181,14 +182,18 @@ def test_init_project_and_add_source_and_template_in_subdir(
     )
 
 
+@pytest.mark.parametrize("update_from_subdir", [False, True])
 def test_update_project(
+    update_from_subdir: bool,
     flexlates: FlexlateFixture,
     repo_with_placeholder_committed: Repo,
-    template_source: TemplateSourceFixture,
+    template_source_with_relative: TemplateSourceFixture,
 ):
     fxt = flexlates.flexlate
-    no_input = flexlates.type == FlexlateType.APP
     repo = repo_with_placeholder_committed
+    template_source = template_source_with_relative
+
+    no_input = flexlates.type == FlexlateType.APP
     with change_directory_to(GENERATED_REPO_DIR):
         fxt.init_project()
         fxt.add_template_source(
@@ -211,46 +216,50 @@ def test_update_project(
             path=template_source.expect_path(template_source.version_1),
         )
 
-        # First update does nothing, because version is at target version
-        # When using app, it will throw an error
-        if flexlates.type == FlexlateType.APP:
-            with pytest.raises(GitCommandError) as excinfo:
+        subdir = GENERATED_REPO_DIR / "subdir1" / "subdir2"
+        subdir.mkdir(parents=True)
+        new_directory = subdir if update_from_subdir else GENERATED_REPO_DIR
+        with change_directory_to(new_directory):
+            # First update does nothing, because version is at target version
+            # When using app, it will throw an error
+            if flexlates.type == FlexlateType.APP:
+                with pytest.raises(GitCommandError) as excinfo:
+                    fxt.update(no_input=True)
+                assert "Your branch is up to date" in str(excinfo.value)
+            else:
+                # When using CLI, it will not throw an error, just display the message
                 fxt.update(no_input=True)
-            assert "Your branch is up to date" in str(excinfo.value)
-        else:
-            # When using CLI, it will not throw an error, just display the message
+
+            _assert_project_files_are_correct(
+                expect_data=template_source.input_data,
+                version=template_source.version_1,
+                template_source_type=template_source.type,
+            )
+            _assert_config_is_correct(
+                expect_data=template_source.input_data,
+                version=template_source.version_1,
+                template_source_type=template_source.type,
+                name=template_source.name,
+                url=template_source.url,
+                path=template_source.expect_path(template_source.version_1),
+            )
+
+            # Now update the target version
+            # TODO: replace with cli command to update target version once it exists
+            config_path = GENERATED_REPO_DIR / "flexlate.json"
+            config = FlexlateConfig.load(config_path)
+            source = config.template_sources[0]
+            source.target_version = template_source.version_2
+            config.save()
+            stage_and_commit_all(
+                repo, "Update target version for cookiecutter to version 2"
+            )
+
+            # Make changes to update local templates to new version (no-op for remote templates)
+            template_source.version_migrate_func(template_source.url_or_absolute_path)
+
+            # Now update should go to new version
             fxt.update(no_input=True)
-
-        _assert_project_files_are_correct(
-            expect_data=template_source.input_data,
-            version=template_source.version_1,
-            template_source_type=template_source.type,
-        )
-        _assert_config_is_correct(
-            expect_data=template_source.input_data,
-            version=template_source.version_1,
-            template_source_type=template_source.type,
-            name=template_source.name,
-            url=template_source.url,
-            path=template_source.expect_path(template_source.version_1),
-        )
-
-        # Now update the target version
-        # TODO: replace with cli command to update target version once it exists
-        config_path = GENERATED_REPO_DIR / "flexlate.json"
-        config = FlexlateConfig.load(config_path)
-        source = config.template_sources[0]
-        source.target_version = template_source.version_2
-        config.save()
-        stage_and_commit_all(
-            repo, "Update target version for cookiecutter to version 2"
-        )
-
-        # Make changes to update local templates to new version (no-op for remote templates)
-        template_source.version_migrate_func(template_source.path)
-
-        # Now update should go to new version
-        fxt.update(no_input=True)
 
     _assert_project_files_are_correct(
         expect_data=template_source.input_data,
