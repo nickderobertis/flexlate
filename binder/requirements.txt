@@ -1,6 +1,6 @@
+copier
+py-app-conf
 cookiecutter
 gitpython
 typer
 flexlate
-copier
-py-app-conf

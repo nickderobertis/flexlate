@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.update.main &mdash; flexlate 0.2.5 documentation</title>
+  <title>flexlate.update.main &mdash; flexlate 0.2.6 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.2.5
+                0.2.6
               </div>
             
           
@@ -205,6 +205,7 @@
         <span class="n">merged_branch_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_MERGED_BRANCH_NAME</span><span class="p">,</span>
         <span class="n">template_branch_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_TEMPLATE_BRANCH_NAME</span><span class="p">,</span>
         <span class="n">no_input</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">full_rerender</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">renderer</span><span class="p">:</span> <span class="n">MultiRenderer</span> <span class="o">=</span> <span class="n">MultiRenderer</span><span class="p">(),</span>
         <span class="n">config_manager</span><span class="p">:</span> <span class="n">ConfigManager</span> <span class="o">=</span> <span class="n">ConfigManager</span><span class="p">(),</span>
     <span class="p">):</span>
@@ -219,7 +220,7 @@
         <span class="c1"># Create it from the initial commit if it does not exist</span>
         <span class="n">cwd</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span>
         <span class="k">with</span> <span class="n">temp_repo_that_pushes_to_branch</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
-            <span class="n">repo</span><span class="p">,</span> <span class="n">branch_name</span><span class="o">=</span><span class="n">template_branch_name</span><span class="p">,</span> <span class="n">delete_tracked_files</span><span class="o">=</span><span class="kc">True</span>
+            <span class="n">repo</span><span class="p">,</span> <span class="n">branch_name</span><span class="o">=</span><span class="n">template_branch_name</span><span class="p">,</span> <span class="n">delete_tracked_files</span><span class="o">=</span><span class="n">full_rerender</span>
         <span class="p">)</span> <span class="k">as</span> <span class="n">temp_repo</span><span class="p">:</span>
             <span class="n">temp_out_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">temp_repo</span><span class="o">.</span><span class="n">working_dir</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
             <span class="n">temp_updates</span> <span class="o">=</span> <span class="n">_move_update_config_locations_to_new_parent</span><span class="p">(</span>
@@ -231,8 +232,15 @@
             <span class="n">config_manager</span><span class="o">.</span><span class="n">update_templates</span><span class="p">(</span>
                 <span class="n">temp_updates</span><span class="p">,</span> <span class="n">project_root</span><span class="o">=</span><span class="n">temp_out_path</span><span class="p">,</span> <span class="n">use_template_source_path</span><span class="o">=</span><span class="kc">False</span>
             <span class="p">)</span>
+            <span class="n">orig_renderables</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">config_manager</span><span class="o">.</span><span class="n">get_all_renderables</span><span class="p">(</span><span class="n">project_root</span><span class="o">=</span><span class="n">temp_out_path</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">full_rerender</span>
+                <span class="k">else</span> <span class="n">config_manager</span><span class="o">.</span><span class="n">get_renderables_for_updates</span><span class="p">(</span>
+                    <span class="n">updates</span><span class="p">,</span> <span class="n">project_root</span><span class="o">=</span><span class="n">out_path</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
             <span class="n">renderables</span> <span class="o">=</span> <span class="n">_move_renderable_out_roots_to_new_parent</span><span class="p">(</span>
-                <span class="n">config_manager</span><span class="o">.</span><span class="n">get_renderables</span><span class="p">(</span><span class="n">project_root</span><span class="o">=</span><span class="n">temp_out_path</span><span class="p">),</span>
+                <span class="n">orig_renderables</span><span class="p">,</span>
                 <span class="n">out_path</span><span class="p">,</span>
                 <span class="n">temp_out_path</span><span class="p">,</span>
             <span class="p">)</span>
@@ -243,7 +251,13 @@
             <span class="n">updated_data</span> <span class="o">=</span> <span class="n">renderer</span><span class="o">.</span><span class="n">render</span><span class="p">(</span>
                 <span class="n">renderables</span><span class="p">,</span> <span class="n">project_root</span><span class="o">=</span><span class="n">temp_out_path</span><span class="p">,</span> <span class="n">no_input</span><span class="o">=</span><span class="n">no_input</span>
             <span class="p">)</span>
-            <span class="n">new_updates</span> <span class="o">=</span> <span class="n">updates_with_updated_data</span><span class="p">(</span><span class="n">temp_updates</span><span class="p">,</span> <span class="n">updated_data</span><span class="p">)</span>
+            <span class="n">new_updates</span> <span class="o">=</span> <span class="n">updates_with_updated_data</span><span class="p">(</span>
+                <span class="n">temp_updates</span><span class="p">,</span>
+                <span class="n">updated_data</span><span class="p">,</span>
+                <span class="n">renderables</span><span class="p">,</span>
+                <span class="n">project_root</span><span class="o">=</span><span class="n">out_path</span><span class="p">,</span>
+                <span class="n">render_root</span><span class="o">=</span><span class="n">temp_out_path</span><span class="p">,</span>
+            <span class="p">)</span>
             <span class="c1"># On second update, use template source path. This means that it will set the template</span>
             <span class="c1"># paths back to how they were originally (relative if needed), so that there will not be</span>
             <span class="c1"># unexpected changes from relative to absolute paths in the user configs</span>
@@ -297,24 +311,24 @@
         <span class="n">finder</span><span class="p">:</span> <span class="n">MultiFinder</span> <span class="o">=</span> <span class="n">MultiFinder</span><span class="p">(),</span>
         <span class="n">config_manager</span><span class="p">:</span> <span class="n">ConfigManager</span> <span class="o">=</span> <span class="n">ConfigManager</span><span class="p">(),</span>
     <span class="p">):</span>
-        <span class="n">sources</span> <span class="o">=</span> <span class="n">config_manager</span><span class="o">.</span><span class="n">get_sources_for_templates</span><span class="p">(</span>
+        <span class="n">sources_with_templates</span> <span class="o">=</span> <span class="n">config_manager</span><span class="o">.</span><span class="n">get_sources_with_templates</span><span class="p">(</span>
             <span class="n">templates</span><span class="p">,</span> <span class="n">project_root</span><span class="o">=</span><span class="n">project_root</span>
         <span class="p">)</span>
-        <span class="n">templates_by_name</span> <span class="o">=</span> <span class="p">{</span><span class="n">template</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">template</span> <span class="k">for</span> <span class="n">template</span> <span class="ow">in</span> <span class="n">templates</span><span class="p">}</span>
-        <span class="k">for</span> <span class="n">source</span> <span class="ow">in</span> <span class="n">sources</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">source_with_templates</span> <span class="ow">in</span> <span class="n">sources_with_templates</span><span class="p">:</span>
             <span class="c1"># TODO: Separate finding from updating the local version of the repo</span>
             <span class="c1">#  If the code failed after the find line but before updating the config,</span>
             <span class="c1">#  then the config would not match what is on the disk</span>
+            <span class="n">source</span> <span class="o">=</span> <span class="n">source_with_templates</span><span class="o">.</span><span class="n">source</span>
             <span class="n">kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="k">if</span> <span class="n">source</span><span class="o">.</span><span class="n">target_version</span><span class="p">:</span>
                 <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="n">source</span><span class="o">.</span><span class="n">target_version</span><span class="p">)</span>
-            <span class="n">new_template</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">source</span><span class="o">.</span><span class="n">update_location</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-            <span class="n">template</span> <span class="o">=</span> <span class="n">templates_by_name</span><span class="p">[</span><span class="n">source</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
-            <span class="k">if</span> <span class="n">template</span><span class="o">.</span><span class="n">version</span> <span class="o">!=</span> <span class="n">new_template</span><span class="o">.</span><span class="n">version</span><span class="p">:</span>
-                <span class="c1"># Template needs to be upgraded</span>
-                <span class="c1"># As finder already updates the local files, just update the template object</span>
-                <span class="n">template</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">new_template</span><span class="o">.</span><span class="n">version</span>
-                <span class="n">template</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">new_template</span><span class="o">.</span><span class="n">path</span></div></div>
+            <span class="k">for</span> <span class="n">template</span> <span class="ow">in</span> <span class="n">source_with_templates</span><span class="o">.</span><span class="n">templates</span><span class="p">:</span>
+                <span class="n">new_template</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">source</span><span class="o">.</span><span class="n">update_location</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">template</span><span class="o">.</span><span class="n">version</span> <span class="o">!=</span> <span class="n">new_template</span><span class="o">.</span><span class="n">version</span><span class="p">:</span>
+                    <span class="c1"># Template needs to be upgraded</span>
+                    <span class="c1"># As finder already updates the local files, just update the template object</span>
+                    <span class="n">template</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">new_template</span><span class="o">.</span><span class="n">version</span>
+                    <span class="n">template</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">new_template</span><span class="o">.</span><span class="n">path</span></div></div>
 
 
 <span class="k">def</span> <span class="nf">_commit_message</span><span class="p">(</span><span class="n">renderables</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Renderable</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>

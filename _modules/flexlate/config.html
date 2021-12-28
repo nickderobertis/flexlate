@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.config &mdash; flexlate 0.2.5 documentation</title>
+  <title>flexlate.config &mdash; flexlate 0.2.6 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.2.5
+                0.2.6
               </div>
             
           
@@ -232,12 +232,7 @@
             <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">target_version</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">target_version</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">git_url</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">git_url</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">git_url</span><span class="p">)</span>
-        <span class="n">local_path</span><span class="p">:</span> <span class="n">Path</span>
-        <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">is_absolute</span><span class="p">():</span>
-            <span class="n">local_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># Convert to absolute path</span>
-            <span class="n">local_path</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_config_file_location</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">))</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+        <span class="n">local_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">absolute_local_path</span>
         <span class="n">template</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">git_url</span> <span class="ow">or</span> <span class="nb">str</span><span class="p">(</span><span class="n">local_path</span><span class="p">),</span> <span class="n">local_path</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="c1"># Keep original template source path (may be relative), so that later when</span>
         <span class="c1"># updating templates, it can update the path without forcing it to be absolute</span>
@@ -246,11 +241,19 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">update_location</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">git_url</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">git_url</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">absolute_local_path</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_local_template</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">git_url</span> <span class="ow">is</span> <span class="kc">None</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">git_url</span> <span class="ow">is</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">absolute_local_path</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">is_absolute</span><span class="p">():</span>
+            <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Convert to absolute path</span>
+            <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_config_file_location</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">))</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="AppliedTemplateConfig"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config.AppliedTemplateConfig">[docs]</a><span class="k">class</span> <span class="nc">AppliedTemplateConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
@@ -266,6 +269,14 @@
 
 <div class="viewcode-block" id="AppliedTemplateWithSource.to_template_and_data"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config.AppliedTemplateWithSource.to_template_and_data">[docs]</a>    <span class="k">def</span> <span class="nf">to_template_and_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Template</span><span class="p">,</span> <span class="n">TemplateData</span><span class="p">]:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">to_template</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">applied_template</span><span class="o">.</span><span class="n">data</span></div></div>
+
+
+<div class="viewcode-block" id="TemplateSourceWithTemplates"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config.TemplateSourceWithTemplates">[docs]</a><span class="k">class</span> <span class="nc">TemplateSourceWithTemplates</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">source</span><span class="p">:</span> <span class="n">TemplateSource</span>
+    <span class="n">templates</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Template</span><span class="p">]</span>
+
+<div class="viewcode-block" id="TemplateSourceWithTemplates.Config"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config.TemplateSourceWithTemplates.Config">[docs]</a>    <span class="k">class</span> <span class="nc">Config</span><span class="p">:</span>
+        <span class="n">arbitrary_types_allowed</span> <span class="o">=</span> <span class="kc">True</span></div></div>
 
 
 <div class="viewcode-block" id="FlexlateConfig"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config.FlexlateConfig">[docs]</a><span class="k">class</span> <span class="nc">FlexlateConfig</span><span class="p">(</span><span class="n">BaseConfig</span><span class="p">):</span>
