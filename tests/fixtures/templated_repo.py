@@ -3,6 +3,7 @@ import pytest
 from flexlate.adder import Adder
 from flexlate.remover import Remover
 from flexlate.transactions.transaction import FlexlateTransaction
+from flexlate.update.main import Updater
 from tests.config import COOKIECUTTER_ONE_NAME
 from tests.fileutils import preprend_cookiecutter_one_generated_text
 
@@ -13,6 +14,7 @@ from tests.fixtures.transaction import (
     add_output_transaction,
     remove_source_transaction,
     remove_output_transaction,
+    update_transaction,
 )
 
 
@@ -116,6 +118,21 @@ def repo_from_cookiecutter_one_with_modifications(
     with change_directory_to(GENERATED_REPO_DIR):
         preprend_cookiecutter_one_generated_text("hello\n")
         stage_and_commit_all(repo, "Prepend cookiecutter text with hello")
+    yield repo
+
+
+@pytest.fixture
+def repo_after_updating_cookiecutter_one(
+    cookiecutter_one_modified_template: CookiecutterTemplate,
+    repo_with_gitignore_and_template_branch_from_cookiecutter_one: Repo,
+    update_transaction: FlexlateTransaction,
+):
+    repo = repo_with_gitignore_and_template_branch_from_cookiecutter_one
+    updater = Updater()
+    template_updates = updater.get_updates_for_templates(
+        [cookiecutter_one_modified_template], project_root=GENERATED_REPO_DIR
+    )
+    updater.update(repo, template_updates, update_transaction, no_input=True)
     yield repo
 
 

@@ -14,7 +14,7 @@ REPO_WITH_COOKIECUTTER_ONE_SOURCE_COMMIT_MESSAGE = 'Added template source one to
 REPO_WITH_TEMPLATE_BRANCH_FROM_COOKIECUTTER_ONE_COMMIT_MESSAGE = 'Update flexlate templates\n\none: 1c154af24ff30bc4cab8cf9d543304d9\n\n-------------------BEGIN FLEXLATE TRANSACTION-------------------\n{\n  "type": "add output",\n  "target": null,\n  "out_root": null,\n  "data": null,\n  "id": "86465f4d-9752-4ae5-aaa7-791b4c814e8d"\n}\n'
 REPO_WITH_SOURCE_REMOVED_COMMIT_MESSAGE = 'Removed template source one from .\n\n-------------------BEGIN FLEXLATE TRANSACTION-------------------\n{\n  "type": "remove source",\n  "target": null,\n  "out_root": null,\n  "data": null,\n  "id": "c034ec63-d2b5-4d8c-aef1-f96e29a6f5d1"\n}\n'
 REPO_WITH_APPLIED_OUTPUT_REMOVED_COMMIT_MESSAGE = 'Update flexlate templates\n\n-------------------BEGIN FLEXLATE TRANSACTION-------------------\n{\n  "type": "remove output",\n  "target": null,\n  "out_root": null,\n  "data": null,\n  "id": "79715a11-a3c4-40b1-a49b-9d8388e5c28d"\n}\n'
-
+REPO_WITH_COOKIECUTTER_ONE_UPDATED_COMMIT_MESSAGE = "Merge branch 'flexlate-templates' into flexlate-output\n"
 
 def test_undo_add_template_source(repo_with_cookiecutter_one_template_source: Repo):
     repo = repo_with_cookiecutter_one_template_source
@@ -103,6 +103,24 @@ def test_undo_remove_applied_template(
         )
 
     assert output_path.read_text() == "b"
+
+
+def test_undo_update(
+    repo_after_updating_cookiecutter_one: Repo,
+):
+    repo = repo_after_updating_cookiecutter_one
+    undoer = Undoer()
+    config_path = GENERATED_REPO_DIR / "flexlate.json"
+    output_path = GENERATED_REPO_DIR / "b" / "text.txt"
+    with change_directory_to(GENERATED_REPO_DIR):
+        assert output_path.read_text() == "b and extra"
+        assert (
+            repo.commit().message
+            == REPO_WITH_COOKIECUTTER_ONE_UPDATED_COMMIT_MESSAGE
+        )
+        undoer.undo_transactions(repo)
+        assert output_path.read_text() == "b"
+        assert repo.commit().message == REPO_WITH_TEMPLATE_BRANCH_FROM_COOKIECUTTER_ONE_COMMIT_MESSAGE
 
 
 def test_undo_too_many_transactions(repo_with_cookiecutter_one_template_source: Repo):
