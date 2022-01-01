@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Optional, List
+from typing import Optional, List, Sequence
 
 from git import Repo
 
@@ -142,6 +142,7 @@ class Flexlate:
     def update(
         self,
         names: Optional[List[str]] = None,
+        data: Optional[Sequence[TemplateData]] = None,
         no_input: bool = False,
         project_path: Path = Path("."),
     ):
@@ -169,6 +170,7 @@ class Flexlate:
         )
         updates = self.updater.get_updates_for_templates(
             templates,
+            data=data,
             config_manager=self.config_manager,
             project_root=project_config.path,
         )

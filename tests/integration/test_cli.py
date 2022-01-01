@@ -197,17 +197,26 @@ def test_update_project(
     subdir = GENERATED_REPO_DIR / "subdir1" / "subdir2"
     subdir.mkdir(parents=True)
 
-    def assert_root_template_output_is_correct(after_update: bool = False):
+    def assert_root_template_output_is_correct(
+        after_version_update: bool = False, after_data_update: bool = False
+    ):
         version = (
-            template_source.version_2 if after_update else template_source.version_1
+            template_source.version_2
+            if after_version_update
+            else template_source.version_1
+        )
+        input_data = (
+            template_source.update_input_data
+            if after_data_update
+            else template_source.input_data
         )
         _assert_project_files_are_correct(
-            expect_data=template_source.input_data,
+            expect_data=input_data,
             version=version,
             template_source_type=template_source.type,
         )
         _assert_config_is_correct(
-            expect_data=template_source.input_data,
+            expect_data=input_data,
             version=version,
             template_source_type=template_source.type,
             name=template_source.name,
@@ -215,20 +224,29 @@ def test_update_project(
             path=template_source.expect_path(version),
         )
 
-    def assert_subdir_template_output_is_correct(after_update: bool = False):
+    def assert_subdir_template_output_is_correct(
+        after_version_update: bool = False, after_data_update: bool = False
+    ):
         version = (
-            template_source.version_2 if after_update else template_source.version_1
+            template_source.version_2
+            if after_version_update
+            else template_source.version_1
+        )
+        input_data = (
+            template_source.update_input_data
+            if after_data_update
+            else template_source.input_data
         )
         _assert_project_files_are_correct(
             subdir,
-            expect_data=template_source.input_data,
+            expect_data=input_data,
             version=version,
             template_source_type=template_source.type,
         )
         _assert_applied_templates_config_is_correct(
             subdir / "flexlate.json",
             expect_applied_template_root=Path("."),
-            expect_data=template_source.input_data,
+            expect_data=input_data,
             version=version,
             template_source_type=template_source.type,
             name=template_source.name,
@@ -268,6 +286,12 @@ def test_update_project(
             assert_root_template_output_is_correct()
             assert_subdir_template_output_is_correct()
 
+            # Now update by just passing new data, should change the output
+            # even though the version has not changed
+            fxt.update(data=[template_source.update_input_data] * 2, no_input=no_input)
+            assert_root_template_output_is_correct(after_data_update=True)
+            assert_subdir_template_output_is_correct(after_data_update=True)
+
             # Now update the target version
             # TODO: replace with cli command to update target version once it exists
             config_path = GENERATED_REPO_DIR / "flexlate.json"
@@ -285,8 +309,12 @@ def test_update_project(
             # Now update should go to new version
             fxt.update(no_input=True)
 
-    assert_root_template_output_is_correct(after_update=True)
-    assert_subdir_template_output_is_correct(after_update=True)
+    assert_root_template_output_is_correct(
+        after_version_update=True, after_data_update=True
+    )
+    assert_subdir_template_output_is_correct(
+        after_version_update=True, after_data_update=True
+    )
 
     project_config_path = GENERATED_REPO_DIR / "flexlate-project.json"
     _assert_project_config_is_correct(project_config_path, user=False)

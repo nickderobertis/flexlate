@@ -14,15 +14,26 @@ runner = CliRunner()
 
 
 def fxt(
-    args: Union[str, Sequence[str]], input_data: Optional[TemplateData] = None
+    args: Union[str, Sequence[str]],
+    input_data: Optional[Union[TemplateData, List[TemplateData]]] = None,
 ) -> Result:
-    text_input = (
-        "\n".join(str(value) for value in input_data.values())
-        if input_data is not None
-        else None
-    )
+    text_input = _get_text_input(input_data)
     print(f"Running {args} with input {text_input}")
     return runner.invoke(cli, args, input=text_input)
+
+
+def _get_text_input(
+    input_data: Optional[Union[TemplateData, List[TemplateData]]]
+) -> Optional[str]:
+    if input_data is None:
+        return None
+    if isinstance(input_data, list):
+        return "\n".join(_template_data_to_text_input(data) for data in input_data)
+    return _template_data_to_text_input(input_data)
+
+
+def _template_data_to_text_input(input_data: TemplateData) -> str:
+    return "\n".join(str(value) for value in input_data.values())
 
 
 class CLIStubFlexlate(Flexlate):
@@ -111,6 +122,7 @@ class CLIStubFlexlate(Flexlate):
     def update(
         self,
         names: Optional[List[str]] = None,
+        data: Optional[Sequence[TemplateData]] = None,
         no_input: bool = False,
         project_path: Path = Path("."),
     ):
@@ -121,7 +133,8 @@ class CLIStubFlexlate(Flexlate):
                 "--path",
                 str(project_path),
                 *_bool_flag(no_input, "no-input"),
-            ]
+            ],
+            input_data=data,
         )
 
 
