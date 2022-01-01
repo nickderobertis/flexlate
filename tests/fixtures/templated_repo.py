@@ -1,10 +1,19 @@
+import pytest
+
 from flexlate.adder import Adder
+from flexlate.remover import Remover
 from flexlate.transactions.transaction import FlexlateTransaction
+from tests.config import COOKIECUTTER_ONE_NAME
 from tests.fileutils import preprend_cookiecutter_one_generated_text
 
 from tests.fixtures.git import *
 from tests.fixtures.template import *
-from tests.fixtures.transaction import add_source_transaction, add_output_transaction
+from tests.fixtures.transaction import (
+    add_source_transaction,
+    add_output_transaction,
+    remove_source_transaction,
+    remove_output_transaction,
+)
 
 
 @pytest.fixture
@@ -121,5 +130,33 @@ def repo_with_cookiecutter_one_template_source_and_output(
     with change_directory_to(GENERATED_REPO_DIR):
         adder.apply_template_and_add(
             repo, cookiecutter_one_template, add_output_transaction, no_input=True
+        )
+    yield repo
+
+
+@pytest.fixture
+def repo_with_template_source_removed(
+    repo_with_cookiecutter_one_template_source: Repo,
+    remove_source_transaction: FlexlateTransaction,
+):
+    repo = repo_with_cookiecutter_one_template_source
+    remover = Remover()
+    with change_directory_to(GENERATED_REPO_DIR):
+        remover.remove_template_source(
+            repo, COOKIECUTTER_ONE_NAME, remove_source_transaction
+        )
+    yield repo
+
+
+@pytest.fixture
+def repo_with_applied_output_removed(
+    repo_with_template_branch_from_cookiecutter_one: Repo,
+    remove_output_transaction: FlexlateTransaction,
+):
+    repo = repo_with_template_branch_from_cookiecutter_one
+    remover = Remover()
+    with change_directory_to(GENERATED_REPO_DIR):
+        remover.remove_applied_template_and_output(
+            repo, COOKIECUTTER_ONE_NAME, remove_output_transaction
         )
     yield repo
