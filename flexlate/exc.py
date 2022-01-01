@@ -92,3 +92,11 @@ class FlexlateTransactionException(FlexlateException):
 
 class CannotParseCommitMessageFlexlateTransaction(FlexlateTransactionException):
     pass
+
+
+class LastCommitWasNotByFlexlateException(FlexlateTransactionException):
+    pass
+
+
+class TransactionMismatchBetweenBranchesException(FlexlateTransactionException):
+    pass

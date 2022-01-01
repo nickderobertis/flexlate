@@ -101,7 +101,10 @@ def fast_forward_branch_without_checkout(repo: Repo, base_branch: str, ff_branch
 
 @contextmanager  # type: ignore
 def temp_repo_that_pushes_to_branch(  # type: ignore
-    repo: Repo, branch_name: str, delete_tracked_files: bool = False
+    repo: Repo,
+    branch_name: str,
+    delete_tracked_files: bool = False,
+    force_push: bool = False,
 ) -> ContextManager[Repo]:
     with tempfile.TemporaryDirectory() as tmp_dir:
         tmp_path = Path(tmp_dir)
@@ -115,7 +118,9 @@ def temp_repo_that_pushes_to_branch(  # type: ignore
             Path(repo.working_dir), Path(temp_repo.working_dir), Path(repo.working_dir)
         )
         yield temp_repo
-        _push_branch_from_one_local_repo_to_another(temp_repo, repo, branch_name)
+        _push_branch_from_one_local_repo_to_another(
+            temp_repo, repo, branch_name, force=force_push
+        )
 
 
 def _clone_single_branch_from_local_repo(
@@ -141,9 +146,14 @@ def _clone_single_branch_from_local_repo(
 
 
 def _push_branch_from_one_local_repo_to_another(
-    from_repo: Repo, to_repo: Repo, branch_name: str
+    from_repo: Repo, to_repo: Repo, branch_name: str, force: bool = False
 ):
-    from_repo.git.push(to_repo.working_dir, branch_name)
+    args: Tuple[str, ...]
+    if force:
+        args = ("--force", to_repo.working_dir, branch_name)
+    else:
+        args = (to_repo.working_dir, branch_name)
+    from_repo.git.push(*args)
 
 
 def _branch_exists(repo: Repo, branch_name: str) -> bool:
@@ -216,3 +226,8 @@ def clone_repo_at_version_get_repo_and_name(
 
 def checkout_version(repo: Repo, version: str):
     repo.git.checkout(version)
+
+
+def reset_current_branch_to_commit(repo: Repo, commit: Commit):
+    commit_sha = commit.hexsha
+    repo.git.reset("--hard", commit_sha)

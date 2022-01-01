@@ -216,7 +216,13 @@ class Flexlate:
 
     def undo(self, num_operations: int = 1, project_path: Path = Path(".")):
         repo = Repo(project_path)
-        self.undoer.undo_transactions(repo, num_transactions=num_operations)
+        project_config = self.config_manager.load_project_config(project_path)
+        self.undoer.undo_transactions(
+            repo,
+            num_transactions=num_operations,
+            merged_branch_name=project_config.merged_branch_name,
+            template_branch_name=project_config.template_branch_name,
+        )
 
     # TODO: list template sources, list applied templates
     # TODO: Update target versions in template sources

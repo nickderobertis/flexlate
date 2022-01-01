@@ -13,6 +13,10 @@ from flexlate.ext_git import (
     merge_branch_into_current,
 )
 from flexlate.path_ops import make_func_that_creates_cwd_and_out_root_before_running
+from flexlate.transactions.transaction import (
+    FlexlateTransaction,
+    reset_last_transaction,
+)
 
 
 def modify_files_via_branches_and_temp_repo(
@@ -50,3 +54,22 @@ def modify_files_via_branches_and_temp_repo(
     # Folder may have been deleted again while switching branches, so
     # need to set cwd again
     os.chdir(cwd)
+
+
+def undo_transaction_in_flexlate_branches(
+    repo: Repo,
+    transaction: FlexlateTransaction,
+    merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
+    template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
+):
+    # Reset the template only branch to the appropriate commit
+    with temp_repo_that_pushes_to_branch(  # type: ignore
+        repo, branch_name=template_branch_name, force_push=True
+    ) as temp_repo:
+        reset_last_transaction(temp_repo, transaction)
+
+    # Reset the merged template branch to the appropriate commit
+    with temp_repo_that_pushes_to_branch(  # type: ignore
+        repo, branch_name=merged_branch_name, force_push=True
+    ) as temp_repo:
+        reset_last_transaction(temp_repo, transaction)

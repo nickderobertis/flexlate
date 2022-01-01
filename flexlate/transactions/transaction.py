@@ -3,9 +3,15 @@ from enum import Enum
 from pathlib import Path
 from typing import Optional
 
+from git import Repo, Commit
 from pydantic import BaseModel, Field, UUID4
 
-from flexlate.exc import CannotParseCommitMessageFlexlateTransaction
+from flexlate.exc import (
+    CannotParseCommitMessageFlexlateTransaction,
+    LastCommitWasNotByFlexlateException,
+    TransactionMismatchBetweenBranchesException,
+)
+from flexlate.ext_git import reset_current_branch_to_commit
 from flexlate.template_data import TemplateData
 
 FLEXLATE_TRANSACTION_COMMIT_DIVIDER = (
@@ -52,3 +58,78 @@ def create_transaction_commit_message(
         + FLEXLATE_TRANSACTION_COMMIT_DIVIDER
         + transaction.commit_message
     )
+
+
+def reset_last_transaction(repo: Repo, transaction: FlexlateTransaction):
+    last_transaction = FlexlateTransaction.parse_commit_message(repo.commit().message)
+    if last_transaction.id != transaction.id:
+        raise TransactionMismatchBetweenBranchesException(
+            f"Found mismatching transaction ids: {last_transaction.id} and {transaction.id}"
+        )
+    earliest_commit = find_earliest_commit_that_was_part_of_transaction(
+        repo, last_transaction
+    )
+    before_transaction_commit = _get_parent_commit(earliest_commit)
+    reset_current_branch_to_commit(repo, before_transaction_commit)
+
+
+def assert_last_commit_was_in_a_flexlate_transaction(repo: Repo):
+    last_commit_message = repo.commit().message
+    try:
+        FlexlateTransaction.parse_commit_message(last_commit_message)
+    except CannotParseCommitMessageFlexlateTransaction as e:
+        raise LastCommitWasNotByFlexlateException(
+            f"Last commit was not made by flexlate: {last_commit_message}"
+        ) from e
+
+
+def find_earliest_commit_that_was_part_of_transaction(
+    repo: Repo, transaction: FlexlateTransaction
+) -> Commit:
+    return _return_commit_if_begin_of_transaction_else_get_parent(
+        repo.commit(), transaction
+    )
+
+
+def _return_commit_if_begin_of_transaction_else_get_parent(
+    commit: Commit, transaction: FlexlateTransaction
+) -> Commit:
+    try:
+        parent_commit = _get_parent_commit(commit)
+    except HitInitialCommit:
+        return commit
+    except HitMergeCommit:
+        return commit
+    try:
+        commit_transaction = FlexlateTransaction.parse_commit_message(
+            parent_commit.message
+        )
+    except CannotParseCommitMessageFlexlateTransaction:
+        # Not a flexlate commit, so this must be the last in the transaction
+        return commit
+
+    if commit_transaction.id == transaction.id:
+        # Parent is still in the same transaction. Recurse to find the original commit
+        return _return_commit_if_begin_of_transaction_else_get_parent(
+            parent_commit, transaction
+        )
+
+    # It is a flexlate commit, but different transaction. Therefore return this commit
+    return commit
+
+
+class HitInitialCommit(Exception):
+    pass
+
+
+class HitMergeCommit(Exception):
+    pass
+
+
+def _get_parent_commit(commit: Commit) -> Commit:
+    parents = commit.parents
+    if len(parents) == 0:
+        raise HitInitialCommit
+    if len(parents) > 1:
+        raise HitMergeCommit
+    return parents[0]
