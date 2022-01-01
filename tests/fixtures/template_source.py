@@ -48,6 +48,7 @@ class TemplateSourceFixture:
     path: str
     type: TemplateSourceType
     input_data: TemplateData
+    update_input_data: TemplateData
     version_1: str
     version_2: str
     is_local_template: bool = False
@@ -97,6 +98,7 @@ cookiecutter_remote_fixture: Final[TemplateSourceFixture] = TemplateSourceFixtur
     path=COOKIECUTTER_REMOTE_URL,
     type=TemplateSourceType.COOKIECUTTER_REMOTE,
     input_data=dict(name="woo", key="it works"),
+    update_input_data=dict(name="updated", key="now"),
     version_1=COOKIECUTTER_REMOTE_VERSION_1,
     version_2=COOKIECUTTER_REMOTE_VERSION_2,
 )
@@ -105,6 +107,7 @@ copier_remote_fixture: Final[TemplateSourceFixture] = TemplateSourceFixture(
     path=COPIER_REMOTE_URL,
     type=TemplateSourceType.COPIER_REMOTE,
     input_data=dict(question1="oh yeah", question2=10.5),
+    update_input_data=dict(question1="please work", question2=2.8),
     version_1=COPIER_REMOTE_VERSION_1,
     version_2=COPIER_REMOTE_VERSION_2,
 )
@@ -114,6 +117,7 @@ cookiecutter_local_fixture: Final[TemplateSourceFixture] = TemplateSourceFixture
     path=COOKIECUTTER_ONE_DIR,
     type=TemplateSourceType.COOKIECUTTER_LOCAL,
     input_data=dict(a="z", c="f"),
+    update_input_data=dict(a="n", c="q"),
     version_1=COOKIECUTTER_ONE_VERSION,
     version_2=COOKIECUTTER_ONE_MODIFIED_VERSION,
     is_local_template=True,
@@ -125,6 +129,7 @@ copier_local_fixture: Final[TemplateSourceFixture] = TemplateSourceFixture(
     path=COPIER_ONE_DIR,
     type=TemplateSourceType.COPIER_LOCAL,
     input_data=dict(q1="abc", q2=2, q3="def"),
+    update_input_data=dict(q1="qwe", q2=2, q3="rty"),
     version_1=COPIER_ONE_VERSION,
     version_2=COPIER_ONE_MODIFIED_VERSION,
     is_local_template=True,
