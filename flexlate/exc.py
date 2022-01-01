@@ -84,3 +84,11 @@ class FlexlateConfigFileNotExistsException(CannotLoadConfigException):
 
 class FlexlateProjectConfigFileNotExistsException(CannotLoadConfigException):
     pass
+
+
+class FlexlateTransactionException(FlexlateException):
+    pass
+
+
+class CannotParseCommitMessageFlexlateTransaction(FlexlateTransactionException):
+    pass

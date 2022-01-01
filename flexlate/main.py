@@ -12,6 +12,7 @@ from flexlate.remover import Remover
 from flexlate.render.multi import MultiRenderer
 from flexlate.template.base import Template
 from flexlate.template_data import TemplateData
+from flexlate.transactions.undoer import Undoer
 from flexlate.update.main import Updater
 
 
@@ -24,6 +25,7 @@ class Flexlate:
         finder: MultiFinder = MultiFinder(),
         renderer: MultiRenderer = MultiRenderer(),
         updater: Updater = Updater(),
+        undoer: Undoer = Undoer(),
     ):
         self.adder = adder
         self.remover = remover
@@ -31,6 +33,7 @@ class Flexlate:
         self.finder = finder
         self.renderer = renderer
         self.updater = updater
+        self.undoer = undoer
 
     def init_project(
         self,
@@ -185,6 +188,10 @@ class Flexlate:
             renderer=self.renderer,
             config_manager=self.config_manager,
         )
+
+    def undo(self, num_operations: int = 1, project_path: Path = Path(".")):
+        repo = Repo(project_path)
+        self.undoer.undo_transactions(repo, num_transactions=num_operations)
 
     # TODO: list template sources, list applied templates
     # TODO: Update target versions in template sources
