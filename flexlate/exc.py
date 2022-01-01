@@ -100,3 +100,11 @@ class LastCommitWasNotByFlexlateException(FlexlateTransactionException):
 
 class TransactionMismatchBetweenBranchesException(FlexlateTransactionException):
     pass
+
+
+class TooFewTransactionsException(FlexlateTransactionException):
+    pass
+
+
+class InvalidNumberOfTransactionsException(FlexlateTransactionException):
+    pass

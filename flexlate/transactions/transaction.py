@@ -10,6 +10,8 @@ from flexlate.exc import (
     CannotParseCommitMessageFlexlateTransaction,
     LastCommitWasNotByFlexlateException,
     TransactionMismatchBetweenBranchesException,
+    InvalidNumberOfTransactionsException,
+    TooFewTransactionsException,
 )
 from flexlate.ext_git import reset_current_branch_to_commit
 from flexlate.template_data import TemplateData
@@ -81,6 +83,40 @@ def assert_last_commit_was_in_a_flexlate_transaction(repo: Repo):
         raise LastCommitWasNotByFlexlateException(
             f"Last commit was not made by flexlate: {last_commit_message}"
         ) from e
+
+
+def assert_has_at_least_n_transactions(repo: Repo, n: int):
+    if n < 0:
+        raise InvalidNumberOfTransactionsException(
+            "Number of transactions must be positive"
+        )
+    assert_last_commit_was_in_a_flexlate_transaction(repo)
+    if n == 1:
+        return
+    last_commit = repo.commit()
+    num_to_verify = n
+
+    def too_few_transactions():
+        # Have hit the end but have not finished verifying, therefore there are too few transactions
+        raise TooFewTransactionsException(
+            f"Desired to undo {n} transactions but only found {n - num_to_verify}"
+        )
+
+    for _ in range(num_to_verify):
+        try:
+            transaction = FlexlateTransaction.parse_commit_message(last_commit.message)
+        except CannotParseCommitMessageFlexlateTransaction:
+            return too_few_transactions()
+        earliest_commit = _return_commit_if_begin_of_transaction_else_get_parent(
+            last_commit, transaction
+        )
+        num_to_verify -= 1
+        if num_to_verify <= 0:
+            return
+        try:
+            last_commit = _get_parent_commit(earliest_commit)
+        except (HitInitialCommit, HitMergeCommit):
+            return too_few_transactions()
 
 
 def find_earliest_commit_that_was_part_of_transaction(

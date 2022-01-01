@@ -7,6 +7,7 @@ from flexlate.transactions.transaction import (
     assert_last_commit_was_in_a_flexlate_transaction,
     FlexlateTransaction,
     reset_last_transaction,
+    assert_has_at_least_n_transactions,
 )
 
 
@@ -17,11 +18,6 @@ class Undoer:
         merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
         template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
     ):
-        assert_repo_is_in_clean_state(repo)
-        assert_last_commit_was_in_a_flexlate_transaction(repo)
-        if repo.working_dir is None:
-            raise ValueError("repo working dir should not be none")
-
         last_transaction = FlexlateTransaction.parse_commit_message(
             repo.commit().message
         )
@@ -44,6 +40,13 @@ class Undoer:
         merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
         template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
     ):
+        assert_repo_is_in_clean_state(repo)
+        assert_last_commit_was_in_a_flexlate_transaction(repo)
+        if repo.working_dir is None:
+            raise ValueError("repo working dir should not be none")
+        # Fail fast if there are too few transactions
+        assert_has_at_least_n_transactions(repo, num_transactions)
+
         for _ in range(num_transactions):
             self.undo_transaction(
                 repo,
