@@ -14,6 +14,7 @@ from flexlate.template.base import Template
 from flexlate.template.cookiecutter import CookiecutterTemplate
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME
 from flexlate.template.types import TemplateType
+from flexlate.transactions.transaction import FlexlateTransaction
 from flexlate.update.main import Updater
 from flexlate.update.template import TemplateUpdate
 from tests.config import (
@@ -32,6 +33,7 @@ from tests.fixtures.git import *
 from tests.fixtures.template import *
 from tests.fixtures.templated_repo import *
 from tests.fixtures.updates import *
+from tests.fixtures.transaction import update_transaction
 from flexlate.ext_git import repo_has_merge_conflicts
 
 
@@ -41,23 +43,27 @@ from flexlate.ext_git import repo_has_merge_conflicts
 def test_update_template_dirty_repo(
     cookiecutter_one_update_no_data: TemplateUpdate,
     dirty_repo: Repo,
+    update_transaction: FlexlateTransaction,
 ):
     repo = dirty_repo
     updater = Updater()
     with pytest.raises(GitRepoDirtyException):
-        updater.update(repo, [cookiecutter_one_update_no_data], no_input=True)
+        updater.update(
+            repo, [cookiecutter_one_update_no_data], update_transaction, no_input=True
+        )
 
 
 def test_update_modify_template(
     cookiecutter_one_modified_template: CookiecutterTemplate,
     repo_with_gitignore_and_template_branch_from_cookiecutter_one: Repo,
+    update_transaction: FlexlateTransaction,
 ):
     repo = repo_with_gitignore_and_template_branch_from_cookiecutter_one
     updater = Updater()
     template_updates = updater.get_updates_for_templates(
         [cookiecutter_one_modified_template], project_root=GENERATED_REPO_DIR
     )
-    updater.update(repo, template_updates, no_input=True)
+    updater.update(repo, template_updates, update_transaction, no_input=True)
     main_branch: Head = repo.branches["master"]  # type: ignore
     template_branch: Head = repo.branches[DEFAULT_MERGED_BRANCH_NAME]  # type: ignore
     assert repo.active_branch == main_branch
@@ -86,13 +92,14 @@ def test_update_modify_template(
 def test_update_modify_template_conflict(
     cookiecutter_one_modified_template: CookiecutterTemplate,
     repo_from_cookiecutter_one_with_modifications: Repo,
+    update_transaction: FlexlateTransaction,
 ):
     repo = repo_from_cookiecutter_one_with_modifications
     updater = Updater()
     template_updates = updater.get_updates_for_templates(
         [cookiecutter_one_modified_template], project_root=GENERATED_FILES_DIR
     )
-    updater.update(repo, template_updates, no_input=True)
+    updater.update(repo, template_updates, update_transaction, no_input=True)
     assert repo_has_merge_conflicts(repo)
 
 
@@ -102,6 +109,7 @@ def test_update_modify_template_conflict(
 def test_update_passed_templates_to_newest_versions(
     remote_target_version: Optional[str],
     cookiecutter_one_template: CookiecutterTemplate,
+    update_transaction: FlexlateTransaction,
 ):
     wipe_generated_folder()
     local_template = cookiecutter_one_template
@@ -135,7 +143,7 @@ def test_update_passed_templates_to_newest_versions(
     assert remote_template.version == COOKIECUTTER_REMOTE_VERSION_1
     assert local_template.version == COOKIECUTTER_ONE_VERSION
     updater.update_passed_templates_to_target_versions(
-        [remote_template, local_template], config_manager=MockConfigManager()  # type: ignore
+        [remote_template, local_template], update_transaction, config_manager=MockConfigManager()  # type: ignore
     )
     assert remote_template.version == COOKIECUTTER_REMOTE_VERSION_2
     assert local_template.version == "471c7dbeea2541fe9a7a558d3aafb6e0"
@@ -143,6 +151,7 @@ def test_update_passed_templates_to_newest_versions(
 
 def test_update_passed_templates_to_newest_versions_but_already_at_targets(
     cookiecutter_one_template: CookiecutterTemplate,
+    update_transaction: FlexlateTransaction,
 ):
     wipe_generated_folder()
     local_template = cookiecutter_one_template
@@ -180,7 +189,7 @@ def test_update_passed_templates_to_newest_versions_but_already_at_targets(
     assert remote_template.version == COOKIECUTTER_REMOTE_VERSION_1
     assert local_template.version == COOKIECUTTER_ONE_VERSION
     updater.update_passed_templates_to_target_versions(
-        [remote_template, local_template], config_manager=MockConfigManager()  # type: ignore
+        [remote_template, local_template], update_transaction, config_manager=MockConfigManager()  # type: ignore
     )
     assert remote_template.version == COOKIECUTTER_REMOTE_VERSION_1
     # Local template is updated anyway, but it shows the old version due to target version

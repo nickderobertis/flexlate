@@ -15,6 +15,10 @@ from flexlate.path_ops import (
     location_relative_to_new_parent,
 )
 from flexlate.render.multi import MultiRenderer
+from flexlate.transactions.transaction import (
+    FlexlateTransaction,
+    create_transaction_commit_message,
+)
 from flexlate.update.main import Updater
 
 
@@ -23,6 +27,7 @@ class Remover:
         self,
         repo: Repo,
         template_name: str,
+        transaction: FlexlateTransaction,
         out_root: Path = Path("."),
         merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
         template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
@@ -45,6 +50,13 @@ class Remover:
             )
             return
 
+        commit_message = create_transaction_commit_message(
+            _remove_template_source_commit_message(
+                template_name, out_root, Path(repo.working_dir)
+            ),
+            transaction,
+        )
+
         modify_files_via_branches_and_temp_repo(
             lambda temp_path: config_manager.remove_template_source(
                 template_name,
@@ -54,9 +66,7 @@ class Remover:
                 project_root=temp_path,
             ),
             repo,
-            _remove_template_source_commit_message(
-                template_name, out_root, Path(repo.working_dir)
-            ),
+            commit_message,
             out_root,
             merged_branch_name=merged_branch_name,
             template_branch_name=template_branch_name,
@@ -66,6 +76,7 @@ class Remover:
         self,
         repo: Repo,
         template_name: str,
+        transaction: FlexlateTransaction,
         out_root: Path = Path("."),
         add_mode: AddMode = AddMode.LOCAL,
         merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
@@ -94,6 +105,13 @@ class Remover:
             )
         else:
             # Commit changes for local and project
+            commit_message = create_transaction_commit_message(
+                _remove_applied_template_commit_message(
+                    template_name, out_root, Path(repo.working_dir)
+                ),
+                transaction,
+            )
+
             modify_files_via_branches_and_temp_repo(
                 lambda temp_path: config_manager.remove_applied_template(
                     template_name,
@@ -104,9 +122,7 @@ class Remover:
                     out_root=expanded_out_root,
                 ),
                 repo,
-                _remove_applied_template_commit_message(
-                    template_name, out_root, Path(repo.working_dir)
-                ),
+                commit_message,
                 out_root,
                 merged_branch_name=merged_branch_name,
                 template_branch_name=template_branch_name,
@@ -115,6 +131,7 @@ class Remover:
         updater.update(
             repo,
             [],
+            transaction,
             merged_branch_name=merged_branch_name,
             template_branch_name=template_branch_name,
             no_input=True,

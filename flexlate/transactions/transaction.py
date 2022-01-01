@@ -6,6 +6,7 @@ from typing import Optional
 from pydantic import BaseModel, Field, UUID4
 
 from flexlate.exc import CannotParseCommitMessageFlexlateTransaction
+from flexlate.template_data import TemplateData
 
 FLEXLATE_TRANSACTION_COMMIT_DIVIDER = (
     "\n\n-------------------BEGIN FLEXLATE TRANSACTION-------------------\n"
@@ -24,6 +25,7 @@ class FlexlateTransaction(BaseModel):
     type: TransactionType
     target: Optional[str] = None
     out_root: Optional[Path] = None
+    data: Optional[TemplateData] = None
     id: UUID4 = Field(default_factory=lambda: uuid.uuid4())
 
     @classmethod
@@ -42,7 +44,7 @@ class FlexlateTransaction(BaseModel):
         return self.json(indent=2)
 
 
-def create_transaction_commit(
+def create_transaction_commit_message(
     commit_message: str, transaction: FlexlateTransaction
 ) -> str:
     return (

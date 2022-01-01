@@ -21,11 +21,14 @@ from flexlate.ext_git import (
     fast_forward_branch_without_checkout,
 )
 from flexlate.template_data import TemplateData, merge_data
+from flexlate.transactions.transaction import (
+    FlexlateTransaction,
+    create_transaction_commit_message,
+)
 from flexlate.update.template import (
     TemplateUpdate,
     updates_with_updated_data,
 )
-from tests.dirutils import display_contents_of_all_files_in_folder
 
 
 class Updater:
@@ -33,6 +36,7 @@ class Updater:
         self,
         repo: Repo,
         updates: Sequence[TemplateUpdate],
+        transaction: FlexlateTransaction,
         merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
         template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
         no_input: bool = False,
@@ -93,7 +97,10 @@ class Updater:
             # paths back to how they were originally (relative if needed), so that there will not be
             # unexpected changes from relative to absolute paths in the user configs
             config_manager.update_templates(new_updates, project_root=temp_out_path)
-            stage_and_commit_all(temp_repo, _commit_message(renderables))
+            commit_message = create_transaction_commit_message(
+                _commit_message(renderables), transaction
+            )
+            stage_and_commit_all(temp_repo, commit_message)
 
         # Now prepare the merged (output) branch, by merging the current
         # branch into it and then the template branch into it.

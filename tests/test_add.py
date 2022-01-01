@@ -9,6 +9,7 @@ from flexlate.add_mode import AddMode
 from flexlate.config import FlexlateConfig, FlexlateProjectConfig
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.template.types import TemplateType
+from flexlate.transactions.transaction import FlexlateTransaction
 from tests.config import GENERATED_FILES_DIR
 from tests.fileutils import cookiecutter_one_generated_text_content
 from tests.fixtures.git import *
@@ -16,17 +17,20 @@ from tests.fixtures.subdir_style import SubdirStyle, subdir_style
 from tests.fixtures.template import *
 from tests.fixtures.templated_repo import *
 from tests.fixtures.add_mode import add_mode
+from tests.fixtures.transaction import add_source_transaction, add_output_transaction
 
 
 def test_add_template_source_to_repo(
     repo_with_placeholder_committed: Repo,
     cookiecutter_one_template: CookiecutterTemplate,
+    add_source_transaction: FlexlateTransaction,
 ):
     repo = repo_with_placeholder_committed
     adder = Adder()
     adder.add_template_source(
         repo,
         cookiecutter_one_template,
+        add_source_transaction,
         out_root=GENERATED_REPO_DIR,
         target_version="some version",
     )
@@ -47,12 +51,18 @@ def test_add_local_cookiecutter_applied_template_to_repo(
     add_mode: AddMode,
     repo_with_cookiecutter_one_template_source: Repo,
     cookiecutter_one_template: CookiecutterTemplate,
+    add_output_transaction: FlexlateTransaction,
 ):
     repo = repo_with_cookiecutter_one_template_source
     template = cookiecutter_one_template
     adder = Adder()
     adder.apply_template_and_add(
-        repo, template, out_root=GENERATED_REPO_DIR, add_mode=add_mode, no_input=True
+        repo,
+        template,
+        add_output_transaction,
+        out_root=GENERATED_REPO_DIR,
+        add_mode=add_mode,
+        no_input=True,
     )
 
     config_dir = GENERATED_FILES_DIR if add_mode == AddMode.USER else GENERATED_REPO_DIR
@@ -75,12 +85,18 @@ def test_add_remote_cookiecutter_applied_template_to_repo(
     add_mode: AddMode,
     repo_with_remote_cookiecutter_template_source: Repo,
     cookiecutter_remote_template: CookiecutterTemplate,
+    add_output_transaction: FlexlateTransaction,
 ):
     repo = repo_with_remote_cookiecutter_template_source
     template = cookiecutter_remote_template
     adder = Adder()
     adder.apply_template_and_add(
-        repo, template, out_root=GENERATED_REPO_DIR, add_mode=add_mode, no_input=True
+        repo,
+        template,
+        add_output_transaction,
+        out_root=GENERATED_REPO_DIR,
+        add_mode=add_mode,
+        no_input=True,
     )
 
     config_dir = GENERATED_FILES_DIR if add_mode == AddMode.USER else GENERATED_REPO_DIR
@@ -104,6 +120,7 @@ def test_add_applied_template_to_subdir(
     subdir_style: SubdirStyle,
     repo_with_cookiecutter_one_template_source: Repo,
     cookiecutter_one_template: CookiecutterTemplate,
+    add_output_transaction: FlexlateTransaction,
 ):
     repo = repo_with_cookiecutter_one_template_source
     template = cookiecutter_one_template
@@ -113,20 +130,26 @@ def test_add_applied_template_to_subdir(
     if subdir_style == SubdirStyle.CD:
         with change_directory_to(subdir):
             adder.apply_template_and_add(
-                repo, template, add_mode=add_mode, no_input=True
+                repo, template, add_output_transaction, add_mode=add_mode, no_input=True
             )
     elif subdir_style == SubdirStyle.PROVIDE_RELATIVE:
         with change_directory_to(GENERATED_REPO_DIR):
             adder.apply_template_and_add(
                 repo,
                 template,
+                add_output_transaction,
                 out_root=subdir.relative_to(os.getcwd()),
                 add_mode=add_mode,
                 no_input=True,
             )
     elif subdir_style == SubdirStyle.PROVIDE_ABSOLUTE:
         adder.apply_template_and_add(
-            repo, template, out_root=subdir.absolute(), add_mode=add_mode, no_input=True
+            repo,
+            template,
+            add_output_transaction,
+            out_root=subdir.absolute(),
+            add_mode=add_mode,
+            no_input=True,
         )
 
     if add_mode == AddMode.LOCAL:
@@ -159,6 +182,7 @@ def test_add_multiple_applied_templates_for_one_source(
     add_mode: AddMode,
     repo_with_cookiecutter_one_template_source: Repo,
     cookiecutter_one_template: CookiecutterTemplate,
+    add_output_transaction: FlexlateTransaction,
 ):
     repo = repo_with_cookiecutter_one_template_source
     template = cookiecutter_one_template
@@ -166,9 +190,13 @@ def test_add_multiple_applied_templates_for_one_source(
     subdir.mkdir(parents=True)
     adder = Adder()
     with change_directory_to(GENERATED_REPO_DIR):
-        adder.apply_template_and_add(repo, template, add_mode=add_mode, no_input=True)
+        adder.apply_template_and_add(
+            repo, template, add_output_transaction, add_mode=add_mode, no_input=True
+        )
     with change_directory_to(subdir):
-        adder.apply_template_and_add(repo, template, add_mode=add_mode, no_input=True)
+        adder.apply_template_and_add(
+            repo, template, add_output_transaction, add_mode=add_mode, no_input=True
+        )
 
     @dataclass
     class OutputOptions:
@@ -247,12 +275,14 @@ def test_add_multiple_applied_templates_for_one_source(
 def test_add_source_to_project_with_existing_outputs(
     repo_with_cookiecutter_one_template_source_and_output: Repo,
     cookiecutter_two_template: CookiecutterTemplate,
+    add_source_transaction: FlexlateTransaction,
 ):
     repo = repo_with_cookiecutter_one_template_source_and_output
     adder = Adder()
     adder.add_template_source(
         repo,
         cookiecutter_two_template,
+        add_source_transaction,
         out_root=GENERATED_REPO_DIR,
         target_version="some version",
     )
