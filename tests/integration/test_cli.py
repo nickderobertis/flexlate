@@ -35,6 +35,7 @@ from tests.fixtures.template_source import (
     TemplateSourceType,
     COOKIECUTTER_REMOTE_DEFAULT_EXPECT_PATH,
 )
+from tests.integration.undoables import UNDOABLE_OPERATIONS
 
 
 def test_init_project_and_add_source_and_template(
@@ -387,10 +388,18 @@ def test_init_project_for_user_and_add_source_and_template(
         fxt.init_project()
         fxt.add_template_source(COOKIECUTTER_REMOTE_URL)
         fxt.apply_template_and_add(COOKIECUTTER_REMOTE_NAME, no_input=True)
-        # Add an operation that will be undone
+        # Work in a subdirectory so that we can run all operations.
+        # Commit a file so that the folder will persist and ensure that
+        # the file is never removed
         subdir = GENERATED_REPO_DIR / "subdir"
         subdir.mkdir()
+        subdir_placeholder_path = (subdir / "some-file.txt").resolve()
+        subdir_placeholder_path.write_text("something")
+        stage_and_commit_all(repo, "Add a placeholder in a subdir")
+        # Add an operation that will be undone
         with change_directory_to(subdir):
+            # One check being careful about the input files, just to make sure
+            # something is happening
             fxt.apply_template_and_add(COOKIECUTTER_REMOTE_NAME, no_input=True)
             config_path = subdir / "flexlate.json"
             _assert_project_files_are_correct(subdir)
@@ -398,6 +407,13 @@ def test_init_project_for_user_and_add_source_and_template(
             fxt.undo()
             _assert_project_files_do_not_exist(subdir)
             assert not config_path.exists()
+            # Now check everything just to make sure it can be undone
+            for operation in UNDOABLE_OPERATIONS:
+                operation(fxt)
+                fxt.undo()
+                _assert_project_files_do_not_exist(subdir)
+                assert not config_path.exists()
+                assert subdir_placeholder_path.read_text() == "something"
 
     _assert_project_files_are_correct()
     _assert_config_is_correct()

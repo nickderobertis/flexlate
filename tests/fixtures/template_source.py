@@ -93,7 +93,7 @@ class TemplateSourceFixture:
         return str((GENERATED_REPO_DIR / Path(self.path)).resolve())
 
 
-cookiecutter_remote_fixture: Final[TemplateSourceFixture] = TemplateSourceFixture(
+COOKIECUTTER_REMOTE_FIXTURE: Final[TemplateSourceFixture] = TemplateSourceFixture(
     name=COOKIECUTTER_REMOTE_NAME,
     path=COOKIECUTTER_REMOTE_URL,
     type=TemplateSourceType.COOKIECUTTER_REMOTE,
@@ -143,7 +143,7 @@ local_absolute_path_fixtures: Final[List[TemplateSourceFixture]] = [
 ]
 
 remote_fixtures: Final[List[TemplateSourceFixture]] = [
-    cookiecutter_remote_fixture,
+    COOKIECUTTER_REMOTE_FIXTURE,
     copier_remote_fixture,
 ]
 
@@ -207,7 +207,7 @@ def template_source_with_relative(request) -> TemplateSourceFixture:
 
 
 one_remote_all_local_relative_fixtures = [
-    cookiecutter_remote_fixture,
+    COOKIECUTTER_REMOTE_FIXTURE,
     *local_relative_path_fixtures,
 ]
 
@@ -217,4 +217,4 @@ def template_source_one_remote_and_all_local_relative(request) -> TemplateSource
     yield request.param
 
 
-COOKIECUTTER_REMOTE_DEFAULT_EXPECT_PATH = cookiecutter_remote_fixture.expect_path()
+COOKIECUTTER_REMOTE_DEFAULT_EXPECT_PATH = COOKIECUTTER_REMOTE_FIXTURE.expect_path()
