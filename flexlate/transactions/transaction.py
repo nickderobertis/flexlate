@@ -147,6 +147,9 @@ def _search_commit_tree_for_earliest_merge_commit_for_transaction(
     merged_branch_name: str,
     template_branch_name: str,
 ):
+    # TODO: Better strategy for finding earliest merge commit for transaction
+    #  The current strategy requires searching until the beginning of history.
+    #  Add early stopping when hitting a user commit or different flexlate transaction
     search_commits = [commit]
     found_commits: List[Commit] = []
     # Breadth-first search
@@ -155,7 +158,7 @@ def _search_commit_tree_for_earliest_merge_commit_for_transaction(
         if _is_flexlate_merge_commit(
             this_commit, merged_branch_name, template_branch_name
         ):
-            merge_transaction = _get_transaction_underlying_merge_commit(commit)
+            merge_transaction = _get_transaction_underlying_merge_commit(this_commit)
             if transaction.id == merge_transaction.id:
                 found_commits.append(this_commit)
         search_commits.extend(list(this_commit.parents))
@@ -216,6 +219,12 @@ def assert_has_at_least_n_transactions(
         )
 
     for _ in range(num_to_verify):
+        if _is_flexlate_merge_commit(
+            last_commit, merged_branch_name, template_branch_name
+        ):
+            last_commit = _get_flexlate_transaction_parent_from_flexlate_merge_commit(
+                last_commit, merged_branch_name, template_branch_name
+            )
         try:
             transaction = FlexlateTransaction.parse_commit_message(last_commit.message)
         except CannotParseCommitMessageFlexlateTransaction:
