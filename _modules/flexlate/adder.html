@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.adder &mdash; flexlate 0.2.7 documentation</title>
+  <title>flexlate.adder &mdash; flexlate 0.3.0 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.2.7
+                0.3.0
               </div>
             
           
@@ -190,6 +190,10 @@
 <span class="kn">from</span> <span class="nn">flexlate.render.multi</span> <span class="kn">import</span> <span class="n">MultiRenderer</span>
 <span class="kn">from</span> <span class="nn">flexlate.template.base</span> <span class="kn">import</span> <span class="n">Template</span>
 <span class="kn">from</span> <span class="nn">flexlate.template_data</span> <span class="kn">import</span> <span class="n">TemplateData</span>
+<span class="kn">from</span> <span class="nn">flexlate.transactions.transaction</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">FlexlateTransaction</span><span class="p">,</span>
+    <span class="n">create_transaction_commit_message</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">flexlate.update.main</span> <span class="kn">import</span> <span class="n">Updater</span>
 <span class="kn">from</span> <span class="nn">flexlate.update.template</span> <span class="kn">import</span> <span class="n">TemplateUpdate</span>
 
@@ -199,6 +203,7 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">repo</span><span class="p">:</span> <span class="n">Repo</span><span class="p">,</span>
         <span class="n">template</span><span class="p">:</span> <span class="n">Template</span><span class="p">,</span>
+        <span class="n">transaction</span><span class="p">:</span> <span class="n">FlexlateTransaction</span><span class="p">,</span>
         <span class="n">target_version</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">out_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
         <span class="n">merged_branch_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_MERGED_BRANCH_NAME</span><span class="p">,</span>
@@ -239,6 +244,13 @@
             <span class="p">)</span>
             <span class="k">return</span>
 
+        <span class="n">commit_message</span> <span class="o">=</span> <span class="n">create_transaction_commit_message</span><span class="p">(</span>
+            <span class="n">_add_template_source_commit_message</span><span class="p">(</span>
+                <span class="n">template</span><span class="p">,</span> <span class="n">out_root</span><span class="p">,</span> <span class="n">Path</span><span class="p">(</span><span class="n">repo</span><span class="o">.</span><span class="n">working_dir</span><span class="p">)</span>
+            <span class="p">),</span>
+            <span class="n">transaction</span><span class="p">,</span>
+        <span class="p">)</span>
+
         <span class="c1"># Local or project config, add in git</span>
         <span class="n">modify_files_via_branches_and_temp_repo</span><span class="p">(</span>
             <span class="k">lambda</span> <span class="n">temp_path</span><span class="p">:</span> <span class="n">config_manager</span><span class="o">.</span><span class="n">add_template_source</span><span class="p">(</span>
@@ -250,9 +262,7 @@
                 <span class="n">project_root</span><span class="o">=</span><span class="n">temp_path</span><span class="p">,</span>
             <span class="p">),</span>
             <span class="n">repo</span><span class="p">,</span>
-            <span class="n">_add_template_source_commit_message</span><span class="p">(</span>
-                <span class="n">template</span><span class="p">,</span> <span class="n">out_root</span><span class="p">,</span> <span class="n">Path</span><span class="p">(</span><span class="n">repo</span><span class="o">.</span><span class="n">working_dir</span><span class="p">)</span>
-            <span class="p">),</span>
+            <span class="n">commit_message</span><span class="p">,</span>
             <span class="n">out_root</span><span class="p">,</span>
             <span class="n">merged_branch_name</span><span class="o">=</span><span class="n">merged_branch_name</span><span class="p">,</span>
             <span class="n">template_branch_name</span><span class="o">=</span><span class="n">template_branch_name</span><span class="p">,</span>
@@ -262,6 +272,7 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">repo</span><span class="p">:</span> <span class="n">Repo</span><span class="p">,</span>
         <span class="n">template</span><span class="p">:</span> <span class="n">Template</span><span class="p">,</span>
+        <span class="n">transaction</span><span class="p">:</span> <span class="n">FlexlateTransaction</span><span class="p">,</span>
         <span class="n">data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TemplateData</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">out_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
         <span class="n">add_mode</span><span class="p">:</span> <span class="n">AddMode</span> <span class="o">=</span> <span class="n">AddMode</span><span class="o">.</span><span class="n">LOCAL</span><span class="p">,</span>
@@ -293,6 +304,13 @@
             <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># Commit changes for local and project</span>
+            <span class="n">commit_message</span> <span class="o">=</span> <span class="n">create_transaction_commit_message</span><span class="p">(</span>
+                <span class="n">_add_template_commit_message</span><span class="p">(</span>
+                    <span class="n">template</span><span class="p">,</span> <span class="n">out_root</span><span class="p">,</span> <span class="n">Path</span><span class="p">(</span><span class="n">repo</span><span class="o">.</span><span class="n">working_dir</span><span class="p">)</span>
+                <span class="p">),</span>
+                <span class="n">transaction</span><span class="p">,</span>
+            <span class="p">)</span>
+
             <span class="n">modify_files_via_branches_and_temp_repo</span><span class="p">(</span>
                 <span class="k">lambda</span> <span class="n">temp_path</span><span class="p">:</span> <span class="n">config_manager</span><span class="o">.</span><span class="n">add_applied_template</span><span class="p">(</span>
                     <span class="n">template</span><span class="p">,</span>
@@ -304,9 +322,7 @@
                     <span class="n">out_root</span><span class="o">=</span><span class="n">expanded_out_root</span><span class="p">,</span>
                 <span class="p">),</span>
                 <span class="n">repo</span><span class="p">,</span>
-                <span class="n">_add_template_commit_message</span><span class="p">(</span>
-                    <span class="n">template</span><span class="p">,</span> <span class="n">out_root</span><span class="p">,</span> <span class="n">Path</span><span class="p">(</span><span class="n">repo</span><span class="o">.</span><span class="n">working_dir</span><span class="p">)</span>
-                <span class="p">),</span>
+                <span class="n">commit_message</span><span class="p">,</span>
                 <span class="n">out_root</span><span class="p">,</span>
                 <span class="n">merged_branch_name</span><span class="o">=</span><span class="n">merged_branch_name</span><span class="p">,</span>
                 <span class="n">template_branch_name</span><span class="o">=</span><span class="n">template_branch_name</span><span class="p">,</span>
@@ -323,6 +339,7 @@
         <span class="n">updater</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
             <span class="n">repo</span><span class="p">,</span>
             <span class="p">[</span><span class="n">template_update</span><span class="p">],</span>
+            <span class="n">transaction</span><span class="p">,</span>
             <span class="n">merged_branch_name</span><span class="o">=</span><span class="n">merged_branch_name</span><span class="p">,</span>
             <span class="n">template_branch_name</span><span class="o">=</span><span class="n">template_branch_name</span><span class="p">,</span>
             <span class="n">no_input</span><span class="o">=</span><span class="n">no_input</span><span class="p">,</span>

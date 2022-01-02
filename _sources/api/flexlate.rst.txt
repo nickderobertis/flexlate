@@ -15,6 +15,7 @@ Subpackages
    flexlate.render
    flexlate.template
    flexlate.template_config
+   flexlate.transactions
    flexlate.update
 
 Submodules

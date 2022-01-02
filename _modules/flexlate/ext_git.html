@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.ext_git &mdash; flexlate 0.2.7 documentation</title>
+  <title>flexlate.ext_git &mdash; flexlate 0.3.0 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.2.7
+                0.3.0
               </div>
             
           
@@ -173,7 +173,7 @@
 <span class="kn">import</span> <span class="nn">tempfile</span>
 <span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">contextmanager</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">cast</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Generator</span><span class="p">,</span> <span class="n">ContextManager</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">cast</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Generator</span><span class="p">,</span> <span class="n">ContextManager</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span>
 
 <span class="kn">from</span> <span class="nn">git</span> <span class="kn">import</span> <span class="n">Repo</span><span class="p">,</span> <span class="n">Blob</span><span class="p">,</span> <span class="n">Tree</span><span class="p">,</span> <span class="n">GitCommandError</span><span class="p">,</span> <span class="n">Commit</span><span class="p">,</span> <span class="n">Git</span>  <span class="c1"># type: ignore</span>
 
@@ -270,7 +270,10 @@
 
 <div class="viewcode-block" id="temp_repo_that_pushes_to_branch"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.ext_git.temp_repo_that_pushes_to_branch">[docs]</a><span class="nd">@contextmanager</span>  <span class="c1"># type: ignore</span>
 <span class="k">def</span> <span class="nf">temp_repo_that_pushes_to_branch</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
-    <span class="n">repo</span><span class="p">:</span> <span class="n">Repo</span><span class="p">,</span> <span class="n">branch_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">delete_tracked_files</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">repo</span><span class="p">:</span> <span class="n">Repo</span><span class="p">,</span>
+    <span class="n">branch_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">delete_tracked_files</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">force_push</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ContextManager</span><span class="p">[</span><span class="n">Repo</span><span class="p">]:</span>
     <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">tmp_dir</span><span class="p">:</span>
         <span class="n">tmp_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">tmp_dir</span><span class="p">)</span>
@@ -284,7 +287,9 @@
             <span class="n">Path</span><span class="p">(</span><span class="n">repo</span><span class="o">.</span><span class="n">working_dir</span><span class="p">),</span> <span class="n">Path</span><span class="p">(</span><span class="n">temp_repo</span><span class="o">.</span><span class="n">working_dir</span><span class="p">),</span> <span class="n">Path</span><span class="p">(</span><span class="n">repo</span><span class="o">.</span><span class="n">working_dir</span><span class="p">)</span>
         <span class="p">)</span>
         <span class="k">yield</span> <span class="n">temp_repo</span>
-        <span class="n">_push_branch_from_one_local_repo_to_another</span><span class="p">(</span><span class="n">temp_repo</span><span class="p">,</span> <span class="n">repo</span><span class="p">,</span> <span class="n">branch_name</span><span class="p">)</span></div>
+        <span class="n">_push_branch_from_one_local_repo_to_another</span><span class="p">(</span>
+            <span class="n">temp_repo</span><span class="p">,</span> <span class="n">repo</span><span class="p">,</span> <span class="n">branch_name</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="n">force_push</span>
+        <span class="p">)</span></div>
 
 
 <span class="k">def</span> <span class="nf">_clone_single_branch_from_local_repo</span><span class="p">(</span>
@@ -310,9 +315,14 @@
 
 
 <span class="k">def</span> <span class="nf">_push_branch_from_one_local_repo_to_another</span><span class="p">(</span>
-    <span class="n">from_repo</span><span class="p">:</span> <span class="n">Repo</span><span class="p">,</span> <span class="n">to_repo</span><span class="p">:</span> <span class="n">Repo</span><span class="p">,</span> <span class="n">branch_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">from_repo</span><span class="p">:</span> <span class="n">Repo</span><span class="p">,</span> <span class="n">to_repo</span><span class="p">:</span> <span class="n">Repo</span><span class="p">,</span> <span class="n">branch_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">force</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="p">):</span>
-    <span class="n">from_repo</span><span class="o">.</span><span class="n">git</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">to_repo</span><span class="o">.</span><span class="n">working_dir</span><span class="p">,</span> <span class="n">branch_name</span><span class="p">)</span>
+    <span class="n">args</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">force</span><span class="p">:</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;--force&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">to_repo</span><span class="o">.</span><span class="n">working_dir</span><span class="p">),</span> <span class="n">branch_name</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">to_repo</span><span class="o">.</span><span class="n">working_dir</span><span class="p">),</span> <span class="n">branch_name</span><span class="p">)</span>
+    <span class="n">from_repo</span><span class="o">.</span><span class="n">git</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_branch_exists</span><span class="p">(</span><span class="n">repo</span><span class="p">:</span> <span class="n">Repo</span><span class="p">,</span> <span class="n">branch_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
@@ -385,6 +395,21 @@
 
 <div class="viewcode-block" id="checkout_version"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.ext_git.checkout_version">[docs]</a><span class="k">def</span> <span class="nf">checkout_version</span><span class="p">(</span><span class="n">repo</span><span class="p">:</span> <span class="n">Repo</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
     <span class="n">repo</span><span class="o">.</span><span class="n">git</span><span class="o">.</span><span class="n">checkout</span><span class="p">(</span><span class="n">version</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="reset_current_branch_to_commit"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.ext_git.reset_current_branch_to_commit">[docs]</a><span class="k">def</span> <span class="nf">reset_current_branch_to_commit</span><span class="p">(</span><span class="n">repo</span><span class="p">:</span> <span class="n">Repo</span><span class="p">,</span> <span class="n">commit</span><span class="p">:</span> <span class="n">Commit</span><span class="p">):</span>
+    <span class="n">commit_sha</span> <span class="o">=</span> <span class="n">commit</span><span class="o">.</span><span class="n">hexsha</span>
+    <span class="n">repo</span><span class="o">.</span><span class="n">git</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="s2">&quot;--hard&quot;</span><span class="p">,</span> <span class="n">commit_sha</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_commits_between_two_commits"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.ext_git.get_commits_between_two_commits">[docs]</a><span class="k">def</span> <span class="nf">get_commits_between_two_commits</span><span class="p">(</span>
+    <span class="n">repo</span><span class="p">:</span> <span class="n">Repo</span><span class="p">,</span> <span class="n">start</span><span class="p">:</span> <span class="n">Commit</span><span class="p">,</span> <span class="n">end</span><span class="p">:</span> <span class="n">Commit</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Commit</span><span class="p">]:</span>
+    <span class="n">raw_commit_output</span> <span class="o">=</span> <span class="n">repo</span><span class="o">.</span><span class="n">git</span><span class="o">.</span><span class="n">rev_list</span><span class="p">(</span>
+        <span class="s2">&quot;--ancestry-path&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">start</span><span class="o">.</span><span class="n">hexsha</span><span class="si">}</span><span class="s2">..</span><span class="si">{</span><span class="n">end</span><span class="o">.</span><span class="n">hexsha</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+    <span class="n">commit_shas</span> <span class="o">=</span> <span class="n">raw_commit_output</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">repo</span><span class="o">.</span><span class="n">commit</span><span class="p">(</span><span class="n">sha</span><span class="p">)</span> <span class="k">for</span> <span class="n">sha</span> <span class="ow">in</span> <span class="n">commit_shas</span><span class="p">]</span></div>
 </pre></div>
 
            </div>

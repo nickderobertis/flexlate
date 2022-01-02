@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.exc &mdash; flexlate 0.2.7 documentation</title>
+  <title>flexlate.exc &mdash; flexlate 0.3.0 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.2.7
+                0.3.0
               </div>
             
           
@@ -252,6 +252,52 @@
 
 
 <div class="viewcode-block" id="FlexlateProjectConfigFileNotExistsException"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.exc.FlexlateProjectConfigFileNotExistsException">[docs]</a><span class="k">class</span> <span class="nc">FlexlateProjectConfigFileNotExistsException</span><span class="p">(</span><span class="n">CannotLoadConfigException</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="FlexlateTransactionException"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.exc.FlexlateTransactionException">[docs]</a><span class="k">class</span> <span class="nc">FlexlateTransactionException</span><span class="p">(</span><span class="n">FlexlateException</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="CannotParseCommitMessageFlexlateTransaction"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.exc.CannotParseCommitMessageFlexlateTransaction">[docs]</a><span class="k">class</span> <span class="nc">CannotParseCommitMessageFlexlateTransaction</span><span class="p">(</span><span class="n">FlexlateTransactionException</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="LastCommitWasNotByFlexlateException"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.exc.LastCommitWasNotByFlexlateException">[docs]</a><span class="k">class</span> <span class="nc">LastCommitWasNotByFlexlateException</span><span class="p">(</span><span class="n">FlexlateTransactionException</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="TransactionMismatchBetweenBranchesException"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.exc.TransactionMismatchBetweenBranchesException">[docs]</a><span class="k">class</span> <span class="nc">TransactionMismatchBetweenBranchesException</span><span class="p">(</span><span class="n">FlexlateTransactionException</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="TooFewTransactionsException"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.exc.TooFewTransactionsException">[docs]</a><span class="k">class</span> <span class="nc">TooFewTransactionsException</span><span class="p">(</span><span class="n">FlexlateTransactionException</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="InvalidNumberOfTransactionsException"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.exc.InvalidNumberOfTransactionsException">[docs]</a><span class="k">class</span> <span class="nc">InvalidNumberOfTransactionsException</span><span class="p">(</span><span class="n">FlexlateTransactionException</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="ExpectedMergeCommitException"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.exc.ExpectedMergeCommitException">[docs]</a><span class="k">class</span> <span class="nc">ExpectedMergeCommitException</span><span class="p">(</span><span class="n">FlexlateTransactionException</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="CannotFindCorrectMergeParentException"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.exc.CannotFindCorrectMergeParentException">[docs]</a><span class="k">class</span> <span class="nc">CannotFindCorrectMergeParentException</span><span class="p">(</span><span class="n">FlexlateTransactionException</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="UserChangesWouldHaveBeenDeletedException"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.exc.UserChangesWouldHaveBeenDeletedException">[docs]</a><span class="k">class</span> <span class="nc">UserChangesWouldHaveBeenDeletedException</span><span class="p">(</span><span class="n">FlexlateTransactionException</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="MergeCommitIsNotMergingAFlexlateTransactionException"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.exc.MergeCommitIsNotMergingAFlexlateTransactionException">[docs]</a><span class="k">class</span> <span class="nc">MergeCommitIsNotMergingAFlexlateTransactionException</span><span class="p">(</span>
+    <span class="n">FlexlateTransactionException</span>
+<span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="CannotFindMergeForTransactionException"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.exc.CannotFindMergeForTransactionException">[docs]</a><span class="k">class</span> <span class="nc">CannotFindMergeForTransactionException</span><span class="p">(</span><span class="n">FlexlateTransactionException</span><span class="p">):</span>
     <span class="k">pass</span></div>
 </pre></div>
 

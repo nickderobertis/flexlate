@@ -1,0 +1,607 @@
+
+
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>flexlate.transactions.transaction &mdash; flexlate 0.3.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/clipboard.min.js"></script>
+        <script src="../../../_static/copybutton.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/sphinx_paramlinks.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/sg_gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/sg_gallery-binder.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/sg_gallery-dataframe.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/sg_gallery-rendered-html.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> flexlate
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">Getting started with flexlate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto_examples/index.html">This is my gallery</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">flexlate</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">flexlate</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>flexlate.transactions.transaction</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for flexlate.transactions.transaction</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">uuid</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Sequence</span>
+
+<span class="kn">from</span> <span class="nn">git</span> <span class="kn">import</span> <span class="n">Repo</span><span class="p">,</span> <span class="n">Commit</span>  <span class="c1"># type: ignore</span>
+<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span><span class="p">,</span> <span class="n">UUID4</span><span class="p">,</span> <span class="n">validator</span>
+
+<span class="kn">from</span> <span class="nn">flexlate.exc</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">CannotParseCommitMessageFlexlateTransaction</span><span class="p">,</span>
+    <span class="n">LastCommitWasNotByFlexlateException</span><span class="p">,</span>
+    <span class="n">TransactionMismatchBetweenBranchesException</span><span class="p">,</span>
+    <span class="n">InvalidNumberOfTransactionsException</span><span class="p">,</span>
+    <span class="n">TooFewTransactionsException</span><span class="p">,</span>
+    <span class="n">ExpectedMergeCommitException</span><span class="p">,</span>
+    <span class="n">CannotFindCorrectMergeParentException</span><span class="p">,</span>
+    <span class="n">UserChangesWouldHaveBeenDeletedException</span><span class="p">,</span>
+    <span class="n">MergeCommitIsNotMergingAFlexlateTransactionException</span><span class="p">,</span>
+    <span class="n">CannotFindMergeForTransactionException</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">flexlate.ext_git</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">reset_current_branch_to_commit</span><span class="p">,</span>
+    <span class="n">get_commits_between_two_commits</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">flexlate.template_data</span> <span class="kn">import</span> <span class="n">TemplateData</span>
+
+<span class="n">FLEXLATE_TRANSACTION_COMMIT_DIVIDER</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">-------------------BEGIN FLEXLATE TRANSACTION-------------------</span><span class="se">\n</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="TransactionType"><a class="viewcode-back" href="../../../api/flexlate.transactions.html#flexlate.transactions.transaction.TransactionType">[docs]</a><span class="k">class</span> <span class="nc">TransactionType</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+    <span class="n">ADD_SOURCE</span> <span class="o">=</span> <span class="s2">&quot;add source&quot;</span>
+    <span class="n">ADD_OUTPUT</span> <span class="o">=</span> <span class="s2">&quot;add output&quot;</span>
+    <span class="n">REMOVE_SOURCE</span> <span class="o">=</span> <span class="s2">&quot;remove source&quot;</span>
+    <span class="n">REMOVE_OUTPUT</span> <span class="o">=</span> <span class="s2">&quot;remove output&quot;</span>
+    <span class="n">UPDATE</span> <span class="o">=</span> <span class="s2">&quot;update&quot;</span></div>
+
+
+<div class="viewcode-block" id="FlexlateTransaction"><a class="viewcode-back" href="../../../api/flexlate.transactions.html#flexlate.transactions.transaction.FlexlateTransaction">[docs]</a><span class="k">class</span> <span class="nc">FlexlateTransaction</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">TransactionType</span>
+    <span class="n">target</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">out_root</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="n">TemplateData</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="n">UUID4</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>
+
+<div class="viewcode-block" id="FlexlateTransaction.cast_data_into_sequence"><a class="viewcode-back" href="../../../api/flexlate.transactions.html#flexlate.transactions.transaction.FlexlateTransaction.cast_data_into_sequence">[docs]</a>    <span class="nd">@validator</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">cast_data_into_sequence</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">v</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">v</span></div>
+
+<div class="viewcode-block" id="FlexlateTransaction.parse_commit_message"><a class="viewcode-back" href="../../../api/flexlate.transactions.html#flexlate.transactions.transaction.FlexlateTransaction.parse_commit_message">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">parse_commit_message</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;FlexlateTransaction&quot;</span><span class="p">:</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">FLEXLATE_TRANSACTION_COMMIT_DIVIDER</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">CannotParseCommitMessageFlexlateTransaction</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Could not parse commit message </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s2">. After splitting &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;on the divider, got </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span><span class="si">}</span><span class="s2"> parts instead of 2&quot;</span>
+            <span class="p">)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">transaction_part</span> <span class="o">=</span> <span class="n">parts</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">parse_raw</span><span class="p">(</span><span class="n">transaction_part</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">commit_message</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">(</span><span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="create_transaction_commit_message"><a class="viewcode-back" href="../../../api/flexlate.transactions.html#flexlate.transactions.transaction.create_transaction_commit_message">[docs]</a><span class="k">def</span> <span class="nf">create_transaction_commit_message</span><span class="p">(</span>
+    <span class="n">commit_message</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">FlexlateTransaction</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="n">commit_message</span>
+        <span class="o">+</span> <span class="n">FLEXLATE_TRANSACTION_COMMIT_DIVIDER</span>
+        <span class="o">+</span> <span class="n">transaction</span><span class="o">.</span><span class="n">commit_message</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="reset_last_transaction"><a class="viewcode-back" href="../../../api/flexlate.transactions.html#flexlate.transactions.transaction.reset_last_transaction">[docs]</a><span class="k">def</span> <span class="nf">reset_last_transaction</span><span class="p">(</span>
+    <span class="n">repo</span><span class="p">:</span> <span class="n">Repo</span><span class="p">,</span>
+    <span class="n">transaction</span><span class="p">:</span> <span class="n">FlexlateTransaction</span><span class="p">,</span>
+    <span class="n">merged_branch_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">template_branch_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="n">last_transaction</span> <span class="o">=</span> <span class="n">find_last_transaction_from_commit</span><span class="p">(</span>
+        <span class="n">repo</span><span class="o">.</span><span class="n">commit</span><span class="p">(),</span> <span class="n">merged_branch_name</span><span class="p">,</span> <span class="n">template_branch_name</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">last_transaction</span><span class="o">.</span><span class="n">id</span> <span class="o">!=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">id</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">TransactionMismatchBetweenBranchesException</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Found mismatching transaction ids: </span><span class="si">{</span><span class="n">last_transaction</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">transaction</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+    <span class="n">earliest_commit</span> <span class="o">=</span> <span class="n">find_earliest_commit_that_was_part_of_transaction</span><span class="p">(</span>
+        <span class="n">repo</span><span class="p">,</span> <span class="n">last_transaction</span><span class="p">,</span> <span class="n">merged_branch_name</span><span class="p">,</span> <span class="n">template_branch_name</span>
+    <span class="p">)</span>
+
+    <span class="n">is_template_branch</span> <span class="o">=</span> <span class="n">repo</span><span class="o">.</span><span class="n">active_branch</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">template_branch_name</span>
+    <span class="k">if</span> <span class="n">is_template_branch</span><span class="p">:</span>
+        <span class="c1"># On template branch, the only commits are flexlate transactions.</span>
+        <span class="c1"># Therefore can just get the parent to find the commit before the</span>
+        <span class="c1"># transaction started</span>
+        <span class="n">before_transaction_commit</span> <span class="o">=</span> <span class="n">_get_parent_commit</span><span class="p">(</span><span class="n">earliest_commit</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># On output/user branch, typically the only commits are merging flexlate transactions</span>
+        <span class="c1"># and user changes. So find the commit that merged this transaction,</span>
+        <span class="c1"># then use its parent.</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">merge_commit</span> <span class="o">=</span> <span class="n">find_earliest_merge_commit_for_transaction</span><span class="p">(</span>
+                <span class="n">repo</span><span class="p">,</span> <span class="n">transaction</span><span class="p">,</span> <span class="n">merged_branch_name</span><span class="p">,</span> <span class="n">template_branch_name</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="n">CannotFindMergeForTransactionException</span><span class="p">:</span>
+            <span class="c1"># This is likely because the user has not made any changes in the repo yet,</span>
+            <span class="c1"># and so the merges from the template branch are always fast-forwards.</span>
+            <span class="c1"># In this case, it is a mirror of the template branch and so we should use</span>
+            <span class="c1"># that logic</span>
+            <span class="n">before_transaction_commit</span> <span class="o">=</span> <span class="n">_get_parent_commit</span><span class="p">(</span><span class="n">earliest_commit</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">before_transaction_commit</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">_get_non_flexlate_transaction_parent_from_flexlate_merge_commit</span><span class="p">(</span>
+                    <span class="n">merge_commit</span><span class="p">,</span> <span class="n">merged_branch_name</span><span class="p">,</span> <span class="n">template_branch_name</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+    <span class="n">assert_that_all_commits_between_two_are_flexlate_transactions_or_merges</span><span class="p">(</span>
+        <span class="n">repo</span><span class="p">,</span>
+        <span class="n">before_transaction_commit</span><span class="p">,</span>
+        <span class="n">repo</span><span class="o">.</span><span class="n">commit</span><span class="p">(),</span>
+        <span class="n">merged_branch_name</span><span class="p">,</span>
+        <span class="n">template_branch_name</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">reset_current_branch_to_commit</span><span class="p">(</span><span class="n">repo</span><span class="p">,</span> <span class="n">before_transaction_commit</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="find_last_transaction_from_commit"><a class="viewcode-back" href="../../../api/flexlate.transactions.html#flexlate.transactions.transaction.find_last_transaction_from_commit">[docs]</a><span class="k">def</span> <span class="nf">find_last_transaction_from_commit</span><span class="p">(</span>
+    <span class="n">commit</span><span class="p">:</span> <span class="n">Commit</span><span class="p">,</span> <span class="n">merged_branch_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">template_branch_name</span><span class="p">:</span> <span class="nb">str</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FlexlateTransaction</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">_is_flexlate_merge_commit</span><span class="p">(</span><span class="n">commit</span><span class="p">,</span> <span class="n">merged_branch_name</span><span class="p">,</span> <span class="n">template_branch_name</span><span class="p">):</span>
+        <span class="n">parent</span> <span class="o">=</span> <span class="n">_get_flexlate_transaction_parent_from_flexlate_merge_commit</span><span class="p">(</span>
+            <span class="n">commit</span><span class="p">,</span> <span class="n">merged_branch_name</span><span class="p">,</span> <span class="n">template_branch_name</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">find_last_transaction_from_commit</span><span class="p">(</span>
+            <span class="n">parent</span><span class="p">,</span> <span class="n">merged_branch_name</span><span class="p">,</span> <span class="n">template_branch_name</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">FlexlateTransaction</span><span class="o">.</span><span class="n">parse_commit_message</span><span class="p">(</span><span class="n">commit</span><span class="o">.</span><span class="n">message</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="find_earliest_merge_commit_for_transaction"><a class="viewcode-back" href="../../../api/flexlate.transactions.html#flexlate.transactions.transaction.find_earliest_merge_commit_for_transaction">[docs]</a><span class="k">def</span> <span class="nf">find_earliest_merge_commit_for_transaction</span><span class="p">(</span>
+    <span class="n">repo</span><span class="p">:</span> <span class="n">Repo</span><span class="p">,</span>
+    <span class="n">transaction</span><span class="p">:</span> <span class="n">FlexlateTransaction</span><span class="p">,</span>
+    <span class="n">merged_branch_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">template_branch_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Commit</span><span class="p">:</span>
+    <span class="c1"># Walk back through commit tree, searching for the appropriate commit</span>
+    <span class="k">return</span> <span class="n">_search_commit_tree_for_earliest_merge_commit_for_transaction</span><span class="p">(</span>
+        <span class="n">repo</span><span class="o">.</span><span class="n">commit</span><span class="p">(),</span> <span class="n">transaction</span><span class="p">,</span> <span class="n">merged_branch_name</span><span class="p">,</span> <span class="n">template_branch_name</span>
+    <span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_search_commit_tree_for_earliest_merge_commit_for_transaction</span><span class="p">(</span>
+    <span class="n">commit</span><span class="p">:</span> <span class="n">Commit</span><span class="p">,</span>
+    <span class="n">transaction</span><span class="p">:</span> <span class="n">FlexlateTransaction</span><span class="p">,</span>
+    <span class="n">merged_branch_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">template_branch_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="c1"># TODO: Better strategy for finding earliest merge commit for transaction</span>
+    <span class="c1">#  The current strategy requires searching until the beginning of history.</span>
+    <span class="c1">#  Add early stopping when hitting a user commit or different flexlate transaction</span>
+    <span class="n">search_commits</span> <span class="o">=</span> <span class="p">[</span><span class="n">commit</span><span class="p">]</span>
+    <span class="n">found_commits</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Commit</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># Breadth-first search</span>
+    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">search_commits</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">this_commit</span> <span class="o">=</span> <span class="n">search_commits</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">_is_flexlate_merge_commit</span><span class="p">(</span>
+            <span class="n">this_commit</span><span class="p">,</span> <span class="n">merged_branch_name</span><span class="p">,</span> <span class="n">template_branch_name</span>
+        <span class="p">):</span>
+            <span class="n">merge_transaction</span> <span class="o">=</span> <span class="n">_get_transaction_underlying_merge_commit</span><span class="p">(</span><span class="n">this_commit</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">transaction</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">merge_transaction</span><span class="o">.</span><span class="n">id</span><span class="p">:</span>
+                <span class="n">found_commits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">this_commit</span><span class="p">)</span>
+        <span class="n">search_commits</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">this_commit</span><span class="o">.</span><span class="n">parents</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">found_commits</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">CannotFindMergeForTransactionException</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Could not find the merge commit for transaction </span><span class="si">{</span><span class="n">transaction</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+    <span class="c1"># Since BFS was used, last found commit should be the earliest</span>
+    <span class="k">return</span> <span class="n">found_commits</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">_get_transaction_underlying_merge_commit</span><span class="p">(</span><span class="n">commit</span><span class="p">:</span> <span class="n">Commit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FlexlateTransaction</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">parent</span> <span class="ow">in</span> <span class="n">commit</span><span class="o">.</span><span class="n">parents</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">FlexlateTransaction</span><span class="o">.</span><span class="n">parse_commit_message</span><span class="p">(</span><span class="n">parent</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">CannotParseCommitMessageFlexlateTransaction</span><span class="p">:</span>
+            <span class="k">continue</span>
+    <span class="k">raise</span> <span class="n">MergeCommitIsNotMergingAFlexlateTransactionException</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;Commit </span><span class="si">{</span><span class="n">commit</span><span class="o">.</span><span class="n">hexsha</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">commit</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+
+
+<div class="viewcode-block" id="assert_last_commit_was_in_a_flexlate_transaction"><a class="viewcode-back" href="../../../api/flexlate.transactions.html#flexlate.transactions.transaction.assert_last_commit_was_in_a_flexlate_transaction">[docs]</a><span class="k">def</span> <span class="nf">assert_last_commit_was_in_a_flexlate_transaction</span><span class="p">(</span>
+    <span class="n">repo</span><span class="p">:</span> <span class="n">Repo</span><span class="p">,</span> <span class="n">merged_branch_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">template_branch_name</span><span class="p">:</span> <span class="nb">str</span>
+<span class="p">):</span>
+    <span class="n">last_commit</span> <span class="o">=</span> <span class="n">repo</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">_is_flexlate_merge_commit</span><span class="p">(</span><span class="n">last_commit</span><span class="p">,</span> <span class="n">merged_branch_name</span><span class="p">,</span> <span class="n">template_branch_name</span><span class="p">):</span>
+        <span class="k">return</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">last_commit</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">LastCommitWasNotByFlexlateException</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Last commit was not made by flexlate, message is bytes&quot;</span>
+        <span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+
+        <span class="n">FlexlateTransaction</span><span class="o">.</span><span class="n">parse_commit_message</span><span class="p">(</span><span class="n">last_commit</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">CannotParseCommitMessageFlexlateTransaction</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">LastCommitWasNotByFlexlateException</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Last commit was not made by flexlate: </span><span class="si">{</span><span class="n">last_commit</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span></div>
+
+
+<div class="viewcode-block" id="assert_has_at_least_n_transactions"><a class="viewcode-back" href="../../../api/flexlate.transactions.html#flexlate.transactions.transaction.assert_has_at_least_n_transactions">[docs]</a><span class="k">def</span> <span class="nf">assert_has_at_least_n_transactions</span><span class="p">(</span>
+    <span class="n">repo</span><span class="p">:</span> <span class="n">Repo</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">merged_branch_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">template_branch_name</span><span class="p">:</span> <span class="nb">str</span>
+<span class="p">):</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">InvalidNumberOfTransactionsException</span><span class="p">(</span>
+            <span class="s2">&quot;Number of transactions must be positive&quot;</span>
+        <span class="p">)</span>
+    <span class="n">assert_last_commit_was_in_a_flexlate_transaction</span><span class="p">(</span>
+        <span class="n">repo</span><span class="p">,</span> <span class="n">merged_branch_name</span><span class="p">,</span> <span class="n">template_branch_name</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="n">last_commit</span> <span class="o">=</span> <span class="n">repo</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="n">num_to_verify</span> <span class="o">=</span> <span class="n">n</span>
+
+    <span class="k">def</span> <span class="nf">too_few_transactions</span><span class="p">():</span>
+        <span class="c1"># Have hit the end but have not finished verifying, therefore there are too few transactions</span>
+        <span class="k">raise</span> <span class="n">TooFewTransactionsException</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Desired to undo </span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2"> transactions but only found </span><span class="si">{</span><span class="n">n</span> <span class="o">-</span> <span class="n">num_to_verify</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_to_verify</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">_is_flexlate_merge_commit</span><span class="p">(</span>
+            <span class="n">last_commit</span><span class="p">,</span> <span class="n">merged_branch_name</span><span class="p">,</span> <span class="n">template_branch_name</span>
+        <span class="p">):</span>
+            <span class="n">last_commit</span> <span class="o">=</span> <span class="n">_get_flexlate_transaction_parent_from_flexlate_merge_commit</span><span class="p">(</span>
+                <span class="n">last_commit</span><span class="p">,</span> <span class="n">merged_branch_name</span><span class="p">,</span> <span class="n">template_branch_name</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">last_commit</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
+            <span class="c1"># Flexlate never commits with binary messages</span>
+            <span class="k">return</span> <span class="n">too_few_transactions</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">transaction</span> <span class="o">=</span> <span class="n">FlexlateTransaction</span><span class="o">.</span><span class="n">parse_commit_message</span><span class="p">(</span><span class="n">last_commit</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">CannotParseCommitMessageFlexlateTransaction</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">too_few_transactions</span><span class="p">()</span>
+        <span class="n">earliest_commit</span> <span class="o">=</span> <span class="n">_return_commit_if_begin_of_transaction_else_get_parent</span><span class="p">(</span>
+            <span class="n">last_commit</span><span class="p">,</span> <span class="n">transaction</span><span class="p">,</span> <span class="n">merged_branch_name</span><span class="p">,</span> <span class="n">template_branch_name</span>
+        <span class="p">)</span>
+        <span class="n">num_to_verify</span> <span class="o">-=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">num_to_verify</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">last_commit</span> <span class="o">=</span> <span class="n">_get_parent_commit</span><span class="p">(</span><span class="n">earliest_commit</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="n">HitInitialCommit</span><span class="p">,</span> <span class="n">HitMergeCommit</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">too_few_transactions</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="assert_that_all_commits_between_two_are_flexlate_transactions_or_merges"><a class="viewcode-back" href="../../../api/flexlate.transactions.html#flexlate.transactions.transaction.assert_that_all_commits_between_two_are_flexlate_transactions_or_merges">[docs]</a><span class="k">def</span> <span class="nf">assert_that_all_commits_between_two_are_flexlate_transactions_or_merges</span><span class="p">(</span>
+    <span class="n">repo</span><span class="p">:</span> <span class="n">Repo</span><span class="p">,</span>
+    <span class="n">start</span><span class="p">:</span> <span class="n">Commit</span><span class="p">,</span>
+    <span class="n">end</span><span class="p">:</span> <span class="n">Commit</span><span class="p">,</span>
+    <span class="n">merged_branch_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">template_branch_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="n">between_commits</span> <span class="o">=</span> <span class="n">get_commits_between_two_commits</span><span class="p">(</span><span class="n">repo</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">commit</span> <span class="ow">in</span> <span class="n">between_commits</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">_is_flexlate_merge_commit</span><span class="p">(</span><span class="n">commit</span><span class="p">,</span> <span class="n">merged_branch_name</span><span class="p">,</span> <span class="n">template_branch_name</span><span class="p">):</span>
+            <span class="k">continue</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">FlexlateTransaction</span><span class="o">.</span><span class="n">parse_commit_message</span><span class="p">(</span><span class="n">commit</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">CannotParseCommitMessageFlexlateTransaction</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">UserChangesWouldHaveBeenDeletedException</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Commit </span><span class="si">{</span><span class="n">commit</span><span class="o">.</span><span class="n">hexsha</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">commit</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s2"> would have been deleted &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;by the flexlate undo strategy. An extra check prevented it. &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Please raise this as an issue on Github&quot;</span>
+            <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="find_earliest_commit_that_was_part_of_transaction"><a class="viewcode-back" href="../../../api/flexlate.transactions.html#flexlate.transactions.transaction.find_earliest_commit_that_was_part_of_transaction">[docs]</a><span class="k">def</span> <span class="nf">find_earliest_commit_that_was_part_of_transaction</span><span class="p">(</span>
+    <span class="n">repo</span><span class="p">:</span> <span class="n">Repo</span><span class="p">,</span>
+    <span class="n">transaction</span><span class="p">:</span> <span class="n">FlexlateTransaction</span><span class="p">,</span>
+    <span class="n">merged_branch_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">template_branch_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Commit</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">_return_commit_if_begin_of_transaction_else_get_parent</span><span class="p">(</span>
+        <span class="n">repo</span><span class="o">.</span><span class="n">commit</span><span class="p">(),</span> <span class="n">transaction</span><span class="p">,</span> <span class="n">merged_branch_name</span><span class="p">,</span> <span class="n">template_branch_name</span>
+    <span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_return_commit_if_begin_of_transaction_else_get_parent</span><span class="p">(</span>
+    <span class="n">commit</span><span class="p">:</span> <span class="n">Commit</span><span class="p">,</span>
+    <span class="n">transaction</span><span class="p">:</span> <span class="n">FlexlateTransaction</span><span class="p">,</span>
+    <span class="n">merged_branch_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">template_branch_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Commit</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">parent_commit</span> <span class="o">=</span> <span class="n">_get_parent_commit</span><span class="p">(</span><span class="n">commit</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">HitInitialCommit</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">commit</span>
+    <span class="k">except</span> <span class="n">HitMergeCommit</span><span class="p">:</span>
+        <span class="n">parent_commit</span> <span class="o">=</span> <span class="n">_get_flexlate_transaction_parent_from_flexlate_merge_commit</span><span class="p">(</span>
+            <span class="n">commit</span><span class="p">,</span> <span class="n">merged_branch_name</span><span class="p">,</span> <span class="n">template_branch_name</span>
+        <span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">commit_transaction</span> <span class="o">=</span> <span class="n">FlexlateTransaction</span><span class="o">.</span><span class="n">parse_commit_message</span><span class="p">(</span>
+            <span class="n">parent_commit</span><span class="o">.</span><span class="n">message</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="n">CannotParseCommitMessageFlexlateTransaction</span><span class="p">:</span>
+        <span class="c1"># Not a flexlate commit, so this must be the last in the transaction</span>
+        <span class="k">return</span> <span class="n">commit</span>
+
+    <span class="k">if</span> <span class="n">commit_transaction</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">transaction</span><span class="o">.</span><span class="n">id</span><span class="p">:</span>
+        <span class="c1"># Parent is still in the same transaction. Recurse to find the original commit</span>
+        <span class="k">return</span> <span class="n">_return_commit_if_begin_of_transaction_else_get_parent</span><span class="p">(</span>
+            <span class="n">parent_commit</span><span class="p">,</span> <span class="n">transaction</span><span class="p">,</span> <span class="n">merged_branch_name</span><span class="p">,</span> <span class="n">template_branch_name</span>
+        <span class="p">)</span>
+
+    <span class="c1"># It is a flexlate commit, but different transaction. Therefore return this commit</span>
+    <span class="k">return</span> <span class="n">commit</span>
+
+
+<div class="viewcode-block" id="HitInitialCommit"><a class="viewcode-back" href="../../../api/flexlate.transactions.html#flexlate.transactions.transaction.HitInitialCommit">[docs]</a><span class="k">class</span> <span class="nc">HitInitialCommit</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="HitMergeCommit"><a class="viewcode-back" href="../../../api/flexlate.transactions.html#flexlate.transactions.transaction.HitMergeCommit">[docs]</a><span class="k">class</span> <span class="nc">HitMergeCommit</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<span class="k">def</span> <span class="nf">_get_parent_commit</span><span class="p">(</span><span class="n">commit</span><span class="p">:</span> <span class="n">Commit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Commit</span><span class="p">:</span>
+    <span class="n">parents</span> <span class="o">=</span> <span class="n">commit</span><span class="o">.</span><span class="n">parents</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parents</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">HitInitialCommit</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parents</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">HitMergeCommit</span>
+    <span class="k">return</span> <span class="n">parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">_get_flexlate_transaction_parent_from_flexlate_merge_commit</span><span class="p">(</span>
+    <span class="n">commit</span><span class="p">:</span> <span class="n">Commit</span><span class="p">,</span> <span class="n">merged_branch_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">template_branch_name</span><span class="p">:</span> <span class="nb">str</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Commit</span><span class="p">:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">_is_flexlate_merge_commit</span><span class="p">(</span><span class="n">commit</span><span class="p">,</span> <span class="n">merged_branch_name</span><span class="p">,</span> <span class="n">template_branch_name</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">ExpectedMergeCommitException</span><span class="p">(</span><span class="s2">&quot;not a flexlate merge commit&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">commit</span><span class="o">.</span><span class="n">parents</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ExpectedMergeCommitException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;has </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">commit</span><span class="o">.</span><span class="n">parents</span><span class="p">)</span><span class="si">}</span><span class="s2"> parents, not 2&quot;</span><span class="p">)</span>
+    <span class="n">flexlate_transaction_parents</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Commit</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">parent</span> <span class="ow">in</span> <span class="n">commit</span><span class="o">.</span><span class="n">parents</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">FlexlateTransaction</span><span class="o">.</span><span class="n">parse_commit_message</span><span class="p">(</span><span class="n">parent</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+            <span class="n">flexlate_transaction_parents</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">CannotParseCommitMessageFlexlateTransaction</span><span class="p">:</span>
+            <span class="k">pass</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">flexlate_transaction_parents</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">CannotFindCorrectMergeParentException</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Cannot determine which of these commits is the flexlate transaction parent </span><span class="si">{</span><span class="n">flexlate_transaction_parents</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">flexlate_transaction_parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">_get_non_flexlate_transaction_parent_from_flexlate_merge_commit</span><span class="p">(</span>
+    <span class="n">commit</span><span class="p">:</span> <span class="n">Commit</span><span class="p">,</span> <span class="n">merged_branch_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">template_branch_name</span><span class="p">:</span> <span class="nb">str</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Commit</span><span class="p">:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">_is_flexlate_merge_commit</span><span class="p">(</span><span class="n">commit</span><span class="p">,</span> <span class="n">merged_branch_name</span><span class="p">,</span> <span class="n">template_branch_name</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">ExpectedMergeCommitException</span><span class="p">(</span><span class="s2">&quot;not a flexlate merge commit&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">commit</span><span class="o">.</span><span class="n">parents</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ExpectedMergeCommitException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;has </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">commit</span><span class="o">.</span><span class="n">parents</span><span class="p">)</span><span class="si">}</span><span class="s2"> parents, not 2&quot;</span><span class="p">)</span>
+    <span class="n">non_flexlate_transaction_parents</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Commit</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">parent</span> <span class="ow">in</span> <span class="n">commit</span><span class="o">.</span><span class="n">parents</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">FlexlateTransaction</span><span class="o">.</span><span class="n">parse_commit_message</span><span class="p">(</span><span class="n">parent</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">CannotParseCommitMessageFlexlateTransaction</span><span class="p">:</span>
+            <span class="n">non_flexlate_transaction_parents</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">non_flexlate_transaction_parents</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">CannotFindCorrectMergeParentException</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Cannot determine which of these commits is the non-flexlate transaction parent </span><span class="si">{</span><span class="n">non_flexlate_transaction_parents</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">non_flexlate_transaction_parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">_is_flexlate_merge_commit</span><span class="p">(</span>
+    <span class="n">commit</span><span class="p">:</span> <span class="n">Commit</span><span class="p">,</span> <span class="n">merged_branch_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">template_branch_name</span><span class="p">:</span> <span class="nb">str</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="n">commit</span><span class="o">.</span><span class="n">message</span>
+        <span class="o">==</span> <span class="sa">f</span><span class="s2">&quot;Merge branch &#39;</span><span class="si">{</span><span class="n">template_branch_name</span><span class="si">}</span><span class="s2">&#39; into </span><span class="si">{</span><span class="n">merged_branch_name</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2022, Nick DeRobertis
+
+    </p>
+  </div>
+    
+    
+      Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

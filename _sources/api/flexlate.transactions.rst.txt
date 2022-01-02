@@ -1,0 +1,27 @@
+flexlate.transactions package
+=============================
+
+.. automodule:: flexlate.transactions
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+flexlate.transactions.transaction module
+----------------------------------------
+
+.. automodule:: flexlate.transactions.transaction
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+flexlate.transactions.undoer module
+-----------------------------------
+
+.. automodule:: flexlate.transactions.undoer
+   :members:
+   :undoc-members:
+   :show-inheritance:
+

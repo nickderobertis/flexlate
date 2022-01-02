@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.path_ops &mdash; flexlate 0.2.7 documentation</title>
+  <title>flexlate.path_ops &mdash; flexlate 0.3.0 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.2.7
+                0.3.0
               </div>
             
           
@@ -250,6 +250,15 @@
     <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
     <span class="k">yield</span>
     <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">current_path</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="make_absolute_path_from_possibly_relative_to_another_path"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.path_ops.make_absolute_path_from_possibly_relative_to_another_path">[docs]</a><span class="k">def</span> <span class="nf">make_absolute_path_from_possibly_relative_to_another_path</span><span class="p">(</span>
+    <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">possibly_relative_to</span><span class="p">:</span> <span class="n">Path</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">is_absolute</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">path</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">possibly_relative_to</span> <span class="o">/</span> <span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span></div>
 </pre></div>
 
            </div>

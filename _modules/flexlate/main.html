@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.main &mdash; flexlate 0.2.7 documentation</title>
+  <title>flexlate.main &mdash; flexlate 0.3.0 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.2.7
+                0.3.0
               </div>
             
           
@@ -181,6 +181,8 @@
 <span class="kn">from</span> <span class="nn">flexlate.render.multi</span> <span class="kn">import</span> <span class="n">MultiRenderer</span>
 <span class="kn">from</span> <span class="nn">flexlate.template.base</span> <span class="kn">import</span> <span class="n">Template</span>
 <span class="kn">from</span> <span class="nn">flexlate.template_data</span> <span class="kn">import</span> <span class="n">TemplateData</span>
+<span class="kn">from</span> <span class="nn">flexlate.transactions.transaction</span> <span class="kn">import</span> <span class="n">FlexlateTransaction</span><span class="p">,</span> <span class="n">TransactionType</span>
+<span class="kn">from</span> <span class="nn">flexlate.transactions.undoer</span> <span class="kn">import</span> <span class="n">Undoer</span>
 <span class="kn">from</span> <span class="nn">flexlate.update.main</span> <span class="kn">import</span> <span class="n">Updater</span>
 
 
@@ -193,13 +195,15 @@
         <span class="n">finder</span><span class="p">:</span> <span class="n">MultiFinder</span> <span class="o">=</span> <span class="n">MultiFinder</span><span class="p">(),</span>
         <span class="n">renderer</span><span class="p">:</span> <span class="n">MultiRenderer</span> <span class="o">=</span> <span class="n">MultiRenderer</span><span class="p">(),</span>
         <span class="n">updater</span><span class="p">:</span> <span class="n">Updater</span> <span class="o">=</span> <span class="n">Updater</span><span class="p">(),</span>
+        <span class="n">undoer</span><span class="p">:</span> <span class="n">Undoer</span> <span class="o">=</span> <span class="n">Undoer</span><span class="p">(),</span>
     <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">adder</span> <span class="o">=</span> <span class="n">adder</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">remover</span> <span class="o">=</span> <span class="n">remover</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config_manager</span> <span class="o">=</span> <span class="n">config_manager</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">finder</span> <span class="o">=</span> <span class="n">finder</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span> <span class="o">=</span> <span class="n">renderer</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">updater</span> <span class="o">=</span> <span class="n">updater</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">updater</span> <span class="o">=</span> <span class="n">updater</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">undoer</span> <span class="o">=</span> <span class="n">undoer</span></div>
 
 <div class="viewcode-block" id="Flexlate.init_project"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.main.Flexlate.init_project">[docs]</a>    <span class="k">def</span> <span class="nf">init_project</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -226,6 +230,9 @@
         <span class="n">template_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
         <span class="n">add_mode</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AddMode</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">FlexlateTransaction</span><span class="p">(</span>
+            <span class="nb">type</span><span class="o">=</span><span class="n">TransactionType</span><span class="o">.</span><span class="n">ADD_SOURCE</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">name</span> <span class="ow">or</span> <span class="n">path</span><span class="p">,</span> <span class="n">out_root</span><span class="o">=</span><span class="n">template_root</span>
+        <span class="p">)</span>
         <span class="n">project_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_manager</span><span class="o">.</span><span class="n">load_project_config</span><span class="p">(</span><span class="n">template_root</span><span class="p">)</span>
         <span class="n">add_mode</span> <span class="o">=</span> <span class="n">add_mode</span> <span class="ow">or</span> <span class="n">project_config</span><span class="o">.</span><span class="n">default_add_mode</span>
         <span class="n">template</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">finder</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="n">target_version</span><span class="p">)</span>
@@ -235,6 +242,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">adder</span><span class="o">.</span><span class="n">add_template_source</span><span class="p">(</span>
             <span class="n">repo</span><span class="p">,</span>
             <span class="n">template</span><span class="p">,</span>
+            <span class="n">transaction</span><span class="p">,</span>
             <span class="n">target_version</span><span class="o">=</span><span class="n">target_version</span><span class="p">,</span>
             <span class="n">out_root</span><span class="o">=</span><span class="n">template_root</span><span class="p">,</span>
             <span class="n">merged_branch_name</span><span class="o">=</span><span class="n">project_config</span><span class="o">.</span><span class="n">merged_branch_name</span><span class="p">,</span>
@@ -248,11 +256,17 @@
         <span class="n">template_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">template_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
     <span class="p">):</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">FlexlateTransaction</span><span class="p">(</span>
+            <span class="nb">type</span><span class="o">=</span><span class="n">TransactionType</span><span class="o">.</span><span class="n">REMOVE_SOURCE</span><span class="p">,</span>
+            <span class="n">target</span><span class="o">=</span><span class="n">template_name</span><span class="p">,</span>
+            <span class="n">out_root</span><span class="o">=</span><span class="n">template_root</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="n">project_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_manager</span><span class="o">.</span><span class="n">load_project_config</span><span class="p">(</span><span class="n">template_root</span><span class="p">)</span>
         <span class="n">repo</span> <span class="o">=</span> <span class="n">Repo</span><span class="p">(</span><span class="n">project_config</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">remover</span><span class="o">.</span><span class="n">remove_template_source</span><span class="p">(</span>
             <span class="n">repo</span><span class="p">,</span>
             <span class="n">template_name</span><span class="p">,</span>
+            <span class="n">transaction</span><span class="p">,</span>
             <span class="n">out_root</span><span class="o">=</span><span class="n">template_root</span><span class="p">,</span>
             <span class="n">merged_branch_name</span><span class="o">=</span><span class="n">project_config</span><span class="o">.</span><span class="n">merged_branch_name</span><span class="p">,</span>
             <span class="n">template_branch_name</span><span class="o">=</span><span class="n">project_config</span><span class="o">.</span><span class="n">template_branch_name</span><span class="p">,</span>
@@ -268,6 +282,9 @@
         <span class="n">add_mode</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AddMode</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">no_input</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">FlexlateTransaction</span><span class="p">(</span>
+            <span class="nb">type</span><span class="o">=</span><span class="n">TransactionType</span><span class="o">.</span><span class="n">ADD_OUTPUT</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">out_root</span><span class="o">=</span><span class="n">out_root</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span>
+        <span class="p">)</span>
         <span class="n">project_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_manager</span><span class="o">.</span><span class="n">load_project_config</span><span class="p">(</span><span class="n">out_root</span><span class="p">)</span>
         <span class="n">add_mode</span> <span class="o">=</span> <span class="n">add_mode</span> <span class="ow">or</span> <span class="n">project_config</span><span class="o">.</span><span class="n">default_add_mode</span>
         <span class="n">template</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_manager</span><span class="o">.</span><span class="n">get_template_by_name</span><span class="p">(</span>
@@ -277,6 +294,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">adder</span><span class="o">.</span><span class="n">apply_template_and_add</span><span class="p">(</span>
             <span class="n">repo</span><span class="p">,</span>
             <span class="n">template</span><span class="p">,</span>
+            <span class="n">transaction</span><span class="p">,</span>
             <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
             <span class="n">out_root</span><span class="o">=</span><span class="n">out_root</span><span class="p">,</span>
             <span class="n">add_mode</span><span class="o">=</span><span class="n">add_mode</span><span class="p">,</span>
@@ -293,12 +311,16 @@
         <span class="n">template_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">out_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
     <span class="p">):</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">FlexlateTransaction</span><span class="p">(</span>
+            <span class="nb">type</span><span class="o">=</span><span class="n">TransactionType</span><span class="o">.</span><span class="n">REMOVE_OUTPUT</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">template_name</span><span class="p">,</span> <span class="n">out_root</span><span class="o">=</span><span class="n">out_root</span>
+        <span class="p">)</span>
         <span class="n">project_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_manager</span><span class="o">.</span><span class="n">load_project_config</span><span class="p">(</span><span class="n">out_root</span><span class="p">)</span>
         <span class="n">repo</span> <span class="o">=</span> <span class="n">Repo</span><span class="p">(</span><span class="n">project_config</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">remover</span><span class="o">.</span><span class="n">remove_applied_template_and_output</span><span class="p">(</span>
             <span class="n">repo</span><span class="p">,</span>
             <span class="n">template_name</span><span class="p">,</span>
+            <span class="n">transaction</span><span class="p">,</span>
             <span class="n">out_root</span><span class="o">=</span><span class="n">out_root</span><span class="p">,</span>
             <span class="n">add_mode</span><span class="o">=</span><span class="n">project_config</span><span class="o">.</span><span class="n">default_add_mode</span><span class="p">,</span>
             <span class="n">merged_branch_name</span><span class="o">=</span><span class="n">project_config</span><span class="o">.</span><span class="n">merged_branch_name</span><span class="p">,</span>
@@ -315,6 +337,11 @@
         <span class="n">no_input</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">project_path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
     <span class="p">):</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">FlexlateTransaction</span><span class="p">(</span>
+            <span class="nb">type</span><span class="o">=</span><span class="n">TransactionType</span><span class="o">.</span><span class="n">UPDATE</span><span class="p">,</span>
+            <span class="n">target</span><span class="o">=</span><span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">names</span><span class="p">)</span> <span class="k">if</span> <span class="n">names</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="n">project_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_manager</span><span class="o">.</span><span class="n">load_project_config</span><span class="p">(</span><span class="n">project_path</span><span class="p">)</span>
         <span class="n">templates</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Template</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">names</span><span class="p">:</span>
@@ -348,11 +375,22 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">updater</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
             <span class="n">repo</span><span class="p">,</span>
             <span class="n">updates</span><span class="p">,</span>
+            <span class="n">transaction</span><span class="p">,</span>
             <span class="n">no_input</span><span class="o">=</span><span class="n">no_input</span><span class="p">,</span>
             <span class="n">merged_branch_name</span><span class="o">=</span><span class="n">project_config</span><span class="o">.</span><span class="n">merged_branch_name</span><span class="p">,</span>
             <span class="n">template_branch_name</span><span class="o">=</span><span class="n">project_config</span><span class="o">.</span><span class="n">template_branch_name</span><span class="p">,</span>
             <span class="n">renderer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="p">,</span>
             <span class="n">config_manager</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config_manager</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Flexlate.undo"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.main.Flexlate.undo">[docs]</a>    <span class="k">def</span> <span class="nf">undo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_operations</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">project_path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)):</span>
+        <span class="n">project_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_manager</span><span class="o">.</span><span class="n">load_project_config</span><span class="p">(</span><span class="n">project_path</span><span class="p">)</span>
+        <span class="n">repo</span> <span class="o">=</span> <span class="n">Repo</span><span class="p">(</span><span class="n">project_config</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">undoer</span><span class="o">.</span><span class="n">undo_transactions</span><span class="p">(</span>
+            <span class="n">repo</span><span class="p">,</span>
+            <span class="n">num_transactions</span><span class="o">=</span><span class="n">num_operations</span><span class="p">,</span>
+            <span class="n">merged_branch_name</span><span class="o">=</span><span class="n">project_config</span><span class="o">.</span><span class="n">merged_branch_name</span><span class="p">,</span>
+            <span class="n">template_branch_name</span><span class="o">=</span><span class="n">project_config</span><span class="o">.</span><span class="n">template_branch_name</span><span class="p">,</span>
         <span class="p">)</span></div></div>
 
     <span class="c1"># TODO: list template sources, list applied templates</span>
