@@ -9,6 +9,7 @@ from git import GitCommandError
 
 from flexlate.add_mode import AddMode
 from flexlate.config import FlexlateConfig, FlexlateProjectConfig
+from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.template_data import TemplateData
 from tests.config import (
     GENERATED_FILES_DIR,
@@ -35,6 +36,8 @@ from tests.fixtures.template_source import (
     TemplateSourceType,
     COOKIECUTTER_REMOTE_DEFAULT_EXPECT_PATH,
 )
+from tests.gitutils import assert_main_commit_message_matches
+from tests.integration.undoables import UNDOABLE_OPERATIONS
 
 
 def test_init_project_and_add_source_and_template(
@@ -326,6 +329,7 @@ def test_remove_template_source(
     user: bool,
     flexlates: FlexlateFixture,
     add_mode: AddMode,
+    subdir_style: SubdirStyle,
     repo_with_placeholder_committed: Repo,
 ):
     fxt = flexlates.flexlate
@@ -344,6 +348,47 @@ def test_remove_template_source(
 
     _assert_project_config_is_correct(project_config_path, user=user, add_mode=add_mode)
 
+    # Works for main dir, now try subdir
+    subdir = GENERATED_REPO_DIR / "subdir1" / "subdir2"
+    subdir.mkdir(parents=True)
+    subdir_config_root: Path
+    if add_mode == AddMode.USER:
+        subdir_config_root = GENERATED_FILES_DIR
+    elif add_mode == AddMode.LOCAL:
+        subdir_config_root = subdir
+    elif add_mode == AddMode.PROJECT:
+        subdir_config_root = GENERATED_REPO_DIR
+    else:
+        raise ValueError("unsupported add mode")
+    subdir_config_path = subdir_config_root / "flexlate.json"
+
+    if subdir_style == SubdirStyle.CD:
+        with change_directory_to(subdir):
+            fxt.add_template_source(COOKIECUTTER_REMOTE_URL)
+            assert subdir_config_path.exists()
+            fxt.remove_template_source(COOKIECUTTER_REMOTE_NAME)
+            assert not subdir_config_path.exists()
+    elif subdir_style == SubdirStyle.PROVIDE_RELATIVE:
+        out_root = subdir.relative_to(os.getcwd())
+        fxt.add_template_source(
+            COOKIECUTTER_REMOTE_URL,
+            template_root=out_root,
+        )
+        assert subdir_config_path.exists()
+        fxt.remove_template_source(COOKIECUTTER_REMOTE_NAME, template_root=out_root)
+        assert not subdir_config_path.exists()
+    elif subdir_style == SubdirStyle.PROVIDE_ABSOLUTE:
+        out_root = subdir.absolute()
+        fxt.add_template_source(
+            COOKIECUTTER_REMOTE_URL,
+            template_root=out_root,
+        )
+        assert subdir_config_path.exists()
+        fxt.remove_template_source(COOKIECUTTER_REMOTE_NAME, template_root=out_root)
+        assert not subdir_config_path.exists()
+
+    _assert_project_config_is_correct(project_config_path, user=user, add_mode=add_mode)
+
 
 @patch.object(appdirs, "user_config_dir", lambda name: GENERATED_FILES_DIR)
 @pytest.mark.parametrize("user", [False, True])
@@ -351,6 +396,7 @@ def test_remove_applied_template(
     user: bool,
     flexlates: FlexlateFixture,
     add_mode: AddMode,
+    subdir_style: SubdirStyle,
     repo_with_placeholder_committed: Repo,
 ):
     fxt = flexlates.flexlate
@@ -371,9 +417,119 @@ def test_remove_applied_template(
         _assert_project_files_are_correct(expect_data=expect_data)
         fxt.remove_applied_template_and_output(COOKIECUTTER_REMOTE_NAME)
 
-    _assert_project_files_do_not_exist(expect_data=expect_data)
+        _assert_project_files_do_not_exist(expect_data=expect_data)
+        _assert_project_config_is_correct(
+            project_config_path, user=user, add_mode=add_mode
+        )
+        _assert_applied_templates_config_is_empty(config_path)
+
+        # Works for main dir, now try subdir
+        subdir = GENERATED_REPO_DIR / "subdir1" / "subdir2"
+        subdir.mkdir(parents=True)
+        if subdir_style == SubdirStyle.CD:
+            with change_directory_to(subdir):
+                fxt.apply_template_and_add(
+                    COOKIECUTTER_REMOTE_NAME, data=expect_data, no_input=no_input
+                )
+                fxt.remove_applied_template_and_output(COOKIECUTTER_REMOTE_NAME)
+        elif subdir_style == SubdirStyle.PROVIDE_RELATIVE:
+            out_root = subdir.relative_to(os.getcwd())
+            fxt.apply_template_and_add(
+                COOKIECUTTER_REMOTE_NAME,
+                data=expect_data,
+                no_input=no_input,
+                out_root=out_root,
+            )
+            fxt.remove_applied_template_and_output(
+                COOKIECUTTER_REMOTE_NAME, out_root=out_root
+            )
+        elif subdir_style == SubdirStyle.PROVIDE_ABSOLUTE:
+            out_root = subdir.absolute()
+            fxt.apply_template_and_add(
+                COOKIECUTTER_REMOTE_NAME,
+                data=expect_data,
+                no_input=no_input,
+                out_root=out_root,
+            )
+            fxt.remove_applied_template_and_output(
+                COOKIECUTTER_REMOTE_NAME, out_root=out_root
+            )
+
+    _assert_project_files_do_not_exist(subdir, expect_data=expect_data)
     _assert_project_config_is_correct(project_config_path, user=user, add_mode=add_mode)
-    _assert_applied_templates_config_is_empty(config_path)
+    assert not (subdir / "flexlate.json").exists()
+
+
+@patch.object(appdirs, "user_config_dir", lambda name: GENERATED_FILES_DIR)
+def test_undo(
+    flexlates: FlexlateFixture,
+    repo_with_placeholder_committed: Repo,
+):
+    fxt = flexlates.flexlate
+    repo = repo_with_placeholder_committed
+    with change_directory_to(GENERATED_REPO_DIR):
+        fxt.init_project()
+        fxt.add_template_source(COOKIECUTTER_REMOTE_URL)
+        fxt.apply_template_and_add(COOKIECUTTER_REMOTE_NAME, no_input=True)
+        # Work in a subdirectory so that we can run all operations.
+        # Commit a file so that the folder will persist and ensure that
+        # the file is never removed
+        subdir = GENERATED_REPO_DIR / "subdir"
+        subdir.mkdir()
+        subdir_placeholder_path = (subdir / "some-file.txt").resolve()
+        subdir_placeholder_path.write_text("something")
+        manual_commit_message = "Add a placeholder in a subdir"
+        stage_and_commit_all(repo, manual_commit_message)
+        # Add an operation that will be undone
+        with change_directory_to(subdir):
+            # One check being careful about the input files, just to make sure
+            # something is happening
+            fxt.apply_template_and_add(COOKIECUTTER_REMOTE_NAME, no_input=True)
+            config_path = subdir / "flexlate.json"
+            _assert_project_files_are_correct(subdir)
+            _assert_applied_templates_config_is_correct(config_path)
+            fxt.undo()
+            _assert_project_files_do_not_exist(subdir)
+            assert not config_path.exists()
+            assert subdir_placeholder_path.read_text() == "something"
+            # Now check everything just to make sure it can be undone
+            for operation in UNDOABLE_OPERATIONS:
+                operation.operation(fxt)
+                fxt.undo(num_operations=operation.num_transactions)
+                _assert_project_files_do_not_exist(subdir)
+                assert not config_path.exists()
+                assert subdir_placeholder_path.read_text() == "something"
+
+    def assert_merged_commit_history_is_correct():
+        assert_main_commit_message_matches(repo.commit().message, manual_commit_message)
+        assert len(repo.commit().parents) == 1
+        parent = repo.commit().parents[0]
+        assert_main_commit_message_matches(parent.message, "Update flexlate templates")
+
+    assert_merged_commit_history_is_correct()
+    _assert_project_files_are_correct()
+    _assert_config_is_correct()
+    _assert_project_config_is_correct()
+
+    for branch_name in [DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME]:
+        branch = repo.branches[branch_name]  # type: ignore
+        branch.checkout()
+
+    merged_branch = repo.branches[DEFAULT_MERGED_BRANCH_NAME]  # type: ignore
+    merged_branch.checkout()
+    assert_merged_commit_history_is_correct()
+
+    template_branch = repo.branches[DEFAULT_TEMPLATE_BRANCH_NAME]  # type: ignore
+    template_branch.checkout()
+
+    assert_main_commit_message_matches(
+        repo.commit().message, "Update flexlate templates"
+    )
+    assert len(repo.commit().parents) == 1
+    parent = repo.commit().parents[0]
+    assert_main_commit_message_matches(
+        parent.message, "Applied template cookiecutter-simple-example to ."
+    )
 
 
 def _assert_project_files_are_correct(
@@ -496,7 +652,9 @@ def _assert_config_is_correct(
 
 
 def _assert_project_config_is_correct(
-    path: Path, user: bool = False, add_mode: AddMode = AddMode.LOCAL
+    path: Path = GENERATED_REPO_DIR / "flexlate-project.json",
+    user: bool = False,
+    add_mode: AddMode = AddMode.LOCAL,
 ):
     project_config = FlexlateProjectConfig.load(path)
     assert len(project_config.projects) == 1

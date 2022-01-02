@@ -34,3 +34,13 @@ def add_gitignore_and_ignored_file_to_repo(repo: Repo):
     out_path.write_text("this should be ignored in git")
     gitignore_path = Path(folder) / ".gitignore"
     gitignore_path.write_text("ignored\n")
+
+
+def assert_main_commit_message_matches(message1: str, message2: str):
+    main_1 = _get_main_message_from_commit_message(message1)
+    main_2 = _get_main_message_from_commit_message(message2)
+    assert main_1 == main_2
+
+
+def _get_main_message_from_commit_message(message: str) -> str:
+    return message.split("\n")[0]

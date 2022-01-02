@@ -12,6 +12,8 @@ from flexlate.remover import Remover
 from flexlate.render.multi import MultiRenderer
 from flexlate.template.base import Template
 from flexlate.template_data import TemplateData
+from flexlate.transactions.transaction import FlexlateTransaction, TransactionType
+from flexlate.transactions.undoer import Undoer
 from flexlate.update.main import Updater
 
 
@@ -24,6 +26,7 @@ class Flexlate:
         finder: MultiFinder = MultiFinder(),
         renderer: MultiRenderer = MultiRenderer(),
         updater: Updater = Updater(),
+        undoer: Undoer = Undoer(),
     ):
         self.adder = adder
         self.remover = remover
@@ -31,6 +34,7 @@ class Flexlate:
         self.finder = finder
         self.renderer = renderer
         self.updater = updater
+        self.undoer = undoer
 
     def init_project(
         self,
@@ -57,6 +61,9 @@ class Flexlate:
         template_root: Path = Path("."),
         add_mode: Optional[AddMode] = None,
     ):
+        transaction = FlexlateTransaction(
+            type=TransactionType.ADD_SOURCE, target=name or path, out_root=template_root
+        )
         project_config = self.config_manager.load_project_config(template_root)
         add_mode = add_mode or project_config.default_add_mode
         template = self.finder.find(path, version=target_version)
@@ -66,6 +73,7 @@ class Flexlate:
         self.adder.add_template_source(
             repo,
             template,
+            transaction,
             target_version=target_version,
             out_root=template_root,
             merged_branch_name=project_config.merged_branch_name,
@@ -79,11 +87,17 @@ class Flexlate:
         template_name: str,
         template_root: Path = Path("."),
     ):
+        transaction = FlexlateTransaction(
+            type=TransactionType.REMOVE_SOURCE,
+            target=template_name,
+            out_root=template_root,
+        )
         project_config = self.config_manager.load_project_config(template_root)
         repo = Repo(project_config.path)
         self.remover.remove_template_source(
             repo,
             template_name,
+            transaction,
             out_root=template_root,
             merged_branch_name=project_config.merged_branch_name,
             template_branch_name=project_config.template_branch_name,
@@ -99,6 +113,9 @@ class Flexlate:
         add_mode: Optional[AddMode] = None,
         no_input: bool = False,
     ):
+        transaction = FlexlateTransaction(
+            type=TransactionType.ADD_OUTPUT, target=name, out_root=out_root, data=data
+        )
         project_config = self.config_manager.load_project_config(out_root)
         add_mode = add_mode or project_config.default_add_mode
         template = self.config_manager.get_template_by_name(
@@ -108,6 +125,7 @@ class Flexlate:
         self.adder.apply_template_and_add(
             repo,
             template,
+            transaction,
             data=data,
             out_root=out_root,
             add_mode=add_mode,
@@ -124,12 +142,16 @@ class Flexlate:
         template_name: str,
         out_root: Path = Path("."),
     ):
+        transaction = FlexlateTransaction(
+            type=TransactionType.REMOVE_OUTPUT, target=template_name, out_root=out_root
+        )
         project_config = self.config_manager.load_project_config(out_root)
         repo = Repo(project_config.path)
 
         self.remover.remove_applied_template_and_output(
             repo,
             template_name,
+            transaction,
             out_root=out_root,
             add_mode=project_config.default_add_mode,
             merged_branch_name=project_config.merged_branch_name,
@@ -146,6 +168,11 @@ class Flexlate:
         no_input: bool = False,
         project_path: Path = Path("."),
     ):
+        transaction = FlexlateTransaction(
+            type=TransactionType.UPDATE,
+            target=", ".join(names) if names is not None else None,
+            data=data,
+        )
         project_config = self.config_manager.load_project_config(project_path)
         templates: List[Template]
         if names:
@@ -179,11 +206,22 @@ class Flexlate:
         self.updater.update(
             repo,
             updates,
+            transaction,
             no_input=no_input,
             merged_branch_name=project_config.merged_branch_name,
             template_branch_name=project_config.template_branch_name,
             renderer=self.renderer,
             config_manager=self.config_manager,
+        )
+
+    def undo(self, num_operations: int = 1, project_path: Path = Path(".")):
+        project_config = self.config_manager.load_project_config(project_path)
+        repo = Repo(project_config.path)
+        self.undoer.undo_transactions(
+            repo,
+            num_transactions=num_operations,
+            merged_branch_name=project_config.merged_branch_name,
+            template_branch_name=project_config.template_branch_name,
         )
 
     # TODO: list template sources, list applied templates

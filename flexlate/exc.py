@@ -84,3 +84,49 @@ class FlexlateConfigFileNotExistsException(CannotLoadConfigException):
 
 class FlexlateProjectConfigFileNotExistsException(CannotLoadConfigException):
     pass
+
+
+class FlexlateTransactionException(FlexlateException):
+    pass
+
+
+class CannotParseCommitMessageFlexlateTransaction(FlexlateTransactionException):
+    pass
+
+
+class LastCommitWasNotByFlexlateException(FlexlateTransactionException):
+    pass
+
+
+class TransactionMismatchBetweenBranchesException(FlexlateTransactionException):
+    pass
+
+
+class TooFewTransactionsException(FlexlateTransactionException):
+    pass
+
+
+class InvalidNumberOfTransactionsException(FlexlateTransactionException):
+    pass
+
+
+class ExpectedMergeCommitException(FlexlateTransactionException):
+    pass
+
+
+class CannotFindCorrectMergeParentException(FlexlateTransactionException):
+    pass
+
+
+class UserChangesWouldHaveBeenDeletedException(FlexlateTransactionException):
+    pass
+
+
+class MergeCommitIsNotMergingAFlexlateTransactionException(
+    FlexlateTransactionException
+):
+    pass
+
+
+class CannotFindMergeForTransactionException(FlexlateTransactionException):
+    pass

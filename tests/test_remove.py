@@ -4,31 +4,48 @@ from flexlate.exc import (
     CannotRemoveAppliedTemplateException,
 )
 from flexlate.remover import Remover
+from flexlate.transactions.transaction import FlexlateTransaction
 from tests.config import COOKIECUTTER_ONE_NAME, COOKIECUTTER_TWO_NAME
 from tests.fixtures.templated_repo import *
+from tests.fixtures.transaction import (
+    remove_source_transaction,
+    remove_output_transaction,
+    add_source_transaction,
+)
 
 
-def test_remove_template_source(repo_with_cookiecutter_one_template_source: Repo):
+def test_remove_template_source(
+    repo_with_cookiecutter_one_template_source: Repo,
+    remove_source_transaction: FlexlateTransaction,
+):
     repo = repo_with_cookiecutter_one_template_source
     remover = Remover()
     config_path = GENERATED_REPO_DIR / "flexlate.json"
     with change_directory_to(GENERATED_REPO_DIR):
         assert config_path.exists()
-        remover.remove_template_source(repo, COOKIECUTTER_ONE_NAME)
+        remover.remove_template_source(
+            repo, COOKIECUTTER_ONE_NAME, remove_source_transaction
+        )
         assert not config_path.exists()
 
 
 def test_remove_template_source_when_multiple_exist(
     repo_with_cookiecutter_one_template_source: Repo,
     cookiecutter_two_template: CookiecutterTemplate,
+    remove_source_transaction: FlexlateTransaction,
+    add_source_transaction: FlexlateTransaction,
 ):
     repo = repo_with_cookiecutter_one_template_source
     remover = Remover()
     adder = Adder()
     config_path = GENERATED_REPO_DIR / "flexlate.json"
     with change_directory_to(GENERATED_REPO_DIR):
-        adder.add_template_source(repo, cookiecutter_two_template)
-        remover.remove_template_source(repo, COOKIECUTTER_ONE_NAME)
+        adder.add_template_source(
+            repo, cookiecutter_two_template, add_source_transaction
+        )
+        remover.remove_template_source(
+            repo, COOKIECUTTER_ONE_NAME, remove_source_transaction
+        )
 
     config = FlexlateConfig.load(config_path)
     assert len(config.applied_templates) == 0
@@ -37,34 +54,47 @@ def test_remove_template_source_when_multiple_exist(
     assert template_source.name == COOKIECUTTER_TWO_NAME
 
 
-def test_remove_non_existing_template_source(repo_with_placeholder_committed: Repo):
+def test_remove_non_existing_template_source(
+    repo_with_placeholder_committed: Repo,
+    remove_source_transaction: FlexlateTransaction,
+):
     repo = repo_with_placeholder_committed
     remover = Remover()
     with change_directory_to(GENERATED_REPO_DIR):
         with pytest.raises(CannotRemoveTemplateSourceException) as exc_info:
-            remover.remove_template_source(repo, COOKIECUTTER_ONE_NAME)
+            remover.remove_template_source(
+                repo, COOKIECUTTER_ONE_NAME, remove_source_transaction
+            )
         assert "Cannot find any template source" in str(exc_info.value)
 
 
 def test_remove_template_source_when_output_exists(
     repo_with_cookiecutter_one_template_source_and_output: Repo,
+    remove_source_transaction: FlexlateTransaction,
 ):
     repo = repo_with_cookiecutter_one_template_source_and_output
     remover = Remover()
     with change_directory_to(GENERATED_REPO_DIR):
         with pytest.raises(CannotRemoveTemplateSourceException) as exc_info:
-            remover.remove_template_source(repo, COOKIECUTTER_ONE_NAME)
+            remover.remove_template_source(
+                repo, COOKIECUTTER_ONE_NAME, remove_source_transaction
+            )
         assert "has existing outputs" in str(exc_info.value)
 
 
-def test_remove_applied_template(repo_with_template_branch_from_cookiecutter_one: Repo):
+def test_remove_applied_template(
+    repo_with_template_branch_from_cookiecutter_one: Repo,
+    remove_output_transaction: FlexlateTransaction,
+):
     repo = repo_with_template_branch_from_cookiecutter_one
     remover = Remover()
     config_path = GENERATED_REPO_DIR / "flexlate.json"
     output_path = GENERATED_REPO_DIR / "b" / "text.txt"
     with change_directory_to(GENERATED_REPO_DIR):
         assert output_path.read_text() == "b"
-        remover.remove_applied_template_and_output(repo, COOKIECUTTER_ONE_NAME)
+        remover.remove_applied_template_and_output(
+            repo, COOKIECUTTER_ONE_NAME, remove_output_transaction
+        )
 
     assert not output_path.exists()
     config = FlexlateConfig.load(config_path)
@@ -74,10 +104,13 @@ def test_remove_applied_template(repo_with_template_branch_from_cookiecutter_one
 
 def test_remove_applied_template_that_does_not_exist(
     repo_with_cookiecutter_one_template_source: Repo,
+    remove_output_transaction: FlexlateTransaction,
 ):
     repo = repo_with_cookiecutter_one_template_source
     remover = Remover()
     with change_directory_to(GENERATED_REPO_DIR):
         with pytest.raises(CannotRemoveAppliedTemplateException) as exc_info:
-            remover.remove_applied_template_and_output(repo, COOKIECUTTER_ONE_NAME)
+            remover.remove_applied_template_and_output(
+                repo, COOKIECUTTER_ONE_NAME, remove_output_transaction
+            )
         assert "Cannot find any applied template with name" in str(exc_info.value)

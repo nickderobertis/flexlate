@@ -179,5 +179,23 @@ def update_templates(
     app.update(names=names, no_input=no_input, project_path=path)
 
 
+@cli.command(name="undo")
+def undo(
+    num_operations: int = typer.Argument(
+        1,
+        help="Number of flexlate operations to undo",
+    ),
+    path: Path = typer.Option(Path("."), help=PROJECT_PATH_DOC),
+):
+    """
+    Undoes the last flexlate operation, like crtl/cmd + z for flexlate.
+    Note that this modifies the git history, discarding the last commits.
+    It has protections against deleting user commits but you should only
+    use this on a feature branch.
+    :return:
+    """
+    app.undo(num_operations=num_operations, project_path=path)
+
+
 if __name__ == "__main__":
     cli()

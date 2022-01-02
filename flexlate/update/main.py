@@ -7,7 +7,11 @@ from git import Repo
 from flexlate.config_manager import ConfigManager
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.finder.multi import MultiFinder
-from flexlate.path_ops import make_all_dirs, location_relative_to_new_parent
+from flexlate.path_ops import (
+    make_all_dirs,
+    location_relative_to_new_parent,
+    make_absolute_path_from_possibly_relative_to_another_path,
+)
 from flexlate.render.multi import MultiRenderer
 from flexlate.render.renderable import Renderable
 from flexlate.template.base import Template
@@ -21,11 +25,14 @@ from flexlate.ext_git import (
     fast_forward_branch_without_checkout,
 )
 from flexlate.template_data import TemplateData, merge_data
+from flexlate.transactions.transaction import (
+    FlexlateTransaction,
+    create_transaction_commit_message,
+)
 from flexlate.update.template import (
     TemplateUpdate,
     updates_with_updated_data,
 )
-from tests.dirutils import display_contents_of_all_files_in_folder
 
 
 class Updater:
@@ -33,6 +40,7 @@ class Updater:
         self,
         repo: Repo,
         updates: Sequence[TemplateUpdate],
+        transaction: FlexlateTransaction,
         merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
         template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
         no_input: bool = False,
@@ -44,7 +52,7 @@ class Updater:
         if repo.working_dir is None:
             raise ValueError("repo working dir should not be none")
 
-        out_path = Path(repo.working_dir)
+        project_root = Path(repo.working_dir)
         current_branch = repo.active_branch
 
         # Prepare the template branch, this is the branch that stores only the template files
@@ -53,47 +61,52 @@ class Updater:
         with temp_repo_that_pushes_to_branch(  # type: ignore
             repo, branch_name=template_branch_name, delete_tracked_files=full_rerender
         ) as temp_repo:
-            temp_out_path = Path(temp_repo.working_dir)  # type: ignore
+            temp_project_root = Path(temp_repo.working_dir)  # type: ignore
             temp_updates = _move_update_config_locations_to_new_parent(
-                updates, out_path, temp_out_path
+                updates, project_root, temp_project_root
             )
             # On first update, don't use template source path. This means that
             # the template paths will be absolute, so they can be loaded even though we are
             # working in a temp directory
             config_manager.update_templates(
-                temp_updates, project_root=temp_out_path, use_template_source_path=False
+                temp_updates,
+                project_root=temp_project_root,
+                use_template_source_path=False,
             )
             orig_renderables = (
-                config_manager.get_all_renderables(project_root=temp_out_path)
+                config_manager.get_all_renderables(project_root=temp_project_root)
                 if full_rerender
                 else config_manager.get_renderables_for_updates(
-                    updates, project_root=out_path
+                    updates, project_root=project_root
                 )
             )
             renderables = _move_renderable_out_roots_to_new_parent(
                 orig_renderables,
-                out_path,
-                temp_out_path,
+                project_root,
+                temp_project_root,
             )
 
             _create_cwd_and_directories_if_needed(
                 cwd, [renderable.out_root for renderable in renderables]
             )
             updated_data = renderer.render(
-                renderables, project_root=temp_out_path, no_input=no_input
+                renderables, project_root=temp_project_root, no_input=no_input
             )
             new_updates = updates_with_updated_data(
                 temp_updates,
                 updated_data,
                 renderables,
-                project_root=out_path,
-                render_root=temp_out_path,
+                project_root=project_root,
+                render_root=temp_project_root,
             )
             # On second update, use template source path. This means that it will set the template
             # paths back to how they were originally (relative if needed), so that there will not be
             # unexpected changes from relative to absolute paths in the user configs
-            config_manager.update_templates(new_updates, project_root=temp_out_path)
-            stage_and_commit_all(temp_repo, _commit_message(renderables))
+            config_manager.update_templates(new_updates, project_root=temp_project_root)
+            commit_message = create_transaction_commit_message(
+                _commit_message(renderables), transaction
+            )
+            stage_and_commit_all(temp_repo, commit_message)
 
         # Now prepare the merged (output) branch, by merging the current
         # branch into it and then the template branch into it.
@@ -109,6 +122,27 @@ class Updater:
             # No conflicts, merge back into current branch
             current_branch.checkout()
             merge_branch_into_current(repo, merged_branch_name)
+
+            # TODO: Make CLI have a pause and resume capability
+            #  We should be running these post actions below afterwards regardless of whether
+            #  there was a merge conflict.
+
+            # Current working directory or out root may have been deleted if it was a remove operation
+            # and there was nothing else in the folder (git does not save folders without files)
+            ensure_exists_folders = [cwd]
+            for renderable in orig_renderables:
+                ensure_exists_folders.append(
+                    make_absolute_path_from_possibly_relative_to_another_path(
+                        renderable.out_root, project_root
+                    )
+                )
+            for folder in ensure_exists_folders:
+                if not os.path.exists(folder):
+                    os.makedirs(folder)
+
+            # Folder may have been deleted again while switching branches, so
+            # need to set cwd again
+            os.chdir(cwd)
 
     def get_updates_for_templates(
         self,

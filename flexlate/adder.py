@@ -21,6 +21,10 @@ from flexlate.path_ops import (
 from flexlate.render.multi import MultiRenderer
 from flexlate.template.base import Template
 from flexlate.template_data import TemplateData
+from flexlate.transactions.transaction import (
+    FlexlateTransaction,
+    create_transaction_commit_message,
+)
 from flexlate.update.main import Updater
 from flexlate.update.template import TemplateUpdate
 
@@ -30,6 +34,7 @@ class Adder:
         self,
         repo: Repo,
         template: Template,
+        transaction: FlexlateTransaction,
         target_version: Optional[str] = None,
         out_root: Path = Path("."),
         merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
@@ -70,6 +75,13 @@ class Adder:
             )
             return
 
+        commit_message = create_transaction_commit_message(
+            _add_template_source_commit_message(
+                template, out_root, Path(repo.working_dir)
+            ),
+            transaction,
+        )
+
         # Local or project config, add in git
         modify_files_via_branches_and_temp_repo(
             lambda temp_path: config_manager.add_template_source(
@@ -81,9 +93,7 @@ class Adder:
                 project_root=temp_path,
             ),
             repo,
-            _add_template_source_commit_message(
-                template, out_root, Path(repo.working_dir)
-            ),
+            commit_message,
             out_root,
             merged_branch_name=merged_branch_name,
             template_branch_name=template_branch_name,
@@ -93,6 +103,7 @@ class Adder:
         self,
         repo: Repo,
         template: Template,
+        transaction: FlexlateTransaction,
         data: Optional[TemplateData] = None,
         out_root: Path = Path("."),
         add_mode: AddMode = AddMode.LOCAL,
@@ -124,6 +135,13 @@ class Adder:
             )
         else:
             # Commit changes for local and project
+            commit_message = create_transaction_commit_message(
+                _add_template_commit_message(
+                    template, out_root, Path(repo.working_dir)
+                ),
+                transaction,
+            )
+
             modify_files_via_branches_and_temp_repo(
                 lambda temp_path: config_manager.add_applied_template(
                     template,
@@ -135,9 +153,7 @@ class Adder:
                     out_root=expanded_out_root,
                 ),
                 repo,
-                _add_template_commit_message(
-                    template, out_root, Path(repo.working_dir)
-                ),
+                commit_message,
                 out_root,
                 merged_branch_name=merged_branch_name,
                 template_branch_name=template_branch_name,
@@ -154,6 +170,7 @@ class Adder:
         updater.update(
             repo,
             [template_update],
+            transaction,
             merged_branch_name=merged_branch_name,
             template_branch_name=template_branch_name,
             no_input=no_input,

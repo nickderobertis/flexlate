@@ -81,3 +81,12 @@ def change_directory_to(path: Path):
     os.chdir(path)
     yield
     os.chdir(current_path)
+
+
+def make_absolute_path_from_possibly_relative_to_another_path(
+    path: Path, possibly_relative_to: Path
+) -> Path:
+    if path.is_absolute():
+        return path
+    else:
+        return (possibly_relative_to / path).resolve()
