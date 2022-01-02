@@ -66,7 +66,7 @@ def test_init_project_and_add_source_and_template(
         version=template_source.default_version,
         name=template_source.name,
         url=template_source.url,
-        path=template_source.expect_path(),
+        path=template_source.path,
     )
 
     project_config_path = GENERATED_REPO_DIR / "flexlate-project.json"
@@ -143,12 +143,12 @@ def test_init_project_and_add_source_and_template_in_subdir(
         applied_config_dir = subdir
         expect_applied_template_root = Path(".")
         template_sources_config_dir = GENERATED_REPO_DIR
-        expect_template_source_path = template_source.expect_path()
+        expect_template_source_path = template_source.path
     elif add_mode == AddMode.PROJECT:
         applied_config_dir = GENERATED_REPO_DIR
         expect_applied_template_root = subdir.relative_to(GENERATED_REPO_DIR)
         template_sources_config_dir = GENERATED_REPO_DIR
-        expect_template_source_path = template_source.expect_path()
+        expect_template_source_path = template_source.path
     elif add_mode == AddMode.USER:
         applied_config_dir = GENERATED_FILES_DIR
         expect_applied_template_root = subdir.absolute()
@@ -157,10 +157,10 @@ def test_init_project_and_add_source_and_template_in_subdir(
             # Move the original directory down a level in the relative path
             # E.g. move ../../input_files/templates/cookiecutters/one to ../input_files/templates/cookiecutters/one
             expect_template_source_path = str(
-                Path(*Path(template_source.expect_path()).parts[1:])
+                Path(*Path(template_source.path).parts[1:])
             )
         else:
-            expect_template_source_path = template_source.expect_path()
+            expect_template_source_path = template_source.path
     else:
         raise ValueError(f"unsupported add mode {add_mode}")
 
@@ -224,7 +224,7 @@ def test_update_project(
             template_source_type=template_source.type,
             name=template_source.name,
             url=template_source.url,
-            path=template_source.expect_path(version),
+            path=template_source.path,
         )
 
     def assert_subdir_template_output_is_correct(
