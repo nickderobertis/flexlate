@@ -327,6 +327,7 @@ def test_remove_template_source(
     user: bool,
     flexlates: FlexlateFixture,
     add_mode: AddMode,
+    subdir_style: SubdirStyle,
     repo_with_placeholder_committed: Repo,
 ):
     fxt = flexlates.flexlate
@@ -342,6 +343,47 @@ def test_remove_template_source(
         assert config_path.exists()
         fxt.remove_template_source(COOKIECUTTER_REMOTE_NAME)
         assert not config_path.exists()
+
+    _assert_project_config_is_correct(project_config_path, user=user, add_mode=add_mode)
+
+    # Works for main dir, now try subdir
+    subdir = GENERATED_REPO_DIR / "subdir1" / "subdir2"
+    subdir.mkdir(parents=True)
+    subdir_config_root: Path
+    if add_mode == AddMode.USER:
+        subdir_config_root = GENERATED_FILES_DIR
+    elif add_mode == AddMode.LOCAL:
+        subdir_config_root = subdir
+    elif add_mode == AddMode.PROJECT:
+        subdir_config_root = GENERATED_REPO_DIR
+    else:
+        raise ValueError("unsupported add mode")
+    subdir_config_path = subdir_config_root / "flexlate.json"
+
+    if subdir_style == SubdirStyle.CD:
+        with change_directory_to(subdir):
+            fxt.add_template_source(COOKIECUTTER_REMOTE_URL)
+            assert subdir_config_path.exists()
+            fxt.remove_template_source(COOKIECUTTER_REMOTE_NAME)
+            assert not subdir_config_path.exists()
+    elif subdir_style == SubdirStyle.PROVIDE_RELATIVE:
+        out_root = subdir.relative_to(os.getcwd())
+        fxt.add_template_source(
+            COOKIECUTTER_REMOTE_URL,
+            template_root=out_root,
+        )
+        assert subdir_config_path.exists()
+        fxt.remove_template_source(COOKIECUTTER_REMOTE_NAME, template_root=out_root)
+        assert not subdir_config_path.exists()
+    elif subdir_style == SubdirStyle.PROVIDE_ABSOLUTE:
+        out_root = subdir.absolute()
+        fxt.add_template_source(
+            COOKIECUTTER_REMOTE_URL,
+            template_root=out_root,
+        )
+        assert subdir_config_path.exists()
+        fxt.remove_template_source(COOKIECUTTER_REMOTE_NAME, template_root=out_root)
+        assert not subdir_config_path.exists()
 
     _assert_project_config_is_correct(project_config_path, user=user, add_mode=add_mode)
 
