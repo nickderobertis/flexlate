@@ -410,8 +410,8 @@ def test_init_project_for_user_and_add_source_and_template(
             assert subdir_placeholder_path.read_text() == "something"
             # Now check everything just to make sure it can be undone
             for operation in UNDOABLE_OPERATIONS:
-                operation(fxt)
-                fxt.undo()
+                operation.operation(fxt)
+                fxt.undo(num_operations=operation.num_transactions)
                 _assert_project_files_do_not_exist(subdir)
                 assert not config_path.exists()
                 assert subdir_placeholder_path.read_text() == "something"
