@@ -38,6 +38,7 @@ from flexlate.ext_git import repo_has_merge_conflicts
 
 
 # TODO: check that config is updated after tests
+from tests.gitutils import assert_main_commit_message_matches
 
 
 def test_update_template_dirty_repo(
@@ -71,9 +72,9 @@ def test_update_modify_template(
         repo.commit().message
         == "Merge branch 'flexlate-templates' into flexlate-output\n"
     )
-    assert (
-        repo.commit().parents[1].message
-        == f"Update flexlate templates\n\none: {COOKIECUTTER_ONE_MODIFIED_VERSION}\n"
+    assert_main_commit_message_matches(
+        repo.commit().parents[1].message,
+        f"Update flexlate templates\n\none: {COOKIECUTTER_ONE_MODIFIED_VERSION}",
     )
     assert (
         cookiecutter_one_generated_text_content(gen_dir=GENERATED_REPO_DIR)

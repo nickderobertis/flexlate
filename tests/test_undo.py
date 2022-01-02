@@ -17,6 +17,7 @@ REPO_WITH_APPLIED_OUTPUT_REMOVED_COMMIT_MESSAGE = 'Update flexlate templates\n\n
 REPO_WITH_COOKIECUTTER_ONE_UPDATED_COMMIT_MESSAGE = (
     "Merge branch 'flexlate-templates' into flexlate-output\n"
 )
+MERGED_MESSAGE = "Merge branch 'flexlate-templates' into flexlate-output\n"
 
 
 def test_undo_add_template_source(repo_with_cookiecutter_one_template_source: Repo):
@@ -121,8 +122,11 @@ def test_undo_update(
         )
         undoer.undo_transactions(repo)
         assert output_path.read_text() == "b"
+        assert repo.commit().message == MERGED_MESSAGE
+        assert len(repo.commit().parents) == 2
+        assert repo.commit().parents[0].message == MERGED_MESSAGE
         assert (
-            repo.commit().message
+            repo.commit().parents[1].message
             == REPO_WITH_TEMPLATE_BRANCH_FROM_COOKIECUTTER_ONE_COMMIT_MESSAGE
         )
 
