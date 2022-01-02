@@ -51,6 +51,13 @@ def modify_files_via_branches_and_temp_repo(
     # Merge back into current branch
     merge_branch_into_current(repo, merged_branch_name)
 
+    # Current working directory or out root may have been deleted if it was a remove operation
+    # and there was nothing else in the folder (git does not save folders without files)
+    ensure_exists_folders = [cwd, out_root]
+    for folder in ensure_exists_folders:
+        if not os.path.exists(folder):
+            os.makedirs(folder)
+
     # Folder may have been deleted again while switching branches, so
     # need to set cwd again
     os.chdir(cwd)
