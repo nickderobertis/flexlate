@@ -66,10 +66,14 @@ def undo_transaction_in_flexlate_branches(
     with temp_repo_that_pushes_to_branch(  # type: ignore
         repo, branch_name=template_branch_name, force_push=True
     ) as temp_repo:
-        reset_last_transaction(temp_repo, transaction)
+        reset_last_transaction(
+            temp_repo, transaction, merged_branch_name, template_branch_name
+        )
 
     # Reset the merged template branch to the appropriate commit
     with temp_repo_that_pushes_to_branch(  # type: ignore
         repo, branch_name=merged_branch_name, force_push=True
     ) as temp_repo:
-        reset_last_transaction(temp_repo, transaction)
+        reset_last_transaction(
+            temp_repo, transaction, merged_branch_name, template_branch_name
+        )

@@ -12,6 +12,8 @@ from flexlate.exc import (
     TransactionMismatchBetweenBranchesException,
     InvalidNumberOfTransactionsException,
     TooFewTransactionsException,
+    ExpectedMergeCommitException,
+    CannotFindCorrectMergeParentException,
 )
 from flexlate.ext_git import reset_current_branch_to_commit
 from flexlate.template_data import TemplateData
@@ -62,35 +64,63 @@ def create_transaction_commit_message(
     )
 
 
-def reset_last_transaction(repo: Repo, transaction: FlexlateTransaction):
-    last_transaction = FlexlateTransaction.parse_commit_message(repo.commit().message)
+def reset_last_transaction(
+    repo: Repo,
+    transaction: FlexlateTransaction,
+    merged_branch_name: str,
+    template_branch_name: str,
+):
+    last_transaction = find_last_transaction_from_commit(
+        repo.commit(), merged_branch_name, template_branch_name
+    )
     if last_transaction.id != transaction.id:
         raise TransactionMismatchBetweenBranchesException(
             f"Found mismatching transaction ids: {last_transaction.id} and {transaction.id}"
         )
     earliest_commit = find_earliest_commit_that_was_part_of_transaction(
-        repo, last_transaction
+        repo, last_transaction, merged_branch_name, template_branch_name
     )
     before_transaction_commit = _get_parent_commit(earliest_commit)
     reset_current_branch_to_commit(repo, before_transaction_commit)
 
 
-def assert_last_commit_was_in_a_flexlate_transaction(repo: Repo):
-    last_commit_message = repo.commit().message
+def find_last_transaction_from_commit(
+    commit: Commit, merged_branch_name: str, template_branch_name: str
+) -> FlexlateTransaction:
+    if _is_flexlate_merge_commit(commit, merged_branch_name, template_branch_name):
+        parent = _get_parent_commit_from_flexlate_merge_commit(
+            commit, merged_branch_name, template_branch_name
+        )
+        return find_last_transaction_from_commit(
+            parent, merged_branch_name, template_branch_name
+        )
+    return FlexlateTransaction.parse_commit_message(commit.message)
+
+
+def assert_last_commit_was_in_a_flexlate_transaction(
+    repo: Repo, merged_branch_name: str, template_branch_name: str
+):
+    last_commit = repo.commit()
+    if _is_flexlate_merge_commit(last_commit, merged_branch_name, template_branch_name):
+        return
     try:
-        FlexlateTransaction.parse_commit_message(last_commit_message)
+        FlexlateTransaction.parse_commit_message(last_commit.message)
     except CannotParseCommitMessageFlexlateTransaction as e:
         raise LastCommitWasNotByFlexlateException(
-            f"Last commit was not made by flexlate: {last_commit_message}"
+            f"Last commit was not made by flexlate: {last_commit.message}"
         ) from e
 
 
-def assert_has_at_least_n_transactions(repo: Repo, n: int):
+def assert_has_at_least_n_transactions(
+    repo: Repo, n: int, merged_branch_name: str, template_branch_name: str
+):
     if n < 0:
         raise InvalidNumberOfTransactionsException(
             "Number of transactions must be positive"
         )
-    assert_last_commit_was_in_a_flexlate_transaction(repo)
+    assert_last_commit_was_in_a_flexlate_transaction(
+        repo, merged_branch_name, template_branch_name
+    )
     if n == 1:
         return
     last_commit = repo.commit()
@@ -108,7 +138,7 @@ def assert_has_at_least_n_transactions(repo: Repo, n: int):
         except CannotParseCommitMessageFlexlateTransaction:
             return too_few_transactions()
         earliest_commit = _return_commit_if_begin_of_transaction_else_get_parent(
-            last_commit, transaction
+            last_commit, transaction, merged_branch_name, template_branch_name
         )
         num_to_verify -= 1
         if num_to_verify <= 0:
@@ -120,22 +150,30 @@ def assert_has_at_least_n_transactions(repo: Repo, n: int):
 
 
 def find_earliest_commit_that_was_part_of_transaction(
-    repo: Repo, transaction: FlexlateTransaction
+    repo: Repo,
+    transaction: FlexlateTransaction,
+    merged_branch_name: str,
+    template_branch_name: str,
 ) -> Commit:
     return _return_commit_if_begin_of_transaction_else_get_parent(
-        repo.commit(), transaction
+        repo.commit(), transaction, merged_branch_name, template_branch_name
     )
 
 
 def _return_commit_if_begin_of_transaction_else_get_parent(
-    commit: Commit, transaction: FlexlateTransaction
+    commit: Commit,
+    transaction: FlexlateTransaction,
+    merged_branch_name: str,
+    template_branch_name: str,
 ) -> Commit:
     try:
         parent_commit = _get_parent_commit(commit)
     except HitInitialCommit:
         return commit
     except HitMergeCommit:
-        return commit
+        parent_commit = _get_parent_commit_from_flexlate_merge_commit(
+            commit, merged_branch_name, template_branch_name
+        )
     try:
         commit_transaction = FlexlateTransaction.parse_commit_message(
             parent_commit.message
@@ -147,7 +185,7 @@ def _return_commit_if_begin_of_transaction_else_get_parent(
     if commit_transaction.id == transaction.id:
         # Parent is still in the same transaction. Recurse to find the original commit
         return _return_commit_if_begin_of_transaction_else_get_parent(
-            parent_commit, transaction
+            parent_commit, transaction, merged_branch_name, template_branch_name
         )
 
     # It is a flexlate commit, but different transaction. Therefore return this commit
@@ -169,3 +207,31 @@ def _get_parent_commit(commit: Commit) -> Commit:
     if len(parents) > 1:
         raise HitMergeCommit
     return parents[0]
+
+
+def _get_parent_commit_from_flexlate_merge_commit(
+    commit: Commit, merged_branch_name: str, template_branch_name: str
+) -> Commit:
+    if not _is_flexlate_merge_commit(commit, merged_branch_name, template_branch_name):
+        raise ExpectedMergeCommitException("not a flexlate merge commit")
+    if len(commit.parents) != 2:
+        raise ExpectedMergeCommitException(f"has {len(commit.parents)} parents, not 2")
+    non_merge_commit_parents = [
+        c
+        for c in commit.parents
+        if not _is_flexlate_merge_commit(c, merged_branch_name, template_branch_name)
+    ]
+    if len(non_merge_commit_parents) != 1:
+        raise CannotFindCorrectMergeParentException(
+            f"Cannot determine which of these commits is the non-merge parent {non_merge_commit_parents}"
+        )
+    return non_merge_commit_parents[0]
+
+
+def _is_flexlate_merge_commit(
+    commit: Commit, merged_branch_name: str, template_branch_name: str
+) -> bool:
+    return (
+        commit.message
+        == f"Merge branch '{template_branch_name}' into {merged_branch_name}\n"
+    )

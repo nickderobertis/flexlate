@@ -108,3 +108,11 @@ class TooFewTransactionsException(FlexlateTransactionException):
 
 class InvalidNumberOfTransactionsException(FlexlateTransactionException):
     pass
+
+
+class ExpectedMergeCommitException(FlexlateTransactionException):
+    pass
+
+
+class CannotFindCorrectMergeParentException(FlexlateTransactionException):
+    pass
