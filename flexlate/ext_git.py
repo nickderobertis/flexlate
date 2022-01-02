@@ -150,9 +150,9 @@ def _push_branch_from_one_local_repo_to_another(
 ):
     args: Tuple[str, ...]
     if force:
-        args = ("--force", to_repo.working_dir, branch_name)
+        args = ("--force", str(to_repo.working_dir), branch_name)
     else:
-        args = (to_repo.working_dir, branch_name)
+        args = (str(to_repo.working_dir), branch_name)
     from_repo.git.push(*args)
 
 

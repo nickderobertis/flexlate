@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from typing import Callable
+from typing import Callable, Union, List
 
 from git import Repo
 
@@ -53,7 +53,7 @@ def modify_files_via_branches_and_temp_repo(
 
     # Current working directory or out root may have been deleted if it was a remove operation
     # and there was nothing else in the folder (git does not save folders without files)
-    ensure_exists_folders = [cwd, out_root]
+    ensure_exists_folders: List[Union[str, Path]] = [cwd, out_root]
     for folder in ensure_exists_folders:
         if not os.path.exists(folder):
             os.makedirs(folder)

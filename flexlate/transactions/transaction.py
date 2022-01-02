@@ -3,7 +3,7 @@ from enum import Enum
 from pathlib import Path
 from typing import Optional, List, Sequence
 
-from git import Repo, Commit
+from git import Repo, Commit  # type: ignore
 from pydantic import BaseModel, Field, UUID4, validator
 
 from flexlate.exc import (
@@ -203,7 +203,12 @@ def assert_last_commit_was_in_a_flexlate_transaction(
     last_commit = repo.commit()
     if _is_flexlate_merge_commit(last_commit, merged_branch_name, template_branch_name):
         return
+    if isinstance(last_commit.message, bytes):
+        raise LastCommitWasNotByFlexlateException(
+            f"Last commit was not made by flexlate, message is bytes"
+        )
     try:
+
         FlexlateTransaction.parse_commit_message(last_commit.message)
     except CannotParseCommitMessageFlexlateTransaction as e:
         raise LastCommitWasNotByFlexlateException(
@@ -239,6 +244,9 @@ def assert_has_at_least_n_transactions(
             last_commit = _get_flexlate_transaction_parent_from_flexlate_merge_commit(
                 last_commit, merged_branch_name, template_branch_name
             )
+        if isinstance(last_commit.message, bytes):
+            # Flexlate never commits with binary messages
+            return too_few_transactions()
         try:
             transaction = FlexlateTransaction.parse_commit_message(last_commit.message)
         except CannotParseCommitMessageFlexlateTransaction:
