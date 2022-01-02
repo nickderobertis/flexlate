@@ -352,6 +352,7 @@ def test_remove_applied_template(
     user: bool,
     flexlates: FlexlateFixture,
     add_mode: AddMode,
+    subdir_style: SubdirStyle,
     repo_with_placeholder_committed: Repo,
 ):
     fxt = flexlates.flexlate
@@ -375,6 +376,35 @@ def test_remove_applied_template(
     _assert_project_files_do_not_exist(expect_data=expect_data)
     _assert_project_config_is_correct(project_config_path, user=user, add_mode=add_mode)
     _assert_applied_templates_config_is_empty(config_path)
+
+    # Works for main dir, now try subdir
+    subdir = GENERATED_REPO_DIR / "subdir1" / "subdir2"
+    subdir.mkdir(parents=True)
+    if subdir_style == SubdirStyle.CD:
+        with change_directory_to(subdir):
+            fxt.apply_template_and_add(
+                COOKIECUTTER_REMOTE_NAME, data=expect_data, no_input=no_input
+            )
+            fxt.remove_applied_template_and_output(COOKIECUTTER_REMOTE_NAME)
+    elif subdir_style == SubdirStyle.PROVIDE_RELATIVE:
+        out_root = subdir.relative_to(os.getcwd())
+        fxt.apply_template_and_add(
+            COOKIECUTTER_REMOTE_NAME,
+            data=expect_data, no_input=no_input,
+            out_root=out_root,
+        )
+        fxt.remove_applied_template_and_output(COOKIECUTTER_REMOTE_NAME, out_root=out_root)
+    elif subdir_style == SubdirStyle.PROVIDE_ABSOLUTE:
+        out_root = subdir.absolute()
+        fxt.apply_template_and_add(
+            COOKIECUTTER_REMOTE_NAME, data=expect_data, no_input=no_input, out_root=out_root
+        )
+        fxt.remove_applied_template_and_output(COOKIECUTTER_REMOTE_NAME, out_root=out_root)
+
+    _assert_project_files_do_not_exist(subdir, expect_data=expect_data)
+    _assert_project_config_is_correct(project_config_path, user=user, add_mode=add_mode)
+    assert not (subdir / "flexlate.json").exists()
+
 
 
 @patch.object(appdirs, "user_config_dir", lambda name: GENERATED_FILES_DIR)
