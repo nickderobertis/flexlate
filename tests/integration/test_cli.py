@@ -9,6 +9,7 @@ from git import GitCommandError
 
 from flexlate.add_mode import AddMode
 from flexlate.config import FlexlateConfig, FlexlateProjectConfig
+from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.template_data import TemplateData
 from tests.config import (
     GENERATED_FILES_DIR,
@@ -35,6 +36,7 @@ from tests.fixtures.template_source import (
     TemplateSourceType,
     COOKIECUTTER_REMOTE_DEFAULT_EXPECT_PATH,
 )
+from tests.gitutils import assert_main_commit_message_matches
 from tests.integration.undoables import UNDOABLE_OPERATIONS
 
 
@@ -459,7 +461,7 @@ def test_remove_applied_template(
 
 
 @patch.object(appdirs, "user_config_dir", lambda name: GENERATED_FILES_DIR)
-def test_init_project_for_user_and_add_source_and_template(
+def test_undo(
     flexlates: FlexlateFixture,
     repo_with_placeholder_committed: Repo,
 ):
@@ -476,7 +478,8 @@ def test_init_project_for_user_and_add_source_and_template(
         subdir.mkdir()
         subdir_placeholder_path = (subdir / "some-file.txt").resolve()
         subdir_placeholder_path.write_text("something")
-        stage_and_commit_all(repo, "Add a placeholder in a subdir")
+        manual_commit_message = "Add a placeholder in a subdir"
+        stage_and_commit_all(repo, manual_commit_message)
         # Add an operation that will be undone
         with change_directory_to(subdir):
             # One check being careful about the input files, just to make sure
@@ -497,9 +500,36 @@ def test_init_project_for_user_and_add_source_and_template(
                 assert not config_path.exists()
                 assert subdir_placeholder_path.read_text() == "something"
 
+    def assert_merged_commit_history_is_correct():
+        assert_main_commit_message_matches(repo.commit().message, manual_commit_message)
+        assert len(repo.commit().parents) == 1
+        parent = repo.commit().parents[0]
+        assert_main_commit_message_matches(parent.message, "Update flexlate templates")
+
+    assert_merged_commit_history_is_correct()
     _assert_project_files_are_correct()
     _assert_config_is_correct()
     _assert_project_config_is_correct()
+
+    for branch_name in [DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME]:
+        branch = repo.branches[branch_name]  # type: ignore
+        branch.checkout()
+
+    merged_branch = repo.branches[DEFAULT_MERGED_BRANCH_NAME]  # type: ignore
+    merged_branch.checkout()
+    assert_merged_commit_history_is_correct()
+
+    template_branch = repo.branches[DEFAULT_TEMPLATE_BRANCH_NAME]  # type: ignore
+    template_branch.checkout()
+
+    assert_main_commit_message_matches(
+        repo.commit().message, "Update flexlate templates"
+    )
+    assert len(repo.commit().parents) == 1
+    parent = repo.commit().parents[0]
+    assert_main_commit_message_matches(
+        parent.message, "Applied template cookiecutter-simple-example to ."
+    )
 
 
 def _assert_project_files_are_correct(
