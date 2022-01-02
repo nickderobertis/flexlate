@@ -120,3 +120,13 @@ class CannotFindCorrectMergeParentException(FlexlateTransactionException):
 
 class UserChangesWouldHaveBeenDeletedException(FlexlateTransactionException):
     pass
+
+
+class MergeCommitIsNotMergingAFlexlateTransactionException(
+    FlexlateTransactionException
+):
+    pass
+
+
+class CannotFindMergeForTransactionException(FlexlateTransactionException):
+    pass

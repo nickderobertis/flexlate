@@ -407,6 +407,7 @@ def test_init_project_for_user_and_add_source_and_template(
             fxt.undo()
             _assert_project_files_do_not_exist(subdir)
             assert not config_path.exists()
+            assert subdir_placeholder_path.read_text() == "something"
             # Now check everything just to make sure it can be undone
             for operation in UNDOABLE_OPERATIONS:
                 operation(fxt)

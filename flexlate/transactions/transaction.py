@@ -1,7 +1,7 @@
 import uuid
 from enum import Enum
 from pathlib import Path
-from typing import Optional
+from typing import Optional, List
 
 from git import Repo, Commit
 from pydantic import BaseModel, Field, UUID4
@@ -15,6 +15,8 @@ from flexlate.exc import (
     ExpectedMergeCommitException,
     CannotFindCorrectMergeParentException,
     UserChangesWouldHaveBeenDeletedException,
+    MergeCommitIsNotMergingAFlexlateTransactionException,
+    CannotFindMergeForTransactionException,
 )
 from flexlate.ext_git import (
     reset_current_branch_to_commit,
@@ -84,7 +86,26 @@ def reset_last_transaction(
     earliest_commit = find_earliest_commit_that_was_part_of_transaction(
         repo, last_transaction, merged_branch_name, template_branch_name
     )
-    before_transaction_commit = _get_parent_commit(earliest_commit)
+
+    is_template_branch = repo.active_branch.name == template_branch_name
+    if is_template_branch:
+        # On template branch, the only commits are flexlate transactions.
+        # Therefore can just get the parent to find the commit before the
+        # transaction started
+        before_transaction_commit = _get_parent_commit(earliest_commit)
+    else:
+        # On output/user branch, the only commits are merging flexlate transactions
+        # and user changes. So find the commit that merged this transaction,
+        # then use its parent.
+        merge_commit = find_earliest_merge_commit_for_transaction(
+            repo, transaction, merged_branch_name, template_branch_name
+        )
+        before_transaction_commit = (
+            _get_non_flexlate_transaction_parent_from_flexlate_merge_commit(
+                merge_commit, merged_branch_name, template_branch_name
+            )
+        )
+
     assert_that_all_commits_between_two_are_flexlate_transactions_or_merges(
         repo,
         before_transaction_commit,
@@ -99,13 +120,64 @@ def find_last_transaction_from_commit(
     commit: Commit, merged_branch_name: str, template_branch_name: str
 ) -> FlexlateTransaction:
     if _is_flexlate_merge_commit(commit, merged_branch_name, template_branch_name):
-        parent = _get_parent_commit_from_flexlate_merge_commit(
+        parent = _get_flexlate_transaction_parent_from_flexlate_merge_commit(
             commit, merged_branch_name, template_branch_name
         )
         return find_last_transaction_from_commit(
             parent, merged_branch_name, template_branch_name
         )
     return FlexlateTransaction.parse_commit_message(commit.message)
+
+
+def find_earliest_merge_commit_for_transaction(
+    repo: Repo,
+    transaction: FlexlateTransaction,
+    merged_branch_name: str,
+    template_branch_name: str,
+) -> Commit:
+    # Walk back through commit tree, searching for the appropriate commit
+    return _search_commit_tree_for_earliest_merge_commit_for_transaction(
+        repo.commit(), transaction, merged_branch_name, template_branch_name
+    )
+
+
+def _search_commit_tree_for_earliest_merge_commit_for_transaction(
+    commit: Commit,
+    transaction: FlexlateTransaction,
+    merged_branch_name: str,
+    template_branch_name: str,
+):
+    search_commits = [commit]
+    found_commits: List[Commit] = []
+    # Breadth-first search
+    while len(search_commits) > 0:
+        this_commit = search_commits.pop(0)
+        if _is_flexlate_merge_commit(
+            this_commit, merged_branch_name, template_branch_name
+        ):
+            merge_transaction = _get_transaction_underlying_merge_commit(commit)
+            if transaction.id == merge_transaction.id:
+                found_commits.append(this_commit)
+        search_commits.extend(list(this_commit.parents))
+
+    if len(found_commits) == 0:
+        raise CannotFindMergeForTransactionException(
+            f"Could not find the merge commit for transaction {transaction}"
+        )
+
+    # Since BFS was used, last found commit should be the earliest
+    return found_commits[-1]
+
+
+def _get_transaction_underlying_merge_commit(commit: Commit) -> FlexlateTransaction:
+    for parent in commit.parents:
+        try:
+            return FlexlateTransaction.parse_commit_message(parent.message)
+        except CannotParseCommitMessageFlexlateTransaction:
+            continue
+    raise MergeCommitIsNotMergingAFlexlateTransactionException(
+        f"Commit {commit.hexsha}: {commit.message}"
+    )
 
 
 def assert_last_commit_was_in_a_flexlate_transaction(
@@ -203,7 +275,7 @@ def _return_commit_if_begin_of_transaction_else_get_parent(
     except HitInitialCommit:
         return commit
     except HitMergeCommit:
-        parent_commit = _get_parent_commit_from_flexlate_merge_commit(
+        parent_commit = _get_flexlate_transaction_parent_from_flexlate_merge_commit(
             commit, merged_branch_name, template_branch_name
         )
     try:
@@ -241,23 +313,45 @@ def _get_parent_commit(commit: Commit) -> Commit:
     return parents[0]
 
 
-def _get_parent_commit_from_flexlate_merge_commit(
+def _get_flexlate_transaction_parent_from_flexlate_merge_commit(
     commit: Commit, merged_branch_name: str, template_branch_name: str
 ) -> Commit:
     if not _is_flexlate_merge_commit(commit, merged_branch_name, template_branch_name):
         raise ExpectedMergeCommitException("not a flexlate merge commit")
     if len(commit.parents) != 2:
         raise ExpectedMergeCommitException(f"has {len(commit.parents)} parents, not 2")
-    non_merge_commit_parents = [
-        c
-        for c in commit.parents
-        if not _is_flexlate_merge_commit(c, merged_branch_name, template_branch_name)
-    ]
-    if len(non_merge_commit_parents) != 1:
+    flexlate_transaction_parents: List[Commit] = []
+    for parent in commit.parents:
+        try:
+            FlexlateTransaction.parse_commit_message(parent.message)
+            flexlate_transaction_parents.append(parent)
+        except CannotParseCommitMessageFlexlateTransaction:
+            pass
+    if len(flexlate_transaction_parents) != 1:
         raise CannotFindCorrectMergeParentException(
-            f"Cannot determine which of these commits is the non-merge parent {non_merge_commit_parents}"
+            f"Cannot determine which of these commits is the flexlate transaction parent {flexlate_transaction_parents}"
         )
-    return non_merge_commit_parents[0]
+    return flexlate_transaction_parents[0]
+
+
+def _get_non_flexlate_transaction_parent_from_flexlate_merge_commit(
+    commit: Commit, merged_branch_name: str, template_branch_name: str
+) -> Commit:
+    if not _is_flexlate_merge_commit(commit, merged_branch_name, template_branch_name):
+        raise ExpectedMergeCommitException("not a flexlate merge commit")
+    if len(commit.parents) != 2:
+        raise ExpectedMergeCommitException(f"has {len(commit.parents)} parents, not 2")
+    non_flexlate_transaction_parents: List[Commit] = []
+    for parent in commit.parents:
+        try:
+            FlexlateTransaction.parse_commit_message(parent.message)
+        except CannotParseCommitMessageFlexlateTransaction:
+            non_flexlate_transaction_parents.append(parent)
+    if len(non_flexlate_transaction_parents) != 1:
+        raise CannotFindCorrectMergeParentException(
+            f"Cannot determine which of these commits is the non-flexlate transaction parent {non_flexlate_transaction_parents}"
+        )
+    return non_flexlate_transaction_parents[0]
 
 
 def _is_flexlate_merge_commit(
