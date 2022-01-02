@@ -206,7 +206,7 @@ class ConfigManager:
             # detected absolute location in the template.
             template_source.path = (
                 str(update.template.template_source_path)
-                if use_template_source_path and template_source.is_local_template
+                if use_template_source_path
                 else str(update.template.path)
             )
         self.save_config(config)

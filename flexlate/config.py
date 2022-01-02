@@ -17,6 +17,7 @@ from flexlate.finder.specific.copier import CopierFinder
 from flexlate.template.base import Template
 from flexlate.template.types import TemplateType
 from flexlate.template_data import TemplateData
+from flexlate.template_path import get_local_repo_path_and_name_cloning_if_repo_url
 
 
 class TemplateSource(BaseModel):
@@ -35,7 +36,9 @@ class TemplateSource(BaseModel):
     ) -> "TemplateSource":
         return cls(
             name=template.name,
-            path=str(template.path),
+            path=template.git_url
+            if template.git_url is not None
+            else str(template.path),
             version=template.version,
             type=template._type,
             target_version=target_version,
@@ -63,7 +66,18 @@ class TemplateSource(BaseModel):
             kwargs.update(target_version=self.target_version)
         if self.git_url is not None:
             kwargs.update(git_url=self.git_url)
-        local_path = self.absolute_local_path
+        local_path: Path
+        if self.git_url is not None:
+            # TODO: Avoid unnecessary git repo cloning
+            #  We already know that we have it by this point, but need to get the local path
+            #  and the logic to resolve the version that may be None is entertwined with the
+            #  cloning and local path determination
+            local_path, _ = get_local_repo_path_and_name_cloning_if_repo_url(
+                self.git_url, version=self.version
+            )
+        else:
+            local_path = self.absolute_local_path
+
         template = finder.find(self.git_url or str(local_path), local_path, **kwargs)
         # Keep original template source path (may be relative), so that later when
         # updating templates, it can update the path without forcing it to be absolute
