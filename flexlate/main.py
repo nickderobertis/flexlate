@@ -215,8 +215,8 @@ class Flexlate:
         )
 
     def undo(self, num_operations: int = 1, project_path: Path = Path(".")):
-        repo = Repo(project_path)
         project_config = self.config_manager.load_project_config(project_path)
+        repo = Repo(project_config.path)
         self.undoer.undo_transactions(
             repo,
             num_transactions=num_operations,
