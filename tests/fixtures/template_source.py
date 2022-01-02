@@ -10,6 +10,7 @@ from typing import List, Final, Callable, Optional, ContextManager
 
 import pytest
 
+from flexlate.add_mode import AddMode
 from flexlate.template.types import TemplateType
 from flexlate.template_data import TemplateData
 from tests.config import (
@@ -67,13 +68,6 @@ class TemplateSourceFixture:
         if self.is_local_template:
             return None
         return self.path
-
-    def expect_path(self, version: Optional[str] = None) -> str:
-        version = version or self.default_version
-        if self.is_local_template:
-            return self.path
-        # appdirs user data directory is mocked to GENERATED_FILES_DIR in tests
-        return str(GENERATED_FILES_DIR / self.name / version)
 
     def relative(self, to: Path) -> "TemplateSourceFixture":
         new_fixture = deepcopy(self)
@@ -217,4 +211,4 @@ def template_source_one_remote_and_all_local_relative(request) -> TemplateSource
     yield request.param
 
 
-COOKIECUTTER_REMOTE_DEFAULT_EXPECT_PATH = COOKIECUTTER_REMOTE_FIXTURE.expect_path()
+COOKIECUTTER_REMOTE_DEFAULT_EXPECT_PATH = COOKIECUTTER_REMOTE_FIXTURE.path
