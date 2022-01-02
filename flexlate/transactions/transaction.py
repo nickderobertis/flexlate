@@ -1,10 +1,10 @@
 import uuid
 from enum import Enum
 from pathlib import Path
-from typing import Optional, List
+from typing import Optional, List, Sequence
 
 from git import Repo, Commit
-from pydantic import BaseModel, Field, UUID4
+from pydantic import BaseModel, Field, UUID4, validator
 
 from flexlate.exc import (
     CannotParseCommitMessageFlexlateTransaction,
@@ -41,8 +41,14 @@ class FlexlateTransaction(BaseModel):
     type: TransactionType
     target: Optional[str] = None
     out_root: Optional[Path] = None
-    data: Optional[TemplateData] = None
+    data: Optional[Sequence[TemplateData]] = None
     id: UUID4 = Field(default_factory=lambda: uuid.uuid4())
+
+    @validator("data", pre=True)
+    def cast_data_into_sequence(cls, v):
+        if isinstance(v, dict):
+            return [v]
+        return v
 
     @classmethod
     def parse_commit_message(cls, message: str) -> "FlexlateTransaction":
@@ -94,17 +100,25 @@ def reset_last_transaction(
         # transaction started
         before_transaction_commit = _get_parent_commit(earliest_commit)
     else:
-        # On output/user branch, the only commits are merging flexlate transactions
+        # On output/user branch, typically the only commits are merging flexlate transactions
         # and user changes. So find the commit that merged this transaction,
         # then use its parent.
-        merge_commit = find_earliest_merge_commit_for_transaction(
-            repo, transaction, merged_branch_name, template_branch_name
-        )
-        before_transaction_commit = (
-            _get_non_flexlate_transaction_parent_from_flexlate_merge_commit(
-                merge_commit, merged_branch_name, template_branch_name
+        try:
+            merge_commit = find_earliest_merge_commit_for_transaction(
+                repo, transaction, merged_branch_name, template_branch_name
             )
-        )
+        except CannotFindMergeForTransactionException:
+            # This is likely because the user has not made any changes in the repo yet,
+            # and so the merges from the template branch are always fast-forwards.
+            # In this case, it is a mirror of the template branch and so we should use
+            # that logic
+            before_transaction_commit = _get_parent_commit(earliest_commit)
+        else:
+            before_transaction_commit = (
+                _get_non_flexlate_transaction_parent_from_flexlate_merge_commit(
+                    merge_commit, merged_branch_name, template_branch_name
+                )
+            )
 
     assert_that_all_commits_between_two_are_flexlate_transactions_or_merges(
         repo,
