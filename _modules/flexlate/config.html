@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.config &mdash; flexlate 0.3.0 documentation</title>
+  <title>flexlate.config &mdash; flexlate 0.3.1 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.3.0
+                0.3.1
               </div>
             
           
@@ -186,6 +186,7 @@
 <span class="kn">from</span> <span class="nn">flexlate.template.base</span> <span class="kn">import</span> <span class="n">Template</span>
 <span class="kn">from</span> <span class="nn">flexlate.template.types</span> <span class="kn">import</span> <span class="n">TemplateType</span>
 <span class="kn">from</span> <span class="nn">flexlate.template_data</span> <span class="kn">import</span> <span class="n">TemplateData</span>
+<span class="kn">from</span> <span class="nn">flexlate.template_path</span> <span class="kn">import</span> <span class="n">get_local_repo_path_and_name_cloning_if_repo_url</span>
 
 
 <div class="viewcode-block" id="TemplateSource"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config.TemplateSource">[docs]</a><span class="k">class</span> <span class="nc">TemplateSource</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
@@ -204,7 +205,9 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;TemplateSource&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
             <span class="n">name</span><span class="o">=</span><span class="n">template</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-            <span class="n">path</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">path</span><span class="p">),</span>
+            <span class="n">path</span><span class="o">=</span><span class="n">template</span><span class="o">.</span><span class="n">git_url</span>
+            <span class="k">if</span> <span class="n">template</span><span class="o">.</span><span class="n">git_url</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">path</span><span class="p">),</span>
             <span class="n">version</span><span class="o">=</span><span class="n">template</span><span class="o">.</span><span class="n">version</span><span class="p">,</span>
             <span class="nb">type</span><span class="o">=</span><span class="n">template</span><span class="o">.</span><span class="n">_type</span><span class="p">,</span>
             <span class="n">target_version</span><span class="o">=</span><span class="n">target_version</span><span class="p">,</span>
@@ -232,7 +235,18 @@
             <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">target_version</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">target_version</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">git_url</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">git_url</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">git_url</span><span class="p">)</span>
-        <span class="n">local_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">absolute_local_path</span>
+        <span class="n">local_path</span><span class="p">:</span> <span class="n">Path</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">git_url</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># TODO: Avoid unnecessary git repo cloning</span>
+            <span class="c1">#  We already know that we have it by this point, but need to get the local path</span>
+            <span class="c1">#  and the logic to resolve the version that may be None is entertwined with the</span>
+            <span class="c1">#  cloning and local path determination</span>
+            <span class="n">local_path</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">get_local_repo_path_and_name_cloning_if_repo_url</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">git_url</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">version</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">local_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">absolute_local_path</span>
+
         <span class="n">template</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">git_url</span> <span class="ow">or</span> <span class="nb">str</span><span class="p">(</span><span class="n">local_path</span><span class="p">),</span> <span class="n">local_path</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="c1"># Keep original template source path (may be relative), so that later when</span>
         <span class="c1"># updating templates, it can update the path without forcing it to be absolute</span>
