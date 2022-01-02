@@ -376,6 +376,34 @@ def test_remove_applied_template(
     _assert_applied_templates_config_is_empty(config_path)
 
 
+@patch.object(appdirs, "user_config_dir", lambda name: GENERATED_FILES_DIR)
+def test_init_project_for_user_and_add_source_and_template(
+    flexlates: FlexlateFixture,
+    repo_with_placeholder_committed: Repo,
+):
+    fxt = flexlates.flexlate
+    repo = repo_with_placeholder_committed
+    with change_directory_to(GENERATED_REPO_DIR):
+        fxt.init_project()
+        fxt.add_template_source(COOKIECUTTER_REMOTE_URL)
+        fxt.apply_template_and_add(COOKIECUTTER_REMOTE_NAME, no_input=True)
+        # Add an operation that will be undone
+        subdir = GENERATED_REPO_DIR / "subdir"
+        subdir.mkdir()
+        with change_directory_to(subdir):
+            fxt.apply_template_and_add(COOKIECUTTER_REMOTE_NAME, no_input=True)
+            config_path = subdir / "flexlate.json"
+            _assert_project_files_are_correct(subdir)
+            _assert_applied_templates_config_is_correct(config_path)
+            fxt.undo()
+            _assert_project_files_do_not_exist(subdir)
+            assert not config_path.exists()
+
+    _assert_project_files_are_correct()
+    _assert_config_is_correct()
+    _assert_project_config_is_correct()
+
+
 def _assert_project_files_are_correct(
     root: Path = GENERATED_REPO_DIR,
     expect_data: Optional[TemplateData] = None,
@@ -496,7 +524,9 @@ def _assert_config_is_correct(
 
 
 def _assert_project_config_is_correct(
-    path: Path, user: bool = False, add_mode: AddMode = AddMode.LOCAL
+    path: Path = GENERATED_REPO_DIR / "flexlate-project.json",
+    user: bool = False,
+    add_mode: AddMode = AddMode.LOCAL,
 ):
     project_config = FlexlateProjectConfig.load(path)
     assert len(project_config.projects) == 1
