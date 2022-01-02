@@ -14,8 +14,12 @@ from flexlate.exc import (
     TooFewTransactionsException,
     ExpectedMergeCommitException,
     CannotFindCorrectMergeParentException,
+    UserChangesWouldHaveBeenDeletedException,
 )
-from flexlate.ext_git import reset_current_branch_to_commit
+from flexlate.ext_git import (
+    reset_current_branch_to_commit,
+    get_commits_between_two_commits,
+)
 from flexlate.template_data import TemplateData
 
 FLEXLATE_TRANSACTION_COMMIT_DIVIDER = (
@@ -81,6 +85,13 @@ def reset_last_transaction(
         repo, last_transaction, merged_branch_name, template_branch_name
     )
     before_transaction_commit = _get_parent_commit(earliest_commit)
+    assert_that_all_commits_between_two_are_flexlate_transactions_or_merges(
+        repo,
+        before_transaction_commit,
+        repo.commit(),
+        merged_branch_name,
+        template_branch_name,
+    )
     reset_current_branch_to_commit(repo, before_transaction_commit)
 
 
@@ -147,6 +158,27 @@ def assert_has_at_least_n_transactions(
             last_commit = _get_parent_commit(earliest_commit)
         except (HitInitialCommit, HitMergeCommit):
             return too_few_transactions()
+
+
+def assert_that_all_commits_between_two_are_flexlate_transactions_or_merges(
+    repo: Repo,
+    start: Commit,
+    end: Commit,
+    merged_branch_name: str,
+    template_branch_name: str,
+):
+    between_commits = get_commits_between_two_commits(repo, start, end)
+    for commit in between_commits:
+        if _is_flexlate_merge_commit(commit, merged_branch_name, template_branch_name):
+            continue
+        try:
+            FlexlateTransaction.parse_commit_message(commit.message)
+        except CannotParseCommitMessageFlexlateTransaction:
+            raise UserChangesWouldHaveBeenDeletedException(
+                f"Commit {commit.hexsha}: {commit.message} would have been deleted "
+                f"by the flexlate undo strategy. An extra check prevented it. "
+                f"Please raise this as an issue on Github"
+            )
 
 
 def find_earliest_commit_that_was_part_of_transaction(

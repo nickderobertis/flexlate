@@ -116,3 +116,7 @@ class ExpectedMergeCommitException(FlexlateTransactionException):
 
 class CannotFindCorrectMergeParentException(FlexlateTransactionException):
     pass
+
+
+class UserChangesWouldHaveBeenDeletedException(FlexlateTransactionException):
+    pass

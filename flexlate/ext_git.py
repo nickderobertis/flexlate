@@ -4,7 +4,7 @@ import shutil
 import tempfile
 from contextlib import contextmanager
 from pathlib import Path
-from typing import cast, Set, Generator, ContextManager, Optional, Tuple
+from typing import cast, Set, Generator, ContextManager, Optional, Tuple, List
 
 from git import Repo, Blob, Tree, GitCommandError, Commit, Git  # type: ignore
 
@@ -231,3 +231,13 @@ def checkout_version(repo: Repo, version: str):
 def reset_current_branch_to_commit(repo: Repo, commit: Commit):
     commit_sha = commit.hexsha
     repo.git.reset("--hard", commit_sha)
+
+
+def get_commits_between_two_commits(
+    repo: Repo, start: Commit, end: Commit
+) -> List[Commit]:
+    raw_commit_output = repo.git.rev_list(
+        "--ancestry-path", f"{start.hexsha}..{end.hexsha}"
+    )
+    commit_shas = raw_commit_output.split("\n")
+    return [repo.commit(sha) for sha in commit_shas]
