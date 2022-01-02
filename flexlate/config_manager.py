@@ -23,6 +23,10 @@ from flexlate.exc import (
     CannotRemoveTemplateSourceException,
     CannotRemoveAppliedTemplateException,
 )
+from flexlate.path_ops import (
+    location_relative_to_new_parent,
+    make_absolute_path_from_possibly_relative_to_another_path,
+)
 from flexlate.render.renderable import Renderable
 from flexlate.template.base import Template
 from flexlate.template_data import TemplateData, merge_data
@@ -291,14 +295,38 @@ class ConfigManager:
         config_path: Path,
         project_root: Path = Path("."),
         out_root: Path = Path("."),
+        orig_project_root: Path = Path("."),
     ):
+        """
+
+        :param template_name:
+        :param config_path:
+        :param project_root: The root of the current working project (may be a temp directory)
+        :param out_root:
+        :param orig_project_root: The root of the user's project (always stays the same, even
+            when working in a temp directory)
+        :return:
+        """
         config = self.load_config(project_root=project_root)
         child_config = _get_or_create_child_config_by_path(config, config_path)
         template_index: Optional[int] = None
+        orig_config_folder = location_relative_to_new_parent(
+            child_config.settings.config_location.parent,
+            project_root,
+            orig_project_root,
+        )
+        absolute_out_root = make_absolute_path_from_possibly_relative_to_another_path(
+            out_root, orig_config_folder
+        )
         for i, applied_template in enumerate(child_config.applied_templates):
+            absolute_template_out_root = (
+                make_absolute_path_from_possibly_relative_to_another_path(
+                    applied_template.root, orig_project_root
+                )
+            )
             if (
                 applied_template.name == template_name
-                and applied_template.root == out_root
+                and absolute_template_out_root == absolute_out_root
             ):
                 template_index = i
                 break

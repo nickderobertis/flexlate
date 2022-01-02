@@ -102,6 +102,7 @@ class Remover:
                 config_path,
                 project_root=project_root,
                 out_root=expanded_out_root,
+                orig_project_root=project_root,
             )
         else:
             # Commit changes for local and project
@@ -120,6 +121,7 @@ class Remover:
                     ),
                     project_root=temp_path,
                     out_root=expanded_out_root,
+                    orig_project_root=project_root,
                 ),
                 repo,
                 commit_message,

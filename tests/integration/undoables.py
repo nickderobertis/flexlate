@@ -5,6 +5,7 @@ from flexlate.main import Flexlate
 from tests.config import COOKIECUTTER_REMOTE_NAME, COPIER_ONE_DIR, COPIER_ONE_NAME
 from tests.fixtures.template_source import COOKIECUTTER_REMOTE_FIXTURE
 
+
 @dataclass
 class UndoableOperation:
     operation: Callable[[Flexlate], None]
