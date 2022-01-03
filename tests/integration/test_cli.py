@@ -67,6 +67,7 @@ def test_init_project_and_add_source_and_template(
         name=template_source.name,
         url=template_source.url,
         path=template_source.path,
+        render_relative_root=template_source.render_relative_root,
     )
 
     project_config_path = GENERATED_REPO_DIR / "flexlate-project.json"
@@ -170,6 +171,7 @@ def test_init_project_and_add_source_and_template_in_subdir(
         name=template_source.name,
         url=template_source.url,
         path=expect_template_source_path,
+        render_relative_root=template_source.render_relative_root,
     )
     _assert_applied_templates_config_is_correct(
         applied_config_dir / "flexlate.json",
@@ -225,6 +227,7 @@ def test_update_project(
             name=template_source.name,
             url=template_source.url,
             path=template_source.path,
+        render_relative_root=template_source.render_relative_root,
         )
 
     def assert_subdir_template_output_is_correct(
@@ -580,6 +583,7 @@ def _assert_template_sources_config_is_correct(
     name: str = COOKIECUTTER_REMOTE_NAME,
     url: str = COOKIECUTTER_REMOTE_URL,
     path: str = COOKIECUTTER_REMOTE_DEFAULT_EXPECT_PATH,
+    render_relative_root: Path = Path("."),
 ):
     assert config_path.exists()
     config = FlexlateConfig.load(config_path)
@@ -590,6 +594,8 @@ def _assert_template_sources_config_is_correct(
     assert template_source.version == version
     assert template_source.git_url == url
     assert template_source.path == path
+    assert template_source.render_relative_root == render_relative_root
+
 
 
 def _assert_template_sources_config_is_empty(
@@ -637,6 +643,7 @@ def _assert_config_is_correct(
     name: str = COOKIECUTTER_REMOTE_NAME,
     url: str = COOKIECUTTER_REMOTE_URL,
     path: str = COOKIECUTTER_REMOTE_DEFAULT_EXPECT_PATH,
+    render_relative_root: Path = Path("{{ cookiecutter.name }}"),
 ):
     _assert_applied_templates_config_is_correct(
         config_path,
@@ -647,7 +654,7 @@ def _assert_config_is_correct(
         name=name,
     )
     _assert_template_sources_config_is_correct(
-        config_path, version=version, name=name, url=url, path=path
+        config_path, version=version, name=name, url=url, path=path, render_relative_root=render_relative_root
     )
 
 

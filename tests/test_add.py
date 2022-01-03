@@ -44,6 +44,7 @@ def test_add_template_source_to_repo(
     assert source.version == cookiecutter_one_template.version
     assert source.type == TemplateType.COOKIECUTTER
     assert source.target_version == "some version"
+    assert source.render_relative_root == Path("{{ cookiecutter.a }}")
 
 
 @patch.object(appdirs, "user_config_dir", lambda name: GENERATED_FILES_DIR)
@@ -297,6 +298,7 @@ def test_add_source_to_project_with_existing_outputs(
     assert source.version == cookiecutter_two_template.version
     assert source.type == TemplateType.COOKIECUTTER
     assert source.target_version == "some version"
+    assert source.render_relative_root == Path("{{ cookiecutter.a }}")
 
 
 # TODO: test for adding to existing
