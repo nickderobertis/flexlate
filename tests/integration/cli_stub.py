@@ -43,6 +43,7 @@ class CLIStubFlexlate(Flexlate):
         default_add_mode: AddMode = AddMode.LOCAL,
         merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
         template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
+        template_path_from: Optional[str] = None,
         user: bool = False,
     ):
         fxt(
@@ -56,6 +57,7 @@ class CLIStubFlexlate(Flexlate):
                 "--template-branch-name",
                 template_branch_name,
                 *_bool_flag(user, "user"),
+                *_flag_if_not_none(template_path_from, "from"),
             ]
         )
 

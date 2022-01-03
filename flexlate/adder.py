@@ -221,6 +221,24 @@ class Adder:
             template_branch_name=template_branch_name,
         )
 
+    def init_project_from_template_source_path(
+        self,
+        repo: Repo,
+        template_path_from: str,
+        default_add_mode: AddMode = AddMode.LOCAL,
+        merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
+        template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
+        user: bool = False,
+        config_manager: ConfigManager = ConfigManager(),
+    ):
+        pass
+        # Make a temp directory
+        # init flexlate project
+        # add template source
+        # add applied output
+        # copy output to current location
+        # copy config to output
+
 
 def _add_template_commit_message(
     template: Template, out_root: Path, project_root: Path

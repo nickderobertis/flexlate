@@ -42,12 +42,13 @@ ADD_MODE_OPTION = typer.Option(
     show_choices=True,
 )
 NO_INPUT_OPTION = typer.Option(False, "--no-input", "-n", show_default=False)
+TEMPLATE_SOURCE_EXTRA_DOC = "Can be a file path or a git url"
 
 
 @add_cli.command(name="source")
 def add_source(
     path: str = typer.Argument(
-        ..., help="Template source. Can be a file path or a git url"
+        ..., help=f"Template source. {TEMPLATE_SOURCE_EXTRA_DOC}"
     ),
     name: Optional[str] = typer.Argument(
         None,
@@ -149,6 +150,11 @@ def init_project(
         "--user",
         help="Store the flexlate project configuration in the user directory rather than in the project",
     ),
+    template_path_from: Optional[str] = typer.Option(
+        None,
+        "--from",
+        help=f"A template source path to initialize the project from. {TEMPLATE_SOURCE_EXTRA_DOC}",
+    ),
 ):
     """
     Initializes a flexlate project. This must be run before other commands
@@ -158,6 +164,7 @@ def init_project(
         default_add_mode=default_add_mode,
         merged_branch_name=merged_branch_name,
         template_branch_name=template_branch_name,
+        template_path_from=template_path_from,
         user=user,
     )
 

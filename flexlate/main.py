@@ -42,16 +42,27 @@ class Flexlate:
         default_add_mode: AddMode = AddMode.LOCAL,
         merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
         template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
+        template_path_from: Optional[str] = None,
         user: bool = False,
     ):
         repo = Repo(path)
-        self.adder.init_project_and_add_to_branches(
-            repo,
-            default_add_mode=default_add_mode,
-            user=user,
-            merged_branch_name=merged_branch_name,
-            template_branch_name=template_branch_name,
-        )
+        if template_path_from:
+            self.adder.init_project_from_template_source_path(
+                repo,
+                template_path_from,
+                default_add_mode=default_add_mode,
+                user=user,
+                merged_branch_name=merged_branch_name,
+                template_branch_name=template_branch_name,
+            )
+        else:
+            self.adder.init_project_and_add_to_branches(
+                repo,
+                default_add_mode=default_add_mode,
+                user=user,
+                merged_branch_name=merged_branch_name,
+                template_branch_name=template_branch_name,
+            )
 
     def add_template_source(
         self,
