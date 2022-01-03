@@ -17,6 +17,7 @@ class CopierTemplate(Template):
         version: Optional[str] = None,
         target_version: Optional[str] = None,
         git_url: Optional[str] = None,
+        render_relative_root: Path = Path("."),
     ):
         super().__init__(
             config,
@@ -25,4 +26,5 @@ class CopierTemplate(Template):
             version=version,
             target_version=target_version,
             git_url=git_url,
+            render_relative_root=render_relative_root,
         )

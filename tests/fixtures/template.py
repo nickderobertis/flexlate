@@ -23,6 +23,7 @@ from tests.config import (
     COOKIECUTTER_ONE_MODIFIED_VERSION,
     COPIER_ONE_VERSION,
     COPIER_ONE_MODIFIED_VERSION,
+    COPIER_OUTPUT_SUBDIR_DIR,
 )
 
 
@@ -77,6 +78,12 @@ def cookiecutter_one_template() -> CookiecutterTemplate:
 def copier_one_template() -> CookiecutterTemplate:
     finder = CopierFinder()
     yield finder.find(str(COPIER_ONE_DIR), COPIER_ONE_DIR)
+
+
+@pytest.fixture
+def copier_output_subdir_template() -> CookiecutterTemplate:
+    finder = CopierFinder()
+    yield finder.find(str(COPIER_OUTPUT_SUBDIR_DIR), COPIER_OUTPUT_SUBDIR_DIR)
 
 
 @pytest.fixture

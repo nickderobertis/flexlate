@@ -13,6 +13,7 @@ class CookiecutterTemplate(Template):
         self,
         config: CookiecutterConfig,
         path: Path,
+        render_relative_root: Path,
         name: Optional[str] = None,
         version: Optional[str] = None,
         target_version: Optional[str] = None,
@@ -25,4 +26,5 @@ class CookiecutterTemplate(Template):
             version=version,
             target_version=target_version,
             git_url=git_url,
+            render_relative_root=render_relative_root,
         )

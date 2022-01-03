@@ -34,6 +34,19 @@ def test_render_copier_with_defaults(copier_one_renderable: Renderable):
     assert rendered_path.read_text() == "1"
 
 
+def test_render_copier_subdir_with_defaults(
+    copier_output_subdir_renderable: Renderable,
+):
+    renderer = CopierRenderer()
+    renderable = copier_output_subdir_renderable
+    data = renderer.render(renderable, no_input=True)
+    assert data == {"qone": "aone", "qtwo": "atwo"}
+    rendered_path = GENERATED_FILES_DIR / "aone.txt"
+    assert rendered_path.read_text() == "atwo"
+    should_not_exist_path = GENERATED_FILES_DIR / "not-rendered.txt"
+    assert not should_not_exist_path.exists()
+
+
 def test_render_cookiecutter_with_data(
     cookiecutter_one_renderable: Renderable,
 ):
