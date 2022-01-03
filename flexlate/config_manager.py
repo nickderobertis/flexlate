@@ -309,6 +309,38 @@ class ConfigManager:
         """
         config = self.load_config(project_root=project_root)
         child_config = _get_or_create_child_config_by_path(config, config_path)
+        template_index, _ = self._find_applied_template(
+            template_name,
+            config_path,
+            project_root=project_root,
+            out_root=out_root,
+            orig_project_root=orig_project_root,
+            config=config,
+        )
+        child_config.applied_templates.pop(template_index)
+        self.save_config(config)
+
+    def _find_applied_template(
+        self,
+        template_name: str,
+        config_path: Path,
+        project_root: Path = Path("."),
+        out_root: Path = Path("."),
+        orig_project_root: Path = Path("."),
+        config: Optional[FlexlateConfig] = None,
+    ) -> Tuple[int, AppliedTemplateConfig]:
+        """
+
+        :param template_name:
+        :param config_path:
+        :param project_root: The root of the current working project (may be a temp directory)
+        :param out_root:
+        :param orig_project_root: The root of the user's project (always stays the same, even
+            when working in a temp directory)
+        :return: index, applied template config tuple
+        """
+        config = config or self.load_config(project_root=project_root)
+        child_config = _get_or_create_child_config_by_path(config, config_path)
         template_index: Optional[int] = None
         orig_config_folder = location_relative_to_new_parent(
             child_config.settings.config_location.parent,
@@ -334,8 +366,8 @@ class ConfigManager:
             raise CannotRemoveAppliedTemplateException(
                 f"Cannot find any applied template with name {template_name} and root {out_root}"
             )
-        child_config.applied_templates.pop(template_index)
-        self.save_config(config)
+        applied_template = child_config.applied_templates[template_index]
+        return template_index, applied_template
 
     def get_num_applied_templates_in_child_config(
         self, child_config_path: Path, project_root: Path = Path(".")
@@ -388,6 +420,30 @@ class ConfigManager:
                 )
             seen_sources.add(source.name)
         return list(sources_with_templates.values())
+
+    def move_applied_template(
+        self,
+        template_name: str,
+        config_path: Path,
+        new_config_path: Path,
+        project_root: Path = Path("."),
+        out_root: Path = Path("."),
+        orig_project_root: Path = Path("."),
+    ):
+        config = self.load_config(project_root=project_root)
+        child_config = _get_or_create_child_config_by_path(config, config_path)
+        template_index, _ = self._find_applied_template(
+            template_name,
+            config_path,
+            project_root=project_root,
+            out_root=out_root,
+            orig_project_root=orig_project_root,
+            config=config,
+        )
+        applied_template = child_config.applied_templates.pop(template_index)
+        new_child_config = _get_or_create_child_config_by_path(config, new_config_path)
+        new_child_config.applied_templates.append(applied_template)
+        self.save_config(config)
 
 
 def _get_child_config_by_path(config: FlexlateConfig, path: Path) -> FlexlateConfig:

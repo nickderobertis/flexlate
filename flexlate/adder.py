@@ -120,10 +120,13 @@ class Adder:
             raise ValueError("repo working dir should not be none")
 
         project_root = Path(repo.working_dir)
+        full_local_config_out_root = out_root / template.render_relative_root
         config_path = determine_config_path_from_roots_and_add_mode(
-            out_root, project_root, add_mode
+            full_local_config_out_root, project_root, add_mode
         )
-        expanded_out_root = get_expanded_out_root(out_root, project_root, add_mode)
+        expanded_out_root = get_expanded_out_root(
+            out_root, project_root, template.render_relative_root, add_mode
+        )
 
         if add_mode == AddMode.USER:
             # No need to commit config changes for user

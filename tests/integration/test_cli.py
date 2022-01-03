@@ -227,7 +227,7 @@ def test_update_project(
             name=template_source.name,
             url=template_source.url,
             path=template_source.path,
-        render_relative_root=template_source.render_relative_root,
+            render_relative_root=template_source.render_relative_root,
         )
 
     def assert_subdir_template_output_is_correct(
@@ -597,7 +597,6 @@ def _assert_template_sources_config_is_correct(
     assert template_source.render_relative_root == render_relative_root
 
 
-
 def _assert_template_sources_config_is_empty(
     config_path: Path = GENERATED_REPO_DIR / "flexlate.json",
 ):
@@ -654,7 +653,12 @@ def _assert_config_is_correct(
         name=name,
     )
     _assert_template_sources_config_is_correct(
-        config_path, version=version, name=name, url=url, path=path, render_relative_root=render_relative_root
+        config_path,
+        version=version,
+        name=name,
+        url=url,
+        path=path,
+        render_relative_root=render_relative_root,
     )
 
 
