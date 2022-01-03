@@ -320,3 +320,8 @@ def test_add_project_config_with_git(repo_with_placeholder_committed: Repo):
         assert len(config.projects) == 1
         project = config.projects[0]
         assert project.path == Path(".")
+
+
+def test_init_project_from_template_source_path():
+    adder = Adder()
+    adder.init_project_from_template_source_path(COOKIECUTTER_REMOTE_URL)

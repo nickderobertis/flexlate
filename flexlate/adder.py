@@ -1,4 +1,5 @@
 import os
+import tempfile
 from copy import deepcopy
 from pathlib import Path
 from typing import Optional
@@ -223,7 +224,6 @@ class Adder:
 
     def init_project_from_template_source_path(
         self,
-        repo: Repo,
         template_path_from: str,
         default_add_mode: AddMode = AddMode.LOCAL,
         merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
@@ -231,7 +231,17 @@ class Adder:
         user: bool = False,
         config_manager: ConfigManager = ConfigManager(),
     ):
-        pass
+        with tempfile.TemporaryDirectory() as temp_dir:
+            repo = Repo.init(temp_dir)
+            self.init_project_and_add_to_branches(
+                repo,
+                default_add_mode=default_add_mode,
+                merged_branch_name=merged_branch_name,
+                template_branch_name=template_branch_name,
+                user=user,
+                config_manager=config_manager,
+            )
+
         # Make a temp directory
         # init flexlate project
         # add template source
