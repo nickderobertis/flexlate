@@ -182,6 +182,54 @@ class Adder:
             renderer=renderer,
             config_manager=config_manager,
         )
+        if add_mode != AddMode.LOCAL:
+            # May need to adjust location of local configs,
+            # but not project or user
+            return
+        renderables = config_manager.get_renderables_for_updates(
+            [template_update], project_root=project_root
+        )
+        renderable = renderables[0]
+        new_relative_out_root = Path(renderer.render_string(str(template.render_relative_root), renderable))
+        if template.render_relative_root == new_relative_out_root:
+            # No need to move, render relative root was not a templated path
+            return
+
+
+        if add_mode == AddMode.USER:
+            # No need to commit config changes for user
+            config_manager.move_applied_template(
+                template.name,
+                config_path,
+                data=data,
+                project_root=project_root,
+                out_root=expanded_out_root,
+            )
+        else:
+            # Commit changes for local and project
+            commit_message = create_transaction_commit_message(
+                _add_template_commit_message(
+                    template, out_root, Path(repo.working_dir)
+                ),
+                transaction,
+            )
+
+            modify_files_via_branches_and_temp_repo(
+                lambda temp_path: config_manager.add_applied_template(
+                    template,
+                    location_relative_to_new_parent(
+                        config_path, project_root, temp_path, Path(os.getcwd())
+                    ),
+                    data=data,
+                    project_root=temp_path,
+                    out_root=expanded_out_root,
+                ),
+                repo,
+                commit_message,
+                out_root,
+                merged_branch_name=merged_branch_name,
+                template_branch_name=template_branch_name,
+            )
 
     def init_project_and_add_to_branches(
         self,

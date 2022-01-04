@@ -51,6 +51,16 @@ class MultiRenderer:
             _merge_file_trees(temp_folders, project_root)
         return out_data
 
+    def render_string(
+            self,
+            string: str,
+            renderable: Renderable,
+    ) -> str:
+        template = renderable.template
+        renderer = _get_specific_renderer(template)
+        return renderer.render_string(string, renderable)
+
+
 
 def _get_specific_renderer(template: Template) -> SpecificTemplateRenderer:
     if template._type == TemplateType.BASE:

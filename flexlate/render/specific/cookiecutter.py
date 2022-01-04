@@ -1,3 +1,5 @@
+import shutil
+import tempfile
 from pathlib import Path
 from typing import Optional
 
@@ -46,3 +48,40 @@ class CookiecutterRenderer(SpecificTemplateRenderer[CookiecutterTemplate]):
         used_data.pop("_template")
 
         return used_data
+
+    def render_string(
+        self,
+        string: str,
+        renderable: Renderable[CookiecutterTemplate],
+    ) -> str:
+        template = renderable.template
+        config_dict = get_user_config()
+        context_file = template.path / "cookiecutter.json"
+
+        context = generate_context(
+            context_file=context_file,
+            default_context=config_dict["default_context"],
+            extra_context=renderable.data,
+        )
+        context["cookiecutter"] = prompt_for_config(context, no_input=True)
+
+        with tempfile.TemporaryDirectory() as temp_template_dir:
+            context["cookiecutter"]["_template"] = temp_template_dir
+            cookiecutter_folder_name = "{{ cookiecutter.a7c82b2f-d66e-43ff-bedd-196d7abd5ddf }}"
+            temp_template_file_path = Path(temp_template_dir) / cookiecutter_folder_name / "temp.txt"
+            temp_template_file_path.write_text(string)
+
+            with tempfile.TemporaryDirectory() as temp_output_dir:
+                generate_files(
+                    repo_dir=temp_template_dir,
+                    context=context,
+                    overwrite_if_exists=False,
+                    skip_if_file_exists=False,
+                    output_dir=temp_output_dir,
+                )
+                temp_output_file_path = Path(temp_output_dir) / cookiecutter_folder_name / "temp.txt"
+                output = temp_output_file_path.read_text()
+
+        return output
+
+

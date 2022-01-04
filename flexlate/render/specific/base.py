@@ -21,3 +21,11 @@ class SpecificTemplateRenderer(Protocol[T]):
         no_input: bool = False,
     ) -> TemplateData:
         ...
+
+
+    def render_string(
+        self,
+        string: str,
+        renderable: Renderable[T],
+    ) -> str:
+        ...
