@@ -52,14 +52,13 @@ class MultiRenderer:
         return out_data
 
     def render_string(
-            self,
-            string: str,
-            renderable: Renderable,
+        self,
+        string: str,
+        renderable: Renderable,
     ) -> str:
         template = renderable.template
         renderer = _get_specific_renderer(template)
         return renderer.render_string(string, renderable)
-
 
 
 def _get_specific_renderer(template: Template) -> SpecificTemplateRenderer:

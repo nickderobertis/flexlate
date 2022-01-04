@@ -38,9 +38,9 @@ class CopierRenderer(SpecificTemplateRenderer[CopierTemplate]):
         return _extract_template_data_from_copier_config(conf)
 
     def render_string(
-            self,
-            string: str,
-            renderable: Renderable[CopierTemplate],
+        self,
+        string: str,
+        renderable: Renderable[CopierTemplate],
     ) -> str:
         template = renderable.template
 
@@ -51,11 +51,10 @@ class CopierRenderer(SpecificTemplateRenderer[CopierTemplate]):
                 shutil.copy(copier_path_1, temp_template_dir)
             if copier_path_2.exists():
                 shutil.copy(copier_path_1, temp_template_dir)
-            temp_template_file_path = Path(temp_template_dir) / template.render_relative_root / "temp.txt"
+            temp_template_file_path = (
+                Path(temp_template_dir) / template.render_relative_root / "temp.txt"
+            )
             temp_template_file_path.write_text(string)
-
-
-
 
             with tempfile.TemporaryDirectory() as temp_output_dir:
                 conf = _make_config_by_adding_defaults_then_prompting_user(
@@ -67,7 +66,9 @@ class CopierRenderer(SpecificTemplateRenderer[CopierTemplate]):
                 copy_local(conf=conf)
                 # TODO: handle when copier render_relative_root is itself templated
                 #  Then this path will be different
-                temp_output_file_path = Path(temp_output_dir)/ template.render_relative_root / "temp.txt"
+                temp_output_file_path = (
+                    Path(temp_output_dir) / template.render_relative_root / "temp.txt"
+                )
                 output = temp_output_file_path.read_text()
         return output
 

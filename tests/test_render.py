@@ -126,3 +126,13 @@ def test_render_multi_with_overlap(
     )
     assert data == [{"a": "b", "c": "something"}, {"a": "b", "c": "something else"}]
     assert cookiecutter_one_generated_text_content() == "bsomethingbsomething else"
+
+
+def test_render_string_local_cookiecutter(
+    cookiecutter_one_renderable: Renderable,
+):
+    renderer = CookiecutterRenderer()
+    output = renderer.render_string(
+        "{{ cookiecutter.a }} works", cookiecutter_one_renderable
+    )
+    assert output == "b works"

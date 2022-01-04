@@ -22,7 +22,6 @@ class SpecificTemplateRenderer(Protocol[T]):
     ) -> TemplateData:
         ...
 
-
     def render_string(
         self,
         string: str,
