@@ -11,7 +11,7 @@ from tests.fixtures.templated_repo import *
 
 INITIAL_COMMIT_MESSAGE = "Initial commit\n"
 REPO_WITH_COOKIECUTTER_ONE_SOURCE_COMMIT_MESSAGE = 'Added template source one to .\n\n-------------------BEGIN FLEXLATE TRANSACTION-------------------\n{\n  "type": "add source",\n  "target": null,\n  "out_root": null,\n  "data": null,\n  "id": "93f984ca-6e8f-45e9-b9b0-aebebfe798c1"\n}\n'
-REPO_WITH_TEMPLATE_BRANCH_FROM_COOKIECUTTER_ONE_COMMIT_MESSAGE = 'Update flexlate templates\n\none: 1c154af24ff30bc4cab8cf9d543304d9\n\n-------------------BEGIN FLEXLATE TRANSACTION-------------------\n{\n  "type": "add output",\n  "target": null,\n  "out_root": null,\n  "data": null,\n  "id": "86465f4d-9752-4ae5-aaa7-791b4c814e8d"\n}\n'
+REPO_WITH_TEMPLATE_BRANCH_FROM_COOKIECUTTER_ONE_COMMIT_MESSAGE = 'Moved config for one to .\n\n-------------------BEGIN FLEXLATE TRANSACTION-------------------\n{\n  "type": "add output",\n  "target": null,\n  "out_root": null,\n  "data": null,\n  "id": "86465f4d-9752-4ae5-aaa7-791b4c814e8d"\n}\n'
 REPO_WITH_SOURCE_REMOVED_COMMIT_MESSAGE = 'Removed template source one from .\n\n-------------------BEGIN FLEXLATE TRANSACTION-------------------\n{\n  "type": "remove source",\n  "target": null,\n  "out_root": null,\n  "data": null,\n  "id": "c034ec63-d2b5-4d8c-aef1-f96e29a6f5d1"\n}\n'
 REPO_WITH_APPLIED_OUTPUT_REMOVED_COMMIT_MESSAGE = 'Update flexlate templates\n\n-------------------BEGIN FLEXLATE TRANSACTION-------------------\n{\n  "type": "remove output",\n  "target": null,\n  "out_root": null,\n  "data": null,\n  "id": "79715a11-a3c4-40b1-a49b-9d8388e5c28d"\n}\n'
 REPO_WITH_COOKIECUTTER_ONE_UPDATED_COMMIT_MESSAGE = (
