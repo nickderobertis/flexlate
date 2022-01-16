@@ -107,10 +107,17 @@ def test_add_remote_cookiecutter_applied_template_to_repo(
         no_input=True,
     )
 
-    config_dir = GENERATED_FILES_DIR if add_mode == AddMode.USER else GENERATED_REPO_DIR
-    template_root = (
-        GENERATED_REPO_DIR.absolute() if add_mode == AddMode.USER else Path(".")
-    )
+    if add_mode == AddMode.USER:
+        config_dir = GENERATED_FILES_DIR
+        template_root = GENERATED_REPO_DIR.absolute()
+    elif add_mode == AddMode.PROJECT:
+        config_dir = GENERATED_REPO_DIR
+        template_root = Path(".")
+    elif add_mode == AddMode.LOCAL:
+        config_dir = GENERATED_REPO_DIR / "abc"
+        template_root = Path("..")
+    else:
+        raise ValueError(f"unsupported add mode {add_mode}")
 
     config_path = config_dir / "flexlate.json"
     config = FlexlateConfig.load(config_path)
@@ -161,8 +168,8 @@ def test_add_applied_template_to_subdir(
         )
 
     if add_mode == AddMode.LOCAL:
-        config_dir = subdir
-        template_root = Path(".")
+        config_dir = subdir / "b"
+        template_root = Path("..")
     elif add_mode == AddMode.PROJECT:
         config_dir = GENERATED_REPO_DIR
         template_root = subdir.relative_to(GENERATED_REPO_DIR)
@@ -218,8 +225,8 @@ def test_add_multiple_applied_templates_for_one_source(
     if add_mode == AddMode.LOCAL:
         output_options.extend(
             [
-                OutputOptions(GENERATED_REPO_DIR, Path("."), GENERATED_REPO_DIR),
-                OutputOptions(subdir, Path("."), subdir),
+                OutputOptions(GENERATED_REPO_DIR / "b", Path(".."), GENERATED_REPO_DIR),
+                OutputOptions(subdir / "b", Path(".."), subdir),
             ]
         )
     elif add_mode == AddMode.PROJECT:
