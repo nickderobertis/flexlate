@@ -302,17 +302,20 @@ def test_add_source_to_project_with_existing_outputs(
         target_version="some version",
     )
     assert cookiecutter_one_generated_text_content(gen_dir=GENERATED_REPO_DIR) == "b"
-    config_path = GENERATED_REPO_DIR / "flexlate.json"
-    config = FlexlateConfig.load(config_path)
-    assert len(config.applied_templates) == 1
-    assert len(config.template_sources) == 2
-    source = config.template_sources[1]
+    source_config_path = GENERATED_REPO_DIR / "flexlate.json"
+    source_config = FlexlateConfig.load(source_config_path)
+    assert len(source_config.applied_templates) == 0
+    assert len(source_config.template_sources) == 2
+    source = source_config.template_sources[1]
     assert source.name == cookiecutter_two_template.name
     assert source.path == str(cookiecutter_two_template.path)
     assert source.version == cookiecutter_two_template.version
     assert source.type == TemplateType.COOKIECUTTER
     assert source.target_version == "some version"
     assert source.render_relative_root == Path("{{ cookiecutter.a }}")
+    at_config_path = GENERATED_REPO_DIR / "b" / "flexlate.json"
+    at_config = FlexlateConfig.load(at_config_path)
+    assert len(at_config.applied_templates) == 1
 
 
 # TODO: test for adding to existing
