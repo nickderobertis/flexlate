@@ -218,7 +218,7 @@ class ConfigManager:
         target_version: Optional[str] = None,
         project_root: Path = Path("."),
     ):
-        config = self.load_config(project_root=project_root)
+        config = self.load_config(project_root=project_root, adjust_applied_paths=False)
         child_config = _get_or_create_child_config_by_path(config, config_path)
         source = TemplateSource.from_template(
             template,
