@@ -60,7 +60,12 @@ def test_init_project_and_add_source_and_template(
         template_source_type=template_source.type,
         version=template_source.default_version,
     )
+    config_relative_root = template_source.evaluated_render_relative_root_creator(
+        template_source.input_data
+    )
     _assert_config_is_correct(
+        at_config_path=GENERATED_REPO_DIR / config_relative_root / "flexlate.json",
+        expect_applied_template_root=template_source.expect_local_applied_template_path,
         expect_data=template_source.input_data,
         template_source_type=template_source.type,
         version=template_source.default_version,
@@ -634,7 +639,8 @@ def _assert_applied_templates_config_is_empty(
 
 
 def _assert_config_is_correct(
-    config_path: Path = GENERATED_REPO_DIR / "flexlate.json",
+    at_config_path: Path = GENERATED_REPO_DIR / "flexlate.json",
+    ts_config_path: Optional[Path] = GENERATED_REPO_DIR / "flexlate.json",
     expect_applied_template_root: Path = Path("."),
     expect_data: Optional[CookiecutterRemoteTemplateData] = None,
     version: str = COOKIECUTTER_REMOTE_VERSION_2,
@@ -645,7 +651,7 @@ def _assert_config_is_correct(
     render_relative_root: Path = Path("{{ cookiecutter.name }}"),
 ):
     _assert_applied_templates_config_is_correct(
-        config_path,
+        at_config_path,
         expect_applied_template_root,
         expect_data=expect_data,
         version=version,
@@ -653,7 +659,7 @@ def _assert_config_is_correct(
         name=name,
     )
     _assert_template_sources_config_is_correct(
-        config_path,
+        ts_config_path,
         version=version,
         name=name,
         url=url,
