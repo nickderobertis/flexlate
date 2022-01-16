@@ -66,10 +66,17 @@ def test_add_local_cookiecutter_applied_template_to_repo(
         no_input=True,
     )
 
-    config_dir = GENERATED_FILES_DIR if add_mode == AddMode.USER else GENERATED_REPO_DIR
-    template_root = (
-        GENERATED_REPO_DIR.absolute() if add_mode == AddMode.USER else Path(".")
-    )
+    if add_mode == AddMode.USER:
+        config_dir = GENERATED_FILES_DIR
+        template_root = GENERATED_REPO_DIR.absolute()
+    elif add_mode == AddMode.PROJECT:
+        config_dir = GENERATED_REPO_DIR
+        template_root = Path(".")
+    elif add_mode == AddMode.LOCAL:
+        config_dir = GENERATED_REPO_DIR / "b"
+        template_root = Path("..")
+    else:
+        raise ValueError(f"unsupported add mode {add_mode}")
 
     config_path = config_dir / "flexlate.json"
     config = FlexlateConfig.load(config_path)

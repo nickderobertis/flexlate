@@ -207,9 +207,11 @@ class Adder:
         modify_files_via_branches_and_temp_repo(
             lambda temp_path: config_manager.move_applied_template(
                 template.name,
-                config_path,
-                (project_root / new_relative_out_root / "flexlate.json").resolve(),
-                project_root=project_root,
+                location_relative_to_new_parent(
+                    config_path, project_root, temp_path, Path(os.getcwd())
+                ),
+                (temp_path / new_relative_out_root / "flexlate.json").resolve(),
+                project_root=temp_path,
                 out_root=expanded_out_root,
                 orig_project_root=project_root,
             ),

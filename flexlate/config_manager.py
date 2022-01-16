@@ -328,6 +328,7 @@ class ConfigManager:
         out_root: Path = Path("."),
         orig_project_root: Path = Path("."),
         config: Optional[FlexlateConfig] = None,
+        adjust_applied_paths: bool = True,
     ) -> Tuple[int, AppliedTemplateConfig]:
         """
 
@@ -339,7 +340,9 @@ class ConfigManager:
             when working in a temp directory)
         :return: index, applied template config tuple
         """
-        config = config or self.load_config(project_root=project_root)
+        config = config or self.load_config(
+            project_root=project_root, adjust_applied_paths=adjust_applied_paths
+        )
         child_config = _get_or_create_child_config_by_path(config, config_path)
         template_index: Optional[int] = None
         orig_config_folder = location_relative_to_new_parent(
@@ -350,10 +353,14 @@ class ConfigManager:
         absolute_out_root = make_absolute_path_from_possibly_relative_to_another_path(
             out_root, orig_config_folder
         )
+        applied_template_reference_path = (
+            orig_project_root if adjust_applied_paths else orig_config_folder
+        )
         for i, applied_template in enumerate(child_config.applied_templates):
+
             absolute_template_out_root = (
                 make_absolute_path_from_possibly_relative_to_another_path(
-                    applied_template.root, orig_project_root
+                    applied_template.root, applied_template_reference_path
                 )
             )
             if (
@@ -430,7 +437,7 @@ class ConfigManager:
         out_root: Path = Path("."),
         orig_project_root: Path = Path("."),
     ):
-        config = self.load_config(project_root=project_root)
+        config = self.load_config(project_root=project_root, adjust_applied_paths=False)
         child_config = _get_or_create_child_config_by_path(config, config_path)
         template_index, _ = self._find_applied_template(
             template_name,
@@ -439,6 +446,7 @@ class ConfigManager:
             out_root=out_root,
             orig_project_root=orig_project_root,
             config=config,
+            adjust_applied_paths=False,
         )
         applied_template = child_config.applied_templates.pop(template_index)
         new_child_config = _get_or_create_child_config_by_path(config, new_config_path)
