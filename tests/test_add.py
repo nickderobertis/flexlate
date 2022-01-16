@@ -44,7 +44,8 @@ def test_add_template_source_to_repo(
     assert source.version == cookiecutter_one_template.version
     assert source.type == TemplateType.COOKIECUTTER
     assert source.target_version == "some version"
-    assert source.render_relative_root == Path("{{ cookiecutter.a }}")
+    assert source.render_relative_root_in_output == Path("{{ cookiecutter.a }}")
+    assert source.render_relative_root_in_template == Path("{{ cookiecutter.a }}")
 
 
 @patch.object(appdirs, "user_config_dir", lambda name: GENERATED_FILES_DIR)
@@ -129,7 +130,7 @@ def test_add_local_copier_output_subdir_applied_template_to_repo(
     at = config.applied_templates[0]
     assert at.name == template.name
     assert at.version == template.version
-    assert at.data == {'qone': 'aone', 'qtwo': 'atwo'}
+    assert at.data == {"qone": "aone", "qtwo": "atwo"}
     assert at.root == template_root
 
 
@@ -357,7 +358,8 @@ def test_add_source_to_project_with_existing_outputs(
     assert source.version == cookiecutter_two_template.version
     assert source.type == TemplateType.COOKIECUTTER
     assert source.target_version == "some version"
-    assert source.render_relative_root == Path("{{ cookiecutter.a }}")
+    assert source.render_relative_root_in_output == Path("{{ cookiecutter.a }}")
+    assert source.render_relative_root_in_template == Path("{{ cookiecutter.a }}")
     at_config_path = GENERATED_REPO_DIR / "b" / "flexlate.json"
     at_config = FlexlateConfig.load(at_config_path)
     assert len(at_config.applied_templates) == 1

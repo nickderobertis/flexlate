@@ -97,6 +97,7 @@ class Remover:
 
         # Determine location of config
         # Need to get renderable to render path in case it is templated
+        # TODO: can use get all renderables
         renderables = config_manager.get_renderables_for_updates(
             config_manager.get_no_op_updates(project_root=project_root),
             project_root=project_root,
@@ -108,7 +109,9 @@ class Remover:
             )
         renderable = renderables[0]
         new_relative_out_root = Path(
-            renderer.render_string(str(template.render_relative_root), renderable)
+            renderer.render_string(
+                str(template.render_relative_root_in_output), renderable
+            )
         )
         full_local_config_out_root = out_root / new_relative_out_root
         config_path = determine_config_path_from_roots_and_add_mode(
@@ -116,7 +119,7 @@ class Remover:
         )
 
         expanded_out_root = get_expanded_out_root(
-            out_root, project_root, template.render_relative_root, add_mode
+            out_root, project_root, template.render_relative_root_in_output, add_mode
         )
 
         if add_mode == AddMode.USER:

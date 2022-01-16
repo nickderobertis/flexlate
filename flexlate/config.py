@@ -27,7 +27,8 @@ class TemplateSource(BaseModel):
     version: Optional[str] = None
     git_url: Optional[str] = None
     target_version: Optional[str] = None
-    render_relative_root: Path = Path(".")
+    render_relative_root_in_output: Path = Path(".")
+    render_relative_root_in_template: Path = Path(".")
 
     _config_file_location: Path = PrivateAttr()
 
@@ -44,7 +45,8 @@ class TemplateSource(BaseModel):
             type=template._type,
             target_version=target_version,
             git_url=template.git_url,
-            render_relative_root=template.render_relative_root,
+            render_relative_root_in_output=template.render_relative_root_in_output,
+            render_relative_root_in_template=template.render_relative_root_in_template,
         )
 
     def to_template(self) -> Template:

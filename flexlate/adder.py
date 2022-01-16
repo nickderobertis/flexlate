@@ -120,12 +120,12 @@ class Adder:
             raise ValueError("repo working dir should not be none")
 
         project_root = Path(repo.working_dir)
-        full_local_config_out_root = out_root / template.render_relative_root
+        full_local_config_out_root = out_root / template.render_relative_root_in_output
         config_path = determine_config_path_from_roots_and_add_mode(
             full_local_config_out_root, project_root, add_mode
         )
         expanded_out_root = get_expanded_out_root(
-            out_root, project_root, template.render_relative_root, add_mode
+            out_root, project_root, template.render_relative_root_in_output, add_mode
         )
 
         if add_mode == AddMode.USER:
@@ -191,9 +191,11 @@ class Adder:
         )
         renderable = renderables[0]
         new_relative_out_root = Path(
-            renderer.render_string(str(template.render_relative_root), renderable)
+            renderer.render_string(
+                str(template.render_relative_root_in_output), renderable
+            )
         )
-        if template.render_relative_root == new_relative_out_root:
+        if template.render_relative_root_in_output == new_relative_out_root:
             # No need to move, render relative root was not a templated path
             return
 

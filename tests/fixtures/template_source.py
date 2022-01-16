@@ -54,9 +54,10 @@ class TemplateSourceFixture:
     version_2: str
     is_local_template: bool = False
     version_migrate_func: Callable[[str], None] = lambda path: None
-    render_relative_root: Path = Path(".")
+    render_relative_root_in_output: Path = Path(".")
+    render_relative_root_in_template: Path = Path(".")
     expect_local_applied_template_path: Path = Path(".")
-    evaluated_render_relative_root_creator: Callable[
+    evaluated_render_relative_root_in_output_creator: Callable[
         [TemplateData], Path
     ] = lambda data: Path(".")
 
@@ -100,8 +101,9 @@ COOKIECUTTER_REMOTE_FIXTURE: Final[TemplateSourceFixture] = TemplateSourceFixtur
     update_input_data=dict(name="updated", key="now"),
     version_1=COOKIECUTTER_REMOTE_VERSION_1,
     version_2=COOKIECUTTER_REMOTE_VERSION_2,
-    render_relative_root=Path("{{ cookiecutter.name }}"),
-    evaluated_render_relative_root_creator=lambda data: Path(data["name"]),
+    render_relative_root_in_output=Path("{{ cookiecutter.name }}"),
+    render_relative_root_in_template=Path("{{ cookiecutter.name }}"),
+    evaluated_render_relative_root_in_output_creator=lambda data: Path(data["name"]),
     expect_local_applied_template_path=Path(".."),
 )
 copier_remote_fixture: Final[TemplateSourceFixture] = TemplateSourceFixture(
@@ -112,8 +114,9 @@ copier_remote_fixture: Final[TemplateSourceFixture] = TemplateSourceFixture(
     update_input_data=dict(question1="please work", question2=2.8),
     version_1=COPIER_REMOTE_VERSION_1,
     version_2=COPIER_REMOTE_VERSION_2,
-    render_relative_root=Path("output"),
-    evaluated_render_relative_root_creator=lambda data: Path("output"),
+    render_relative_root_in_output=Path("."),
+    render_relative_root_in_template=Path("output"),
+    evaluated_render_relative_root_in_output_creator=lambda data: Path("output"),
 )
 
 cookiecutter_local_fixture: Final[TemplateSourceFixture] = TemplateSourceFixture(
@@ -126,8 +129,9 @@ cookiecutter_local_fixture: Final[TemplateSourceFixture] = TemplateSourceFixture
     version_2=COOKIECUTTER_ONE_MODIFIED_VERSION,
     is_local_template=True,
     version_migrate_func=modify_cookiecutter_one,
-    render_relative_root=Path("{{ cookiecutter.a }}"),
-    evaluated_render_relative_root_creator=lambda data: Path(data["a"]),
+    render_relative_root_in_output=Path("{{ cookiecutter.a }}"),
+    render_relative_root_in_template=Path("{{ cookiecutter.a }}"),
+    evaluated_render_relative_root_in_output_creator=lambda data: Path(data["a"]),
     expect_local_applied_template_path=Path(".."),
 )
 

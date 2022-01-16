@@ -20,7 +20,8 @@ class Template(abc.ABC):
         target_version: Optional[str] = None,
         git_url: Optional[str] = None,
         template_source_path: Optional[Path] = None,
-        render_relative_root: Path = Path("."),
+        render_relative_root_in_output: Path = Path("."),
+        render_relative_root_in_template: Path = Path("."),
     ):
         self.config = config
         self.path = path
@@ -29,7 +30,8 @@ class Template(abc.ABC):
         self.name = name or self.default_name
         self.version = version or self.folder_hash
         self.template_source_path = template_source_path or path
-        self.render_relative_root = render_relative_root
+        self.render_relative_root_in_output = render_relative_root_in_output
+        self.render_relative_root_in_template = render_relative_root_in_template
 
     @property
     def default_name(self) -> str:

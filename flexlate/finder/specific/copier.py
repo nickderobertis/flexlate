@@ -31,7 +31,7 @@ class CopierFinder(TemplateFinder[CopierTemplate]):
             version=version,
             target_version=git_version,
             git_url=git_url,
-            render_relative_root=config.render_relative_root,
+            render_relative_root_in_template=config.render_relative_root_in_template,
         )
 
     def get_config(self, directory: Path) -> CopierConfig:
@@ -44,10 +44,12 @@ class CopierFinder(TemplateFinder[CopierTemplate]):
                 data[key] = value["default"]
             else:
                 data[key] = None
-        render_relative_root: Path = Path(".")
+        render_relative_root_in_template: Path = Path(".")
         if "_subdirectory" in raw_data:
-            render_relative_root = Path(raw_data["_subdirectory"])
-        return CopierConfig(data, render_relative_root=render_relative_root)
+            render_relative_root_in_template = Path(raw_data["_subdirectory"])
+        return CopierConfig(
+            data, render_relative_root_in_template=render_relative_root_in_template
+        )
 
     def matches_template_type(self, path: Path) -> bool:
         return (path / "copier.yml").exists() or (path / "copier.yaml").exists()

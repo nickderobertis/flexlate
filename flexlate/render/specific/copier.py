@@ -52,7 +52,9 @@ class CopierRenderer(SpecificTemplateRenderer[CopierTemplate]):
             if copier_path_2.exists():
                 shutil.copy(copier_path_2, temp_template_dir)
             temp_template_file_path = (
-                Path(temp_template_dir) / template.render_relative_root / "temp.txt"
+                Path(temp_template_dir)
+                / template.render_relative_root_in_template
+                / "temp.txt"
             )
             if not temp_template_file_path.parent.exists():
                 temp_template_file_path.parent.mkdir(parents=True)
@@ -66,9 +68,7 @@ class CopierRenderer(SpecificTemplateRenderer[CopierTemplate]):
                     no_input=True,
                 )
                 copy_local(conf=conf)
-                temp_output_file_path = (
-                    Path(temp_output_dir) / "temp.txt"
-                )
+                temp_output_file_path = Path(temp_output_dir) / "temp.txt"
                 output = temp_output_file_path.read_text()
         return output
 

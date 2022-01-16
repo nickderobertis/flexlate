@@ -26,5 +26,7 @@ class CookiecutterTemplate(Template):
             version=version,
             target_version=target_version,
             git_url=git_url,
-            render_relative_root=render_relative_root,
+            # Output relative root is always the same as template relative root for Cookiecutter
+            render_relative_root_in_output=render_relative_root,
+            render_relative_root_in_template=render_relative_root,
         )
