@@ -25,11 +25,33 @@ def repo_with_cookiecutter_one_template_source(
     add_source_transaction: FlexlateTransaction,
 ) -> Repo:
     repo = repo_with_placeholder_committed
+    template = cookiecutter_one_template
+
     with change_directory_to(GENERATED_REPO_DIR):
         adder = Adder()
         adder.add_template_source(
             repo,
-            cookiecutter_one_template,
+            template,
+            add_source_transaction,
+            out_root=GENERATED_REPO_DIR,
+        )
+    yield repo
+
+
+@pytest.fixture
+def repo_with_copier_output_subdir_template_source(
+    repo_with_placeholder_committed: Repo,
+    copier_output_subdir_template: CookiecutterTemplate,
+    add_source_transaction: FlexlateTransaction,
+) -> Repo:
+    repo = repo_with_placeholder_committed
+    template = copier_output_subdir_template
+
+    with change_directory_to(GENERATED_REPO_DIR):
+        adder = Adder()
+        adder.add_template_source(
+            repo,
+            template,
             add_source_transaction,
             out_root=GENERATED_REPO_DIR,
         )

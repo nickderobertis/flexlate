@@ -73,6 +73,8 @@ def test_add_local_cookiecutter_applied_template_to_repo(
         config_dir = GENERATED_REPO_DIR
         template_root = Path(".")
     elif add_mode == AddMode.LOCAL:
+        # Template has output in a subdir, so with
+        # local mode config will also be in the subdir
         config_dir = GENERATED_REPO_DIR / "b"
         template_root = Path("..")
     else:
@@ -85,6 +87,49 @@ def test_add_local_cookiecutter_applied_template_to_repo(
     assert at.name == template.name
     assert at.version == template.version
     assert at.data == {"a": "b", "c": ""}
+    assert at.root == template_root
+
+
+@patch.object(appdirs, "user_config_dir", lambda name: GENERATED_FILES_DIR)
+def test_add_local_copier_output_subdir_applied_template_to_repo(
+    add_mode: AddMode,
+    repo_with_copier_output_subdir_template_source: Repo,
+    copier_output_subdir_template: CookiecutterTemplate,
+    add_output_transaction: FlexlateTransaction,
+):
+    repo = repo_with_copier_output_subdir_template_source
+    template = copier_output_subdir_template
+    adder = Adder()
+    adder.apply_template_and_add(
+        repo,
+        template,
+        add_output_transaction,
+        out_root=GENERATED_REPO_DIR,
+        add_mode=add_mode,
+        no_input=True,
+    )
+
+    if add_mode == AddMode.USER:
+        config_dir = GENERATED_FILES_DIR
+        template_root = GENERATED_REPO_DIR.absolute()
+    elif add_mode == AddMode.PROJECT:
+        config_dir = GENERATED_REPO_DIR
+        template_root = Path(".")
+    elif add_mode == AddMode.LOCAL:
+        # Even though template has output in a subdir, with copier
+        # it all still renders at root in output
+        config_dir = GENERATED_REPO_DIR
+        template_root = Path(".")
+    else:
+        raise ValueError(f"unsupported add mode {add_mode}")
+
+    config_path = config_dir / "flexlate.json"
+    config = FlexlateConfig.load(config_path)
+    assert len(config.applied_templates) == 1
+    at = config.applied_templates[0]
+    assert at.name == template.name
+    assert at.version == template.version
+    assert at.data == {'qone': 'aone', 'qtwo': 'atwo'}
     assert at.root == template_root
 
 
