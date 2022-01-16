@@ -10,6 +10,7 @@ from flexlate.config_manager import (
     determine_config_path_from_roots_and_add_mode,
 )
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
+from flexlate.exc import CannotRemoveAppliedTemplateException
 from flexlate.ext_git import assert_repo_is_in_clean_state
 from flexlate.path_ops import (
     location_relative_to_new_parent,
@@ -93,10 +94,27 @@ class Remover:
         template = config_manager.get_template_by_name(
             template_name, project_root=project_root
         )
-        full_local_config_out_root = out_root / template.render_relative_root
+
+        # Determine location of config
+        # Need to get renderable to render path in case it is templated
+        renderables = config_manager.get_renderables_for_updates(
+            config_manager.get_no_op_updates(project_root=project_root),
+            project_root=project_root,
+        )
+        if len(renderables) == 0:
+            raise CannotRemoveAppliedTemplateException(
+                f"Cannot find any applied template with name {template_name} "
+                f"because there are no applied templates"
+            )
+        renderable = renderables[0]
+        new_relative_out_root = Path(
+            renderer.render_string(str(template.render_relative_root), renderable)
+        )
+        full_local_config_out_root = out_root / new_relative_out_root
         config_path = determine_config_path_from_roots_and_add_mode(
             full_local_config_out_root, project_root, add_mode
         )
+
         expanded_out_root = get_expanded_out_root(
             out_root, project_root, template.render_relative_root, add_mode
         )
