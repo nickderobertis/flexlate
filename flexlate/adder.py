@@ -210,7 +210,12 @@ class Adder:
                 location_relative_to_new_parent(
                     config_path, project_root, temp_path, Path(os.getcwd())
                 ),
-                (temp_path / new_relative_out_root / "flexlate.json").resolve(),
+                location_relative_to_new_parent(
+                    out_root / new_relative_out_root / "flexlate.json",
+                    project_root,
+                    temp_path,
+                    Path(os.getcwd()),
+                ),
                 project_root=temp_path,
                 out_root=expanded_out_root,
                 orig_project_root=project_root,
