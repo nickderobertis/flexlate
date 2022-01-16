@@ -50,10 +50,12 @@ class CopierRenderer(SpecificTemplateRenderer[CopierTemplate]):
             if copier_path_1.exists():
                 shutil.copy(copier_path_1, temp_template_dir)
             if copier_path_2.exists():
-                shutil.copy(copier_path_1, temp_template_dir)
+                shutil.copy(copier_path_2, temp_template_dir)
             temp_template_file_path = (
                 Path(temp_template_dir) / template.render_relative_root / "temp.txt"
             )
+            if not temp_template_file_path.parent.exists():
+                temp_template_file_path.parent.mkdir(parents=True)
             temp_template_file_path.write_text(string)
 
             with tempfile.TemporaryDirectory() as temp_output_dir:
@@ -64,10 +66,8 @@ class CopierRenderer(SpecificTemplateRenderer[CopierTemplate]):
                     no_input=True,
                 )
                 copy_local(conf=conf)
-                # TODO: handle when copier render_relative_root is itself templated
-                #  Then this path will be different
                 temp_output_file_path = (
-                    Path(temp_output_dir) / template.render_relative_root / "temp.txt"
+                    Path(temp_output_dir) / "temp.txt"
                 )
                 output = temp_output_file_path.read_text()
         return output
