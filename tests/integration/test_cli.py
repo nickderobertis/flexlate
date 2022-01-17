@@ -117,6 +117,7 @@ def test_init_project_for_user_and_add_source_and_template(
         at_config_path=at_config_root / "flexlate.json",
         ts_config_path=ts_config_root / "flexlate.json",
         expect_applied_template_root=template_root,
+        expect_add_mode=add_mode,
     )
 
     project_config_path = GENERATED_FILES_DIR / "flexlate-project.json"
@@ -208,6 +209,7 @@ def test_init_project_and_add_source_and_template_in_subdir(
         version=template_source.default_version,
         template_source_type=template_source.type,
         name=template_source.name,
+        expect_add_mode=add_mode,
     )
 
     project_config_path = GENERATED_REPO_DIR / "flexlate-project.json"
@@ -671,6 +673,7 @@ def _assert_applied_templates_config_is_correct(
     version: str = COOKIECUTTER_REMOTE_VERSION_2,
     template_source_type: TemplateSourceType = TemplateSourceType.COOKIECUTTER_REMOTE,
     name: str = COOKIECUTTER_REMOTE_NAME,
+    expect_add_mode: AddMode = AddMode.LOCAL,
 ):
     data: TemplateData = expect_data or _get_default_data(template_source_type)
     assert config_path.exists()
@@ -682,6 +685,7 @@ def _assert_applied_templates_config_is_correct(
     assert applied_template.data == data
     assert applied_template.version == version
     assert applied_template.root == expect_applied_template_root
+    assert applied_template.add_mode == expect_add_mode
 
 
 def _assert_applied_templates_config_is_empty(
@@ -704,6 +708,7 @@ def _assert_config_is_correct(
     path: str = COOKIECUTTER_REMOTE_DEFAULT_EXPECT_PATH,
     render_relative_root_in_output: Path = Path("{{ cookiecutter.name }}"),
     render_relative_root_in_template: Path = Path("{{ cookiecutter.name }}"),
+    expect_add_mode: AddMode = AddMode.LOCAL,
 ):
     _assert_applied_templates_config_is_correct(
         at_config_path,
@@ -712,6 +717,7 @@ def _assert_config_is_correct(
         version=version,
         template_source_type=template_source_type,
         name=name,
+        expect_add_mode=expect_add_mode,
     )
     _assert_template_sources_config_is_correct(
         ts_config_path,

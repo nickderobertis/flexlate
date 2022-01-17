@@ -109,6 +109,7 @@ class AppliedTemplateConfig(BaseModel):
     name: str
     data: TemplateData
     version: str
+    add_mode: AddMode
     root: Path = Path(".")
 
 

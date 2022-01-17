@@ -89,6 +89,7 @@ def test_add_local_cookiecutter_applied_template_to_repo(
     assert at.version == template.version
     assert at.data == {"a": "b", "c": ""}
     assert at.root == template_root
+    assert at.add_mode == add_mode
 
 
 @patch.object(appdirs, "user_config_dir", lambda name: GENERATED_FILES_DIR)
@@ -132,6 +133,7 @@ def test_add_local_copier_output_subdir_applied_template_to_repo(
     assert at.version == template.version
     assert at.data == {"qone": "aone", "qtwo": "atwo"}
     assert at.root == template_root
+    assert at.add_mode == add_mode
 
 
 @patch.object(appdirs, "user_config_dir", lambda name: GENERATED_FILES_DIR)
@@ -173,6 +175,7 @@ def test_add_remote_cookiecutter_applied_template_to_repo(
     assert at.version == template.version
     assert at.data == {"name": "abc", "key": "value"}
     assert at.root == template_root
+    assert at.add_mode == add_mode
 
 
 @patch.object(appdirs, "user_config_dir", lambda name: GENERATED_FILES_DIR)
@@ -233,6 +236,7 @@ def test_add_applied_template_to_subdir(
     assert at.version == template.version
     assert at.data == {"a": "b", "c": ""}
     assert at.root == template_root
+    assert at.add_mode == add_mode
 
     output_file_path = subdir / "b" / "text.txt"
     assert output_file_path.read_text() == "b"
@@ -328,6 +332,7 @@ def test_add_multiple_applied_templates_for_one_source(
         assert at.version == template.version
         assert at.data == {"a": "b", "c": ""}
         assert at.root == template_root
+        assert at.add_mode == add_mode
 
         output_file_path = render_root / "b" / "text.txt"
         assert output_file_path.read_text() == "b"

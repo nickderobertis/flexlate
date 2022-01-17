@@ -274,6 +274,7 @@ class ConfigManager:
         self,
         template: Template,
         config_path: Path,
+        add_mode: AddMode,
         data: Optional[TemplateData] = None,
         project_root: Path = Path("."),
         out_root: Path = Path("."),
@@ -285,6 +286,7 @@ class ConfigManager:
             data=data or {},
             version=template.version,
             root=out_root,
+            add_mode=add_mode,
         )
         child_config.applied_templates.append(applied)
         self.save_config(config)

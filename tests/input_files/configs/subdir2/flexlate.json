@@ -5,8 +5,10 @@
       "path": "../../input_files/templates/cookiecutters/two",
       "type": "cookiecutter",
       "version": null,
+      "git_url": null,
       "target_version": null,
-      "git_url": null
+      "render_relative_root_in_output": "{{ cookiecutter.a }}",
+      "render_relative_root_in_template": "{{ cookiecutter.a }}"
     }
   ],
   "applied_templates": [
@@ -17,6 +19,7 @@
         "d": "e"
       },
       "version": "some version",
+      "add_mode": "local",
       "root": "."
     },
     {
@@ -26,6 +29,7 @@
         "c": "something"
       },
       "version": "d512c7e14e83cb4bc8d4e5ae06bb357e",
+      "add_mode": "local",
       "root": "subdir2_2"
     }
   ]

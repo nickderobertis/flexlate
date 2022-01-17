@@ -133,6 +133,7 @@ class Adder:
             config_manager.add_applied_template(
                 template,
                 config_path,
+                add_mode,
                 data=data,
                 project_root=project_root,
                 out_root=expanded_out_root,
@@ -152,6 +153,7 @@ class Adder:
                     location_relative_to_new_parent(
                         config_path, project_root, temp_path, Path(os.getcwd())
                     ),
+                    add_mode,
                     data=data,
                     project_root=temp_path,
                     out_root=expanded_out_root,
