@@ -32,8 +32,9 @@ def make_func_that_creates_cwd_and_out_root_before_running(
 
 def make_all_dirs(paths: Sequence[Path]):
     for path in paths:
-        if not path.exists():
-            path.mkdir(parents=True)
+        absolute_path = path.resolve()
+        if not absolute_path.exists():
+            absolute_path.mkdir(parents=True)
 
 
 def copy_flexlate_configs(src: Path, dst: Path, root: Path):
