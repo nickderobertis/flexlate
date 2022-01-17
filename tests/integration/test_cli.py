@@ -10,6 +10,7 @@ from git import GitCommandError
 from flexlate.add_mode import AddMode
 from flexlate.config import FlexlateConfig, FlexlateProjectConfig
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
+from flexlate.template.types import TemplateType
 from flexlate.template_data import TemplateData
 from tests.config import (
     GENERATED_FILES_DIR,
@@ -97,13 +98,24 @@ def test_init_project_for_user_and_add_source_and_template(
 
     _assert_project_files_are_correct()
 
-    config_root = (
-        GENERATED_FILES_DIR if add_mode == AddMode.USER else GENERATED_REPO_DIR
-    )
-    template_root = GENERATED_REPO_DIR if add_mode == AddMode.USER else Path(".")
+    if add_mode == AddMode.USER:
+        at_config_root = GENERATED_FILES_DIR
+        ts_config_root = GENERATED_FILES_DIR
+        template_root = GENERATED_REPO_DIR.absolute()
+    elif add_mode == AddMode.PROJECT:
+        at_config_root = GENERATED_REPO_DIR
+        ts_config_root = GENERATED_REPO_DIR
+        template_root = Path(".")
+    elif add_mode == AddMode.LOCAL:
+        at_config_root = GENERATED_REPO_DIR / "abc"
+        ts_config_root = GENERATED_REPO_DIR
+        template_root = Path("..")
+    else:
+        raise ValueError(f"unsupported add mode {add_mode}")
 
     _assert_config_is_correct(
-        config_root / "flexlate.json",
+        at_config_path=at_config_root / "flexlate.json",
+        ts_config_path=ts_config_root / "flexlate.json",
         expect_applied_template_root=template_root,
     )
 
@@ -148,9 +160,17 @@ def test_init_project_and_add_source_and_template_in_subdir(
         version=template_source.default_version,
     )
 
+    config_relative_root = (
+        template_source.evaluated_render_relative_root_in_output_creator(
+            template_source.input_data
+        )
+    )
+
     if add_mode == AddMode.LOCAL:
-        applied_config_dir = subdir
-        expect_applied_template_root = Path(".")
+        applied_config_dir = subdir / config_relative_root
+        expect_applied_template_root = (
+            template_source.expect_local_applied_template_path
+        )
         template_sources_config_dir = GENERATED_REPO_DIR
         expect_template_source_path = template_source.path
     elif add_mode == AddMode.PROJECT:
@@ -224,12 +244,19 @@ def test_update_project(
             if after_data_update
             else template_source.input_data
         )
+        at_config_path = (
+            GENERATED_REPO_DIR
+            / template_source.evaluated_render_relative_root_in_output_creator(
+                input_data
+            )
+        )
         _assert_project_files_are_correct(
             expect_data=input_data,
             version=version,
             template_source_type=template_source.type,
         )
         _assert_config_is_correct(
+            at_config_path=at_config_path,
             expect_data=input_data,
             version=version,
             template_source_type=template_source.type,
