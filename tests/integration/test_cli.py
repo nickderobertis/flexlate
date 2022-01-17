@@ -162,7 +162,7 @@ def test_init_project_and_add_source_and_template_in_subdir(
 
     config_relative_root = (
         template_source.evaluated_render_relative_root_in_output_creator(
-            template_source.input_data
+            _get_default_data(template_source.type)
         )
     )
 
@@ -249,6 +249,7 @@ def test_update_project(
             / template_source.evaluated_render_relative_root_in_output_creator(
                 input_data
             )
+            / "flexlate.json"
         )
         _assert_project_files_are_correct(
             expect_data=input_data,
@@ -257,6 +258,7 @@ def test_update_project(
         )
         _assert_config_is_correct(
             at_config_path=at_config_path,
+            expect_applied_template_root=template_source.expect_local_applied_template_path,
             expect_data=input_data,
             version=version,
             template_source_type=template_source.type,
@@ -280,6 +282,13 @@ def test_update_project(
             if after_data_update
             else template_source.input_data
         )
+        at_config_path = (
+            subdir
+            / template_source.evaluated_render_relative_root_in_output_creator(
+                input_data
+            )
+            / "flexlate.json"
+        )
         _assert_project_files_are_correct(
             subdir,
             expect_data=input_data,
@@ -287,14 +296,14 @@ def test_update_project(
             template_source_type=template_source.type,
         )
         _assert_applied_templates_config_is_correct(
-            subdir / "flexlate.json",
-            expect_applied_template_root=Path("."),
+            at_config_path,
+            expect_applied_template_root=template_source.expect_local_applied_template_path,
             expect_data=input_data,
             version=version,
             template_source_type=template_source.type,
             name=template_source.name,
         )
-        _assert_template_sources_config_is_empty(subdir / "flexlate.json")
+        _assert_template_sources_config_is_empty(at_config_path)
 
     with change_directory_to(GENERATED_REPO_DIR):
         fxt.init_project()
@@ -332,6 +341,7 @@ def test_update_project(
             # Now update by just passing new data, should change the output
             # even though the version has not changed
             fxt.update(data=[template_source.update_input_data] * 2, no_input=no_input)
+            breakpoint()
             assert_root_template_output_is_correct(after_data_update=True)
             assert_subdir_template_output_is_correct(after_data_update=True)
 
@@ -525,9 +535,11 @@ def test_undo(
             # One check being careful about the input files, just to make sure
             # something is happening
             fxt.apply_template_and_add(COOKIECUTTER_REMOTE_NAME, no_input=True)
-            config_path = subdir / "flexlate.json"
+            config_path = subdir / "abc" / "flexlate.json"
             _assert_project_files_are_correct(subdir)
-            _assert_applied_templates_config_is_correct(config_path)
+            _assert_applied_templates_config_is_correct(
+                config_path, expect_applied_template_root=Path("..")
+            )
             fxt.undo()
             _assert_project_files_do_not_exist(subdir)
             assert not config_path.exists()
@@ -544,11 +556,16 @@ def test_undo(
         assert_main_commit_message_matches(repo.commit().message, manual_commit_message)
         assert len(repo.commit().parents) == 1
         parent = repo.commit().parents[0]
-        assert_main_commit_message_matches(parent.message, "Update flexlate templates")
+        assert_main_commit_message_matches(
+            parent.message, "Moved config for cookiecutter-simple-example to ."
+        )
 
     assert_merged_commit_history_is_correct()
     _assert_project_files_are_correct()
-    _assert_config_is_correct()
+    _assert_config_is_correct(
+        at_config_path=GENERATED_REPO_DIR / "abc" / "flexlate.json",
+        expect_applied_template_root=Path(".."),
+    )
     _assert_project_config_is_correct()
 
     for branch_name in [DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME]:
@@ -563,13 +580,11 @@ def test_undo(
     template_branch.checkout()
 
     assert_main_commit_message_matches(
-        repo.commit().message, "Update flexlate templates"
+        repo.commit().message, "Moved config for cookiecutter-simple-example to ."
     )
     assert len(repo.commit().parents) == 1
     parent = repo.commit().parents[0]
-    assert_main_commit_message_matches(
-        parent.message, "Applied template cookiecutter-simple-example to ."
-    )
+    assert_main_commit_message_matches(parent.message, "Update flexlate templates")
 
 
 def _assert_project_files_are_correct(
