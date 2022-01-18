@@ -27,6 +27,7 @@ from flexlate.path_ops import (
     location_relative_to_new_parent,
     make_absolute_path_from_possibly_relative_to_another_path,
 )
+from flexlate.render.multi import MultiRenderer
 from flexlate.render.renderable import Renderable
 from flexlate.template.base import Template
 from flexlate.template_data import TemplateData, merge_data
@@ -119,25 +120,19 @@ class ConfigManager:
         self, project_root: Path = Path("."), config: Optional[FlexlateConfig] = None
     ) -> List[Renderable]:
         config = config or self.load_config(project_root)
-        renderables: List[Renderable] = []
-        for applied_with_source in self.get_applied_templates_with_sources(
-            project_root=project_root, config=config
-        ):
-            template, data = applied_with_source.to_template_and_data()
-            renderable: Renderable[Template] = Renderable(
-                template=template,
-                data=data,
-                out_root=applied_with_source.applied_template.root,
+        return [
+            Renderable.from_applied_template_with_source(applied_with_source)
+            for applied_with_source in self.get_applied_templates_with_sources(
+                project_root=project_root, config=config
             )
-            renderables.append(renderable)
-        return renderables
+        ]
 
     def get_renderables_for_updates(
         self,
         updates: Sequence[TemplateUpdate],
         project_root: Path = Path("."),
         adjust_root: bool = True,
-    ):
+    ) -> List[Renderable]:
         return [
             update.to_renderable(project_root=project_root, adjust_root=adjust_root)
             for update in updates
@@ -454,6 +449,77 @@ class ConfigManager:
         new_child_config = _get_or_create_child_config_by_path(config, new_config_path)
         new_child_config.applied_templates.append(applied_template)
         self.save_config(config)
+
+    def _get_applied_templates_and_sources_with_local_add_mode(
+        self,
+        project_root: Path = Path("."),
+        config: Optional[FlexlateConfig] = None,
+    ) -> List[AppliedTemplateWithSource]:
+        config = config or self.load_config(project_root=project_root)
+
+        return [
+            atws
+            for atws in self.get_applied_templates_with_sources(
+                project_root=project_root, config=config
+            )
+            if atws.applied_template.add_mode == AddMode.LOCAL
+        ]
+
+    def move_local_applied_templates_if_necessary(
+        self,
+        project_root: Path = Path("."),
+        orig_project_root: Path = Path("."),
+        renderer: MultiRenderer = MultiRenderer(),
+    ):
+        config = self.load_config(project_root=project_root)
+        applied_templates_with_sources = (
+            self._get_applied_templates_and_sources_with_local_add_mode(
+                project_root=project_root, config=config
+            )
+        )
+        for atwc in applied_templates_with_sources:
+            source = atwc.source
+            if source.is_local_template:
+                # Move source back to orig project so that relative template
+                # paths can be resolved
+                source.path = location_relative_to_new_parent(
+                    Path(source.path), project_root, orig_project_root, project_root
+                ).resolve()
+            template = source.to_template()
+            if template.render_relative_root_in_output == Path("."):
+                # Should not need to move as config will not be in a subdirectory
+                continue
+            renderable = Renderable.from_applied_template_with_source(atwc)
+            new_relative_out_root = Path(
+                renderer.render_string(
+                    str(template.render_relative_root_in_output), renderable
+                )
+            )
+            if template.render_relative_root_in_output == new_relative_out_root:
+                # No need to move, render relative root was not a templated path
+                continue
+
+            orig_config_path = atwc.applied_template._config_file_location
+
+            render_root = (
+                orig_config_path.parent / atwc.applied_template._orig_root
+            ).resolve()
+            new_config_path = render_root / new_relative_out_root / "flexlate.json"
+            if orig_config_path == new_config_path:
+                # No need to move, still in the same location
+                continue
+
+            # Must have different location now, move it
+            # TODO: more efficient algorithm for updating locations of applied templates
+            #  Currently it needs to find the template twice
+            self.move_applied_template(
+                atwc.source.name,
+                orig_config_path,
+                new_config_path,
+                project_root=project_root,
+                out_root=atwc.applied_template._orig_root,
+                orig_project_root=orig_project_root,
+            )
 
 
 def _get_child_config_by_path(config: FlexlateConfig, path: Path) -> FlexlateConfig:

@@ -184,52 +184,6 @@ class Adder:
             renderer=renderer,
             config_manager=config_manager,
         )
-        if add_mode != AddMode.LOCAL:
-            # May need to adjust location of local configs,
-            # but not project or user
-            return
-        renderables = config_manager.get_renderables_for_updates(
-            [template_update], project_root=project_root
-        )
-        renderable = renderables[0]
-        new_relative_out_root = Path(
-            renderer.render_string(
-                str(template.render_relative_root_in_output), renderable
-            )
-        )
-        if template.render_relative_root_in_output == new_relative_out_root:
-            # No need to move, render relative root was not a templated path
-            return
-
-        # Commit changes for local and project
-        commit_message = create_transaction_commit_message(
-            _move_applied_template_config_message(
-                template, out_root, Path(repo.working_dir)
-            ),
-            transaction,
-        )
-        modify_files_via_branches_and_temp_repo(
-            lambda temp_path: config_manager.move_applied_template(
-                template.name,
-                location_relative_to_new_parent(
-                    config_path, project_root, temp_path, Path(os.getcwd())
-                ),
-                location_relative_to_new_parent(
-                    out_root / new_relative_out_root / "flexlate.json",
-                    project_root,
-                    temp_path,
-                    Path(os.getcwd()),
-                ),
-                project_root=temp_path,
-                out_root=expanded_out_root,
-                orig_project_root=project_root,
-            ),
-            repo,
-            commit_message,
-            out_root,
-            merged_branch_name=merged_branch_name,
-            template_branch_name=template_branch_name,
-        )
 
     def init_project_and_add_to_branches(
         self,

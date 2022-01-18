@@ -343,7 +343,6 @@ def test_update_project(
             # Now update by just passing new data, should change the output
             # even though the version has not changed
             fxt.update(data=[template_source.update_input_data] * 2, no_input=no_input)
-            breakpoint()
             assert_root_template_output_is_correct(after_data_update=True)
             assert_subdir_template_output_is_correct(after_data_update=True)
 
@@ -559,7 +558,7 @@ def test_undo(
         assert len(repo.commit().parents) == 1
         parent = repo.commit().parents[0]
         assert_main_commit_message_matches(
-            parent.message, "Moved config for cookiecutter-simple-example to ."
+            parent.message, "Update flexlate templates"
         )
 
     assert_merged_commit_history_is_correct()
@@ -582,11 +581,11 @@ def test_undo(
     template_branch.checkout()
 
     assert_main_commit_message_matches(
-        repo.commit().message, "Moved config for cookiecutter-simple-example to ."
+        repo.commit().message, "Update flexlate templates"
     )
     assert len(repo.commit().parents) == 1
     parent = repo.commit().parents[0]
-    assert_main_commit_message_matches(parent.message, "Update flexlate templates")
+    assert_main_commit_message_matches(parent.message, "Applied template cookiecutter-simple-example to .")
 
 
 def _assert_project_files_are_correct(
