@@ -177,6 +177,17 @@ def test_add_remote_cookiecutter_applied_template_to_repo(
     assert at.root == template_root
     assert at.add_mode == add_mode
 
+    template_sources_config_path = GENERATED_REPO_DIR / "flexlate.json"
+    ts_config = FlexlateConfig.load(template_sources_config_path)
+    assert len(ts_config.template_sources) == 1
+    source = ts_config.template_sources[0]
+    assert source.name == cookiecutter_remote_template.name
+    assert source.path == cookiecutter_remote_template.git_url
+    assert source.version == cookiecutter_remote_template.version
+    assert source.type == TemplateType.COOKIECUTTER
+    assert source.render_relative_root_in_output == Path("{{ cookiecutter.name }}")
+    assert source.render_relative_root_in_template == Path("{{ cookiecutter.name }}")
+
 
 @patch.object(appdirs, "user_config_dir", lambda name: GENERATED_FILES_DIR)
 def test_add_applied_template_to_subdir(
