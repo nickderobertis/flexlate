@@ -43,26 +43,45 @@ class Flexlate:
         merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
         template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
         template_path_from: Optional[str] = None,
+        template_version: Optional[str] = None,
         user: bool = False,
     ):
         repo = Repo(path)
-        if template_path_from:
-            self.adder.init_project_from_template_source_path(
-                repo,
-                template_path_from,
-                default_add_mode=default_add_mode,
-                user=user,
-                merged_branch_name=merged_branch_name,
-                template_branch_name=template_branch_name,
-            )
-        else:
-            self.adder.init_project_and_add_to_branches(
-                repo,
-                default_add_mode=default_add_mode,
-                user=user,
-                merged_branch_name=merged_branch_name,
-                template_branch_name=template_branch_name,
-            )
+        self.adder.init_project_and_add_to_branches(
+            repo,
+            default_add_mode=default_add_mode,
+            user=user,
+            merged_branch_name=merged_branch_name,
+            template_branch_name=template_branch_name,
+        )
+
+    def init_project_from(
+        self,
+        template_path: str,
+        path: Path = Path("."),
+        template_version: Optional[str] = None,
+        default_folder_name: str = "project",
+        no_input: bool = False,
+        default_add_mode: AddMode = AddMode.LOCAL,
+        merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
+        template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
+    ):
+        transaction = FlexlateTransaction(
+            type=TransactionType.ADD_SOURCE_AND_OUTPUT,
+            target=template_path,
+            out_root=path,
+        )
+        template = self.finder.find(template_path, version=template_version)
+        self.adder.init_project_from_template_source_path(
+            template,
+            transaction,
+            target_version=template_version,
+            default_folder_name=default_folder_name,
+            no_input=no_input,
+            default_add_mode=default_add_mode,
+            merged_branch_name=merged_branch_name,
+            template_branch_name=template_branch_name,
+        )
 
     def add_template_source(
         self,

@@ -557,9 +557,7 @@ def test_undo(
         assert_main_commit_message_matches(repo.commit().message, manual_commit_message)
         assert len(repo.commit().parents) == 1
         parent = repo.commit().parents[0]
-        assert_main_commit_message_matches(
-            parent.message, "Update flexlate templates"
-        )
+        assert_main_commit_message_matches(parent.message, "Update flexlate templates")
 
     assert_merged_commit_history_is_correct()
     _assert_project_files_are_correct()
@@ -585,7 +583,9 @@ def test_undo(
     )
     assert len(repo.commit().parents) == 1
     parent = repo.commit().parents[0]
-    assert_main_commit_message_matches(parent.message, "Applied template cookiecutter-simple-example to .")
+    assert_main_commit_message_matches(
+        parent.message, "Applied template cookiecutter-simple-example to ."
+    )
 
 
 def _assert_project_files_are_correct(

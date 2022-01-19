@@ -373,6 +373,37 @@ class ConfigManager:
         applied_template = child_config.applied_templates[template_index]
         return template_index, applied_template
 
+    def _find_template_source(
+        self,
+        template_name: str,
+        config_path: Path,
+        project_root: Path = Path("."),
+        config: Optional[FlexlateConfig] = None,
+    ) -> Tuple[int, AppliedTemplateConfig]:
+        """
+
+        :param template_name:
+        :param config_path:
+        :param project_root: The root of the current working project (may be a temp directory)
+        :param out_root:
+        :param orig_project_root: The root of the user's project (always stays the same, even
+            when working in a temp directory)
+        :return: index, applied template config tuple
+        """
+        config = config or self.load_config(project_root=project_root)
+        child_config = _get_or_create_child_config_by_path(config, config_path)
+        template_index: Optional[int] = None
+        for i, template_source in enumerate(child_config.template_sources):
+            if template_source.name == template_name:
+                template_index = i
+                break
+        if template_index is None:
+            raise CannotRemoveAppliedTemplateException(
+                f"Cannot find any template source with name {template_name}"
+            )
+        template_source = child_config.template_sources[template_index]
+        return template_index, template_source
+
     def get_num_applied_templates_in_child_config(
         self, child_config_path: Path, project_root: Path = Path(".")
     ):
@@ -448,6 +479,26 @@ class ConfigManager:
         applied_template = child_config.applied_templates.pop(template_index)
         new_child_config = _get_or_create_child_config_by_path(config, new_config_path)
         new_child_config.applied_templates.append(applied_template)
+        self.save_config(config)
+
+    def move_template_source(
+        self,
+        template_name: str,
+        config_path: Path,
+        new_config_path: Path,
+        project_root: Path = Path("."),
+    ):
+        config = self.load_config(project_root=project_root, adjust_applied_paths=False)
+        child_config = _get_or_create_child_config_by_path(config, config_path)
+        template_index, _ = self._find_template_source(
+            template_name,
+            config_path,
+            project_root=project_root,
+            config=config,
+        )
+        template_source = child_config.template_sources.pop(template_index)
+        new_child_config = _get_or_create_child_config_by_path(config, new_config_path)
+        new_child_config.template_sources.append(template_source)
         self.save_config(config)
 
     def _get_applied_templates_and_sources_with_local_add_mode(

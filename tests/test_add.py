@@ -17,7 +17,7 @@ from tests.fixtures.subdir_style import SubdirStyle, subdir_style
 from tests.fixtures.template import *
 from tests.fixtures.templated_repo import *
 from tests.fixtures.add_mode import add_mode
-from tests.fixtures.transaction import add_source_transaction, add_output_transaction
+from tests.fixtures.transaction import *
 
 
 def test_add_template_source_to_repo(
@@ -393,6 +393,15 @@ def test_add_project_config_with_git(repo_with_placeholder_committed: Repo):
         assert project.path == Path(".")
 
 
-def test_init_project_from_template_source_path():
+def test_init_project_from_template_source_path(
+    cookiecutter_remote_template: CookiecutterTemplate,
+    add_source_and_output_transaction: FlexlateTransaction,
+):
+    template = cookiecutter_remote_template
+    transaction = add_source_and_output_transaction
+
     adder = Adder()
-    adder.init_project_from_template_source_path(COOKIECUTTER_REMOTE_URL)
+    with change_directory_to(GENERATED_FILES_DIR):
+        adder.init_project_from_template_source_path(
+            template, transaction, no_input=True
+        )
