@@ -8,6 +8,7 @@ from git import Head
 from flexlate.add_mode import AddMode
 from flexlate.config import FlexlateConfig, FlexlateProjectConfig
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
+from flexlate.template.copier import CopierTemplate
 from flexlate.template.types import TemplateType
 from flexlate.transactions.transaction import FlexlateTransaction
 from tests.config import GENERATED_FILES_DIR
@@ -404,7 +405,7 @@ def test_add_project_config_with_git(repo_with_placeholder_committed: Repo):
         assert project.path == Path(".")
 
 
-def test_init_project_from_template_source_path(
+def test_init_project_from_template_source_path_remote_cookiecutter(
     cookiecutter_remote_template: CookiecutterTemplate,
     add_source_and_output_transaction: FlexlateTransaction,
 ):
@@ -426,9 +427,9 @@ def test_init_project_from_template_source_path(
     config = FlexlateConfig.load(config_path)
     assert len(config.template_sources) == 1
     source = config.template_sources[0]
-    assert source.name == cookiecutter_remote_template.name
-    assert source.path == cookiecutter_remote_template.git_url
-    assert source.version == cookiecutter_remote_template.version
+    assert source.name == template.name
+    assert source.path == template.git_url
+    assert source.version == template.version
     assert source.type == TemplateType.COOKIECUTTER
     assert source.render_relative_root_in_output == Path("{{ cookiecutter.name }}")
     assert source.render_relative_root_in_template == Path("{{ cookiecutter.name }}")
@@ -438,4 +439,44 @@ def test_init_project_from_template_source_path(
     assert at.version == template.version
     assert at.data == {"name": "abc", "key": "value"}
     assert at.root == Path("..")
+    assert at.add_mode == AddMode.LOCAL
+
+
+def test_init_project_from_template_source_path_local_copier(
+    copier_one_template: CopierTemplate,
+    add_source_and_output_transaction: FlexlateTransaction,
+):
+    template = copier_one_template
+    transaction = add_source_and_output_transaction
+
+    adder = Adder()
+    with change_directory_to(GENERATED_FILES_DIR):
+        adder.init_project_from_template_source_path(
+            template, transaction, no_input=True
+        )
+
+    project_dir = GENERATED_FILES_DIR / "project"
+    # Ensure project is a git repo
+    Repo(project_dir)
+
+    content_path = project_dir / "a1.txt"
+    content = content_path.read_text()
+    assert content == "1"
+
+    config_path = project_dir / "flexlate.json"
+    config = FlexlateConfig.load(config_path)
+    assert len(config.template_sources) == 1
+    source = config.template_sources[0]
+    assert source.name == template.name
+    assert source.path == str(template.path)
+    assert source.version == template.version
+    assert source.type == TemplateType.COPIER
+    assert source.render_relative_root_in_output == Path(".")
+    assert source.render_relative_root_in_template == Path(".")
+    assert len(config.applied_templates) == 1
+    at = config.applied_templates[0]
+    assert at.name == template.name
+    assert at.version == template.version
+    assert at.data == {"q1": "a1", "q2": 1, "q3": None}
+    assert at.root == Path(".")
     assert at.add_mode == AddMode.LOCAL
