@@ -416,3 +416,26 @@ def test_init_project_from_template_source_path(
         adder.init_project_from_template_source_path(
             template, transaction, no_input=True
         )
+
+    project_dir = GENERATED_FILES_DIR / "abc"
+    content_path = project_dir / "abc.txt"
+    content = content_path.read_text()
+    assert content == "some new header\nvalue"
+
+    config_path = project_dir / "flexlate.json"
+    config = FlexlateConfig.load(config_path)
+    assert len(config.template_sources) == 1
+    source = config.template_sources[0]
+    assert source.name == cookiecutter_remote_template.name
+    assert source.path == cookiecutter_remote_template.git_url
+    assert source.version == cookiecutter_remote_template.version
+    assert source.type == TemplateType.COOKIECUTTER
+    assert source.render_relative_root_in_output == Path("{{ cookiecutter.name }}")
+    assert source.render_relative_root_in_template == Path("{{ cookiecutter.name }}")
+    assert len(config.applied_templates) == 1
+    at = config.applied_templates[0]
+    assert at.name == template.name
+    assert at.version == template.version
+    assert at.data == {"name": "abc", "key": "value"}
+    assert at.root == Path("..")
+    assert at.add_mode == AddMode.LOCAL
