@@ -419,9 +419,15 @@ def test_init_project_from_template_source_path_remote_cookiecutter(
         )
 
     project_dir = GENERATED_FILES_DIR / "abc"
+    # Ensure project is a git repo
+    Repo(project_dir)
+
     content_path = project_dir / "abc.txt"
     content = content_path.read_text()
     assert content == "some new header\nvalue"
+
+    non_content_path = project_dir / "README.md"
+    assert not non_content_path.exists()
 
     config_path = project_dir / "flexlate.json"
     config = FlexlateConfig.load(config_path)
@@ -462,6 +468,9 @@ def test_init_project_from_template_source_path_local_copier(
     content_path = project_dir / "a1.txt"
     content = content_path.read_text()
     assert content == "1"
+
+    non_content_path = project_dir / "README.md"
+    assert not non_content_path.exists()
 
     config_path = project_dir / "flexlate.json"
     config = FlexlateConfig.load(config_path)
