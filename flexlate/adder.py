@@ -291,6 +291,8 @@ class Adder:
                         "Output folder name? (this template does not provide one)",
                         default=default_folder_name,
                     )
+                os.remove(temp_file)
+                stage_and_commit_all(repo, "Remove temporary file")
             else:
                 # Output renders in a subdirectory. Find that directory
                 renderables = config_manager.get_all_renderables(project_root=temp_path)
@@ -322,6 +324,15 @@ class Adder:
                     temp_path / new_relative_out_root / "flexlate-project.json"
                 )
                 shutil.move(orig_project_config_path, new_project_config_path)
+
+                # Move .git folder into output directory
+                git_folder = temp_path / ".git"
+                new_git_folder = temp_path / new_relative_out_root / ".git"
+                shutil.move(git_folder, new_git_folder)
+                # Reassign repo now that it has moved
+                repo = Repo(temp_path / new_relative_out_root)
+
+                stage_and_commit_all(repo, "Move flexlate config and remove temporary file")
 
             final_out_path = path / folder_name
             shutil.copytree(output_folder, final_out_path)

@@ -420,7 +420,8 @@ def test_init_project_from_template_source_path_remote_cookiecutter(
 
     project_dir = GENERATED_FILES_DIR / "abc"
     # Ensure project is a git repo
-    Repo(project_dir)
+    repo = Repo(project_dir)
+    assert repo.commit().message == "Move flexlate config and remove temporary file\n"
 
     content_path = project_dir / "abc.txt"
     content = content_path.read_text()
@@ -463,7 +464,8 @@ def test_init_project_from_template_source_path_local_copier(
 
     project_dir = GENERATED_FILES_DIR / "project"
     # Ensure project is a git repo
-    Repo(project_dir)
+    repo = Repo(project_dir)
+    assert repo.commit().message == "Remove temporary file\n"
 
     content_path = project_dir / "a1.txt"
     content = content_path.read_text()
