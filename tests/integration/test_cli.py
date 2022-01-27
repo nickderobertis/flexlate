@@ -588,6 +588,49 @@ def test_undo(
     )
 
 
+def test_init_project_from_template(
+    flexlates: FlexlateFixture,
+    template_source: TemplateSourceFixture,
+):
+    fxt = flexlates.flexlate
+    no_input = flexlates.type == FlexlateType.APP
+    with change_directory_to(GENERATED_FILES_DIR):
+        fxt.init_project_from(
+            template_source.path, data=template_source.input_data, no_input=no_input
+        )
+
+    relative_root = (
+        template_source.evaluated_render_relative_root_in_output_creator(
+            template_source.input_data
+        )
+    )
+    root = GENERATED_FILES_DIR / relative_root
+
+    _assert_project_files_are_correct(
+        root=GENERATED_FILES_DIR,
+        expect_data=template_source.input_data,
+        template_source_type=template_source.type,
+        version=template_source.default_version,
+    )
+
+    _assert_config_is_correct(
+        at_config_path=root / "flexlate.json",
+        ts_config_path=root / "flexlate.json",
+        expect_applied_template_root=template_source.expect_local_applied_template_path,
+        expect_data=template_source.input_data,
+        template_source_type=template_source.type,
+        version=template_source.default_version,
+        name=template_source.name,
+        url=template_source.url,
+        path=template_source.path,
+        render_relative_root_in_output=template_source.render_relative_root_in_output,
+        render_relative_root_in_template=template_source.render_relative_root_in_template,
+    )
+
+    project_config_path = root / "flexlate-project.json"
+    _assert_project_config_is_correct(project_config_path, user=False)
+
+
 def _assert_project_files_are_correct(
     root: Path = GENERATED_REPO_DIR,
     expect_data: Optional[TemplateData] = None,
