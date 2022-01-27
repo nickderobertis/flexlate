@@ -42,7 +42,6 @@ class Flexlate:
         default_add_mode: AddMode = AddMode.LOCAL,
         merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
         template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
-        template_path_from: Optional[str] = None,
         template_version: Optional[str] = None,
         user: bool = False,
     ):
