@@ -332,7 +332,9 @@ class Adder:
                 # Reassign repo now that it has moved
                 repo = Repo(temp_path / new_relative_out_root)
 
-                stage_and_commit_all(repo, "Move flexlate config and remove temporary file")
+                stage_and_commit_all(
+                    repo, "Move flexlate config and remove temporary file"
+                )
 
             final_out_path = path / folder_name
             shutil.copytree(output_folder, final_out_path)

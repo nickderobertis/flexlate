@@ -24,7 +24,11 @@ ADD_MODE_DOC = (
 )
 NO_INPUT_DOC = "Whether to proceed without any input from the user (useful for automation, e.g. CI systems)"
 PROJECT_PATH_DOC = "The location of the project"
-
+MERGED_BRANCH_DOC = "The name of the branch that flexlate creates to store the merges between template updates and the project"
+TEMPLATE_BRANCH_DOC = (
+    "The name of the branch that flexlate creates that stores only the template output"
+)
+PROJECT_USER_DOC = "Store the flexlate project configuration in the user directory rather than in the project"
 
 TEMPLATE_ROOT_OPTION = typer.Option(
     Path("."),
@@ -138,17 +142,16 @@ def init_project(
         show_choices=True,
     ),
     merged_branch_name: str = typer.Option(
-        DEFAULT_MERGED_BRANCH_NAME,
-        help="The name of the branch that flexlate creates to store the merges between template updates and the project",
+        DEFAULT_MERGED_BRANCH_NAME, help=MERGED_BRANCH_DOC
     ),
     template_branch_name: str = typer.Option(
         DEFAULT_TEMPLATE_BRANCH_NAME,
-        help="The name of the branch that flexlate creates that stores only the template output",
+        help=TEMPLATE_BRANCH_DOC,
     ),
     user: bool = typer.Option(
         False,
         "--user",
-        help="Store the flexlate project configuration in the user directory rather than in the project",
+        help=PROJECT_USER_DOC,
     ),
     template_path_from: Optional[str] = typer.Option(
         None,
