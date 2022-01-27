@@ -66,6 +66,7 @@ class CLIStubFlexlate(Flexlate):
         template_path: str,
         path: Path = Path("."),
         template_version: Optional[str] = None,
+        data: Optional[TemplateData] = None,
         default_folder_name: str = "project",
         no_input: bool = False,
         default_add_mode: AddMode = AddMode.LOCAL,
@@ -87,7 +88,8 @@ class CLIStubFlexlate(Flexlate):
                 merged_branch_name,
                 "--template-branch-name",
                 template_branch_name,
-            ]
+            ],
+            input_data=data,
         )
 
     def add_template_source(
