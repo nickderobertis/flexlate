@@ -61,6 +61,35 @@ class CLIStubFlexlate(Flexlate):
             ]
         )
 
+    def init_project_from(
+        self,
+        template_path: str,
+        path: Path = Path("."),
+        template_version: Optional[str] = None,
+        default_folder_name: str = "project",
+        no_input: bool = False,
+        default_add_mode: AddMode = AddMode.LOCAL,
+        merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
+        template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
+    ):
+        fxt(
+            [
+                "init-from",
+                template_path,
+                str(path),
+                *_flag_if_not_none(template_version, "version"),
+                "--folder-name",
+                default_folder_name,
+                *_bool_flag(no_input, "no-input"),
+                "--add-mode",
+                default_add_mode.value,
+                "--merged-branch-name",
+                merged_branch_name,
+                "--template-branch-name",
+                template_branch_name,
+            ]
+        )
+
     def add_template_source(
         self,
         path: str,
