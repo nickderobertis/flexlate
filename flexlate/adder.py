@@ -325,12 +325,12 @@ class Adder:
                 new_project_config_path = (
                     temp_path / new_relative_out_root / "flexlate-project.json"
                 )
-                shutil.move(orig_project_config_path, new_project_config_path)
+                shutil.move(str(orig_project_config_path), str(new_project_config_path))
 
                 # Move .git folder into output directory
                 git_folder = temp_path / ".git"
                 new_git_folder = temp_path / new_relative_out_root / ".git"
-                shutil.move(git_folder, new_git_folder)
+                shutil.move(str(git_folder), str(new_git_folder))
                 # Reassign repo now that it has moved
                 repo = Repo(temp_path / new_relative_out_root)
 
