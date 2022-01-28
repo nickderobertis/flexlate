@@ -13,13 +13,21 @@ from typer.testing import CliRunner
 runner = CliRunner()
 
 
+class CLIRunnerException(Exception):
+    pass
+
+
 def fxt(
     args: Union[str, Sequence[str]],
     input_data: Optional[Union[TemplateData, List[TemplateData]]] = None,
 ) -> Result:
     text_input = _get_text_input(input_data)
     print(f"Running {args} with input {text_input}")
-    return runner.invoke(cli, args, input=text_input)
+    result = runner.invoke(cli, args, input=text_input)
+    if result.exit_code != 0:
+        raise CLIRunnerException(
+            f"fxt exited with code {result.exit_code}. Output: {result.stdout}"
+        )
 
 
 def _get_text_input(
@@ -91,6 +99,7 @@ class CLIStubFlexlate(Flexlate):
             ],
             input_data=data,
         )
+        breakpoint()
 
     def add_template_source(
         self,
