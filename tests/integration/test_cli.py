@@ -603,9 +603,17 @@ def test_init_project_from_template(
         template_source.input_data
     )
     root = GENERATED_FILES_DIR / relative_root
+    project_files_check_root = GENERATED_FILES_DIR
+    project_folder_name = relative_root.name
+    if relative_root == Path("."):
+        # When relative root is current directory, init-from creates a new folder
+        # with name as passed. The default name is "project"
+        project_folder_name = "project"
+        root = root / project_folder_name
+        project_files_check_root = project_files_check_root / project_folder_name
 
     _assert_project_files_are_correct(
-        root=GENERATED_FILES_DIR,
+        root=project_files_check_root,
         expect_data=template_source.input_data,
         template_source_type=template_source.type,
         version=template_source.default_version,
@@ -626,7 +634,9 @@ def test_init_project_from_template(
     )
 
     project_config_path = root / "flexlate-project.json"
-    _assert_project_config_is_correct(project_config_path, user=False)
+    _assert_project_config_is_correct(
+        project_config_path, user=False, project_folder_name=project_folder_name
+    )
 
 
 def _assert_project_files_are_correct(
@@ -774,16 +784,18 @@ def _assert_project_config_is_correct(
     path: Path = GENERATED_REPO_DIR / "flexlate-project.json",
     user: bool = False,
     add_mode: AddMode = AddMode.LOCAL,
+    project_folder_name: str = "project",
 ):
+    expect_project_path = GENERATED_FILES_DIR / project_folder_name
     project_config = FlexlateProjectConfig.load(path)
     assert len(project_config.projects) == 1
     project = project_config.projects[0]
     if user:
         assert project.path == project.path.absolute()
-        assert project.path == GENERATED_REPO_DIR
+        assert project.path == expect_project_path
     else:
         assert project.path != project.path.absolute()
-        assert (path.parent / project.path).absolute() == GENERATED_REPO_DIR
+        assert (path.parent / project.path).absolute() == expect_project_path
     assert project.default_add_mode == add_mode
 
 
