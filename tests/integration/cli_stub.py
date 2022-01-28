@@ -1,3 +1,4 @@
+import shlex
 from pathlib import Path
 from typing import Union, Sequence, Optional, List
 
@@ -9,6 +10,8 @@ from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRAN
 from flexlate.main import Flexlate
 from flexlate.template_data import TemplateData
 from typer.testing import CliRunner
+
+from tests import ext_click
 
 runner = CliRunner()
 
@@ -22,12 +25,14 @@ def fxt(
     input_data: Optional[Union[TemplateData, List[TemplateData]]] = None,
 ) -> Result:
     text_input = _get_text_input(input_data)
-    print(f"Running {args} with input {text_input}")
     result = runner.invoke(cli, args, input=text_input)
     if result.exit_code != 0:
+        output = ext_click.result_to_message(result)
+        command = shlex.join(["fxt", *args])
         raise CLIRunnerException(
-            f"fxt exited with code {result.exit_code}. Output: {result.stdout}"
+            f"{command} with input {text_input} exited with code {result.exit_code}.\n{output}"
         )
+    return result
 
 
 def _get_text_input(
