@@ -5,6 +5,7 @@ from typing import Optional
 from unittest.mock import patch
 
 import appdirs
+import pytest
 from git import GitCommandError
 
 from flexlate.add_mode import AddMode
@@ -38,6 +39,7 @@ from tests.fixtures.template_source import (
     COOKIECUTTER_REMOTE_DEFAULT_EXPECT_PATH,
 )
 from tests.gitutils import assert_main_commit_message_matches
+from tests.integration.cli_stub import CLIRunnerException
 from tests.integration.undoables import UNDOABLE_OPERATIONS
 
 
@@ -334,8 +336,10 @@ def test_update_project(
                     fxt.update(no_input=True)
                 assert "Your branch is up to date" in str(excinfo.value)
             else:
-                # When using CLI, it will not throw an error, just display the message
-                fxt.update(no_input=True)
+                # When using CLI stub, it will throw a CLIRunnerException
+                with pytest.raises(CLIRunnerException) as excinfo:
+                    fxt.update(no_input=True)
+                assert "Your branch is up to date" in str(excinfo.value)
 
             assert_root_template_output_is_correct()
             assert_subdir_template_output_is_correct()
@@ -546,8 +550,9 @@ def test_undo(
             assert not config_path.exists()
             assert subdir_placeholder_path.read_text() == "something"
             # Now check everything just to make sure it can be undone
+            is_cli = flexlates.type == FlexlateType.CLI
             for operation in UNDOABLE_OPERATIONS:
-                operation.operation(fxt)
+                operation.operation(fxt, is_cli)
                 fxt.undo(num_operations=operation.num_transactions)
                 _assert_project_files_do_not_exist(subdir)
                 assert not config_path.exists()

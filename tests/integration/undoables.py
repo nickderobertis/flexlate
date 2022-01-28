@@ -8,32 +8,33 @@ from tests.fixtures.template_source import COOKIECUTTER_REMOTE_FIXTURE
 
 @dataclass
 class UndoableOperation:
-    operation: Callable[[Flexlate], None]
+    operation: Callable[[Flexlate, bool], None]
     num_transactions: int = 1
 
 
-def add_template_source(fxt: Flexlate):
+def add_template_source(fxt: Flexlate, is_cli: bool):
     fxt.add_template_source(str(COPIER_ONE_DIR))
 
 
-def apply_template_and_add(fxt: Flexlate):
+def apply_template_and_add(fxt: Flexlate, is_cli: bool):
     fxt.apply_template_and_add(COOKIECUTTER_REMOTE_NAME, no_input=True)
 
 
-def remove_template_source(fxt: Flexlate):
+def remove_template_source(fxt: Flexlate, is_cli: bool):
     # Must add the template source so it can be removed. It will be two undo operations
     fxt.add_template_source(str(COPIER_ONE_DIR))
     fxt.remove_template_source(COPIER_ONE_NAME)
 
 
-def remove_applied_template_and_output(fxt: Flexlate):
+def remove_applied_template_and_output(fxt: Flexlate, is_cli: bool):
     # Must add the applied template output so it can be removed. It will be two undo operations
     fxt.apply_template_and_add(COOKIECUTTER_REMOTE_NAME, no_input=True)
     fxt.remove_applied_template_and_output(COOKIECUTTER_REMOTE_NAME)
 
 
-def update(fxt: Flexlate):
-    fxt.update(data=[COOKIECUTTER_REMOTE_FIXTURE.update_input_data], no_input=True)
+def update(fxt: Flexlate, is_cli: bool):
+    no_input = not is_cli
+    fxt.update(data=[COOKIECUTTER_REMOTE_FIXTURE.update_input_data], no_input=no_input)
 
 
 UNDOABLE_OPERATIONS: Final[List[UndoableOperation]] = [
