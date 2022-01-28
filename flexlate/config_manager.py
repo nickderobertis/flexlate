@@ -379,7 +379,7 @@ class ConfigManager:
         config_path: Path,
         project_root: Path = Path("."),
         config: Optional[FlexlateConfig] = None,
-    ) -> Tuple[int, AppliedTemplateConfig]:
+    ) -> Tuple[int, TemplateSource]:
         """
 
         :param template_name:
@@ -533,9 +533,11 @@ class ConfigManager:
             if source.is_local_template:
                 # Move source back to orig project so that relative template
                 # paths can be resolved
-                source.path = location_relative_to_new_parent(
-                    Path(source.path), project_root, orig_project_root, project_root
-                ).resolve()
+                source.path = str(
+                    location_relative_to_new_parent(
+                        Path(source.path), project_root, orig_project_root, project_root
+                    ).resolve()
+                )
             template = source.to_template()
             if template.render_relative_root_in_output == Path("."):
                 # Should not need to move as config will not be in a subdirectory

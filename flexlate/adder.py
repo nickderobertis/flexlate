@@ -309,7 +309,7 @@ class Adder:
                     )
                 )
                 output_folder = (temp_path / new_relative_out_root).resolve()
-                folder_name = new_relative_out_root
+                folder_name = new_relative_out_root.name
 
                 # Move template source and project config into output directory
                 orig_config_path = temp_path / "flexlate.json"

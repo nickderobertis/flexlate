@@ -19,7 +19,7 @@ class Template(abc.ABC):
         version: Optional[str] = None,
         target_version: Optional[str] = None,
         git_url: Optional[str] = None,
-        template_source_path: Optional[Path] = None,
+        template_source_path: Optional[str] = None,
         render_relative_root_in_output: Path = Path("."),
         render_relative_root_in_template: Path = Path("."),
     ):
