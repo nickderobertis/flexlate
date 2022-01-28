@@ -81,6 +81,10 @@ class CLIStubFlexlate(Flexlate):
         merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
         template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
     ):
+        # Answer about the generated folder if prompted
+        project_folder_answer = {"folder": default_folder_name}
+        all_data = {**(data or {}), **project_folder_answer}
+
         fxt(
             [
                 "init-from",
@@ -97,9 +101,8 @@ class CLIStubFlexlate(Flexlate):
                 "--template-branch-name",
                 template_branch_name,
             ],
-            input_data=data,
+            input_data=all_data,
         )
-        breakpoint()
 
     def add_template_source(
         self,
