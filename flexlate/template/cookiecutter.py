@@ -18,6 +18,7 @@ class CookiecutterTemplate(Template):
         version: Optional[str] = None,
         target_version: Optional[str] = None,
         git_url: Optional[str] = None,
+        template_source_path: Optional[str] = None,
     ):
         super().__init__(
             config,
@@ -26,6 +27,7 @@ class CookiecutterTemplate(Template):
             version=version,
             target_version=target_version,
             git_url=git_url,
+            template_source_path=template_source_path,
             # Output relative root is always the same as template relative root for Cookiecutter
             render_relative_root_in_output=render_relative_root,
             render_relative_root_in_template=render_relative_root,

@@ -599,10 +599,8 @@ def test_init_project_from_template(
             template_source.path, data=template_source.input_data, no_input=no_input
         )
 
-    relative_root = (
-        template_source.evaluated_render_relative_root_in_output_creator(
-            template_source.input_data
-        )
+    relative_root = template_source.evaluated_render_relative_root_in_output_creator(
+        template_source.input_data
     )
     root = GENERATED_FILES_DIR / relative_root
 

@@ -24,6 +24,7 @@ class CookiecutterFinder(TemplateFinder[CookiecutterTemplate]):
         config = self.get_config(local_path)
         version = get_version_from_source_path(path, local_path) or git_version
         git_url = get_git_url_from_source_path(path, template_kwargs)
+        template_source_path = git_url if git_url else path
         absolute_template_dir = find_template(local_path)
         relative_template_dir = Path(
             os.path.relpath(absolute_template_dir, local_path.resolve())
@@ -34,6 +35,7 @@ class CookiecutterFinder(TemplateFinder[CookiecutterTemplate]):
             relative_template_dir,
             version=version,
             git_url=git_url,
+            template_source_path=template_source_path,
             **template_kwargs
         )
 
