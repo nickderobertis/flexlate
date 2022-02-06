@@ -30,6 +30,10 @@ See the
 https://nickderobertis.github.io/flexlate/
 )
 
+## Requirements
+
+Python >= 3.9
+
 ## Author
 
 Created by Nick DeRobertis. MIT License.

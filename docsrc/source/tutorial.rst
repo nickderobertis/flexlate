@@ -1,6 +1,10 @@
 Getting started with flexlate
 **********************************
 
+Requirements
+===============
+Python >= 3.9
+
 Install
 =======
 
