@@ -1,3 +1,4 @@
+
 name: automerge
 on:
   pull_request:
@@ -14,11 +15,12 @@ on:
       - submitted
 jobs:
   test:
+
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 1
       matrix:
-        python-version: [3.9]
+        python-version: [3.8]
 
     steps:
       - name: Dump GitHub context
@@ -53,10 +55,10 @@ jobs:
     needs: test
     steps:
       - uses: actions/checkout@v1
-      - name: Set up Python 3.9
+      - name: Set up Python 3.8
         uses: actions/setup-python@v1
         with:
-          python-version: 3.9
+          python-version: 3.8
       - name: Check if maintainer
         env:
           GITHUB_PR_USER: ${{ github.actor }}
@@ -107,7 +109,7 @@ jobs:
     strategy:
       max-parallel: 1
       matrix:
-        python-version: [3.9]
+        python-version: [3.8]
     steps:
       - uses: actions/checkout@v1
         with:
