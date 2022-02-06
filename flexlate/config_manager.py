@@ -58,6 +58,8 @@ class ConfigManager:
             config = FlexlateProjectConfig.load_recursive(path)
         except FileNotFoundError:
             # TEMP
+            print("\n\n\nchecking paths for finding project config\n\n")
+            print("current path exists?", path.exists())
             print("files in path", path.resolve(), list(path.resolve().iterdir()))
             print("files in parent", path.resolve().parent, list(path.resolve().parent.iterdir()))
             print("files in grandparent", path.resolve().parent.parent, list(path.resolve().parent.parent.iterdir()))
