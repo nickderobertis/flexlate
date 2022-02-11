@@ -36,6 +36,7 @@ class TransactionType(str, Enum):
     REMOVE_SOURCE = "remove source"
     REMOVE_OUTPUT = "remove output"
     UPDATE = "update"
+    SYNC = "sync"
 
 
 class FlexlateTransaction(BaseModel):
