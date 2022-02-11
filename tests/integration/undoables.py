@@ -11,6 +11,10 @@ class UndoableOperation:
     operation: Callable[[Flexlate, bool], None]
     num_transactions: int = 1
 
+    @property
+    def name(self) -> str:
+        return self.operation.__name__
+
 
 def add_template_source(fxt: Flexlate, is_cli: bool):
     fxt.add_template_source(str(COPIER_ONE_DIR))
