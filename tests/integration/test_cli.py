@@ -555,6 +555,8 @@ def test_undo(
                 print(f"Running operation {operation.name}. Cwd: {os.getcwd()}. Repo contents: {list(GENERATED_REPO_DIR.iterdir())}")
                 operation.operation(fxt, is_cli)
                 print(f"After operation {operation.name}")
+                if operation.name == "remove_applied_template_and_output":
+                    print(repo.git.log("-p", "--full-diff"))
                 print(f"Generated contents: {list(GENERATED_FILES_DIR.iterdir())}")
                 print(f"Repo contents: {list(GENERATED_REPO_DIR.iterdir())}")
                 print(f"Cwd: {os.getcwd()}")
