@@ -13,13 +13,15 @@ def test_sync_change_in_template_source_name(
 ):
     repo = repo_with_cookiecutter_one_template_source
     expect_name = "new-name"
+    config_path = GENERATED_REPO_DIR / "flexlate.json"
+
+    def update_config(config: FlexlateConfig):
+        config.template_sources[0].name = expect_name
 
     # Make a manual change in the template source name
-    config_path = GENERATED_REPO_DIR / "flexlate.json"
-    config = FlexlateConfig.load(config_path)
-    config.template_sources[0].name = expect_name
-    config.save()
-    stage_and_commit_all(repo, "Manual change to cookiecutter one name")
+    _update_config(
+        config_path, repo, update_config, "Manual change to cookiecutter one name"
+    )
 
     # Sync changes to flexlate branches
     syncer = Syncer()
@@ -45,3 +47,15 @@ def _check_config_on_each_branch(
         branch.checkout()
         config = FlexlateConfig.load(config_path)
         checker(config)
+
+
+def _update_config(
+    config_path: Path,
+    repo: Repo,
+    updater: Callable[[FlexlateConfig], None],
+    commit: str,
+):
+    config = FlexlateConfig.load(config_path)
+    updater(config)
+    config.save()
+    stage_and_commit_all(repo, commit)
