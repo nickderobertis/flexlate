@@ -127,6 +127,10 @@ class Updater:
         checkout_template_branch(repo, merged_branch_name)
         merge_branch_into_current(repo, template_branch_name)
 
+        # Folder may have been deleted again while switching branches, so
+        # need to set cwd again
+        os.chdir(cwd)
+
         if not repo_has_merge_conflicts(repo):
             # No conflicts, merge back into current branch
             current_branch.checkout()
