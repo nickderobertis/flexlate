@@ -35,6 +35,42 @@ def test_sync_change_in_template_source_name(
     _check_config_on_each_branch(config_path, repo, check_config)
 
 
+def test_sync_change_to_applied_template_location(
+    repo_with_template_branch_from_cookiecutter_one_project_add_mode: Repo,
+    sync_transaction: FlexlateTransaction,
+):
+    repo = repo_with_template_branch_from_cookiecutter_one_project_add_mode
+    expect_original_output_path = GENERATED_REPO_DIR / "b" / "text.txt"
+    expect_new_output_path = GENERATED_REPO_DIR / "a" / "b" / "text.txt"
+    config_path = GENERATED_REPO_DIR / "flexlate.json"
+    assert expect_original_output_path.exists()
+
+    def update_config(config: FlexlateConfig):
+        config.applied_templates[0].root = Path("a")
+
+    # Make a manual change in the template source name
+    _update_config(
+        config_path,
+        repo,
+        update_config,
+        "Manual change to applied cookiecutter one template location",
+    )
+
+    # Sync changes to flexlate branches
+    syncer = Syncer()
+    syncer.sync_local_changes_to_flexlate_branches(
+        repo, sync_transaction, no_input=True
+    )
+
+    def check_config(config: FlexlateConfig):
+        assert config.applied_templates[0].root == Path("a")
+
+        assert not expect_original_output_path.exists()
+        assert expect_new_output_path.exists()
+
+    _check_config_on_each_branch(config_path, repo, check_config)
+
+
 def _check_config_on_each_branch(
     config_path: Path, repo: Repo, checker: Callable[[FlexlateConfig], None]
 ):
