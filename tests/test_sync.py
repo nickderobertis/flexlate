@@ -1,3 +1,5 @@
+from typing import Callable
+
 from flexlate.config import FlexlateConfig
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.syncer import Syncer
@@ -25,6 +27,15 @@ def test_sync_change_in_template_source_name(
         repo, sync_transaction, no_input=True
     )
 
+    def check_config(config: FlexlateConfig):
+        assert config.template_sources[0].name == expect_name
+
+    _check_config_on_each_branch(config_path, repo, check_config)
+
+
+def _check_config_on_each_branch(
+    config_path: Path, repo: Repo, checker: Callable[[FlexlateConfig], None]
+):
     for branch_name in [
         "master",
         DEFAULT_MERGED_BRANCH_NAME,
@@ -33,4 +44,4 @@ def test_sync_change_in_template_source_name(
         branch: Head = repo.branches[branch_name]  # type: ignore
         branch.checkout()
         config = FlexlateConfig.load(config_path)
-        assert config.template_sources[0].name == expect_name
+        checker(config)
