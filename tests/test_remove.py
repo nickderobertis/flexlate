@@ -1,3 +1,4 @@
+from flexlate.add_mode import AddMode
 from flexlate.config import FlexlateConfig
 from flexlate.exc import (
     CannotRemoveTemplateSourceException,
@@ -114,3 +115,41 @@ def test_remove_applied_template_that_does_not_exist(
                 repo, COOKIECUTTER_ONE_NAME, remove_output_transaction
             )
         assert "Cannot find any applied template with name" in str(exc_info.value)
+
+
+def test_remove_applied_template_when_multiple_exist(
+    repo_with_cookiecutter_one_template_source_and_output: Repo,
+    remove_output_transaction: FlexlateTransaction,
+    add_output_transaction: FlexlateTransaction,
+    cookiecutter_one_template: CookiecutterTemplate,
+):
+    repo = repo_with_cookiecutter_one_template_source_and_output
+    remover = Remover()
+    adder = Adder()
+    subdir = GENERATED_REPO_DIR / "subdir"
+    subdir.mkdir()
+    config_path = subdir / "b"  / "flexlate.json"
+    output_path = subdir / "b" / "text.txt"
+    with change_directory_to(subdir):
+        adder.apply_template_and_add(repo, cookiecutter_one_template, add_output_transaction, no_input=True)
+        assert output_path.read_text() == "b"
+        assert config_path.exists()
+        remover.remove_applied_template_and_output(
+            repo, COOKIECUTTER_ONE_NAME, remove_output_transaction
+        )
+
+    # Ensure that remove went correctly
+    assert not output_path.exists()
+    assert not config_path.exists()
+
+    # Ensure no side effects
+    unrelated_config_path = GENERATED_REPO_DIR / "b" / "flexlate.json"
+    config = FlexlateConfig.load(unrelated_config_path)
+    assert len(config.template_sources) == 0
+    assert len(config.applied_templates) == 1
+    at = config.applied_templates[0]
+    assert at.add_mode == AddMode.LOCAL
+    assert at.version == COOKIECUTTER_ONE_VERSION
+    assert at.data == {"a": "b", "c": ""}
+    assert at.name == "one"
+    assert at.root == Path("..")
