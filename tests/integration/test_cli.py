@@ -552,14 +552,8 @@ def test_undo(
             # Now check everything just to make sure it can be undone
             is_cli = flexlates.type == FlexlateType.CLI
             for operation in UNDOABLE_OPERATIONS:
-                print(f"Running operation {operation.name}. Cwd: {os.getcwd()}. Repo contents: {list(GENERATED_REPO_DIR.iterdir())}")
                 operation.operation(fxt, is_cli)
-                print(f"After operation {operation.name}")
-                print(f"Generated contents: {list(GENERATED_FILES_DIR.iterdir())}")
-                print(f"Repo contents: {list(GENERATED_REPO_DIR.iterdir())}")
-                print(f"Cwd: {os.getcwd()}")
                 fxt.undo(num_operations=operation.num_transactions)
-                print(f"Done undoing operation {operation.name}. Cwd: {os.getcwd()}")
                 _assert_project_files_do_not_exist(subdir)
                 assert not config_path.exists()
                 assert subdir_placeholder_path.read_text() == "something"

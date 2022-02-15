@@ -57,13 +57,6 @@ class ConfigManager:
         try:
             config = FlexlateProjectConfig.load_recursive(path)
         except FileNotFoundError:
-            # TEMP
-            print("\n\n\nchecking paths for finding project config\n\n")
-            print("current path exists?", path.exists())
-            print("files in path", path.resolve(), list(path.resolve().iterdir()))
-            print("files in parent", path.resolve().parent, list(path.resolve().parent.iterdir()))
-            print("files in grandparent", path.resolve().parent.parent, list(path.resolve().parent.parent.iterdir()))
-            # END TEMP
             raise FlexlateProjectConfigFileNotExistsException(
                 f"could not find a projects config file in any "
                 f"parent directory of path {path} or in the user directory"
@@ -235,7 +228,7 @@ class ConfigManager:
         config_path: Path,
         project_root: Path = Path("."),
     ):
-        config = self.load_config(project_root=project_root)
+        config = self.load_config(project_root=project_root, adjust_applied_paths=False)
         if self._applied_template_exists_in_project(
             template_name, project_root=project_root, config=config
         ):
@@ -311,16 +304,16 @@ class ConfigManager:
             when working in a temp directory)
         :return:
         """
-        config = self.load_config(project_root=project_root)
-        child_config = _get_or_create_child_config_by_path(config, config_path)
         template_index, _ = self._find_applied_template(
             template_name,
             config_path,
             project_root=project_root,
             out_root=out_root,
             orig_project_root=orig_project_root,
-            config=config,
+            adjust_applied_paths=True
         )
+        config = self.load_config(project_root=project_root, adjust_applied_paths=False)
+        child_config = _get_or_create_child_config_by_path(config, config_path)
         child_config.applied_templates.pop(template_index)
         self.save_config(config)
 
