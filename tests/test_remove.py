@@ -55,6 +55,43 @@ def test_remove_template_source_when_multiple_exist(
     assert template_source.name == COOKIECUTTER_TWO_NAME
 
 
+def test_remove_template_source_when_outputs_from_another_source_exist(
+    repo_with_cookiecutter_one_template_source_and_output: Repo,
+    cookiecutter_two_template: CookiecutterTemplate,
+    remove_source_transaction: FlexlateTransaction,
+    add_source_transaction: FlexlateTransaction,
+):
+    repo = repo_with_cookiecutter_one_template_source_and_output
+    remover = Remover()
+    adder = Adder()
+    config_path = GENERATED_REPO_DIR / "flexlate.json"
+    with change_directory_to(GENERATED_REPO_DIR):
+        adder.add_template_source(
+            repo, cookiecutter_two_template, add_source_transaction
+        )
+        remover.remove_template_source(
+            repo, COOKIECUTTER_TWO_NAME, remove_source_transaction
+        )
+
+    # Check source successfully removed
+    config = FlexlateConfig.load(config_path)
+    assert len(config.applied_templates) == 0
+    assert len(config.template_sources) == 1
+    template_source = config.template_sources[0]
+    assert template_source.name == COOKIECUTTER_ONE_NAME
+
+    # Check no side effects
+    unrelated_config_path = GENERATED_REPO_DIR / "b" / "flexlate.json"
+    config = FlexlateConfig.load(unrelated_config_path)
+    assert len(config.template_sources) == 0
+    assert len(config.applied_templates) == 1
+    at = config.applied_templates[0]
+    assert at.add_mode == AddMode.LOCAL
+    assert at.version == COOKIECUTTER_ONE_VERSION
+    assert at.data == {"a": "b", "c": ""}
+    assert at.name == "one"
+    assert at.root == Path("..")
+
 def test_remove_non_existing_template_source(
     repo_with_placeholder_committed: Repo,
     remove_source_transaction: FlexlateTransaction,
