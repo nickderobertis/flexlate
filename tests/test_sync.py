@@ -71,6 +71,47 @@ def test_sync_change_to_applied_template_location(
     _check_config_on_each_branch(config_path, repo, check_config)
 
 
+def test_sync_change_to_template_version(
+    repo_with_template_branch_from_cookiecutter_remote_version_one: Repo,
+    sync_transaction: FlexlateTransaction,
+):
+    repo = repo_with_template_branch_from_cookiecutter_remote_version_one
+    expect_output_path = GENERATED_REPO_DIR / "abc" / "abc.txt"
+    config_path = GENERATED_REPO_DIR / "flexlate.json"
+    assert expect_output_path.exists()
+    assert expect_output_path.read_text() == "value"
+
+    def update_config(config: FlexlateConfig):
+        ts = config.template_sources[0]
+        ts.target_version = COOKIECUTTER_REMOTE_VERSION_2
+        ts.version = COOKIECUTTER_REMOTE_VERSION_2
+
+    # Make a manual change in the template source name
+    _update_config(
+        config_path,
+        repo,
+        update_config,
+        "Manual change to cookiecutter remote version",
+    )
+
+    # Sync changes to flexlate branches
+    syncer = Syncer()
+    syncer.sync_local_changes_to_flexlate_branches(
+        repo, sync_transaction, no_input=True
+    )
+
+    def check_config(config: FlexlateConfig):
+        ts = config.template_sources[0]
+        assert ts.target_version == COOKIECUTTER_REMOTE_VERSION_2
+        assert ts.version == COOKIECUTTER_REMOTE_VERSION_2
+
+        assert expect_output_path.exists()
+        # Content updated to version 2
+        assert expect_output_path.read_text() == "some new header\nvalue"
+
+    _check_config_on_each_branch(config_path, repo, check_config)
+
+
 def _check_config_on_each_branch(
     config_path: Path, repo: Repo, checker: Callable[[FlexlateConfig], None]
 ):
