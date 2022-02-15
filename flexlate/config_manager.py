@@ -235,7 +235,7 @@ class ConfigManager:
         config_path: Path,
         project_root: Path = Path("."),
     ):
-        config = self.load_config(project_root=project_root)
+        config = self.load_config(project_root=project_root, adjust_applied_paths=False)
         if self._applied_template_exists_in_project(
             template_name, project_root=project_root, config=config
         ):
