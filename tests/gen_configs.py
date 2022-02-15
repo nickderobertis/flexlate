@@ -1,6 +1,8 @@
 # A bootstrap script to set up input files for config tests
+import os
 from pathlib import Path
 
+from flexlate.add_mode import AddMode
 from flexlate.config import (
     FlexlateConfig,
     TemplateSource,
@@ -20,6 +22,7 @@ from tests.config import (
     PROJECT_CONFIGS_PROJECT_1_PATH,
     PROJECT_CONFIGS_PROJECT_1_SUBDIR,
     PROJECT_CONFIGS_PROJECT_2_SUBDIR,
+    GENERATED_FILES_DIR,
 )
 
 
@@ -28,8 +31,10 @@ def create_config_1() -> FlexlateConfig:
         template_sources=[
             TemplateSource(
                 name="one",
-                path=str(COOKIECUTTER_ONE_DIR.relative_to(PROJECT_DIR)),
+                path=str(os.path.relpath(COOKIECUTTER_ONE_DIR, GENERATED_FILES_DIR)),
                 type=TemplateType.COOKIECUTTER,
+                render_relative_root_in_output=Path("{{ cookiecutter.a }}"),
+                render_relative_root_in_template=Path("{{ cookiecutter.a }}"),
             ),
         ],
         applied_templates=[
@@ -37,12 +42,14 @@ def create_config_1() -> FlexlateConfig:
                 name="one",
                 data=dict(a="b", c=""),
                 version="d512c7e14e83cb4bc8d4e5ae06bb357e",
+                add_mode=AddMode.LOCAL,
             ),
             AppliedTemplateConfig(
                 name="one",
                 data=dict(a="b", c=""),
                 version="d512c7e14e83cb4bc8d4e5ae06bb357e",
                 root=Path("subdir1"),
+                add_mode=AddMode.PROJECT,
             ),
         ],
     )
@@ -55,8 +62,14 @@ def create_config_2() -> FlexlateConfig:
         template_sources=[
             TemplateSource(
                 name="two",
-                path=str(COOKIECUTTER_TWO_DIR.relative_to(PROJECT_DIR)),
+                path=str(
+                    os.path.relpath(
+                        COOKIECUTTER_TWO_DIR, GENERATED_FILES_DIR / "subdir2"
+                    )
+                ),
                 type=TemplateType.COOKIECUTTER,
+                render_relative_root_in_output=Path("{{ cookiecutter.a }}"),
+                render_relative_root_in_template=Path("{{ cookiecutter.a }}"),
             ),
         ],
         applied_templates=[
@@ -64,12 +77,14 @@ def create_config_2() -> FlexlateConfig:
                 name="two",
                 data=dict(a="b", d="e"),
                 version="some version",
+                add_mode=AddMode.LOCAL,
             ),
             AppliedTemplateConfig(
                 name="one",
                 data=dict(a="b", c="something"),
                 version="d512c7e14e83cb4bc8d4e5ae06bb357e",
                 root=Path("subdir2_2"),
+                add_mode=AddMode.LOCAL,
             ),
         ],
     )

@@ -1,4 +1,7 @@
+import shutil
+import tempfile
 from collections import ChainMap
+from pathlib import Path
 from typing import Sequence, Final, Any, Dict
 
 from copier import copy_local
@@ -33,6 +36,41 @@ class CopierRenderer(SpecificTemplateRenderer[CopierTemplate]):
         )
         copy_local(conf=conf)
         return _extract_template_data_from_copier_config(conf)
+
+    def render_string(
+        self,
+        string: str,
+        renderable: Renderable[CopierTemplate],
+    ) -> str:
+        template = renderable.template
+
+        with tempfile.TemporaryDirectory() as temp_template_dir:
+            copier_path_1 = Path(template.path) / "copier.yml"
+            copier_path_2 = Path(template.path) / "copier.yaml"
+            if copier_path_1.exists():
+                shutil.copy(copier_path_1, temp_template_dir)
+            if copier_path_2.exists():
+                shutil.copy(copier_path_2, temp_template_dir)
+            temp_template_file_path = (
+                Path(temp_template_dir)
+                / template.render_relative_root_in_template
+                / "temp.txt"
+            )
+            if not temp_template_file_path.parent.exists():
+                temp_template_file_path.parent.mkdir(parents=True)
+            temp_template_file_path.write_text(string)
+
+            with tempfile.TemporaryDirectory() as temp_output_dir:
+                conf = _make_config_by_adding_defaults_then_prompting_user(
+                    temp_template_dir,
+                    temp_output_dir,
+                    data=renderable.data,
+                    no_input=True,
+                )
+                copy_local(conf=conf)
+                temp_output_file_path = Path(temp_output_dir) / "temp.txt"
+                output = temp_output_file_path.read_text()
+        return output
 
 
 def _extract_template_data_from_copier_config(config: ConfigData) -> TemplateData:

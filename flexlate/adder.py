@@ -1,9 +1,12 @@
 import os
+import shutil
+import tempfile
 from copy import deepcopy
 from pathlib import Path
 from typing import Optional
 
 from git import Repo
+from rich.prompt import Prompt
 
 from flexlate.add_mode import AddMode, get_expanded_out_root
 from flexlate.branch_update import modify_files_via_branches_and_temp_repo
@@ -14,6 +17,7 @@ from flexlate.config_manager import (
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.ext_git import (
     assert_repo_is_in_clean_state,
+    stage_and_commit_all,
 )
 from flexlate.path_ops import (
     location_relative_to_new_parent,
@@ -119,16 +123,20 @@ class Adder:
             raise ValueError("repo working dir should not be none")
 
         project_root = Path(repo.working_dir)
+        full_local_config_out_root = out_root / template.render_relative_root_in_output
         config_path = determine_config_path_from_roots_and_add_mode(
-            out_root, project_root, add_mode
+            full_local_config_out_root, project_root, add_mode
         )
-        expanded_out_root = get_expanded_out_root(out_root, project_root, add_mode)
+        expanded_out_root = get_expanded_out_root(
+            out_root, project_root, template.render_relative_root_in_output, add_mode
+        )
 
         if add_mode == AddMode.USER:
             # No need to commit config changes for user
             config_manager.add_applied_template(
                 template,
                 config_path,
+                add_mode,
                 data=data,
                 project_root=project_root,
                 out_root=expanded_out_root,
@@ -148,6 +156,7 @@ class Adder:
                     location_relative_to_new_parent(
                         config_path, project_root, temp_path, Path(os.getcwd())
                     ),
+                    add_mode,
                     data=data,
                     project_root=temp_path,
                     out_root=expanded_out_root,
@@ -221,12 +230,130 @@ class Adder:
             template_branch_name=template_branch_name,
         )
 
+    def init_project_from_template_source_path(
+        self,
+        template: Template,
+        transaction: FlexlateTransaction,
+        path: Path = Path("."),
+        target_version: Optional[str] = None,
+        data: Optional[TemplateData] = None,
+        default_folder_name: str = "project",
+        default_add_mode: AddMode = AddMode.LOCAL,
+        merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
+        template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
+        no_input: bool = False,
+        config_manager: ConfigManager = ConfigManager(),
+        updater: Updater = Updater(),
+        renderer: MultiRenderer = MultiRenderer(),
+    ):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_path = Path(temp_dir)
+            repo = Repo.init(temp_dir)
+            temp_file = temp_path / "README.md"
+            temp_file.touch()
+            stage_and_commit_all(repo, "Initial commit")
+            self.init_project_and_add_to_branches(
+                repo,
+                default_add_mode=default_add_mode,
+                merged_branch_name=merged_branch_name,
+                template_branch_name=template_branch_name,
+                user=False,
+                config_manager=config_manager,
+            )
+            self.add_template_source(
+                repo,
+                template,
+                transaction,
+                target_version=target_version,
+                out_root=temp_path,
+                merged_branch_name=merged_branch_name,
+                template_branch_name=template_branch_name,
+                add_mode=AddMode.LOCAL,
+                config_manager=config_manager,
+            )
+            self.apply_template_and_add(
+                repo,
+                template,
+                transaction,
+                data=data,
+                out_root=temp_path,
+                add_mode=AddMode.LOCAL,
+                merged_branch_name=merged_branch_name,
+                template_branch_name=template_branch_name,
+                no_input=no_input,
+                config_manager=config_manager,
+                updater=updater,
+                renderer=renderer,
+            )
+            if template.render_relative_root_in_output == Path("."):
+                output_folder = temp_path
+                folder_name = default_folder_name
+                if not no_input:
+                    folder_name = Prompt.ask(
+                        "Output folder name? (this template does not provide one)",
+                        default=default_folder_name,
+                    )
+                os.remove(temp_file)
+                stage_and_commit_all(repo, "Remove temporary file")
+            else:
+                # Output renders in a subdirectory. Find that directory
+                renderables = config_manager.get_all_renderables(project_root=temp_path)
+                if len(renderables) != 1:
+                    raise ValueError(
+                        "there should only be one renderable in the init-from process"
+                    )
+                renderable = renderables[0]
+                new_relative_out_root = Path(
+                    renderer.render_string(
+                        str(template.render_relative_root_in_output), renderable
+                    )
+                )
+                output_folder = (temp_path / new_relative_out_root).resolve()
+                folder_name = new_relative_out_root.name
+
+                # Move template source and project config into output directory
+                orig_config_path = temp_path / "flexlate.json"
+                new_config_path = temp_path / new_relative_out_root / "flexlate.json"
+                config_manager.move_template_source(
+                    template.name,
+                    orig_config_path,
+                    new_config_path,
+                    project_root=temp_path,
+                )
+
+                orig_project_config_path = temp_path / "flexlate-project.json"
+                new_project_config_path = (
+                    temp_path / new_relative_out_root / "flexlate-project.json"
+                )
+                shutil.move(str(orig_project_config_path), str(new_project_config_path))
+
+                # Move .git folder into output directory
+                git_folder = temp_path / ".git"
+                new_git_folder = temp_path / new_relative_out_root / ".git"
+                shutil.move(str(git_folder), str(new_git_folder))
+                # Reassign repo now that it has moved
+                repo = Repo(temp_path / new_relative_out_root)
+
+                stage_and_commit_all(
+                    repo, "Move flexlate config and remove temporary file"
+                )
+
+            final_out_path = path / folder_name
+            shutil.copytree(output_folder, final_out_path)
+
 
 def _add_template_commit_message(
     template: Template, out_root: Path, project_root: Path
 ) -> str:
     relative_path = out_root.absolute().relative_to(project_root)
     return f"Applied template {template.name} to {relative_path}"
+
+
+def _move_applied_template_config_message(
+    template: Template, out_root: Path, project_root: Path
+) -> str:
+    relative_path = out_root.absolute().relative_to(project_root)
+    return f"Moved config for {template.name} to {relative_path}"
 
 
 def _add_template_source_commit_message(

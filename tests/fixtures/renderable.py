@@ -19,6 +19,15 @@ def copier_one_renderable(
 
 
 @pytest.fixture
+def copier_output_subdir_renderable(
+    copier_output_subdir_template: CopierTemplate,
+) -> Renderable:
+    return Renderable(
+        template=copier_output_subdir_template, out_root=GENERATED_FILES_DIR
+    )
+
+
+@pytest.fixture
 def cookiecutter_two_renderable(
     cookiecutter_two_template: CookiecutterTemplate,
 ) -> Renderable:

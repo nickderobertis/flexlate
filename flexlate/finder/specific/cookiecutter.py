@@ -1,6 +1,9 @@
 import json
+import os.path
 from pathlib import Path
 from typing import Optional
+
+from cookiecutter.find import find_template
 
 from flexlate.finder.specific.base import TemplateFinder
 from flexlate.finder.specific.git import (
@@ -21,8 +24,19 @@ class CookiecutterFinder(TemplateFinder[CookiecutterTemplate]):
         config = self.get_config(local_path)
         version = get_version_from_source_path(path, local_path) or git_version
         git_url = get_git_url_from_source_path(path, template_kwargs)
+        template_source_path = git_url if git_url else path
+        absolute_template_dir = find_template(local_path)
+        relative_template_dir = Path(
+            os.path.relpath(absolute_template_dir, local_path.resolve())
+        )
         return CookiecutterTemplate(
-            config, local_path, version=version, git_url=git_url, **template_kwargs
+            config,
+            local_path,
+            relative_template_dir,
+            version=version,
+            git_url=git_url,
+            template_source_path=template_source_path,
+            **template_kwargs
         )
 
     def get_config(self, directory: Path) -> CookiecutterConfig:

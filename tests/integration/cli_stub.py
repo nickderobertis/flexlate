@@ -1,3 +1,4 @@
+import shlex
 from pathlib import Path
 from typing import Union, Sequence, Optional, List
 
@@ -10,7 +11,13 @@ from flexlate.main import Flexlate
 from flexlate.template_data import TemplateData
 from typer.testing import CliRunner
 
+from tests import ext_click
+
 runner = CliRunner()
+
+
+class CLIRunnerException(Exception):
+    pass
 
 
 def fxt(
@@ -18,8 +25,14 @@ def fxt(
     input_data: Optional[Union[TemplateData, List[TemplateData]]] = None,
 ) -> Result:
     text_input = _get_text_input(input_data)
-    print(f"Running {args} with input {text_input}")
-    return runner.invoke(cli, args, input=text_input)
+    result = runner.invoke(cli, args, input=text_input)
+    if result.exit_code != 0:
+        output = ext_click.result_to_message(result)
+        command = shlex.join(["fxt", *args])
+        raise CLIRunnerException(
+            f"{command} with input {text_input} exited with code {result.exit_code}.\n{output}"
+        )
+    return result
 
 
 def _get_text_input(
@@ -43,6 +56,7 @@ class CLIStubFlexlate(Flexlate):
         default_add_mode: AddMode = AddMode.LOCAL,
         merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
         template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
+        template_path_from: Optional[str] = None,
         user: bool = False,
     ):
         fxt(
@@ -56,7 +70,43 @@ class CLIStubFlexlate(Flexlate):
                 "--template-branch-name",
                 template_branch_name,
                 *_bool_flag(user, "user"),
+                *_flag_if_not_none(template_path_from, "from"),
             ]
+        )
+
+    def init_project_from(
+        self,
+        template_path: str,
+        path: Path = Path("."),
+        template_version: Optional[str] = None,
+        data: Optional[TemplateData] = None,
+        default_folder_name: str = "project",
+        no_input: bool = False,
+        default_add_mode: AddMode = AddMode.LOCAL,
+        merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
+        template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
+    ):
+        # Answer about the generated folder if prompted
+        project_folder_answer = {"folder": default_folder_name}
+        all_data = {**(data or {}), **project_folder_answer}
+
+        fxt(
+            [
+                "init-from",
+                template_path,
+                str(path),
+                *_flag_if_not_none(template_version, "version"),
+                "--folder-name",
+                default_folder_name,
+                *_bool_flag(no_input, "no-input"),
+                "--add-mode",
+                default_add_mode.value,
+                "--merged-branch-name",
+                merged_branch_name,
+                "--template-branch-name",
+                template_branch_name,
+            ],
+            input_data=all_data,
         )
 
     def add_template_source(

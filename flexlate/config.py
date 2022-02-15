@@ -27,6 +27,8 @@ class TemplateSource(BaseModel):
     version: Optional[str] = None
     git_url: Optional[str] = None
     target_version: Optional[str] = None
+    render_relative_root_in_output: Path = Path(".")
+    render_relative_root_in_template: Path = Path(".")
 
     _config_file_location: Path = PrivateAttr()
 
@@ -43,6 +45,8 @@ class TemplateSource(BaseModel):
             type=template._type,
             target_version=target_version,
             git_url=template.git_url,
+            render_relative_root_in_output=template.render_relative_root_in_output,
+            render_relative_root_in_template=template.render_relative_root_in_template,
         )
 
     def to_template(self) -> Template:
@@ -105,7 +109,17 @@ class AppliedTemplateConfig(BaseModel):
     name: str
     data: TemplateData
     version: str
+    add_mode: AddMode
     root: Path = Path(".")
+
+    _config_file_location: Path = PrivateAttr()
+    _orig_root: Path = PrivateAttr()
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        # Root may get updated externally during config loading when adjusting applied paths,
+        # save the original root
+        self._orig_root = self.root
 
 
 class AppliedTemplateWithSource(BaseModel):
@@ -187,6 +201,11 @@ class FlexlateConfig(BaseConfig):
             # can be made absolute before usage
             loaded_path = path or cls._settings.config_location
             template_source._config_file_location = Path(loaded_path)
+        for applied_template in config.applied_templates:
+            # Add location from which config was loaded so that it is easier to move
+            # applied templates to correct location after updates
+            loaded_path = path or cls._settings.config_location
+            applied_template._config_file_location = Path(loaded_path)
         return config
 
     def save(self, serializer_kwargs: Optional[Dict[str, Any]] = None, **kwargs):

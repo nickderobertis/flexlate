@@ -32,6 +32,7 @@ FLEXLATE_TRANSACTION_COMMIT_DIVIDER = (
 class TransactionType(str, Enum):
     ADD_SOURCE = "add source"
     ADD_OUTPUT = "add output"
+    ADD_SOURCE_AND_OUTPUT = "add source and output"
     REMOVE_SOURCE = "remove source"
     REMOVE_OUTPUT = "remove output"
     UPDATE = "update"

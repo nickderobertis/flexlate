@@ -11,6 +11,7 @@ on:
     types: [closed]
 
 jobs:
+  # TODO: parallelize tests to run with different git versions
   test:
     runs-on: ubuntu-latest
     strategy:

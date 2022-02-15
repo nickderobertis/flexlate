@@ -34,6 +34,19 @@ def test_render_copier_with_defaults(copier_one_renderable: Renderable):
     assert rendered_path.read_text() == "1"
 
 
+def test_render_copier_subdir_with_defaults(
+    copier_output_subdir_renderable: Renderable,
+):
+    renderer = CopierRenderer()
+    renderable = copier_output_subdir_renderable
+    data = renderer.render(renderable, no_input=True)
+    assert data == {"qone": "aone", "qtwo": "atwo"}
+    rendered_path = GENERATED_FILES_DIR / "aone.txt"
+    assert rendered_path.read_text() == "atwo"
+    should_not_exist_path = GENERATED_FILES_DIR / "not-rendered.txt"
+    assert not should_not_exist_path.exists()
+
+
 def test_render_cookiecutter_with_data(
     cookiecutter_one_renderable: Renderable,
 ):
@@ -113,3 +126,13 @@ def test_render_multi_with_overlap(
     )
     assert data == [{"a": "b", "c": "something"}, {"a": "b", "c": "something else"}]
     assert cookiecutter_one_generated_text_content() == "bsomethingbsomething else"
+
+
+def test_render_string_local_cookiecutter(
+    cookiecutter_one_renderable: Renderable,
+):
+    renderer = CookiecutterRenderer()
+    output = renderer.render_string(
+        "{{ cookiecutter.a }} works", cookiecutter_one_renderable
+    )
+    assert output == "b works"

@@ -24,7 +24,13 @@ ADD_MODE_DOC = (
 )
 NO_INPUT_DOC = "Whether to proceed without any input from the user (useful for automation, e.g. CI systems)"
 PROJECT_PATH_DOC = "The location of the project"
-
+MERGED_BRANCH_DOC = "The name of the branch that flexlate creates to store the merges between template updates and the project"
+TEMPLATE_BRANCH_DOC = (
+    "The name of the branch that flexlate creates that stores only the template output"
+)
+PROJECT_USER_DOC = "Store the flexlate project configuration in the user directory rather than in the project"
+TARGET_VERSION_DOC = "A specific version to target. Only useful for git repos, pass a branch name or commit SHA"
+TEMPLATE_SOURCE_EXTRA_DOC = "Can be a file path or a git url"
 
 TEMPLATE_ROOT_OPTION = typer.Option(
     Path("."),
@@ -42,24 +48,25 @@ ADD_MODE_OPTION = typer.Option(
     show_choices=True,
 )
 NO_INPUT_OPTION = typer.Option(False, "--no-input", "-n", show_default=False)
+VERSION_OPTION = typer.Option(
+    None,
+    "--version",
+    "-v",
+    help=TARGET_VERSION_DOC,
+    show_default=False,
+)
 
 
 @add_cli.command(name="source")
 def add_source(
     path: str = typer.Argument(
-        ..., help="Template source. Can be a file path or a git url"
+        ..., help=f"Template source. {TEMPLATE_SOURCE_EXTRA_DOC}"
     ),
     name: Optional[str] = typer.Argument(
         None,
         help="A custom name for the template. By default, it will use the folder or repo name",
     ),
-    version: Optional[str] = typer.Option(
-        None,
-        "--version",
-        "-v",
-        help="A specific version to target. Only useful for git repos, pass a branch name or commit SHA",
-        show_default=False,
-    ),
+    version: Optional[str] = VERSION_OPTION,
     template_root: Path = TEMPLATE_ROOT_OPTION,
     add_mode: Optional[AddMode] = ADD_MODE_OPTION,
 ):
@@ -137,17 +144,16 @@ def init_project(
         show_choices=True,
     ),
     merged_branch_name: str = typer.Option(
-        DEFAULT_MERGED_BRANCH_NAME,
-        help="The name of the branch that flexlate creates to store the merges between template updates and the project",
+        DEFAULT_MERGED_BRANCH_NAME, help=MERGED_BRANCH_DOC
     ),
     template_branch_name: str = typer.Option(
         DEFAULT_TEMPLATE_BRANCH_NAME,
-        help="The name of the branch that flexlate creates that stores only the template output",
+        help=TEMPLATE_BRANCH_DOC,
     ),
     user: bool = typer.Option(
         False,
         "--user",
-        help="Store the flexlate project configuration in the user directory rather than in the project",
+        help=PROJECT_USER_DOC,
     ),
 ):
     """
@@ -159,6 +165,52 @@ def init_project(
         merged_branch_name=merged_branch_name,
         template_branch_name=template_branch_name,
         user=user,
+    )
+
+
+@cli.command(name="init-from")
+def init_project_from(
+    template_path: str = typer.Argument(
+        ...,
+        help=f"A template source path to initialize the project from. {TEMPLATE_SOURCE_EXTRA_DOC}",
+    ),
+    path: Path = typer.Argument(Path("."), help=PROJECT_PATH_DOC),
+    version: Optional[str] = VERSION_OPTION,
+    folder_name: str = typer.Option(
+        "project",
+        "--folder-name",
+        "-f",
+        help="The name of the outputted folder. This only applies on templates that don't set the name of the folder (Copier)",
+    ),
+    no_input: bool = NO_INPUT_OPTION,
+    default_add_mode: AddMode = typer.Option(
+        AddMode.LOCAL,
+        "--add-mode",
+        "-a",
+        help=ADD_MODE_DOC,
+        case_sensitive=False,
+        show_choices=True,
+    ),
+    merged_branch_name: str = typer.Option(
+        DEFAULT_MERGED_BRANCH_NAME, help=MERGED_BRANCH_DOC
+    ),
+    template_branch_name: str = typer.Option(
+        DEFAULT_TEMPLATE_BRANCH_NAME,
+        help=TEMPLATE_BRANCH_DOC,
+    ),
+):
+    """
+    Generates a project from a template and sets it up as a Flexlate project.
+    """
+    app.init_project_from(
+        template_path,
+        path,
+        template_version=version,
+        default_folder_name=folder_name,
+        no_input=no_input,
+        default_add_mode=default_add_mode,
+        merged_branch_name=merged_branch_name,
+        template_branch_name=template_branch_name,
     )
 
 

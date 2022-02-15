@@ -8,6 +8,7 @@ from git import Head
 from flexlate.add_mode import AddMode
 from flexlate.config import FlexlateConfig, FlexlateProjectConfig
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
+from flexlate.template.copier import CopierTemplate
 from flexlate.template.types import TemplateType
 from flexlate.transactions.transaction import FlexlateTransaction
 from tests.config import GENERATED_FILES_DIR
@@ -17,7 +18,7 @@ from tests.fixtures.subdir_style import SubdirStyle, subdir_style
 from tests.fixtures.template import *
 from tests.fixtures.templated_repo import *
 from tests.fixtures.add_mode import add_mode
-from tests.fixtures.transaction import add_source_transaction, add_output_transaction
+from tests.fixtures.transaction import *
 
 
 def test_add_template_source_to_repo(
@@ -44,6 +45,8 @@ def test_add_template_source_to_repo(
     assert source.version == cookiecutter_one_template.version
     assert source.type == TemplateType.COOKIECUTTER
     assert source.target_version == "some version"
+    assert source.render_relative_root_in_output == Path("{{ cookiecutter.a }}")
+    assert source.render_relative_root_in_template == Path("{{ cookiecutter.a }}")
 
 
 @patch.object(appdirs, "user_config_dir", lambda name: GENERATED_FILES_DIR)
@@ -65,10 +68,19 @@ def test_add_local_cookiecutter_applied_template_to_repo(
         no_input=True,
     )
 
-    config_dir = GENERATED_FILES_DIR if add_mode == AddMode.USER else GENERATED_REPO_DIR
-    template_root = (
-        GENERATED_REPO_DIR.absolute() if add_mode == AddMode.USER else Path(".")
-    )
+    if add_mode == AddMode.USER:
+        config_dir = GENERATED_FILES_DIR
+        template_root = GENERATED_REPO_DIR.absolute()
+    elif add_mode == AddMode.PROJECT:
+        config_dir = GENERATED_REPO_DIR
+        template_root = Path(".")
+    elif add_mode == AddMode.LOCAL:
+        # Template has output in a subdir, so with
+        # local mode config will also be in the subdir
+        config_dir = GENERATED_REPO_DIR / "b"
+        template_root = Path("..")
+    else:
+        raise ValueError(f"unsupported add mode {add_mode}")
 
     config_path = config_dir / "flexlate.json"
     config = FlexlateConfig.load(config_path)
@@ -78,6 +90,51 @@ def test_add_local_cookiecutter_applied_template_to_repo(
     assert at.version == template.version
     assert at.data == {"a": "b", "c": ""}
     assert at.root == template_root
+    assert at.add_mode == add_mode
+
+
+@patch.object(appdirs, "user_config_dir", lambda name: GENERATED_FILES_DIR)
+def test_add_local_copier_output_subdir_applied_template_to_repo(
+    add_mode: AddMode,
+    repo_with_copier_output_subdir_template_source: Repo,
+    copier_output_subdir_template: CookiecutterTemplate,
+    add_output_transaction: FlexlateTransaction,
+):
+    repo = repo_with_copier_output_subdir_template_source
+    template = copier_output_subdir_template
+    adder = Adder()
+    adder.apply_template_and_add(
+        repo,
+        template,
+        add_output_transaction,
+        out_root=GENERATED_REPO_DIR,
+        add_mode=add_mode,
+        no_input=True,
+    )
+
+    if add_mode == AddMode.USER:
+        config_dir = GENERATED_FILES_DIR
+        template_root = GENERATED_REPO_DIR.absolute()
+    elif add_mode == AddMode.PROJECT:
+        config_dir = GENERATED_REPO_DIR
+        template_root = Path(".")
+    elif add_mode == AddMode.LOCAL:
+        # Even though template has output in a subdir, with copier
+        # it all still renders at root in output
+        config_dir = GENERATED_REPO_DIR
+        template_root = Path(".")
+    else:
+        raise ValueError(f"unsupported add mode {add_mode}")
+
+    config_path = config_dir / "flexlate.json"
+    config = FlexlateConfig.load(config_path)
+    assert len(config.applied_templates) == 1
+    at = config.applied_templates[0]
+    assert at.name == template.name
+    assert at.version == template.version
+    assert at.data == {"qone": "aone", "qtwo": "atwo"}
+    assert at.root == template_root
+    assert at.add_mode == add_mode
 
 
 @patch.object(appdirs, "user_config_dir", lambda name: GENERATED_FILES_DIR)
@@ -99,10 +156,17 @@ def test_add_remote_cookiecutter_applied_template_to_repo(
         no_input=True,
     )
 
-    config_dir = GENERATED_FILES_DIR if add_mode == AddMode.USER else GENERATED_REPO_DIR
-    template_root = (
-        GENERATED_REPO_DIR.absolute() if add_mode == AddMode.USER else Path(".")
-    )
+    if add_mode == AddMode.USER:
+        config_dir = GENERATED_FILES_DIR
+        template_root = GENERATED_REPO_DIR.absolute()
+    elif add_mode == AddMode.PROJECT:
+        config_dir = GENERATED_REPO_DIR
+        template_root = Path(".")
+    elif add_mode == AddMode.LOCAL:
+        config_dir = GENERATED_REPO_DIR / "abc"
+        template_root = Path("..")
+    else:
+        raise ValueError(f"unsupported add mode {add_mode}")
 
     config_path = config_dir / "flexlate.json"
     config = FlexlateConfig.load(config_path)
@@ -112,6 +176,18 @@ def test_add_remote_cookiecutter_applied_template_to_repo(
     assert at.version == template.version
     assert at.data == {"name": "abc", "key": "value"}
     assert at.root == template_root
+    assert at.add_mode == add_mode
+
+    template_sources_config_path = GENERATED_REPO_DIR / "flexlate.json"
+    ts_config = FlexlateConfig.load(template_sources_config_path)
+    assert len(ts_config.template_sources) == 1
+    source = ts_config.template_sources[0]
+    assert source.name == cookiecutter_remote_template.name
+    assert source.path == cookiecutter_remote_template.git_url
+    assert source.version == cookiecutter_remote_template.version
+    assert source.type == TemplateType.COOKIECUTTER
+    assert source.render_relative_root_in_output == Path("{{ cookiecutter.name }}")
+    assert source.render_relative_root_in_template == Path("{{ cookiecutter.name }}")
 
 
 @patch.object(appdirs, "user_config_dir", lambda name: GENERATED_FILES_DIR)
@@ -153,8 +229,8 @@ def test_add_applied_template_to_subdir(
         )
 
     if add_mode == AddMode.LOCAL:
-        config_dir = subdir
-        template_root = Path(".")
+        config_dir = subdir / "b"
+        template_root = Path("..")
     elif add_mode == AddMode.PROJECT:
         config_dir = GENERATED_REPO_DIR
         template_root = subdir.relative_to(GENERATED_REPO_DIR)
@@ -172,6 +248,7 @@ def test_add_applied_template_to_subdir(
     assert at.version == template.version
     assert at.data == {"a": "b", "c": ""}
     assert at.root == template_root
+    assert at.add_mode == add_mode
 
     output_file_path = subdir / "b" / "text.txt"
     assert output_file_path.read_text() == "b"
@@ -210,8 +287,8 @@ def test_add_multiple_applied_templates_for_one_source(
     if add_mode == AddMode.LOCAL:
         output_options.extend(
             [
-                OutputOptions(GENERATED_REPO_DIR, Path("."), GENERATED_REPO_DIR),
-                OutputOptions(subdir, Path("."), subdir),
+                OutputOptions(GENERATED_REPO_DIR / "b", Path(".."), GENERATED_REPO_DIR),
+                OutputOptions(subdir / "b", Path(".."), subdir),
             ]
         )
     elif add_mode == AddMode.PROJECT:
@@ -267,6 +344,7 @@ def test_add_multiple_applied_templates_for_one_source(
         assert at.version == template.version
         assert at.data == {"a": "b", "c": ""}
         assert at.root == template_root
+        assert at.add_mode == add_mode
 
         output_file_path = render_root / "b" / "text.txt"
         assert output_file_path.read_text() == "b"
@@ -287,16 +365,21 @@ def test_add_source_to_project_with_existing_outputs(
         target_version="some version",
     )
     assert cookiecutter_one_generated_text_content(gen_dir=GENERATED_REPO_DIR) == "b"
-    config_path = GENERATED_REPO_DIR / "flexlate.json"
-    config = FlexlateConfig.load(config_path)
-    assert len(config.applied_templates) == 1
-    assert len(config.template_sources) == 2
-    source = config.template_sources[1]
+    source_config_path = GENERATED_REPO_DIR / "flexlate.json"
+    source_config = FlexlateConfig.load(source_config_path)
+    assert len(source_config.applied_templates) == 0
+    assert len(source_config.template_sources) == 2
+    source = source_config.template_sources[1]
     assert source.name == cookiecutter_two_template.name
     assert source.path == str(cookiecutter_two_template.path)
     assert source.version == cookiecutter_two_template.version
     assert source.type == TemplateType.COOKIECUTTER
     assert source.target_version == "some version"
+    assert source.render_relative_root_in_output == Path("{{ cookiecutter.a }}")
+    assert source.render_relative_root_in_template == Path("{{ cookiecutter.a }}")
+    at_config_path = GENERATED_REPO_DIR / "b" / "flexlate.json"
+    at_config = FlexlateConfig.load(at_config_path)
+    assert len(at_config.applied_templates) == 1
 
 
 # TODO: test for adding to existing
@@ -320,3 +403,91 @@ def test_add_project_config_with_git(repo_with_placeholder_committed: Repo):
         assert len(config.projects) == 1
         project = config.projects[0]
         assert project.path == Path(".")
+
+
+def test_init_project_from_template_source_path_remote_cookiecutter(
+    cookiecutter_remote_template: CookiecutterTemplate,
+    add_source_and_output_transaction: FlexlateTransaction,
+):
+    template = cookiecutter_remote_template
+    transaction = add_source_and_output_transaction
+
+    adder = Adder()
+    with change_directory_to(GENERATED_FILES_DIR):
+        adder.init_project_from_template_source_path(
+            template, transaction, no_input=True
+        )
+
+    project_dir = GENERATED_FILES_DIR / "abc"
+    # Ensure project is a git repo
+    repo = Repo(project_dir)
+    assert repo.commit().message == "Move flexlate config and remove temporary file\n"
+
+    content_path = project_dir / "abc.txt"
+    content = content_path.read_text()
+    assert content == "some new header\nvalue"
+
+    non_content_path = project_dir / "README.md"
+    assert not non_content_path.exists()
+
+    config_path = project_dir / "flexlate.json"
+    config = FlexlateConfig.load(config_path)
+    assert len(config.template_sources) == 1
+    source = config.template_sources[0]
+    assert source.name == template.name
+    assert source.path == template.git_url
+    assert source.version == template.version
+    assert source.type == TemplateType.COOKIECUTTER
+    assert source.render_relative_root_in_output == Path("{{ cookiecutter.name }}")
+    assert source.render_relative_root_in_template == Path("{{ cookiecutter.name }}")
+    assert len(config.applied_templates) == 1
+    at = config.applied_templates[0]
+    assert at.name == template.name
+    assert at.version == template.version
+    assert at.data == {"name": "abc", "key": "value"}
+    assert at.root == Path("..")
+    assert at.add_mode == AddMode.LOCAL
+
+
+def test_init_project_from_template_source_path_local_copier(
+    copier_one_template: CopierTemplate,
+    add_source_and_output_transaction: FlexlateTransaction,
+):
+    template = copier_one_template
+    transaction = add_source_and_output_transaction
+
+    adder = Adder()
+    with change_directory_to(GENERATED_FILES_DIR):
+        adder.init_project_from_template_source_path(
+            template, transaction, no_input=True
+        )
+
+    project_dir = GENERATED_FILES_DIR / "project"
+    # Ensure project is a git repo
+    repo = Repo(project_dir)
+    assert repo.commit().message == "Remove temporary file\n"
+
+    content_path = project_dir / "a1.txt"
+    content = content_path.read_text()
+    assert content == "1"
+
+    non_content_path = project_dir / "README.md"
+    assert not non_content_path.exists()
+
+    config_path = project_dir / "flexlate.json"
+    config = FlexlateConfig.load(config_path)
+    assert len(config.template_sources) == 1
+    source = config.template_sources[0]
+    assert source.name == template.name
+    assert source.path == str(template.path)
+    assert source.version == template.version
+    assert source.type == TemplateType.COPIER
+    assert source.render_relative_root_in_output == Path(".")
+    assert source.render_relative_root_in_template == Path(".")
+    assert len(config.applied_templates) == 1
+    at = config.applied_templates[0]
+    assert at.name == template.name
+    assert at.version == template.version
+    assert at.data == {"q1": "a1", "q2": 1, "q3": None}
+    assert at.root == Path(".")
+    assert at.add_mode == AddMode.LOCAL

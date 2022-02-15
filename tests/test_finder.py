@@ -23,6 +23,9 @@ from tests.config import (
     COPIER_ONE_NAME,
     COOKIECUTTER_ONE_NAME,
     GENERATED_FILES_DIR,
+    COPIER_OUTPUT_SUBDIR_VERSION,
+    COPIER_OUTPUT_SUBDIR_NAME,
+    COPIER_OUTPUT_SUBDIR_DIR,
 )
 
 
@@ -46,6 +49,8 @@ def test_get_cookiecutter_local_template():
     assert template.git_url is None
     assert template.version == COOKIECUTTER_ONE_VERSION
     assert template.config.defaults == {"a": "b", "c": ""}
+    assert template.render_relative_root_in_output == Path("{{ cookiecutter.a }}")
+    assert template.render_relative_root_in_template == Path("{{ cookiecutter.a }}")
 
 
 def test_get_copier_local_template():
@@ -56,6 +61,20 @@ def test_get_copier_local_template():
     assert template.git_url is None
     assert template.version == COPIER_ONE_VERSION
     assert template.config.defaults == {"q1": "a1", "q2": 1, "q3": None}
+    assert template.render_relative_root_in_output == Path(".")
+    assert template.render_relative_root_in_template == Path(".")
+
+
+def test_get_copier_local_output_subdir_template():
+    finder = CopierFinder()
+    template = finder.find(str(COPIER_OUTPUT_SUBDIR_DIR), COPIER_OUTPUT_SUBDIR_DIR)
+    assert template.path == COPIER_OUTPUT_SUBDIR_DIR
+    assert template.name == COPIER_OUTPUT_SUBDIR_NAME
+    assert template.git_url is None
+    assert template.version == COPIER_OUTPUT_SUBDIR_VERSION
+    assert template.config.defaults == {"qone": "aone", "qtwo": "atwo"}
+    assert template.render_relative_root_in_output == Path(".")
+    assert template.render_relative_root_in_template == Path("output")
 
 
 @pytest.mark.parametrize(
@@ -80,6 +99,12 @@ def test_get_cookiecutter_remote_template(version: str, expect_contents: str):
         assert template.name == COOKIECUTTER_REMOTE_NAME
         assert template.version == version
         assert template.config.defaults == {"name": "abc", "key": "value"}
+        assert template.render_relative_root_in_output == Path(
+            "{{ cookiecutter.name }}"
+        )
+        assert template.render_relative_root_in_template == Path(
+            "{{ cookiecutter.name }}"
+        )
         template_file = (
             template.path / "{{ cookiecutter.name }}" / "{{ cookiecutter.name }}.txt"
         )
@@ -108,6 +133,8 @@ def test_get_copier_remote_template(version: str, expect_contents: str):
         assert template.name == COPIER_REMOTE_NAME
         assert template.version == version
         assert template.config.defaults == {"question1": "answer1", "question2": 2.7}
+        assert template.render_relative_root_in_output == Path(".")
+        assert template.render_relative_root_in_template == Path("output")
         template_file = template.path / "output" / "{{ question1 }}.txt.jinja"
         assert template_file.read_text() == expect_contents
 
@@ -119,6 +146,8 @@ def test_multi_finder_get_cookiecutter_local_template():
     assert template.git_url is None
     assert template.version == COOKIECUTTER_ONE_VERSION
     assert template.config.defaults == {"a": "b", "c": ""}
+    assert template.render_relative_root_in_output == Path("{{ cookiecutter.a }}")
+    assert template.render_relative_root_in_template == Path("{{ cookiecutter.a }}")
 
 
 def test_multi_finder_get_copier_local_template():
@@ -128,6 +157,8 @@ def test_multi_finder_get_copier_local_template():
     assert template.git_url is None
     assert template.version == COPIER_ONE_VERSION
     assert template.config.defaults == {"q1": "a1", "q2": 1, "q3": None}
+    assert template.render_relative_root_in_output == Path(".")
+    assert template.render_relative_root_in_template == Path(".")
 
 
 @pytest.mark.parametrize(
@@ -146,6 +177,8 @@ def test_multi_finder_get_cookiecutter_remote_template(
     assert template.git_url == COOKIECUTTER_REMOTE_URL
     assert template.version == version
     assert template.config.defaults == {"name": "abc", "key": "value"}
+    assert template.render_relative_root_in_output == Path("{{ cookiecutter.name }}")
+    assert template.render_relative_root_in_template == Path("{{ cookiecutter.name }}")
     template_file = (
         template.path / "{{ cookiecutter.name }}" / "{{ cookiecutter.name }}.txt"
     )
@@ -166,5 +199,7 @@ def test_multi_finder_get_copier_remote_template(version: str, expect_contents: 
     assert template.git_url == COPIER_REMOTE_URL
     assert template.version == version
     assert template.config.defaults == {"question1": "answer1", "question2": 2.7}
+    assert template.render_relative_root_in_output == Path(".")
+    assert template.render_relative_root_in_template == Path("output")
     template_file = template.path / "output" / "{{ question1 }}.txt.jinja"
     assert template_file.read_text() == expect_contents

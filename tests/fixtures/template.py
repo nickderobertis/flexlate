@@ -23,6 +23,7 @@ from tests.config import (
     COOKIECUTTER_ONE_MODIFIED_VERSION,
     COPIER_ONE_VERSION,
     COPIER_ONE_MODIFIED_VERSION,
+    COPIER_OUTPUT_SUBDIR_DIR,
 )
 
 
@@ -80,6 +81,12 @@ def copier_one_template() -> CookiecutterTemplate:
 
 
 @pytest.fixture
+def copier_output_subdir_template() -> CookiecutterTemplate:
+    finder = CopierFinder()
+    yield finder.find(str(COPIER_OUTPUT_SUBDIR_DIR), COPIER_OUTPUT_SUBDIR_DIR)
+
+
+@pytest.fixture
 def cookiecutter_two_template() -> CookiecutterTemplate:
     finder = CookiecutterFinder()
     yield finder.find(str(COOKIECUTTER_TWO_DIR), COOKIECUTTER_TWO_DIR)
@@ -93,7 +100,10 @@ def cookiecutter_remote_template() -> CookiecutterTemplate:
         local_path, name = get_local_repo_path_and_name_cloning_if_repo_url(
             COOKIECUTTER_REMOTE_URL, dst_folder=temp_path
         )
-        yield finder.find(COOKIECUTTER_REMOTE_URL, local_path, name=name)
+        template = finder.find(COOKIECUTTER_REMOTE_URL, local_path, name=name)
+        # This would normally happen when loading template from source in config
+        template.template_source_path = COOKIECUTTER_REMOTE_URL
+        yield template
 
 
 @pytest.fixture

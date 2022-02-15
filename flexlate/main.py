@@ -42,6 +42,7 @@ class Flexlate:
         default_add_mode: AddMode = AddMode.LOCAL,
         merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
         template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
+        template_version: Optional[str] = None,
         user: bool = False,
     ):
         repo = Repo(path)
@@ -49,6 +50,36 @@ class Flexlate:
             repo,
             default_add_mode=default_add_mode,
             user=user,
+            merged_branch_name=merged_branch_name,
+            template_branch_name=template_branch_name,
+        )
+
+    def init_project_from(
+        self,
+        template_path: str,
+        path: Path = Path("."),
+        template_version: Optional[str] = None,
+        data: Optional[TemplateData] = None,
+        default_folder_name: str = "project",
+        no_input: bool = False,
+        default_add_mode: AddMode = AddMode.LOCAL,
+        merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
+        template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
+    ):
+        transaction = FlexlateTransaction(
+            type=TransactionType.ADD_SOURCE_AND_OUTPUT,
+            target=template_path,
+            out_root=path,
+        )
+        template = self.finder.find(template_path, version=template_version)
+        self.adder.init_project_from_template_source_path(
+            template,
+            transaction,
+            target_version=template_version,
+            default_folder_name=default_folder_name,
+            data=data,
+            no_input=no_input,
+            default_add_mode=default_add_mode,
             merged_branch_name=merged_branch_name,
             template_branch_name=template_branch_name,
         )
