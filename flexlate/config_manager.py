@@ -311,16 +311,16 @@ class ConfigManager:
             when working in a temp directory)
         :return:
         """
-        config = self.load_config(project_root=project_root)
-        child_config = _get_or_create_child_config_by_path(config, config_path)
         template_index, _ = self._find_applied_template(
             template_name,
             config_path,
             project_root=project_root,
             out_root=out_root,
             orig_project_root=orig_project_root,
-            config=config,
+            adjust_applied_paths=True
         )
+        config = self.load_config(project_root=project_root, adjust_applied_paths=False)
+        child_config = _get_or_create_child_config_by_path(config, config_path)
         child_config.applied_templates.pop(template_index)
         self.save_config(config)
 
