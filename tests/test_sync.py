@@ -81,17 +81,17 @@ def test_sync_change_to_template_version(
     assert expect_output_path.exists()
     assert expect_output_path.read_text() == "value"
 
-    def update_config(config: FlexlateConfig):
+    def update_config_for_template_source(config: FlexlateConfig):
         ts = config.template_sources[0]
         ts.target_version = COOKIECUTTER_REMOTE_VERSION_2
         ts.version = COOKIECUTTER_REMOTE_VERSION_2
 
-    # Make a manual change in the template source name
+    # Make a manual change in the template source version
     _update_config(
         config_path,
         repo,
-        update_config,
-        "Manual change to cookiecutter remote version",
+        update_config_for_template_source,
+        "Manual change to cookiecutter remote version for template source",
     )
 
     # Sync changes to flexlate branches
@@ -100,16 +100,47 @@ def test_sync_change_to_template_version(
         repo, sync_transaction, no_input=True
     )
 
-    def check_config(config: FlexlateConfig):
+    def check_config_after_updating_template_source(config: FlexlateConfig):
         ts = config.template_sources[0]
         assert ts.target_version == COOKIECUTTER_REMOTE_VERSION_2
         assert ts.version == COOKIECUTTER_REMOTE_VERSION_2
 
         assert expect_output_path.exists()
+        # Content not updated to version 2, because version was not updated in applied template
+        assert expect_output_path.read_text() == "value"
+
+    _check_config_on_each_branch(
+        config_path, repo, check_config_after_updating_template_source
+    )
+
+    def update_config_for_applied_template(config: FlexlateConfig):
+        at = config.applied_templates[0]
+        at.version = COOKIECUTTER_REMOTE_VERSION_2
+
+    # Make a manual change in the template source version
+    _update_config(
+        config_path,
+        repo,
+        update_config_for_applied_template,
+        "Manual change to cookiecutter remote version for applied template",
+    )
+
+    # Sync changes to flexlate branches
+    syncer.sync_local_changes_to_flexlate_branches(
+        repo, sync_transaction, no_input=True
+    )
+
+    def check_config_after_updating_applied_template(config: FlexlateConfig):
+        at = config.applied_templates[0]
+        assert at.version == COOKIECUTTER_REMOTE_VERSION_2
+
+        assert expect_output_path.exists()
         # Content updated to version 2
         assert expect_output_path.read_text() == "some new header\nvalue"
 
-    _check_config_on_each_branch(config_path, repo, check_config)
+    _check_config_on_each_branch(
+        config_path, repo, check_config_after_updating_applied_template
+    )
 
 
 def _check_config_on_each_branch(
