@@ -162,7 +162,7 @@ class ConfigManager:
         for child_config in config.child_configs:
             for i, applied_template in enumerate(child_config.applied_templates):
                 source = sources[applied_template.name]
-                template = source.to_template()
+                template = source.to_template(version=applied_template.version)
                 template.version = applied_template.version
                 updates.append(
                     TemplateUpdate(

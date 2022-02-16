@@ -155,6 +155,7 @@ def _check_config_on_each_branch(
         branch.checkout()
         config = FlexlateConfig.load(config_path)
         checker(config)
+    repo.branches["master"].checkout()  # type: ignore
 
 
 def _update_config(
