@@ -1,7 +1,10 @@
 from typing import Callable
 
+import pytest
+
 from flexlate.config import FlexlateConfig
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
+from flexlate.exc import GitRepoDirtyException
 from flexlate.syncer import Syncer
 from tests.fixtures.templated_repo import *
 from tests.fixtures.transaction import sync_transaction
@@ -141,6 +144,21 @@ def test_sync_change_to_template_version(
     _check_config_on_each_branch(
         config_path, repo, check_config_after_updating_applied_template
     )
+
+
+def test_sync_fails_when_there_are_uncommitted_changes(
+    repo_with_cookiecutter_one_template_source: Repo,
+    sync_transaction: FlexlateTransaction,
+):
+    repo = repo_with_cookiecutter_one_template_source
+    new_file_path = GENERATED_REPO_DIR / "my-new-file.txt"
+    new_file_path.write_text("some text")
+
+    syncer = Syncer()
+    with pytest.raises(GitRepoDirtyException):
+        syncer.sync_local_changes_to_flexlate_branches(
+            repo, sync_transaction, no_input=True
+        )
 
 
 def _check_config_on_each_branch(
