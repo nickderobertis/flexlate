@@ -48,15 +48,14 @@ def repo_with_cookiecutter_remote_version_one_template_source(
     repo = repo_with_placeholder_committed
     template = cookiecutter_remote_template
 
-    with change_directory_to(GENERATED_REPO_DIR):
-        adder = Adder()
-        adder.add_template_source(
-            repo,
-            template,
-            add_source_transaction,
-            out_root=GENERATED_REPO_DIR,
-            target_version=COOKIECUTTER_REMOTE_VERSION_1,
-        )
+    adder = Adder()
+    adder.add_template_source(
+        repo,
+        template,
+        add_source_transaction,
+        out_root=GENERATED_REPO_DIR,
+        target_version=COOKIECUTTER_REMOTE_VERSION_1,
+    )
     yield repo
 
 
@@ -158,7 +157,7 @@ def repo_with_template_branch_from_cookiecutter_one_project_add_mode(
 @pytest.fixture
 def repo_with_template_branch_from_cookiecutter_remote_version_one(
     repo_with_cookiecutter_remote_version_one_template_source: Repo,
-    cookiecutter_remote_template: CookiecutterTemplate,
+    cookiecutter_remote_version_one_template: CookiecutterTemplate,
     add_output_transaction: FlexlateTransaction,
 ) -> Repo:
     repo = repo_with_cookiecutter_remote_version_one_template_source
@@ -166,7 +165,7 @@ def repo_with_template_branch_from_cookiecutter_remote_version_one(
         adder = Adder()
         adder.apply_template_and_add(
             repo,
-            cookiecutter_remote_template,
+            cookiecutter_remote_version_one_template,
             add_output_transaction,
             out_root=GENERATED_REPO_DIR,
             no_input=True,

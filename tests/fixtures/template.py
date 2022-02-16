@@ -106,6 +106,25 @@ def cookiecutter_remote_template() -> CookiecutterTemplate:
         yield template
 
 
+@pytest.fixture()
+def cookiecutter_remote_version_one_template() -> CookiecutterTemplate:
+    finder = CookiecutterFinder()
+    with tempfile.TemporaryDirectory() as temp_dir:
+        temp_path = Path(temp_dir)
+        local_path, name = get_local_repo_path_and_name_cloning_if_repo_url(
+            COOKIECUTTER_REMOTE_URL, dst_folder=temp_path
+        )
+        template = finder.find(
+            COOKIECUTTER_REMOTE_URL,
+            local_path,
+            name=name,
+            version=COOKIECUTTER_REMOTE_VERSION_1,
+        )
+        # This would normally happen when loading template from source in config
+        template.template_source_path = COOKIECUTTER_REMOTE_URL
+        yield template
+
+
 @pytest.fixture
 def cookiecutter_local_templates(
     cookiecutter_one_template: CookiecutterTemplate,

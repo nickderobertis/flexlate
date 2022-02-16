@@ -92,6 +92,7 @@ def test_remove_template_source_when_outputs_from_another_source_exist(
     assert at.name == "one"
     assert at.root == Path("..")
 
+
 def test_remove_non_existing_template_source(
     repo_with_placeholder_committed: Repo,
     remove_source_transaction: FlexlateTransaction,
@@ -165,10 +166,12 @@ def test_remove_applied_template_when_multiple_exist(
     adder = Adder()
     subdir = GENERATED_REPO_DIR / "subdir"
     subdir.mkdir()
-    config_path = subdir / "b"  / "flexlate.json"
+    config_path = subdir / "b" / "flexlate.json"
     output_path = subdir / "b" / "text.txt"
     with change_directory_to(subdir):
-        adder.apply_template_and_add(repo, cookiecutter_one_template, add_output_transaction, no_input=True)
+        adder.apply_template_and_add(
+            repo, cookiecutter_one_template, add_output_transaction, no_input=True
+        )
         assert output_path.read_text() == "b"
         assert config_path.exists()
         remover.remove_applied_template_and_output(

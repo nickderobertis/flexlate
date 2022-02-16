@@ -190,6 +190,47 @@ def test_add_remote_cookiecutter_applied_template_to_repo(
     assert source.render_relative_root_in_template == Path("{{ cookiecutter.name }}")
 
 
+def test_add_source_and_output_at_target_version(
+    repo_with_placeholder_committed: Repo,
+    cookiecutter_remote_version_one_template: CookiecutterTemplate,
+    add_output_transaction: FlexlateTransaction,
+    add_source_transaction: FlexlateTransaction,
+):
+    repo = repo_with_placeholder_committed
+    template = cookiecutter_remote_version_one_template
+
+    adder = Adder()
+    adder.add_template_source(
+        repo,
+        template,
+        add_source_transaction,
+        out_root=GENERATED_REPO_DIR,
+        target_version=COOKIECUTTER_REMOTE_VERSION_1,
+    )
+    adder.apply_template_and_add(
+        repo,
+        template,
+        add_output_transaction,
+        out_root=GENERATED_REPO_DIR,
+        no_input=True,
+    )
+
+    # Check for version 1 content
+    output_path = GENERATED_REPO_DIR / "abc" / "abc.txt"
+    assert output_path.read_text() == "value"
+
+    # Check for version 1 in configs
+    config_path = GENERATED_REPO_DIR / "flexlate.json"
+    config = FlexlateConfig.load(config_path)
+    assert len(config.template_sources) == 1
+    ts = config.template_sources[0]
+    assert ts.version == COOKIECUTTER_REMOTE_VERSION_1
+    assert ts.target_version == COOKIECUTTER_REMOTE_VERSION_1
+    assert len(config.applied_templates) == 1
+    at = config.applied_templates[0]
+    assert at.version == COOKIECUTTER_REMOTE_VERSION_1
+
+
 @patch.object(appdirs, "user_config_dir", lambda name: GENERATED_FILES_DIR)
 def test_add_applied_template_to_subdir(
     add_mode: AddMode,

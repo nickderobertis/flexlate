@@ -310,7 +310,7 @@ class ConfigManager:
             project_root=project_root,
             out_root=out_root,
             orig_project_root=orig_project_root,
-            adjust_applied_paths=True
+            adjust_applied_paths=True,
         )
         config = self.load_config(project_root=project_root, adjust_applied_paths=False)
         child_config = _get_or_create_child_config_by_path(config, config_path)
