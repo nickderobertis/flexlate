@@ -5,6 +5,7 @@ from typing import Optional, Sequence
 from unittest.mock import patch
 
 import pytest
+from _pytest.monkeypatch import MonkeyPatch
 from git import Repo, Head
 
 from flexlate.config import FlexlateConfig, TemplateSource, TemplateSourceWithTemplates
@@ -131,6 +132,20 @@ def test_update_modify_template_conflict(
         [cookiecutter_one_modified_template], project_root=GENERATED_FILES_DIR
     )
     updater.update(repo, template_updates, update_transaction, no_input=True)
+    assert repo_has_merge_conflicts(repo)
+
+
+def test_update_modify_template_conflict_with_resolution(
+    cookiecutter_one_modified_template: CookiecutterTemplate,
+    repo_from_cookiecutter_one_with_modifications: Repo,
+    update_transaction: FlexlateTransaction,
+):
+    repo = repo_from_cookiecutter_one_with_modifications
+    updater = Updater()
+    template_updates = updater.get_updates_for_templates(
+        [cookiecutter_one_modified_template], project_root=GENERATED_FILES_DIR
+    )
+    updater.update(repo, template_updates, update_transaction)
     assert repo_has_merge_conflicts(repo)
 
 
