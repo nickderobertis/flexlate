@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Sequence, Optional, List, Dict, Any
 
 from git import Repo
+from rich.prompt import Confirm
 
 from flexlate.config_manager import ConfigManager
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
@@ -14,6 +15,13 @@ from flexlate.path_ops import (
 )
 from flexlate.render.multi import MultiRenderer
 from flexlate.render.renderable import Renderable
+from flexlate.styles import (
+    print_styled,
+    ACTION_REQUIRED_STYLE,
+    styled,
+    QUESTION_STYLE,
+    ALERT_STYLE,
+)
 from flexlate.template.base import Template
 from flexlate.ext_git import (
     stage_and_commit_all,
@@ -127,31 +135,49 @@ class Updater:
         checkout_template_branch(repo, merged_branch_name)
         merge_branch_into_current(repo, template_branch_name)
 
-        if not repo_has_merge_conflicts(repo):
-            # No conflicts, merge back into current branch
-            current_branch.checkout()
-            merge_branch_into_current(repo, merged_branch_name)
+        if repo_has_merge_conflicts(repo):
+            if no_input:
+                # Not receiving input, so there is no way the user could resolve conflicts
+                # during the process
+                print_styled("Repo has merge conflicts after update", ALERT_STYLE)
+                return
 
-            # TODO: Make CLI have a pause and resume capability
-            #  We should be running these post actions below afterwards regardless of whether
-            #  there was a merge conflict.
-
-            # Current working directory or out root may have been deleted if it was a remove operation
-            # and there was nothing else in the folder (git does not save folders without files)
-            ensure_exists_folders = [cwd]
-            for renderable in orig_renderables:
-                ensure_exists_folders.append(
-                    make_absolute_path_from_possibly_relative_to_another_path(
-                        renderable.out_root, project_root
-                    )
+            # Need to wait for user to resolve merge conflicts
+            print_styled(
+                "Repo has merge conflicts after update, please resolve them",
+                ACTION_REQUIRED_STYLE,
+            )
+            user_fixed = Confirm.ask(
+                styled("Conflicts fixed? n to abort", QUESTION_STYLE)
+            )
+            if not user_fixed:
+                # TODO: on abort, clean up the mess in the flexlate branches
+                print_styled(
+                    "Aborting update. Flexlate branches may be in a broken state",
+                    ALERT_STYLE,
                 )
-            for folder in ensure_exists_folders:
-                if not os.path.exists(folder):
-                    os.makedirs(folder)
+                return
 
-            # Folder may have been deleted again while switching branches, so
-            # need to set cwd again
-            os.chdir(cwd)
+        # No conflicts, merge back into current branch
+        current_branch.checkout()
+        merge_branch_into_current(repo, merged_branch_name)
+
+        # Current working directory or out root may have been deleted if it was a remove operation
+        # and there was nothing else in the folder (git does not save folders without files)
+        ensure_exists_folders = [cwd]
+        for renderable in orig_renderables:
+            ensure_exists_folders.append(
+                make_absolute_path_from_possibly_relative_to_another_path(
+                    renderable.out_root, project_root
+                )
+            )
+        for folder in ensure_exists_folders:
+            if not os.path.exists(folder):
+                os.makedirs(folder)
+
+        # Folder may have been deleted again while switching branches, so
+        # need to set cwd again
+        os.chdir(cwd)
 
     def get_updates_for_templates(
         self,
