@@ -190,6 +190,9 @@ class CLIStubFlexlate(Flexlate):
     def undo(self, num_operations: int = 1, project_path: Path = Path(".")):
         return fxt(["undo", str(num_operations), "--path", str(project_path)])
 
+    def sync(self, no_input: bool = False, project_path: Path = Path(".")):
+        return fxt(["sync", str(project_path), *_bool_flag(no_input, "no-input")])
+
 
 def _bool_flag(value: bool, name: str) -> List[str]:
     return [f"--{name}"] if value else []

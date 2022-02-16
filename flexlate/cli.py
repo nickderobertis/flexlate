@@ -240,13 +240,31 @@ def undo(
     path: Path = typer.Option(Path("."), help=PROJECT_PATH_DOC),
 ):
     """
-    Undoes the last flexlate operation, like crtl/cmd + z for flexlate.
+    Undoes the last flexlate operation, like ctrl/cmd + z for flexlate.
     Note that this modifies the git history, discarding the last commits.
     It has protections against deleting user commits but you should only
     use this on a feature branch.
     :return:
     """
     app.undo(num_operations=num_operations, project_path=path)
+
+
+@cli.command(name="sync")
+def sync(
+    path: Path = typer.Argument(Path("."), help=PROJECT_PATH_DOC),
+    no_input: bool = NO_INPUT_OPTION,
+):
+    """
+    Syncs manual changes to the flexlate branches, and updates templates
+    accordingly. This is useful if you want to move or modify flexlate configs
+    after they are created, but there is no command in the CLI for it.
+    This is currently the way to update template versions until there is a
+    specific command for it: manually change the version and run sync.
+
+    Note: Be sure to commit your changes before running sync
+    :return:
+    """
+    app.sync(no_input=no_input, project_path=path)
 
 
 if __name__ == "__main__":

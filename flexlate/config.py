@@ -49,7 +49,7 @@ class TemplateSource(BaseModel):
             render_relative_root_in_template=template.render_relative_root_in_template,
         )
 
-    def to_template(self) -> Template:
+    def to_template(self, version: Optional[str] = None) -> Template:
         if self.type == TemplateType.BASE:
             raise InvalidTemplateTypeException(
                 "base type is not allowed for concrete templates"
@@ -64,8 +64,10 @@ class TemplateSource(BaseModel):
                 f"no handling for template type {self.type} in creating template from source"
             )
         kwargs = dict(name=self.name)
-        if self.version is not None:
-            kwargs.update(version=self.version)
+        version = version or self.version
+        if version is not None:
+            kwargs.update(version=version)
+        # TODO: Can we remove target_version from templates?
         if self.target_version is not None:
             kwargs.update(target_version=self.target_version)
         if self.git_url is not None:
@@ -77,7 +79,7 @@ class TemplateSource(BaseModel):
             #  and the logic to resolve the version that may be None is entertwined with the
             #  cloning and local path determination
             local_path, _ = get_local_repo_path_and_name_cloning_if_repo_url(
-                self.git_url, version=self.version
+                self.git_url, version=version
             )
         else:
             local_path = self.absolute_local_path
@@ -127,7 +129,10 @@ class AppliedTemplateWithSource(BaseModel):
     source: TemplateSource
 
     def to_template_and_data(self) -> Tuple[Template, TemplateData]:
-        return self.source.to_template(), self.applied_template.data
+        return (
+            self.source.to_template(version=self.applied_template.version),
+            self.applied_template.data,
+        )
 
 
 class TemplateSourceWithTemplates(BaseModel):

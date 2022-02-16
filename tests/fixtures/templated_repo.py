@@ -1,5 +1,6 @@
 import pytest
 
+from flexlate.add_mode import AddMode
 from flexlate.adder import Adder
 from flexlate.remover import Remover
 from flexlate.transactions.transaction import FlexlateTransaction
@@ -35,6 +36,26 @@ def repo_with_cookiecutter_one_template_source(
             add_source_transaction,
             out_root=GENERATED_REPO_DIR,
         )
+    yield repo
+
+
+@pytest.fixture
+def repo_with_cookiecutter_remote_version_one_template_source(
+    repo_with_placeholder_committed: Repo,
+    cookiecutter_remote_version_one_template: CookiecutterTemplate,
+    add_source_transaction: FlexlateTransaction,
+) -> Repo:
+    repo = repo_with_placeholder_committed
+    template = cookiecutter_remote_version_one_template
+
+    adder = Adder()
+    adder.add_template_source(
+        repo,
+        template,
+        add_source_transaction,
+        out_root=GENERATED_REPO_DIR,
+        target_version=COOKIECUTTER_REMOTE_VERSION_1,
+    )
     yield repo
 
 
@@ -109,6 +130,46 @@ def repo_with_template_branch_from_cookiecutter_one(
             add_output_transaction,
             out_root=GENERATED_REPO_DIR,
             no_input=True,
+        )
+    yield repo
+
+
+@pytest.fixture
+def repo_with_template_branch_from_cookiecutter_one_project_add_mode(
+    repo_with_cookiecutter_one_template_source: Repo,
+    cookiecutter_one_template: CookiecutterTemplate,
+    add_output_transaction: FlexlateTransaction,
+) -> Repo:
+    repo = repo_with_cookiecutter_one_template_source
+    with change_directory_to(GENERATED_REPO_DIR):
+        adder = Adder()
+        adder.apply_template_and_add(
+            repo,
+            cookiecutter_one_template,
+            add_output_transaction,
+            out_root=GENERATED_REPO_DIR,
+            no_input=True,
+            add_mode=AddMode.PROJECT,
+        )
+    yield repo
+
+
+@pytest.fixture
+def repo_with_template_branch_from_cookiecutter_remote_version_one(
+    repo_with_cookiecutter_remote_version_one_template_source: Repo,
+    cookiecutter_remote_version_one_template: CookiecutterTemplate,
+    add_output_transaction: FlexlateTransaction,
+) -> Repo:
+    repo = repo_with_cookiecutter_remote_version_one_template_source
+    with change_directory_to(GENERATED_REPO_DIR):
+        adder = Adder()
+        adder.apply_template_and_add(
+            repo,
+            cookiecutter_remote_version_one_template,
+            add_output_transaction,
+            out_root=GENERATED_REPO_DIR,
+            no_input=True,
+            add_mode=AddMode.PROJECT,
         )
     yield repo
 

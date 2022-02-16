@@ -1,5 +1,6 @@
 # Integration tests
 import os
+import shutil
 from pathlib import Path
 from typing import Optional
 from unittest.mock import patch
@@ -642,6 +643,35 @@ def test_init_project_from_template(
     _assert_project_config_is_correct(
         project_config_path, user=False, project_folder_name=project_folder_name
     )
+
+
+def test_sync_manually_remove_applied_template(
+    flexlates: FlexlateFixture, repo_with_placeholder_committed: Repo
+):
+    fxt = flexlates.flexlate
+    repo = repo_with_placeholder_committed
+
+    output_folder = GENERATED_REPO_DIR / "abc"
+
+    with change_directory_to(GENERATED_REPO_DIR):
+        fxt.init_project()
+        fxt.add_template_source(COOKIECUTTER_REMOTE_URL)
+        fxt.apply_template_and_add(COOKIECUTTER_REMOTE_NAME, no_input=True)
+
+        assert output_folder.exists()
+        shutil.rmtree(output_folder)
+        stage_and_commit_all(repo, "Manual change to remove applied template")
+
+        fxt.sync(no_input=True)
+
+    for branch_name in [
+        "master",
+        DEFAULT_MERGED_BRANCH_NAME,
+        DEFAULT_TEMPLATE_BRANCH_NAME,
+    ]:
+        branch: Head = repo.branches[branch_name]  # type: ignore
+        branch.checkout()
+        assert not output_folder.exists()
 
 
 def _assert_project_files_are_correct(

@@ -10,6 +10,7 @@ from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRAN
 from flexlate.finder.multi import MultiFinder
 from flexlate.remover import Remover
 from flexlate.render.multi import MultiRenderer
+from flexlate.syncer import Syncer
 from flexlate.template.base import Template
 from flexlate.template_data import TemplateData
 from flexlate.transactions.transaction import FlexlateTransaction, TransactionType
@@ -25,6 +26,7 @@ class Flexlate:
         config_manager: ConfigManager = ConfigManager(),
         finder: MultiFinder = MultiFinder(),
         renderer: MultiRenderer = MultiRenderer(),
+        syncer: Syncer = Syncer(),
         updater: Updater = Updater(),
         undoer: Undoer = Undoer(),
     ):
@@ -33,6 +35,7 @@ class Flexlate:
         self.config_manager = config_manager
         self.finder = finder
         self.renderer = renderer
+        self.syncer = syncer
         self.updater = updater
         self.undoer = undoer
 
@@ -253,6 +256,23 @@ class Flexlate:
             num_transactions=num_operations,
             merged_branch_name=project_config.merged_branch_name,
             template_branch_name=project_config.template_branch_name,
+        )
+
+    def sync(self, no_input: bool = False, project_path: Path = Path(".")):
+        project_config = self.config_manager.load_project_config(project_path)
+        repo = Repo(project_config.path)
+        transaction = FlexlateTransaction(
+            type=TransactionType.SYNC,
+        )
+        self.syncer.sync_local_changes_to_flexlate_branches(
+            repo,
+            transaction,
+            merged_branch_name=project_config.merged_branch_name,
+            template_branch_name=project_config.template_branch_name,
+            no_input=no_input,
+            updater=self.updater,
+            renderer=self.renderer,
+            config_manager=self.config_manager,
         )
 
     # TODO: list template sources, list applied templates

@@ -162,7 +162,7 @@ class ConfigManager:
         for child_config in config.child_configs:
             for i, applied_template in enumerate(child_config.applied_templates):
                 source = sources[applied_template.name]
-                template = source.to_template()
+                template = source.to_template(version=applied_template.version)
                 template.version = applied_template.version
                 updates.append(
                     TemplateUpdate(
@@ -310,7 +310,7 @@ class ConfigManager:
             project_root=project_root,
             out_root=out_root,
             orig_project_root=orig_project_root,
-            adjust_applied_paths=True
+            adjust_applied_paths=True,
         )
         config = self.load_config(project_root=project_root, adjust_applied_paths=False)
         child_config = _get_or_create_child_config_by_path(config, config_path)
