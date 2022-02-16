@@ -654,6 +654,7 @@ def test_sync_manually_remove_applied_template(
     output_folder = GENERATED_REPO_DIR / "abc"
 
     with change_directory_to(GENERATED_REPO_DIR):
+        fxt.init_project()
         fxt.add_template_source(COOKIECUTTER_REMOTE_URL)
         fxt.apply_template_and_add(COOKIECUTTER_REMOTE_NAME, no_input=True)
 
