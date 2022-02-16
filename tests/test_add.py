@@ -213,6 +213,7 @@ def test_add_source_and_output_at_target_version(
         add_output_transaction,
         out_root=GENERATED_REPO_DIR,
         no_input=True,
+        add_mode=AddMode.PROJECT,
     )
 
     # Check for version 1 content

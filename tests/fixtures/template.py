@@ -112,7 +112,7 @@ def cookiecutter_remote_version_one_template() -> CookiecutterTemplate:
     with tempfile.TemporaryDirectory() as temp_dir:
         temp_path = Path(temp_dir)
         local_path, name = get_local_repo_path_and_name_cloning_if_repo_url(
-            COOKIECUTTER_REMOTE_URL, dst_folder=temp_path
+            COOKIECUTTER_REMOTE_URL, COOKIECUTTER_REMOTE_VERSION_1, dst_folder=temp_path
         )
         template = finder.find(
             COOKIECUTTER_REMOTE_URL,

@@ -42,11 +42,11 @@ def repo_with_cookiecutter_one_template_source(
 @pytest.fixture
 def repo_with_cookiecutter_remote_version_one_template_source(
     repo_with_placeholder_committed: Repo,
-    cookiecutter_remote_template: CookiecutterTemplate,
+    cookiecutter_remote_version_one_template: CookiecutterTemplate,
     add_source_transaction: FlexlateTransaction,
 ) -> Repo:
     repo = repo_with_placeholder_committed
-    template = cookiecutter_remote_template
+    template = cookiecutter_remote_version_one_template
 
     adder = Adder()
     adder.add_template_source(
