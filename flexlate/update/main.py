@@ -5,6 +5,7 @@ from typing import Sequence, Optional, List, Dict, Any
 from git import Repo
 from rich.prompt import Confirm
 
+from flexlate.cli_utils import confirm_user
 from flexlate.config_manager import ConfigManager
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.finder.multi import MultiFinder
@@ -147,7 +148,7 @@ class Updater:
                 "Repo has merge conflicts after update, please resolve them",
                 ACTION_REQUIRED_STYLE,
             )
-            user_fixed = Confirm.ask(
+            user_fixed = confirm_user(
                 styled("Conflicts fixed? n to abort", QUESTION_STYLE)
             )
             if not user_fixed:
