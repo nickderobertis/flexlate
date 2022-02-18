@@ -34,6 +34,7 @@ from flexlate.ext_git import (
     fast_forward_branch_without_checkout,
     abort_merge,
     reset_branch_to_commit_without_checkout,
+    get_branch_sha,
 )
 from flexlate.template_data import TemplateData, merge_data
 from flexlate.transactions.transaction import (
@@ -68,8 +69,8 @@ class Updater:
 
         # Save the status of the flexlate branches. We may need to roll back to this state
         # if the user aborts the merge
-        merged_branch_sha = repo.branches[merged_branch_name].commit.hexsha  # type: ignore
-        template_branch_sha = repo.branches[template_branch_name].commit.hexsha  # type: ignore
+        merged_branch_sha = get_branch_sha(repo, merged_branch_name)
+        template_branch_sha = get_branch_sha(repo, template_branch_name)
 
         # Prepare the template branch, this is the branch that stores only the template files
         # Create it from the initial commit if it does not exist

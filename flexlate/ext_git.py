@@ -102,11 +102,23 @@ def fast_forward_branch_without_checkout(repo: Repo, base_branch: str, ff_branch
 def reset_branch_to_commit_without_checkout(
     repo: Repo, branch_name: str, commit_sha: str
 ):
+    if commit_sha is None:
+        # Branch didn't previously exist, delete
+        repo.git.branch("-d", branch_name)
+        return
     repo.git.branch("--force", branch_name, commit_sha)
 
 
 def abort_merge(repo: Repo):
     repo.git.merge("--abort")
+
+
+def get_branch_sha(repo: Repo, branch_name: str) -> Optional[str]:
+    try:
+        branch = repo.branches[branch_name]  # type: ignore
+    except IndexError:
+        return None
+    return branch.commit.hexsha
 
 
 @contextmanager  # type: ignore
