@@ -99,6 +99,16 @@ def fast_forward_branch_without_checkout(repo: Repo, base_branch: str, ff_branch
     repo.git.fetch(repo.working_dir, f"{ff_branch}:{base_branch}")
 
 
+def reset_branch_to_commit_without_checkout(
+    repo: Repo, branch_name: str, commit_sha: str
+):
+    repo.git.branch("--force", branch_name, commit_sha)
+
+
+def abort_merge(repo: Repo):
+    repo.git.merge("--abort")
+
+
 @contextmanager  # type: ignore
 def temp_repo_that_pushes_to_branch(  # type: ignore
     repo: Repo,

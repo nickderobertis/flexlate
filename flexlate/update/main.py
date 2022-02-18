@@ -32,6 +32,8 @@ from flexlate.ext_git import (
     assert_repo_is_in_clean_state,
     temp_repo_that_pushes_to_branch,
     fast_forward_branch_without_checkout,
+    abort_merge,
+    reset_branch_to_commit_without_checkout,
 )
 from flexlate.template_data import TemplateData, merge_data
 from flexlate.transactions.transaction import (
@@ -63,6 +65,11 @@ class Updater:
 
         project_root = Path(repo.working_dir)
         current_branch = repo.active_branch
+
+        # Save the status of the flexlate branches. We may need to roll back to this state
+        # if the user aborts the merge
+        merged_branch_sha = repo.branches[merged_branch_name].commit.hexsha  # type: ignore
+        template_branch_sha = repo.branches[template_branch_name].commit.hexsha  # type: ignore
 
         # Prepare the template branch, this is the branch that stores only the template files
         # Create it from the initial commit if it does not exist
@@ -152,10 +159,18 @@ class Updater:
                 styled("Conflicts fixed? n to abort", QUESTION_STYLE)
             )
             if not user_fixed:
-                # TODO: on abort, clean up the mess in the flexlate branches
                 print_styled(
-                    "Aborting update. Flexlate branches may be in a broken state",
+                    "Aborting update.",
                     ALERT_STYLE,
+                )
+                # Abort merge and reset flexlate branches to original state
+                abort_merge(repo)
+                current_branch.checkout()
+                reset_branch_to_commit_without_checkout(
+                    repo, merged_branch_name, merged_branch_sha
+                )
+                reset_branch_to_commit_without_checkout(
+                    repo, template_branch_name, template_branch_sha
                 )
                 return
 
