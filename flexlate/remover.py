@@ -80,7 +80,6 @@ class Remover:
         transaction: FlexlateTransaction,
         out_root: Path = Path("."),
         add_mode: AddMode = AddMode.LOCAL,
-        quiet: bool = False,
         merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
         template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
         config_manager: ConfigManager = ConfigManager(),
@@ -165,7 +164,6 @@ class Remover:
             merged_branch_name=merged_branch_name,
             template_branch_name=template_branch_name,
             no_input=True,
-            quiet=quiet,
             renderer=renderer,
             config_manager=config_manager,
         )

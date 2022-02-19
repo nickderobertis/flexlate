@@ -5,7 +5,7 @@ from typing import Sequence, Optional, List, Dict, Any
 from git import Repo
 from rich.prompt import Confirm
 
-from flexlate.cli_utils import confirm_user, console_print
+from flexlate.cli_utils import confirm_user
 from flexlate.config_manager import ConfigManager
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.finder.multi import MultiFinder
@@ -56,7 +56,6 @@ class Updater:
         merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
         template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
         no_input: bool = False,
-        quiet: bool = False,
         full_rerender: bool = True,
         renderer: MultiRenderer = MultiRenderer(),
         config_manager: ConfigManager = ConfigManager(),
@@ -149,22 +148,22 @@ class Updater:
             if no_input:
                 # Not receiving input, so there is no way the user could resolve conflicts
                 # during the process
-                console_print(
-                    "Repo has merge conflicts after update", ALERT_STYLE, quiet=quiet
-                )
+                print_styled("Repo has merge conflicts after update", ALERT_STYLE)
                 return
 
             # Need to wait for user to resolve merge conflicts
-            console_print(
+            print_styled(
                 "Repo has merge conflicts after update, please resolve them",
                 ACTION_REQUIRED_STYLE,
-                quiet=quiet,
             )
             user_fixed = confirm_user(
                 styled("Conflicts fixed? n to abort", QUESTION_STYLE)
             )
             if not user_fixed:
-                console_print("Aborting update.", ALERT_STYLE, quiet=quiet)
+                print_styled(
+                    "Aborting update.",
+                    ALERT_STYLE,
+                )
                 # Abort merge and reset flexlate branches to original state
                 abort_merge(repo)
                 current_branch.checkout()
