@@ -31,6 +31,7 @@ TEMPLATE_BRANCH_DOC = (
 PROJECT_USER_DOC = "Store the flexlate project configuration in the user directory rather than in the project"
 TARGET_VERSION_DOC = "A specific version to target. Only useful for git repos, pass a branch name or commit SHA"
 TEMPLATE_SOURCE_EXTRA_DOC = "Can be a file path or a git url"
+QUIET_DOC = "Suppress CLI output except for prompts"
 
 TEMPLATE_ROOT_OPTION = typer.Option(
     Path("."),
@@ -55,6 +56,7 @@ VERSION_OPTION = typer.Option(
     help=TARGET_VERSION_DOC,
     show_default=False,
 )
+QUIET_OPTION = typer.Option(False, "--quiet", "-q", show_default=False)
 
 
 @add_cli.command(name="source")
@@ -91,12 +93,17 @@ def generate_applied_template(
     template_root: Path = TEMPLATE_ROOT_OPTION,
     add_mode: Optional[AddMode] = ADD_MODE_OPTION,
     no_input: bool = NO_INPUT_OPTION,
+    quiet: bool = QUIET_OPTION,
 ):
     """
     Applies a template to a given location, and stores it in config so it can be updated
     """
     app.apply_template_and_add(
-        name, out_root=template_root, add_mode=add_mode, no_input=no_input
+        name,
+        out_root=template_root,
+        add_mode=add_mode,
+        no_input=no_input,
+        quiet=quiet,
     )
 
 
@@ -125,8 +132,11 @@ def remove_template_output(
         "the applied template output to remove",
     ),
     template_root: Path = TEMPLATE_ROOT_OPTION,
+    quiet: bool = QUIET_OPTION,
 ):
-    app.remove_applied_template_and_output(template_name, out_root=template_root)
+    app.remove_applied_template_and_output(
+        template_name, out_root=template_root, quiet=quiet
+    )
 
 
 cli.add_typer(remove_cli, name="remove")
@@ -183,6 +193,7 @@ def init_project_from(
         help="The name of the outputted folder. This only applies on templates that don't set the name of the folder (Copier)",
     ),
     no_input: bool = NO_INPUT_OPTION,
+    quiet: bool = QUIET_OPTION,
     default_add_mode: AddMode = typer.Option(
         AddMode.LOCAL,
         "--add-mode",
@@ -208,6 +219,7 @@ def init_project_from(
         template_version=version,
         default_folder_name=folder_name,
         no_input=no_input,
+        quiet=quiet,
         default_add_mode=default_add_mode,
         merged_branch_name=merged_branch_name,
         template_branch_name=template_branch_name,
@@ -222,13 +234,14 @@ def update_templates(
         show_default=False,
     ),
     no_input: bool = NO_INPUT_OPTION,
+    quiet: bool = QUIET_OPTION,
     path: Path = typer.Option(Path("."), help=PROJECT_PATH_DOC),
 ):
     """
     Updates applied templates in the project to the newest versions
     available that still satisfy source target versions
     """
-    app.update(names=names, no_input=no_input, project_path=path)
+    app.update(names=names, no_input=no_input, quiet=quiet, project_path=path)
 
 
 @cli.command(name="undo")
@@ -253,6 +266,7 @@ def undo(
 def sync(
     path: Path = typer.Argument(Path("."), help=PROJECT_PATH_DOC),
     no_input: bool = NO_INPUT_OPTION,
+    quiet: bool = QUIET_OPTION,
 ):
     """
     Syncs manual changes to the flexlate branches, and updates templates
@@ -264,7 +278,7 @@ def sync(
     Note: Be sure to commit your changes before running sync
     :return:
     """
-    app.sync(no_input=no_input, project_path=path)
+    app.sync(no_input=no_input, quiet=quiet, project_path=path)
 
 
 if __name__ == "__main__":

@@ -82,6 +82,7 @@ class CLIStubFlexlate(Flexlate):
         data: Optional[TemplateData] = None,
         default_folder_name: str = "project",
         no_input: bool = False,
+        quiet: bool = False,
         default_add_mode: AddMode = AddMode.LOCAL,
         merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
         template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
@@ -99,6 +100,7 @@ class CLIStubFlexlate(Flexlate):
                 "--folder-name",
                 default_folder_name,
                 *_bool_flag(no_input, "no-input"),
+                *_bool_flag(quiet, "quiet"),
                 "--add-mode",
                 default_add_mode.value,
                 "--merged-branch-name",
@@ -136,8 +138,18 @@ class CLIStubFlexlate(Flexlate):
         self,
         template_name: str,
         template_root: Path = Path("."),
+        quiet: bool = False,
     ):
-        fxt(["remove", "source", template_name, "--root", str(template_root)])
+        fxt(
+            [
+                "remove",
+                "source",
+                template_name,
+                "--root",
+                str(template_root),
+                *_bool_flag(quiet, "quiet"),
+            ]
+        )
 
     def apply_template_and_add(
         self,
@@ -146,6 +158,7 @@ class CLIStubFlexlate(Flexlate):
         out_root: Path = Path("."),
         add_mode: Optional[AddMode] = None,
         no_input: bool = False,
+        quiet: bool = False,
     ):
         fxt(
             [
@@ -155,6 +168,7 @@ class CLIStubFlexlate(Flexlate):
                 "--root",
                 str(out_root),
                 *_bool_flag(no_input, "no-input"),
+                *_bool_flag(quiet, "quiet"),
                 *_flag_if_not_none(
                     add_mode.value if add_mode is not None else None, "add-mode"
                 ),
@@ -163,17 +177,25 @@ class CLIStubFlexlate(Flexlate):
         )
 
     def remove_applied_template_and_output(
-        self,
-        template_name: str,
-        out_root: Path = Path("."),
+        self, template_name: str, out_root: Path = Path("."), quiet: bool = False
     ):
-        fxt(["remove", "output", template_name, "--root", str(out_root)])
+        fxt(
+            [
+                "remove",
+                "output",
+                template_name,
+                "--root",
+                str(out_root),
+                *_bool_flag(quiet, "quiet"),
+            ]
+        )
 
     def update(
         self,
         names: Optional[List[str]] = None,
         data: Optional[Sequence[TemplateData]] = None,
         no_input: bool = False,
+        quiet: bool = False,
         project_path: Path = Path("."),
     ):
         fxt(
@@ -183,6 +205,7 @@ class CLIStubFlexlate(Flexlate):
                 "--path",
                 str(project_path),
                 *_bool_flag(no_input, "no-input"),
+                *_bool_flag(quiet, "quiet"),
             ],
             input_data=data,
         )
@@ -190,8 +213,20 @@ class CLIStubFlexlate(Flexlate):
     def undo(self, num_operations: int = 1, project_path: Path = Path(".")):
         return fxt(["undo", str(num_operations), "--path", str(project_path)])
 
-    def sync(self, no_input: bool = False, project_path: Path = Path(".")):
-        return fxt(["sync", str(project_path), *_bool_flag(no_input, "no-input")])
+    def sync(
+        self,
+        no_input: bool = False,
+        quiet: bool = False,
+        project_path: Path = Path("."),
+    ):
+        return fxt(
+            [
+                "sync",
+                str(project_path),
+                *_bool_flag(no_input, "no-input"),
+                *_bool_flag(quiet, "quiet"),
+            ]
+        )
 
 
 def _bool_flag(value: bool, name: str) -> List[str]:
