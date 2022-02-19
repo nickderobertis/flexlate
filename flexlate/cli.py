@@ -165,10 +165,12 @@ def init_project(
         "--user",
         help=PROJECT_USER_DOC,
     ),
+    quiet: bool = QUIET_OPTION,
 ):
     """
     Initializes a flexlate project. This must be run before other commands
     """
+    app = Flexlate(quiet=quiet)
     app.init_project(
         path,
         default_add_mode=default_add_mode,

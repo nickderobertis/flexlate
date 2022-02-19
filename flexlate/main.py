@@ -10,6 +10,7 @@ from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRAN
 from flexlate.finder.multi import MultiFinder
 from flexlate.remover import Remover
 from flexlate.render.multi import MultiRenderer
+from flexlate.styles import console
 from flexlate.syncer import Syncer
 from flexlate.template.base import Template
 from flexlate.template_data import TemplateData
@@ -21,6 +22,7 @@ from flexlate.update.main import Updater
 class Flexlate:
     def __init__(
         self,
+        quiet: bool = False,
         adder: Adder = Adder(),
         remover: Remover = Remover(),
         config_manager: ConfigManager = ConfigManager(),
@@ -30,6 +32,10 @@ class Flexlate:
         updater: Updater = Updater(),
         undoer: Undoer = Undoer(),
     ):
+        self.quiet = quiet
+        # Let rich handle suppressing output
+        console.quiet = quiet
+
         self.adder = adder
         self.remover = remover
         self.config_manager = config_manager

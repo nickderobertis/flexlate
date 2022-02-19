@@ -1,6 +1,7 @@
 import os
 import shutil
 import tempfile
+import time
 from copy import deepcopy
 from pathlib import Path
 from typing import Optional
@@ -10,6 +11,7 @@ from rich.prompt import Prompt
 
 from flexlate.add_mode import AddMode, get_expanded_out_root
 from flexlate.branch_update import modify_files_via_branches_and_temp_repo
+from flexlate.cli_utils import console_print
 from flexlate.config_manager import (
     ConfigManager,
     determine_config_path_from_roots_and_add_mode,
@@ -23,6 +25,7 @@ from flexlate.path_ops import (
     location_relative_to_new_parent,
 )
 from flexlate.render.multi import MultiRenderer
+from flexlate.styles import SUCCESS_STYLE, INFO_STYLE, console, styled
 from flexlate.template.base import Template
 from flexlate.template_data import TemplateData
 from flexlate.transactions.transaction import (
@@ -205,31 +208,44 @@ class Adder:
 
         path = Path(repo.working_dir)
 
-        if user:
-            # Simply init the project for the user
-            config_manager.add_project(
-                path=path,
-                default_add_mode=default_add_mode,
-                user=user,
+        with console.status(styled("Initializing...", INFO_STYLE)):
+            console_print(
+                f"Initializing flexlate project with default add mode "
+                f"{default_add_mode.value} and user={user} in "
+                f"{Path(repo.working_dir).resolve()}",
+                INFO_STYLE,
+            )
+
+            if user:
+                # Simply init the project for the user
+                config_manager.add_project(
+                    path=path,
+                    default_add_mode=default_add_mode,
+                    user=user,
+                    merged_branch_name=merged_branch_name,
+                    template_branch_name=template_branch_name,
+                )
+                return
+
+            # Config resides in project, so add it via branches
+            modify_files_via_branches_and_temp_repo(
+                lambda temp_path: config_manager.add_project(
+                    path=temp_path,
+                    default_add_mode=default_add_mode,
+                    user=user,
+                    merged_branch_name=merged_branch_name,
+                    template_branch_name=template_branch_name,
+                ),
+                repo,
+                "Initialized flexlate project",
+                path,
                 merged_branch_name=merged_branch_name,
                 template_branch_name=template_branch_name,
             )
-            return
 
-        # Config resides in project, so add it via branches
-        modify_files_via_branches_and_temp_repo(
-            lambda temp_path: config_manager.add_project(
-                path=temp_path,
-                default_add_mode=default_add_mode,
-                user=user,
-                merged_branch_name=merged_branch_name,
-                template_branch_name=template_branch_name,
-            ),
-            repo,
-            "Initialized flexlate project",
-            path,
-            merged_branch_name=merged_branch_name,
-            template_branch_name=template_branch_name,
+        console_print(
+            f"Finished initializing flexlate project",
+            SUCCESS_STYLE,
         )
 
     def init_project_from_template_source_path(
