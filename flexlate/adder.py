@@ -11,7 +11,6 @@ from rich.prompt import Prompt
 
 from flexlate.add_mode import AddMode, get_expanded_out_root
 from flexlate.branch_update import modify_files_via_branches_and_temp_repo
-from flexlate.cli_utils import console_print
 from flexlate.config_manager import (
     ConfigManager,
     determine_config_path_from_roots_and_add_mode,
@@ -25,7 +24,7 @@ from flexlate.path_ops import (
     location_relative_to_new_parent,
 )
 from flexlate.render.multi import MultiRenderer
-from flexlate.styles import SUCCESS_STYLE, INFO_STYLE, console, styled
+from flexlate.styles import SUCCESS_STYLE, INFO_STYLE, console, styled, print_styled
 from flexlate.template.base import Template
 from flexlate.template_data import TemplateData
 from flexlate.transactions.transaction import (
@@ -207,7 +206,7 @@ class Adder:
         path = Path(repo.working_dir)
 
         with console.status(styled("Initializing...", INFO_STYLE)):
-            console_print(
+            print_styled(
                 f"Initializing flexlate project with default add mode "
                 f"{default_add_mode.value} and user={user} in "
                 f"{Path(repo.working_dir).resolve()}",
@@ -241,7 +240,7 @@ class Adder:
                 template_branch_name=template_branch_name,
             )
 
-        console_print(
+        print_styled(
             f"Finished initializing flexlate project",
             SUCCESS_STYLE,
         )
