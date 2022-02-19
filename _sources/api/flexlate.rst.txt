@@ -53,6 +53,14 @@ flexlate.cli module
    :undoc-members:
    :show-inheritance:
 
+flexlate.cli\_utils module
+--------------------------
+
+.. automodule:: flexlate.cli_utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 flexlate.config module
 ----------------------
 
@@ -113,6 +121,22 @@ flexlate.remover module
 -----------------------
 
 .. automodule:: flexlate.remover
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+flexlate.styles module
+----------------------
+
+.. automodule:: flexlate.styles
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+flexlate.syncer module
+----------------------
+
+.. automodule:: flexlate.syncer
    :members:
    :undoc-members:
    :show-inheritance:

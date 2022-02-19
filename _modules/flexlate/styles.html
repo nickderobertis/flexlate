@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.template_data &mdash; flexlate 0.4.0 documentation</title>
+  <title>flexlate.styles &mdash; flexlate 0.4.0 documentation</title>
   
 
   
@@ -151,7 +151,7 @@
         
           <li><a href="../index.html">Module code</a> &raquo;</li>
         
-      <li>flexlate.template_data</li>
+      <li>flexlate.styles</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -166,23 +166,22 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for flexlate.template_data</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">List</span>
+  <h1>Source code for flexlate.styles</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Final</span>
 
-<span class="n">TemplateData</span> <span class="o">=</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+<span class="kn">from</span> <span class="nn">rich</span> <span class="kn">import</span> <span class="nb">print</span>
+
+<span class="n">ACTION_REQUIRED_STYLE</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;[yellow]:pencil:&quot;</span>
+<span class="n">QUESTION_STYLE</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;:question:&quot;</span>
+<span class="n">ALERT_STYLE</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;[red]:x:&quot;</span>
 
 
-<div class="viewcode-block" id="merge_data"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.template_data.merge_data">[docs]</a><span class="k">def</span> <span class="nf">merge_data</span><span class="p">(</span>
-    <span class="n">overrides</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">TemplateData</span><span class="p">],</span> <span class="n">defaults</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">TemplateData</span><span class="p">]</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">TemplateData</span><span class="p">]:</span>
-    <span class="n">out_data</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">TemplateData</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">default_data</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">defaults</span><span class="p">):</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">override_data</span> <span class="o">=</span> <span class="n">overrides</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-        <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
-            <span class="n">override_data</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">out_data</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="o">**</span><span class="n">default_data</span><span class="p">,</span> <span class="o">**</span><span class="n">override_data</span><span class="p">})</span>
-    <span class="k">return</span> <span class="n">out_data</span></div>
+<div class="viewcode-block" id="styled"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.styles.styled">[docs]</a><span class="k">def</span> <span class="nf">styled</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">style</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">style</span><span class="si">}{</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span></div>
+
+
+<div class="viewcode-block" id="print_styled"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.styles.print_styled">[docs]</a><span class="k">def</span> <span class="nf">print_styled</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">style</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">styled</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">style</span><span class="p">))</span></div>
 </pre></div>
 
            </div>

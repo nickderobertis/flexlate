@@ -8,7 +8,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.render package &mdash; flexlate 0.3.1 documentation</title>
+  <title>flexlate.render package &mdash; flexlate 0.4.0 documentation</title>
   
 
   
@@ -73,7 +73,7 @@
             
             
               <div class="version">
-                0.3.1
+                0.4.0
               </div>
             
           
@@ -121,6 +121,7 @@
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.adder">flexlate.adder module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.branch_update">flexlate.branch_update module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.cli">flexlate.cli module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.cli_utils">flexlate.cli_utils module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.config">flexlate.config module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.config_manager">flexlate.config_manager module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.constants">flexlate.constants module</a></li>
@@ -129,6 +130,8 @@
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.main">flexlate.main module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.path_ops">flexlate.path_ops module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.remover">flexlate.remover module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.styles">flexlate.styles module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.syncer">flexlate.syncer module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.template_data">flexlate.template_data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.template_path">flexlate.template_path module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.types">flexlate.types module</a></li>
@@ -240,6 +243,16 @@
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="flexlate.render.multi.MultiRenderer.render_string">
+<span class="sig-name descname"><span class="pre">render_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">renderable</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/render/multi.html#MultiRenderer.render_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.render.multi.MultiRenderer.render_string" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </section>
@@ -264,6 +277,16 @@
 <dt class="sig sig-object py" id="flexlate.render.renderable.Renderable.data">
 <span class="sig-name descname"><span class="pre">data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#flexlate.render.renderable.Renderable.data" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flexlate.render.renderable.Renderable.from_applied_template_with_source">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_applied_template_with_source</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">applied_template_with_source</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/render/renderable.html#Renderable.from_applied_template_with_source"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.render.renderable.Renderable.from_applied_template_with_source" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#flexlate.render.renderable.Renderable" title="flexlate.render.renderable.Renderable"><code class="xref py py-class docutils literal notranslate"><span class="pre">Renderable</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="flexlate.render.renderable.Renderable.out_root">

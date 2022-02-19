@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.ext_git &mdash; flexlate 0.3.1 documentation</title>
+  <title>flexlate.ext_git &mdash; flexlate 0.4.0 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.3.1
+                0.4.0
               </div>
             
           
@@ -266,6 +266,28 @@
 
 <div class="viewcode-block" id="fast_forward_branch_without_checkout"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.ext_git.fast_forward_branch_without_checkout">[docs]</a><span class="k">def</span> <span class="nf">fast_forward_branch_without_checkout</span><span class="p">(</span><span class="n">repo</span><span class="p">:</span> <span class="n">Repo</span><span class="p">,</span> <span class="n">base_branch</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ff_branch</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
     <span class="n">repo</span><span class="o">.</span><span class="n">git</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">repo</span><span class="o">.</span><span class="n">working_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ff_branch</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">base_branch</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="reset_branch_to_commit_without_checkout"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.ext_git.reset_branch_to_commit_without_checkout">[docs]</a><span class="k">def</span> <span class="nf">reset_branch_to_commit_without_checkout</span><span class="p">(</span>
+    <span class="n">repo</span><span class="p">:</span> <span class="n">Repo</span><span class="p">,</span> <span class="n">branch_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">commit_sha</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">):</span>
+    <span class="k">if</span> <span class="n">commit_sha</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Branch didn&#39;t previously exist, delete</span>
+        <span class="n">repo</span><span class="o">.</span><span class="n">git</span><span class="o">.</span><span class="n">branch</span><span class="p">(</span><span class="s2">&quot;-d&quot;</span><span class="p">,</span> <span class="n">branch_name</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="n">repo</span><span class="o">.</span><span class="n">git</span><span class="o">.</span><span class="n">branch</span><span class="p">(</span><span class="s2">&quot;--force&quot;</span><span class="p">,</span> <span class="n">branch_name</span><span class="p">,</span> <span class="n">commit_sha</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="abort_merge"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.ext_git.abort_merge">[docs]</a><span class="k">def</span> <span class="nf">abort_merge</span><span class="p">(</span><span class="n">repo</span><span class="p">:</span> <span class="n">Repo</span><span class="p">):</span>
+    <span class="n">repo</span><span class="o">.</span><span class="n">git</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="s2">&quot;--abort&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_branch_sha"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.ext_git.get_branch_sha">[docs]</a><span class="k">def</span> <span class="nf">get_branch_sha</span><span class="p">(</span><span class="n">repo</span><span class="p">:</span> <span class="n">Repo</span><span class="p">,</span> <span class="n">branch_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">branch</span> <span class="o">=</span> <span class="n">repo</span><span class="o">.</span><span class="n">branches</span><span class="p">[</span><span class="n">branch_name</span><span class="p">]</span>  <span class="c1"># type: ignore</span>
+    <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">branch</span><span class="o">.</span><span class="n">commit</span><span class="o">.</span><span class="n">hexsha</span></div>
 
 
 <div class="viewcode-block" id="temp_repo_that_pushes_to_branch"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.ext_git.temp_repo_that_pushes_to_branch">[docs]</a><span class="nd">@contextmanager</span>  <span class="c1"># type: ignore</span>

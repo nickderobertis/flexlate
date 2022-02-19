@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.render.multi &mdash; flexlate 0.3.1 documentation</title>
+  <title>flexlate.render.multi &mdash; flexlate 0.4.0 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.3.1
+                0.4.0
               </div>
             
           
@@ -218,7 +218,16 @@
                 <span class="n">template_data</span> <span class="o">=</span> <span class="n">renderer</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">temp_renderable</span><span class="p">,</span> <span class="n">no_input</span><span class="o">=</span><span class="n">no_input</span><span class="p">)</span>
                 <span class="n">out_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">template_data</span><span class="p">)</span>
             <span class="n">_merge_file_trees</span><span class="p">(</span><span class="n">temp_folders</span><span class="p">,</span> <span class="n">project_root</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">out_data</span></div></div>
+        <span class="k">return</span> <span class="n">out_data</span></div>
+
+<div class="viewcode-block" id="MultiRenderer.render_string"><a class="viewcode-back" href="../../../api/flexlate.render.html#flexlate.render.multi.MultiRenderer.render_string">[docs]</a>    <span class="k">def</span> <span class="nf">render_string</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">string</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">renderable</span><span class="p">:</span> <span class="n">Renderable</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">template</span> <span class="o">=</span> <span class="n">renderable</span><span class="o">.</span><span class="n">template</span>
+        <span class="n">renderer</span> <span class="o">=</span> <span class="n">_get_specific_renderer</span><span class="p">(</span><span class="n">template</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">renderer</span><span class="o">.</span><span class="n">render_string</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">renderable</span><span class="p">)</span></div></div>
 
 
 <span class="k">def</span> <span class="nf">_get_specific_renderer</span><span class="p">(</span><span class="n">template</span><span class="p">:</span> <span class="n">Template</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SpecificTemplateRenderer</span><span class="p">:</span>

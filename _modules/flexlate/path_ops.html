@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.path_ops &mdash; flexlate 0.3.1 documentation</title>
+  <title>flexlate.path_ops &mdash; flexlate 0.4.0 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.3.1
+                0.4.0
               </div>
             
           
@@ -201,8 +201,9 @@
 
 <div class="viewcode-block" id="make_all_dirs"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.path_ops.make_all_dirs">[docs]</a><span class="k">def</span> <span class="nf">make_all_dirs</span><span class="p">(</span><span class="n">paths</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Path</span><span class="p">]):</span>
     <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-            <span class="n">path</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+        <span class="n">absolute_path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">absolute_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="n">absolute_path</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="copy_flexlate_configs"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.path_ops.copy_flexlate_configs">[docs]</a><span class="k">def</span> <span class="nf">copy_flexlate_configs</span><span class="p">(</span><span class="n">src</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">dst</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">root</span><span class="p">:</span> <span class="n">Path</span><span class="p">):</span>

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.template.cookiecutter &mdash; flexlate 0.3.1 documentation</title>
+  <title>flexlate.template.cookiecutter &mdash; flexlate 0.4.0 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.3.1
+                0.4.0
               </div>
             
           
@@ -182,10 +182,12 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">config</span><span class="p">:</span> <span class="n">CookiecutterConfig</span><span class="p">,</span>
         <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+        <span class="n">render_relative_root</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
         <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">version</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">target_version</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">git_url</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">template_source_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">config</span><span class="p">,</span>
@@ -194,6 +196,10 @@
             <span class="n">version</span><span class="o">=</span><span class="n">version</span><span class="p">,</span>
             <span class="n">target_version</span><span class="o">=</span><span class="n">target_version</span><span class="p">,</span>
             <span class="n">git_url</span><span class="o">=</span><span class="n">git_url</span><span class="p">,</span>
+            <span class="n">template_source_path</span><span class="o">=</span><span class="n">template_source_path</span><span class="p">,</span>
+            <span class="c1"># Output relative root is always the same as template relative root for Cookiecutter</span>
+            <span class="n">render_relative_root_in_output</span><span class="o">=</span><span class="n">render_relative_root</span><span class="p">,</span>
+            <span class="n">render_relative_root_in_template</span><span class="o">=</span><span class="n">render_relative_root</span><span class="p">,</span>
         <span class="p">)</span></div></div>
 </pre></div>
 

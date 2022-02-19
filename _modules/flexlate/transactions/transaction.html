@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.transactions.transaction &mdash; flexlate 0.3.1 documentation</title>
+  <title>flexlate.transactions.transaction &mdash; flexlate 0.4.0 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.3.1
+                0.4.0
               </div>
             
           
@@ -201,9 +201,11 @@
 <div class="viewcode-block" id="TransactionType"><a class="viewcode-back" href="../../../api/flexlate.transactions.html#flexlate.transactions.transaction.TransactionType">[docs]</a><span class="k">class</span> <span class="nc">TransactionType</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
     <span class="n">ADD_SOURCE</span> <span class="o">=</span> <span class="s2">&quot;add source&quot;</span>
     <span class="n">ADD_OUTPUT</span> <span class="o">=</span> <span class="s2">&quot;add output&quot;</span>
+    <span class="n">ADD_SOURCE_AND_OUTPUT</span> <span class="o">=</span> <span class="s2">&quot;add source and output&quot;</span>
     <span class="n">REMOVE_SOURCE</span> <span class="o">=</span> <span class="s2">&quot;remove source&quot;</span>
     <span class="n">REMOVE_OUTPUT</span> <span class="o">=</span> <span class="s2">&quot;remove output&quot;</span>
-    <span class="n">UPDATE</span> <span class="o">=</span> <span class="s2">&quot;update&quot;</span></div>
+    <span class="n">UPDATE</span> <span class="o">=</span> <span class="s2">&quot;update&quot;</span>
+    <span class="n">SYNC</span> <span class="o">=</span> <span class="s2">&quot;sync&quot;</span></div>
 
 
 <div class="viewcode-block" id="FlexlateTransaction"><a class="viewcode-back" href="../../../api/flexlate.transactions.html#flexlate.transactions.transaction.FlexlateTransaction">[docs]</a><span class="k">class</span> <span class="nc">FlexlateTransaction</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>

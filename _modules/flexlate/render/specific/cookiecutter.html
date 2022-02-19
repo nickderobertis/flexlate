@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.render.specific.cookiecutter &mdash; flexlate 0.3.1 documentation</title>
+  <title>flexlate.render.specific.cookiecutter &mdash; flexlate 0.4.0 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.3.1
+                0.4.0
               </div>
             
           
@@ -167,12 +167,12 @@
            <div itemprop="articleBody">
             
   <h1>Source code for flexlate.render.specific.cookiecutter</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+<span></span><span class="kn">import</span> <span class="nn">tempfile</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span>
 
 <span class="kn">from</span> <span class="nn">cookiecutter.config</span> <span class="kn">import</span> <span class="n">get_user_config</span>
 <span class="kn">from</span> <span class="nn">cookiecutter.generate</span> <span class="kn">import</span> <span class="n">generate_context</span><span class="p">,</span> <span class="n">generate_files</span>
-<span class="kn">from</span> <span class="nn">cookiecutter.main</span> <span class="kn">import</span> <span class="n">cookiecutter</span>
 <span class="kn">from</span> <span class="nn">cookiecutter.prompt</span> <span class="kn">import</span> <span class="n">prompt_for_config</span>
 
 <span class="kn">from</span> <span class="nn">flexlate.render.renderable</span> <span class="kn">import</span> <span class="n">Renderable</span>
@@ -214,7 +214,64 @@
         <span class="n">used_data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;cookiecutter&quot;</span><span class="p">])</span>
         <span class="n">used_data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;_template&quot;</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">used_data</span></div></div>
+        <span class="k">return</span> <span class="n">used_data</span></div>
+
+<div class="viewcode-block" id="CookiecutterRenderer.render_string"><a class="viewcode-back" href="../../../../api/flexlate.render.specific.html#flexlate.render.specific.cookiecutter.CookiecutterRenderer.render_string">[docs]</a>    <span class="k">def</span> <span class="nf">render_string</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">string</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">renderable</span><span class="p">:</span> <span class="n">Renderable</span><span class="p">[</span><span class="n">CookiecutterTemplate</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">template</span> <span class="o">=</span> <span class="n">renderable</span><span class="o">.</span><span class="n">template</span>
+        <span class="n">config_dict</span> <span class="o">=</span> <span class="n">get_user_config</span><span class="p">()</span>
+        <span class="n">context_file</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">path</span> <span class="o">/</span> <span class="s2">&quot;cookiecutter.json&quot;</span>
+
+        <span class="n">context</span> <span class="o">=</span> <span class="n">generate_context</span><span class="p">(</span>
+            <span class="n">context_file</span><span class="o">=</span><span class="n">context_file</span><span class="p">,</span>
+            <span class="n">default_context</span><span class="o">=</span><span class="n">config_dict</span><span class="p">[</span><span class="s2">&quot;default_context&quot;</span><span class="p">],</span>
+            <span class="n">extra_context</span><span class="o">=</span><span class="n">renderable</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;cookiecutter&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prompt_for_config</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">no_input</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">temp_template_dir</span><span class="p">:</span>
+            <span class="n">context</span><span class="p">[</span><span class="s2">&quot;cookiecutter&quot;</span><span class="p">][</span><span class="s2">&quot;_template&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_template_dir</span>
+            <span class="p">(</span>
+                <span class="n">cookiecutter_pre_folder_name</span><span class="p">,</span>
+                <span class="n">cookiecutter_post_folder_name</span><span class="p">,</span>
+            <span class="p">)</span> <span class="o">=</span> <span class="n">_cookiecutter_before_and_after_render_string_temp_folder</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+            <span class="n">temp_template_file_path</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">Path</span><span class="p">(</span><span class="n">temp_template_dir</span><span class="p">)</span> <span class="o">/</span> <span class="n">cookiecutter_pre_folder_name</span> <span class="o">/</span> <span class="s2">&quot;temp.txt&quot;</span>
+            <span class="p">)</span>
+            <span class="n">temp_template_file_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">()</span>
+            <span class="n">temp_template_file_path</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+
+            <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">temp_output_dir</span><span class="p">:</span>
+                <span class="n">generate_files</span><span class="p">(</span>
+                    <span class="n">repo_dir</span><span class="o">=</span><span class="n">temp_template_dir</span><span class="p">,</span>
+                    <span class="n">context</span><span class="o">=</span><span class="n">context</span><span class="p">,</span>
+                    <span class="n">overwrite_if_exists</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">skip_if_file_exists</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">output_dir</span><span class="o">=</span><span class="n">temp_output_dir</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">temp_output_file_path</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">Path</span><span class="p">(</span><span class="n">temp_output_dir</span><span class="p">)</span> <span class="o">/</span> <span class="n">cookiecutter_post_folder_name</span> <span class="o">/</span> <span class="s2">&quot;temp.txt&quot;</span>
+                <span class="p">)</span>
+                <span class="n">output</span> <span class="o">=</span> <span class="n">temp_output_file_path</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">output</span></div></div>
+
+
+<span class="k">def</span> <span class="nf">_get_first_question_and_answer_from_context</span><span class="p">(</span><span class="n">context</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+    <span class="n">cookiecutter_context</span> <span class="o">=</span> <span class="n">context</span><span class="p">[</span><span class="s2">&quot;cookiecutter&quot;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">question</span><span class="p">,</span> <span class="n">answer</span> <span class="ow">in</span> <span class="n">cookiecutter_context</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">question</span><span class="p">,</span> <span class="n">answer</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;no questions in copier context, this is not expected&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_cookiecutter_before_and_after_render_string_temp_folder</span><span class="p">(</span>
+    <span class="n">cookiecutter_context</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+    <span class="n">question</span><span class="p">,</span> <span class="n">answer</span> <span class="o">=</span> <span class="n">_get_first_question_and_answer_from_context</span><span class="p">(</span><span class="n">cookiecutter_context</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s2">&quot;{{ cookiecutter.&quot;</span> <span class="o">+</span> <span class="n">question</span> <span class="o">+</span> <span class="s2">&quot; }}&quot;</span><span class="p">,</span> <span class="n">answer</span>
 </pre></div>
 
            </div>

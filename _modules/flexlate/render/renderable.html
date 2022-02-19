@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.render.renderable &mdash; flexlate 0.3.1 documentation</title>
+  <title>flexlate.render.renderable &mdash; flexlate 0.4.0 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.3.1
+                0.4.0
               </div>
             
           
@@ -172,6 +172,7 @@
 
 <span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
 
+<span class="kn">from</span> <span class="nn">flexlate.config</span> <span class="kn">import</span> <span class="n">AppliedTemplateWithSource</span>
 <span class="kn">from</span> <span class="nn">flexlate.template.base</span> <span class="kn">import</span> <span class="n">Template</span>
 <span class="kn">from</span> <span class="nn">flexlate.template_data</span> <span class="kn">import</span> <span class="n">TemplateData</span>
 
@@ -182,6 +183,17 @@
     <span class="n">template</span><span class="p">:</span> <span class="n">T</span>
     <span class="n">data</span><span class="p">:</span> <span class="n">TemplateData</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
     <span class="n">out_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Renderable.from_applied_template_with_source"><a class="viewcode-back" href="../../../api/flexlate.render.html#flexlate.render.renderable.Renderable.from_applied_template_with_source">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_applied_template_with_source</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span> <span class="n">applied_template_with_source</span><span class="p">:</span> <span class="n">AppliedTemplateWithSource</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Renderable&quot;</span><span class="p">:</span>
+        <span class="n">template</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">applied_template_with_source</span><span class="o">.</span><span class="n">to_template_and_data</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
+            <span class="n">template</span><span class="o">=</span><span class="n">template</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+            <span class="n">out_root</span><span class="o">=</span><span class="n">applied_template_with_source</span><span class="o">.</span><span class="n">applied_template</span><span class="o">.</span><span class="n">root</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 <div class="viewcode-block" id="Renderable.Config"><a class="viewcode-back" href="../../../api/flexlate.render.html#flexlate.render.renderable.Renderable.Config">[docs]</a>    <span class="k">class</span> <span class="nc">Config</span><span class="p">:</span>
         <span class="n">arbitrary_types_allowed</span> <span class="o">=</span> <span class="kc">True</span></div></div>

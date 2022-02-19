@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.template_data &mdash; flexlate 0.4.0 documentation</title>
+  <title>flexlate.cli_utils &mdash; flexlate 0.4.0 documentation</title>
   
 
   
@@ -151,7 +151,7 @@
         
           <li><a href="../index.html">Module code</a> &raquo;</li>
         
-      <li>flexlate.template_data</li>
+      <li>flexlate.cli_utils</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -166,23 +166,12 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for flexlate.template_data</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">List</span>
-
-<span class="n">TemplateData</span> <span class="o">=</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+  <h1>Source code for flexlate.cli_utils</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">rich.prompt</span> <span class="kn">import</span> <span class="n">Confirm</span>
 
 
-<div class="viewcode-block" id="merge_data"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.template_data.merge_data">[docs]</a><span class="k">def</span> <span class="nf">merge_data</span><span class="p">(</span>
-    <span class="n">overrides</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">TemplateData</span><span class="p">],</span> <span class="n">defaults</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">TemplateData</span><span class="p">]</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">TemplateData</span><span class="p">]:</span>
-    <span class="n">out_data</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">TemplateData</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">default_data</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">defaults</span><span class="p">):</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">override_data</span> <span class="o">=</span> <span class="n">overrides</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-        <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
-            <span class="n">override_data</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">out_data</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="o">**</span><span class="n">default_data</span><span class="p">,</span> <span class="o">**</span><span class="n">override_data</span><span class="p">})</span>
-    <span class="k">return</span> <span class="n">out_data</span></div>
+<div class="viewcode-block" id="confirm_user"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.cli_utils.confirm_user">[docs]</a><span class="k">def</span> <span class="nf">confirm_user</span><span class="p">(</span><span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">Confirm</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

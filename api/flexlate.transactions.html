@@ -8,7 +8,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.transactions package &mdash; flexlate 0.3.1 documentation</title>
+  <title>flexlate.transactions package &mdash; flexlate 0.4.0 documentation</title>
   
 
   
@@ -73,7 +73,7 @@
             
             
               <div class="version">
-                0.3.1
+                0.4.0
               </div>
             
           
@@ -121,6 +121,7 @@
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.adder">flexlate.adder module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.branch_update">flexlate.branch_update module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.cli">flexlate.cli module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.cli_utils">flexlate.cli_utils module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.config">flexlate.config module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.config_manager">flexlate.config_manager module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.constants">flexlate.constants module</a></li>
@@ -129,6 +130,8 @@
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.main">flexlate.main module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.path_ops">flexlate.path_ops module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.remover">flexlate.remover module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.styles">flexlate.styles module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.syncer">flexlate.syncer module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.template_data">flexlate.template_data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.template_path">flexlate.template_path module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.types">flexlate.types module</a></li>
@@ -296,6 +299,11 @@
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="flexlate.transactions.transaction.TransactionType.ADD_SOURCE_AND_OUTPUT">
+<span class="sig-name descname"><span class="pre">ADD_SOURCE_AND_OUTPUT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'add</span> <span class="pre">source</span> <span class="pre">and</span> <span class="pre">output'</span></em><a class="headerlink" href="#flexlate.transactions.transaction.TransactionType.ADD_SOURCE_AND_OUTPUT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="flexlate.transactions.transaction.TransactionType.REMOVE_OUTPUT">
 <span class="sig-name descname"><span class="pre">REMOVE_OUTPUT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'remove</span> <span class="pre">output'</span></em><a class="headerlink" href="#flexlate.transactions.transaction.TransactionType.REMOVE_OUTPUT" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -303,6 +311,11 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="flexlate.transactions.transaction.TransactionType.REMOVE_SOURCE">
 <span class="sig-name descname"><span class="pre">REMOVE_SOURCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'remove</span> <span class="pre">source'</span></em><a class="headerlink" href="#flexlate.transactions.transaction.TransactionType.REMOVE_SOURCE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flexlate.transactions.transaction.TransactionType.SYNC">
+<span class="sig-name descname"><span class="pre">SYNC</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'sync'</span></em><a class="headerlink" href="#flexlate.transactions.transaction.TransactionType.SYNC" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">

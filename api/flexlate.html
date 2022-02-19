@@ -8,7 +8,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate package &mdash; flexlate 0.3.1 documentation</title>
+  <title>flexlate package &mdash; flexlate 0.4.0 documentation</title>
   
 
   
@@ -73,7 +73,7 @@
             
             
               <div class="version">
-                0.3.1
+                0.4.0
               </div>
             
           
@@ -121,6 +121,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#module-flexlate.adder">flexlate.adder module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-flexlate.branch_update">flexlate.branch_update module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-flexlate.cli">flexlate.cli module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-flexlate.cli_utils">flexlate.cli_utils module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-flexlate.config">flexlate.config module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-flexlate.config_manager">flexlate.config_manager module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-flexlate.constants">flexlate.constants module</a></li>
@@ -129,6 +130,8 @@
 <li class="toctree-l3"><a class="reference internal" href="#module-flexlate.main">flexlate.main module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-flexlate.path_ops">flexlate.path_ops module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-flexlate.remover">flexlate.remover module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-flexlate.styles">flexlate.styles module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-flexlate.syncer">flexlate.syncer module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-flexlate.template_data">flexlate.template_data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-flexlate.template_path">flexlate.template_path module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-flexlate.types">flexlate.types module</a></li>
@@ -302,7 +305,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="flexlate.add_mode.get_expanded_out_root">
-<span class="sig-prename descclassname"><span class="pre">flexlate.add_mode.</span></span><span class="sig-name descname"><span class="pre">get_expanded_out_root</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">out_root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project_root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_mode</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/add_mode.html#get_expanded_out_root"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.add_mode.get_expanded_out_root" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">flexlate.add_mode.</span></span><span class="sig-name descname"><span class="pre">get_expanded_out_root</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">out_root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project_root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">render_relative_root_in_output</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_mode</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/add_mode.html#get_expanded_out_root"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.add_mode.get_expanded_out_root" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code></a></p>
@@ -332,6 +335,11 @@
 <span class="sig-name descname"><span class="pre">init_project_and_add_to_branches</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">repo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_add_mode=AddMode.LOCAL</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">merged_branch_name='flexlate-output'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template_branch_name='flexlate-templates'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_manager=&lt;flexlate.config_manager.ConfigManager</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/adder.html#Adder.init_project_and_add_to_branches"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.adder.Adder.init_project_and_add_to_branches" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="flexlate.adder.Adder.init_project_from_template_source_path">
+<span class="sig-name descname"><span class="pre">init_project_from_template_source_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transaction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path=PosixPath('.')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_version=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_folder_name='project'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_add_mode=AddMode.LOCAL</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">merged_branch_name='flexlate-output'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template_branch_name='flexlate-templates'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_input=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_manager=&lt;flexlate.config_manager.ConfigManager</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">updater=&lt;flexlate.update.main.Updater</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">renderer=&lt;flexlate.render.multi.MultiRenderer</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/adder.html#Adder.init_project_from_template_source_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.adder.Adder.init_project_from_template_source_path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </section>
@@ -351,12 +359,37 @@
 <section id="module-flexlate.cli">
 <span id="flexlate-cli-module"></span><h2>flexlate.cli module<a class="headerlink" href="#module-flexlate.cli" title="Permalink to this headline">¶</a></h2>
 </section>
+<section id="module-flexlate.cli_utils">
+<span id="flexlate-cli-utils-module"></span><h2>flexlate.cli_utils module<a class="headerlink" href="#module-flexlate.cli_utils" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="flexlate.cli_utils.confirm_user">
+<span class="sig-prename descclassname"><span class="pre">flexlate.cli_utils.</span></span><span class="sig-name descname"><span class="pre">confirm_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prompt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/cli_utils.html#confirm_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.cli_utils.confirm_user" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 <section id="module-flexlate.config">
 <span id="flexlate-config-module"></span><h2>flexlate.config module<a class="headerlink" href="#module-flexlate.config" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="flexlate.config.AppliedTemplateConfig">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">flexlate.config.</span></span><span class="sig-name descname"><span class="pre">AppliedTemplateConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/config.html#AppliedTemplateConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.config.AppliedTemplateConfig" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">flexlate.config.</span></span><span class="sig-name descname"><span class="pre">AppliedTemplateConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">version</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#flexlate.add_mode.AddMode" title="flexlate.add_mode.AddMode"><span class="pre">flexlate.add_mode.AddMode</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.10)"><span class="pre">pathlib.Path</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">PosixPath('.')</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/config.html#AppliedTemplateConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.config.AppliedTemplateConfig" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pydantic.main.BaseModel</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="flexlate.config.AppliedTemplateConfig.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/config.html#AppliedTemplateConfig.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.config.AppliedTemplateConfig.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new model by parsing and validating input data from keyword arguments.</p>
+<p>Raises ValidationError if the input data cannot be parsed to form a valid model.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flexlate.config.AppliedTemplateConfig.add_mode">
+<span class="sig-name descname"><span class="pre">add_mode</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#flexlate.add_mode.AddMode" title="flexlate.add_mode.AddMode"><span class="pre">flexlate.add_mode.AddMode</span></a></em><a class="headerlink" href="#flexlate.config.AppliedTemplateConfig.add_mode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="py attribute">
 <dt class="sig sig-object py" id="flexlate.config.AppliedTemplateConfig.data">
 <span class="sig-name descname"><span class="pre">data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#flexlate.config.AppliedTemplateConfig.data" title="Permalink to this definition">¶</a></dt>
@@ -599,13 +632,23 @@
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="flexlate.config.TemplateSource.render_relative_root_in_output">
+<span class="sig-name descname"><span class="pre">render_relative_root_in_output</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.10)"><span class="pre">pathlib.Path</span></a></em><a class="headerlink" href="#flexlate.config.TemplateSource.render_relative_root_in_output" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="flexlate.config.TemplateSource.render_relative_root_in_template">
+<span class="sig-name descname"><span class="pre">render_relative_root_in_template</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.10)"><span class="pre">pathlib.Path</span></a></em><a class="headerlink" href="#flexlate.config.TemplateSource.render_relative_root_in_template" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="flexlate.config.TemplateSource.target_version">
 <span class="sig-name descname"><span class="pre">target_version</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#flexlate.config.TemplateSource.target_version" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="flexlate.config.TemplateSource.to_template">
-<span class="sig-name descname"><span class="pre">to_template</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/config.html#TemplateSource.to_template"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.config.TemplateSource.to_template" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">to_template</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/config.html#TemplateSource.to_template"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.config.TemplateSource.to_template" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="flexlate.template.html#flexlate.template.base.Template" title="flexlate.template.base.Template"><code class="xref py py-class docutils literal notranslate"><span class="pre">Template</span></code></a></p>
@@ -671,7 +714,7 @@
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="flexlate.config_manager.ConfigManager.add_applied_template">
-<span class="sig-name descname"><span class="pre">add_applied_template</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project_root</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('.')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_root</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('.')</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/config_manager.html#ConfigManager.add_applied_template"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.config_manager.ConfigManager.add_applied_template" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">add_applied_template</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project_root</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('.')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_root</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('.')</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/config_manager.html#ConfigManager.add_applied_template"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.config_manager.ConfigManager.add_applied_template" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -732,7 +775,12 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="flexlate.config_manager.ConfigManager.get_renderables_for_updates">
 <span class="sig-name descname"><span class="pre">get_renderables_for_updates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">updates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project_root</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('.')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adjust_root</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/config_manager.html#ConfigManager.get_renderables_for_updates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.config_manager.ConfigManager.get_renderables_for_updates" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>[<a class="reference internal" href="flexlate.render.html#flexlate.render.renderable.Renderable" title="flexlate.render.renderable.Renderable"><code class="xref py py-class docutils literal notranslate"><span class="pre">Renderable</span></code></a>]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="flexlate.config_manager.ConfigManager.get_sources_with_templates">
@@ -787,6 +835,21 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="flexlate.config_manager.ConfigManager.load_specific_projects_config">
 <span class="sig-name descname"><span class="pre">load_specific_projects_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('.')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/config_manager.html#ConfigManager.load_specific_projects_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.config_manager.ConfigManager.load_specific_projects_config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flexlate.config_manager.ConfigManager.move_applied_template">
+<span class="sig-name descname"><span class="pre">move_applied_template</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_config_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project_root</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('.')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_root</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('.')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orig_project_root</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('.')</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/config_manager.html#ConfigManager.move_applied_template"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.config_manager.ConfigManager.move_applied_template" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flexlate.config_manager.ConfigManager.move_local_applied_templates_if_necessary">
+<span class="sig-name descname"><span class="pre">move_local_applied_templates_if_necessary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project_root=PosixPath('.')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orig_project_root=PosixPath('.')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">renderer=&lt;flexlate.render.multi.MultiRenderer</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/config_manager.html#ConfigManager.move_local_applied_templates_if_necessary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.config_manager.ConfigManager.move_local_applied_templates_if_necessary" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flexlate.config_manager.ConfigManager.move_template_source">
+<span class="sig-name descname"><span class="pre">move_template_source</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_config_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project_root</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('.')</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/config_manager.html#ConfigManager.move_template_source"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.config_manager.ConfigManager.move_template_source" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1049,6 +1112,11 @@ when working in a temp directory)</p></li>
 <section id="module-flexlate.ext_git">
 <span id="flexlate-ext-git-module"></span><h2>flexlate.ext_git module<a class="headerlink" href="#module-flexlate.ext_git" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
+<dt class="sig sig-object py" id="flexlate.ext_git.abort_merge">
+<span class="sig-prename descclassname"><span class="pre">flexlate.ext_git.</span></span><span class="sig-name descname"><span class="pre">abort_merge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">repo</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/ext_git.html#abort_merge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.ext_git.abort_merge" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="flexlate.ext_git.assert_repo_is_in_clean_state">
 <span class="sig-prename descclassname"><span class="pre">flexlate.ext_git.</span></span><span class="sig-name descname"><span class="pre">assert_repo_is_in_clean_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">repo</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/ext_git.html#assert_repo_is_in_clean_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.ext_git.assert_repo_is_in_clean_state" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -1087,6 +1155,16 @@ when working in a temp directory)</p></li>
 <dt class="sig sig-object py" id="flexlate.ext_git.fast_forward_branch_without_checkout">
 <span class="sig-prename descclassname"><span class="pre">flexlate.ext_git.</span></span><span class="sig-name descname"><span class="pre">fast_forward_branch_without_checkout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">repo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_branch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ff_branch</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/ext_git.html#fast_forward_branch_without_checkout"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.ext_git.fast_forward_branch_without_checkout" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="flexlate.ext_git.get_branch_sha">
+<span class="sig-prename descclassname"><span class="pre">flexlate.ext_git.</span></span><span class="sig-name descname"><span class="pre">get_branch_sha</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">repo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">branch_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/ext_git.html#get_branch_sha"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.ext_git.get_branch_sha" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="flexlate.ext_git.get_commits_between_two_commits">
@@ -1144,6 +1222,11 @@ when working in a temp directory)</p></li>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="flexlate.ext_git.reset_branch_to_commit_without_checkout">
+<span class="sig-prename descclassname"><span class="pre">flexlate.ext_git.</span></span><span class="sig-name descname"><span class="pre">reset_branch_to_commit_without_checkout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">repo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">branch_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">commit_sha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/ext_git.html#reset_branch_to_commit_without_checkout"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.ext_git.reset_branch_to_commit_without_checkout" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="flexlate.ext_git.reset_current_branch_to_commit">
 <span class="sig-prename descclassname"><span class="pre">flexlate.ext_git.</span></span><span class="sig-name descname"><span class="pre">reset_current_branch_to_commit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">repo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">commit</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/ext_git.html#reset_current_branch_to_commit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.ext_git.reset_current_branch_to_commit" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -1168,11 +1251,11 @@ when working in a temp directory)</p></li>
 <span id="flexlate-main-module"></span><h2>flexlate.main module<a class="headerlink" href="#module-flexlate.main" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="flexlate.main.Flexlate">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">flexlate.main.</span></span><span class="sig-name descname"><span class="pre">Flexlate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adder=&lt;flexlate.adder.Adder</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remover=&lt;flexlate.remover.Remover</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_manager=&lt;flexlate.config_manager.ConfigManager</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finder=&lt;flexlate.finder.multi.MultiFinder</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">renderer=&lt;flexlate.render.multi.MultiRenderer</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">updater=&lt;flexlate.update.main.Updater</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">undoer=&lt;flexlate.transactions.undoer.Undoer</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/main.html#Flexlate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.main.Flexlate" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">flexlate.main.</span></span><span class="sig-name descname"><span class="pre">Flexlate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adder=&lt;flexlate.adder.Adder</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remover=&lt;flexlate.remover.Remover</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_manager=&lt;flexlate.config_manager.ConfigManager</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finder=&lt;flexlate.finder.multi.MultiFinder</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">renderer=&lt;flexlate.render.multi.MultiRenderer</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">syncer=&lt;flexlate.syncer.Syncer</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">updater=&lt;flexlate.update.main.Updater</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">undoer=&lt;flexlate.transactions.undoer.Undoer</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/main.html#Flexlate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.main.Flexlate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="flexlate.main.Flexlate.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adder=&lt;flexlate.adder.Adder</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remover=&lt;flexlate.remover.Remover</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_manager=&lt;flexlate.config_manager.ConfigManager</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finder=&lt;flexlate.finder.multi.MultiFinder</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">renderer=&lt;flexlate.render.multi.MultiRenderer</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">updater=&lt;flexlate.update.main.Updater</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">undoer=&lt;flexlate.transactions.undoer.Undoer</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/main.html#Flexlate.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.main.Flexlate.__init__" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adder=&lt;flexlate.adder.Adder</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remover=&lt;flexlate.remover.Remover</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_manager=&lt;flexlate.config_manager.ConfigManager</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finder=&lt;flexlate.finder.multi.MultiFinder</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">renderer=&lt;flexlate.render.multi.MultiRenderer</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">syncer=&lt;flexlate.syncer.Syncer</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">updater=&lt;flexlate.update.main.Updater</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">undoer=&lt;flexlate.transactions.undoer.Undoer</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/main.html#Flexlate.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.main.Flexlate.__init__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1187,7 +1270,12 @@ when working in a temp directory)</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="flexlate.main.Flexlate.init_project">
-<span class="sig-name descname"><span class="pre">init_project</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('.')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_add_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">AddMode.LOCAL</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">merged_branch_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'flexlate-output'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template_branch_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'flexlate-templates'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/main.html#Flexlate.init_project"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.main.Flexlate.init_project" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">init_project</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('.')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_add_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">AddMode.LOCAL</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">merged_branch_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'flexlate-output'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template_branch_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'flexlate-templates'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template_version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/main.html#Flexlate.init_project"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.main.Flexlate.init_project" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flexlate.main.Flexlate.init_project_from">
+<span class="sig-name descname"><span class="pre">init_project_from</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('.')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template_version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_folder_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'project'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_add_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">AddMode.LOCAL</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">merged_branch_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'flexlate-output'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template_branch_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'flexlate-templates'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/main.html#Flexlate.init_project_from"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.main.Flexlate.init_project_from" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1198,6 +1286,11 @@ when working in a temp directory)</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="flexlate.main.Flexlate.remove_template_source">
 <span class="sig-name descname"><span class="pre">remove_template_source</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template_root</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('.')</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/main.html#Flexlate.remove_template_source"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.main.Flexlate.remove_template_source" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flexlate.main.Flexlate.sync">
+<span class="sig-name descname"><span class="pre">sync</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">no_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('.')</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/main.html#Flexlate.sync"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.main.Flexlate.sync" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1273,6 +1366,38 @@ creates those directories as needed before running the logic</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="flexlate.remover.Remover.remove_template_source">
 <span class="sig-name descname"><span class="pre">remove_template_source</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">repo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transaction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_root=PosixPath('.')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">merged_branch_name='flexlate-output'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template_branch_name='flexlate-templates'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_mode=AddMode.LOCAL</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_manager=&lt;flexlate.config_manager.ConfigManager</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/remover.html#Remover.remove_template_source"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.remover.Remover.remove_template_source" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-flexlate.styles">
+<span id="flexlate-styles-module"></span><h2>flexlate.styles module<a class="headerlink" href="#module-flexlate.styles" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="flexlate.styles.print_styled">
+<span class="sig-prename descclassname"><span class="pre">flexlate.styles.</span></span><span class="sig-name descname"><span class="pre">print_styled</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">style</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/styles.html#print_styled"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.styles.print_styled" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="flexlate.styles.styled">
+<span class="sig-prename descclassname"><span class="pre">flexlate.styles.</span></span><span class="sig-name descname"><span class="pre">styled</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">style</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/styles.html#styled"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.styles.styled" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-flexlate.syncer">
+<span id="flexlate-syncer-module"></span><h2>flexlate.syncer module<a class="headerlink" href="#module-flexlate.syncer" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="flexlate.syncer.Syncer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">flexlate.syncer.</span></span><span class="sig-name descname"><span class="pre">Syncer</span></span><a class="reference internal" href="../_modules/flexlate/syncer.html#Syncer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.syncer.Syncer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="flexlate.syncer.Syncer.sync_local_changes_to_flexlate_branches">
+<span class="sig-name descname"><span class="pre">sync_local_changes_to_flexlate_branches</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">repo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transaction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">merged_branch_name='flexlate-output'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template_branch_name='flexlate-templates'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_input=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">updater=&lt;flexlate.update.main.Updater</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">renderer=&lt;flexlate.render.multi.MultiRenderer</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_manager=&lt;flexlate.config_manager.ConfigManager</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/syncer.html#Syncer.sync_local_changes_to_flexlate_branches"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.syncer.Syncer.sync_local_changes_to_flexlate_branches" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

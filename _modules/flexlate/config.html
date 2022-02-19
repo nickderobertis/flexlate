@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.config &mdash; flexlate 0.3.1 documentation</title>
+  <title>flexlate.config &mdash; flexlate 0.4.0 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.3.1
+                0.4.0
               </div>
             
           
@@ -196,6 +196,8 @@
     <span class="n">version</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">git_url</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">target_version</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">render_relative_root_in_output</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+    <span class="n">render_relative_root_in_template</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
 
     <span class="n">_config_file_location</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">PrivateAttr</span><span class="p">()</span>
 
@@ -212,9 +214,11 @@
             <span class="nb">type</span><span class="o">=</span><span class="n">template</span><span class="o">.</span><span class="n">_type</span><span class="p">,</span>
             <span class="n">target_version</span><span class="o">=</span><span class="n">target_version</span><span class="p">,</span>
             <span class="n">git_url</span><span class="o">=</span><span class="n">template</span><span class="o">.</span><span class="n">git_url</span><span class="p">,</span>
+            <span class="n">render_relative_root_in_output</span><span class="o">=</span><span class="n">template</span><span class="o">.</span><span class="n">render_relative_root_in_output</span><span class="p">,</span>
+            <span class="n">render_relative_root_in_template</span><span class="o">=</span><span class="n">template</span><span class="o">.</span><span class="n">render_relative_root_in_template</span><span class="p">,</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="TemplateSource.to_template"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config.TemplateSource.to_template">[docs]</a>    <span class="k">def</span> <span class="nf">to_template</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Template</span><span class="p">:</span>
+<div class="viewcode-block" id="TemplateSource.to_template"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config.TemplateSource.to_template">[docs]</a>    <span class="k">def</span> <span class="nf">to_template</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Template</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">TemplateType</span><span class="o">.</span><span class="n">BASE</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">InvalidTemplateTypeException</span><span class="p">(</span>
                 <span class="s2">&quot;base type is not allowed for concrete templates&quot;</span>
@@ -229,8 +233,10 @@
                 <span class="sa">f</span><span class="s2">&quot;no handling for template type </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="si">}</span><span class="s2"> in creating template from source&quot;</span>
             <span class="p">)</span>
         <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
+        <span class="n">version</span> <span class="o">=</span> <span class="n">version</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">version</span>
+        <span class="k">if</span> <span class="n">version</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="n">version</span><span class="p">)</span>
+        <span class="c1"># TODO: Can we remove target_version from templates?</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_version</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">target_version</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">target_version</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">git_url</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -242,7 +248,7 @@
             <span class="c1">#  and the logic to resolve the version that may be None is entertwined with the</span>
             <span class="c1">#  cloning and local path determination</span>
             <span class="n">local_path</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">get_local_repo_path_and_name_cloning_if_repo_url</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">git_url</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">version</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">git_url</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="n">version</span>
             <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">local_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">absolute_local_path</span>
@@ -274,7 +280,17 @@
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">data</span><span class="p">:</span> <span class="n">TemplateData</span>
     <span class="n">version</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span></div>
+    <span class="n">add_mode</span><span class="p">:</span> <span class="n">AddMode</span>
+    <span class="n">root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+
+    <span class="n">_config_file_location</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">PrivateAttr</span><span class="p">()</span>
+    <span class="n">_orig_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">PrivateAttr</span><span class="p">()</span>
+
+<div class="viewcode-block" id="AppliedTemplateConfig.__init__"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config.AppliedTemplateConfig.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="c1"># Root may get updated externally during config loading when adjusting applied paths,</span>
+        <span class="c1"># save the original root</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_orig_root</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">root</span></div></div>
 
 
 <div class="viewcode-block" id="AppliedTemplateWithSource"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config.AppliedTemplateWithSource">[docs]</a><span class="k">class</span> <span class="nc">AppliedTemplateWithSource</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
@@ -282,7 +298,10 @@
     <span class="n">source</span><span class="p">:</span> <span class="n">TemplateSource</span>
 
 <div class="viewcode-block" id="AppliedTemplateWithSource.to_template_and_data"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config.AppliedTemplateWithSource.to_template_and_data">[docs]</a>    <span class="k">def</span> <span class="nf">to_template_and_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Template</span><span class="p">,</span> <span class="n">TemplateData</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">to_template</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">applied_template</span><span class="o">.</span><span class="n">data</span></div></div>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">to_template</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">applied_template</span><span class="o">.</span><span class="n">version</span><span class="p">),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">applied_template</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
+        <span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="TemplateSourceWithTemplates"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config.TemplateSourceWithTemplates">[docs]</a><span class="k">class</span> <span class="nc">TemplateSourceWithTemplates</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
@@ -356,6 +375,11 @@
             <span class="c1"># can be made absolute before usage</span>
             <span class="n">loaded_path</span> <span class="o">=</span> <span class="n">path</span> <span class="ow">or</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_settings</span><span class="o">.</span><span class="n">config_location</span>
             <span class="n">template_source</span><span class="o">.</span><span class="n">_config_file_location</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">loaded_path</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">applied_template</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">applied_templates</span><span class="p">:</span>
+            <span class="c1"># Add location from which config was loaded so that it is easier to move</span>
+            <span class="c1"># applied templates to correct location after updates</span>
+            <span class="n">loaded_path</span> <span class="o">=</span> <span class="n">path</span> <span class="ow">or</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_settings</span><span class="o">.</span><span class="n">config_location</span>
+            <span class="n">applied_template</span><span class="o">.</span><span class="n">_config_file_location</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">loaded_path</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">config</span></div>
 
 <div class="viewcode-block" id="FlexlateConfig.save"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config.FlexlateConfig.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">serializer_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>

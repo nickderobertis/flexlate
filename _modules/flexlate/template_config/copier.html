@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.template_config.copier &mdash; flexlate 0.3.1 documentation</title>
+  <title>flexlate.template_config.copier &mdash; flexlate 0.4.0 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.3.1
+                0.4.0
               </div>
             
           
@@ -167,11 +167,18 @@
            <div itemprop="articleBody">
             
   <h1>Source code for flexlate.template_config.copier</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">flexlate.template_config.base</span> <span class="kn">import</span> <span class="n">TemplateConfig</span>
+<span></span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">from</span> <span class="nn">flexlate.template_config.base</span> <span class="kn">import</span> <span class="n">TemplateConfig</span>
+<span class="kn">from</span> <span class="nn">flexlate.template_data</span> <span class="kn">import</span> <span class="n">TemplateData</span>
 
 
 <div class="viewcode-block" id="CopierConfig"><a class="viewcode-back" href="../../../api/flexlate.template_config.html#flexlate.template_config.copier.CopierConfig">[docs]</a><span class="k">class</span> <span class="nc">CopierConfig</span><span class="p">(</span><span class="n">TemplateConfig</span><span class="p">):</span>
-    <span class="k">pass</span></div>
+<div class="viewcode-block" id="CopierConfig.__init__"><a class="viewcode-back" href="../../../api/flexlate.template_config.html#flexlate.template_config.copier.CopierConfig.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">defaults</span><span class="p">:</span> <span class="n">TemplateData</span><span class="p">,</span> <span class="n">render_relative_root_in_template</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">defaults</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">render_relative_root_in_template</span> <span class="o">=</span> <span class="n">render_relative_root_in_template</span></div></div>
 </pre></div>
 
            </div>
