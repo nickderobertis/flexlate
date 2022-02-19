@@ -8,6 +8,7 @@ import pytest
 from _pytest.monkeypatch import MonkeyPatch
 from git import Repo, Head
 
+from flexlate import cli_utils
 from flexlate.config import FlexlateConfig, TemplateSource, TemplateSourceWithTemplates
 from flexlate.exc import GitRepoDirtyException
 from flexlate.finder.multi import MultiFinder
@@ -36,6 +37,7 @@ from tests.fixtures.git import *
 from tests.fixtures.template import *
 from tests.fixtures.templated_repo import *
 from tests.fixtures.updates import *
+from tests.fixtures.quiet import quiet
 from tests.fixtures.transaction import update_transaction
 from flexlate.ext_git import repo_has_merge_conflicts
 
@@ -176,6 +178,7 @@ def test_update_modify_template_conflict_with_reject(
     cookiecutter_one_modified_template: CookiecutterTemplate,
     repo_from_cookiecutter_one_with_modifications: Repo,
     update_transaction: FlexlateTransaction,
+    quiet: bool,
 ):
     repo = repo_from_cookiecutter_one_with_modifications
 
@@ -186,8 +189,15 @@ def test_update_modify_template_conflict_with_reject(
     template_updates = updater.get_updates_for_templates(
         [cookiecutter_one_modified_template], project_root=GENERATED_FILES_DIR
     )
-    with patch.object(main, "confirm_user", _reject_update):
-        updater.update(repo, template_updates, update_transaction)
+    with patch.object(
+        cli_utils, "print_styled", wraps=cli_utils.print_styled
+    ) as spy_print_styled:
+        with patch.object(main, "confirm_user", _reject_update):
+            updater.update(repo, template_updates, update_transaction, quiet=quiet)
+        if quiet:
+            spy_print_styled.assert_not_called()
+        else:
+            spy_print_styled.assert_called()
 
     assert repo.commit().message == "Prepend cookiecutter text with hello\n"
 
