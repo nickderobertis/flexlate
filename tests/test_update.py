@@ -5,16 +5,19 @@ from typing import Optional, Sequence
 from unittest.mock import patch
 
 import pytest
+from _pytest.monkeypatch import MonkeyPatch
 from git import Repo, Head
 
 from flexlate.config import FlexlateConfig, TemplateSource, TemplateSourceWithTemplates
 from flexlate.exc import GitRepoDirtyException
 from flexlate.finder.multi import MultiFinder
+from flexlate.render.specific import cookiecutter
 from flexlate.template.base import Template
 from flexlate.template.cookiecutter import CookiecutterTemplate
-from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME
+from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.template.types import TemplateType
 from flexlate.transactions.transaction import FlexlateTransaction
+from flexlate.update import main
 from flexlate.update.main import Updater
 from flexlate.update.template import TemplateUpdate
 from tests.config import (
@@ -132,6 +135,68 @@ def test_update_modify_template_conflict(
     )
     updater.update(repo, template_updates, update_transaction, no_input=True)
     assert repo_has_merge_conflicts(repo)
+
+
+@patch.object(
+    cookiecutter, "prompt_for_config", lambda context, no_input: {"a": "b", "c": ""}
+)
+def test_update_modify_template_conflict_with_resolution(
+    cookiecutter_one_modified_template: CookiecutterTemplate,
+    repo_from_cookiecutter_one_with_modifications: Repo,
+    update_transaction: FlexlateTransaction,
+):
+    repo = repo_from_cookiecutter_one_with_modifications
+    manual_commit_message = "Manually resolve conflicts"
+
+    def _resolve_conflicts_then_type_yes(prompt: str) -> bool:
+        stage_and_commit_all(repo, manual_commit_message)
+        return True
+
+    updater = Updater()
+    template_updates = updater.get_updates_for_templates(
+        [cookiecutter_one_modified_template], project_root=GENERATED_FILES_DIR
+    )
+    with patch.object(main, "confirm_user", _resolve_conflicts_then_type_yes):
+        updater.update(repo, template_updates, update_transaction)
+    assert not repo_has_merge_conflicts(repo)
+
+    for branch_name in [
+        "master",
+        DEFAULT_MERGED_BRANCH_NAME,
+    ]:
+        branch: Head = repo.branches[branch_name]  # type: ignore
+        branch.checkout()
+        assert repo.commit().message == manual_commit_message + "\n"
+
+
+@patch.object(
+    cookiecutter, "prompt_for_config", lambda context, no_input: {"a": "b", "c": ""}
+)
+def test_update_modify_template_conflict_with_reject(
+    cookiecutter_one_modified_template: CookiecutterTemplate,
+    repo_from_cookiecutter_one_with_modifications: Repo,
+    update_transaction: FlexlateTransaction,
+):
+    repo = repo_from_cookiecutter_one_with_modifications
+
+    def _reject_update(prompt: str) -> bool:
+        return False
+
+    updater = Updater()
+    template_updates = updater.get_updates_for_templates(
+        [cookiecutter_one_modified_template], project_root=GENERATED_FILES_DIR
+    )
+    with patch.object(main, "confirm_user", _reject_update):
+        updater.update(repo, template_updates, update_transaction)
+
+    assert repo.commit().message == "Prepend cookiecutter text with hello\n"
+
+    for branch_name in [DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME]:
+        branch: Head = repo.branches[branch_name]  # type: ignore
+        branch.checkout()
+        assert_main_commit_message_matches(
+            repo.commit().message, "Update flexlate templates"
+        )
 
 
 @pytest.mark.parametrize(

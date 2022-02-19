@@ -1,11 +1,9 @@
-import shutil
 import tempfile
 from pathlib import Path
-from typing import Optional, Tuple
+from typing import Tuple
 
 from cookiecutter.config import get_user_config
 from cookiecutter.generate import generate_context, generate_files
-from cookiecutter.main import cookiecutter
 from cookiecutter.prompt import prompt_for_config
 
 from flexlate.render.renderable import Renderable
