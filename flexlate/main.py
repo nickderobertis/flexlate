@@ -65,6 +65,7 @@ class Flexlate:
         data: Optional[TemplateData] = None,
         default_folder_name: str = "project",
         no_input: bool = False,
+        quiet: bool = False,
         default_add_mode: AddMode = AddMode.LOCAL,
         merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
         template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
@@ -82,6 +83,7 @@ class Flexlate:
             default_folder_name=default_folder_name,
             data=data,
             no_input=no_input,
+            quiet=quiet,
             default_add_mode=default_add_mode,
             merged_branch_name=merged_branch_name,
             template_branch_name=template_branch_name,
@@ -146,6 +148,7 @@ class Flexlate:
         out_root: Path = Path("."),
         add_mode: Optional[AddMode] = None,
         no_input: bool = False,
+        quiet: bool = False,
     ):
         transaction = FlexlateTransaction(
             type=TransactionType.ADD_OUTPUT, target=name, out_root=out_root, data=data
@@ -164,6 +167,7 @@ class Flexlate:
             out_root=out_root,
             add_mode=add_mode,
             no_input=no_input,
+            quiet=quiet,
             merged_branch_name=project_config.merged_branch_name,
             template_branch_name=project_config.template_branch_name,
             config_manager=self.config_manager,
@@ -175,6 +179,7 @@ class Flexlate:
         self,
         template_name: str,
         out_root: Path = Path("."),
+        quiet: bool = False,
     ):
         transaction = FlexlateTransaction(
             type=TransactionType.REMOVE_OUTPUT, target=template_name, out_root=out_root
@@ -188,6 +193,7 @@ class Flexlate:
             transaction,
             out_root=out_root,
             add_mode=project_config.default_add_mode,
+            quiet=quiet,
             merged_branch_name=project_config.merged_branch_name,
             template_branch_name=project_config.template_branch_name,
             config_manager=self.config_manager,
@@ -200,6 +206,7 @@ class Flexlate:
         names: Optional[List[str]] = None,
         data: Optional[Sequence[TemplateData]] = None,
         no_input: bool = False,
+        quiet: bool = False,
         project_path: Path = Path("."),
     ):
         transaction = FlexlateTransaction(
@@ -242,6 +249,7 @@ class Flexlate:
             updates,
             transaction,
             no_input=no_input,
+            quiet=quiet,
             merged_branch_name=project_config.merged_branch_name,
             template_branch_name=project_config.template_branch_name,
             renderer=self.renderer,
@@ -258,7 +266,12 @@ class Flexlate:
             template_branch_name=project_config.template_branch_name,
         )
 
-    def sync(self, no_input: bool = False, project_path: Path = Path(".")):
+    def sync(
+        self,
+        no_input: bool = False,
+        quiet: bool = False,
+        project_path: Path = Path("."),
+    ):
         project_config = self.config_manager.load_project_config(project_path)
         repo = Repo(project_config.path)
         transaction = FlexlateTransaction(
@@ -270,6 +283,7 @@ class Flexlate:
             merged_branch_name=project_config.merged_branch_name,
             template_branch_name=project_config.template_branch_name,
             no_input=no_input,
+            quiet=quiet,
             updater=self.updater,
             renderer=self.renderer,
             config_manager=self.config_manager,
