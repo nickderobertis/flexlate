@@ -100,7 +100,7 @@ def fast_forward_branch_without_checkout(repo: Repo, base_branch: str, ff_branch
 
 
 def reset_branch_to_commit_without_checkout(
-    repo: Repo, branch_name: str, commit_sha: str
+    repo: Repo, branch_name: str, commit_sha: Optional[str] = None
 ):
     if commit_sha is None:
         # Branch didn't previously exist, delete
