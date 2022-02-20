@@ -187,7 +187,7 @@ def _assert_successful_merge(
     feature_template_branch_name: str,
     delete: bool,
     feature_branch_message: str = "Update flexlate templates",
-    main_branch_message: str = "Manually resolve conflicts",
+    main_branch_message: str = "Update flexlate templates",
 ):
     for branch_name in [
         "master",
