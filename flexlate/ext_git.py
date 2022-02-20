@@ -1,10 +1,11 @@
+import itertools
 import os
 import re
 import shutil
 import tempfile
 from contextlib import contextmanager
 from pathlib import Path
-from typing import cast, Set, Generator, ContextManager, Optional, Tuple, List
+from typing import cast, Set, Generator, ContextManager, Optional, Tuple, List, Sequence
 
 from git import Repo, Blob, Tree, GitCommandError, Commit, Git  # type: ignore
 
@@ -127,10 +128,13 @@ def temp_repo_that_pushes_to_branch(  # type: ignore
     branch_name: str,
     delete_tracked_files: bool = False,
     force_push: bool = False,
+    additional_branches: Sequence[str] = tuple(),
 ) -> ContextManager[Repo]:
     with tempfile.TemporaryDirectory() as tmp_dir:
         tmp_path = Path(tmp_dir)
-        temp_repo = _clone_single_branch_from_local_repo(repo, tmp_path, branch_name)
+        temp_repo = _clone_from_local_repo(
+            repo, tmp_path, branch_name, additional_branches
+        )
         if delete_tracked_files:
             delete_tracked_files_excluding_initial_commit(temp_repo)
         # For type narrowing
@@ -143,6 +147,19 @@ def temp_repo_that_pushes_to_branch(  # type: ignore
         _push_branch_from_one_local_repo_to_another(
             temp_repo, repo, branch_name, force=force_push
         )
+
+
+def _clone_from_local_repo(
+    repo: Repo,
+    out_dir: Path,
+    branch_name: str,
+    additional_branches: Sequence[str] = tuple(),
+) -> Repo:
+    if additional_branches:
+        return _clone_specific_branches_from_local_repo(
+            repo, out_dir, [branch_name, *additional_branches], branch_name
+        )
+    return _clone_single_branch_from_local_repo(repo, out_dir, branch_name)
 
 
 def _clone_single_branch_from_local_repo(
@@ -164,6 +181,21 @@ def _clone_single_branch_from_local_repo(
         # Now create the new branch
         checkout_template_branch(temp_repo, branch_name)
 
+    return temp_repo
+
+
+def _clone_specific_branches_from_local_repo(
+    repo: Repo, out_dir: Path, branch_names: Sequence[str], checkout_branch: str
+) -> Repo:
+    temp_repo = Repo.init(out_dir)
+    branch_arguments = list(
+        itertools.chain(*[["-t", branch] for branch in branch_names])
+    )
+    temp_repo.git.remote("add", "-f", *branch_arguments, "origin", repo.working_dir)
+    for branch in branch_names:
+        # TODO: is there a way to set up remote tracking branches without checkout?
+        temp_repo.git.checkout("-t", f"origin/{branch}")
+    temp_repo.branches[checkout_branch].checkout()  # type: ignore
     return temp_repo
 
 

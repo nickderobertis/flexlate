@@ -5,6 +5,7 @@ from typing import Sequence, Optional, List, Dict, Any
 from git import Repo
 from rich.prompt import Confirm
 
+from flexlate.branch_update import abort_merge_and_reset_flexlate_branches
 from flexlate.cli_utils import confirm_user
 from flexlate.config_manager import ConfigManager
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
@@ -175,14 +176,13 @@ class Updater:
                     "Aborting update.",
                     ALERT_STYLE,
                 )
-                # Abort merge and reset flexlate branches to original state
-                abort_merge(repo)
-                current_branch.checkout()
-                reset_branch_to_commit_without_checkout(
-                    repo, merged_branch_name, merged_branch_sha
-                )
-                reset_branch_to_commit_without_checkout(
-                    repo, template_branch_name, template_branch_sha
+                abort_merge_and_reset_flexlate_branches(
+                    repo,
+                    current_branch,
+                    merged_branch_sha=merged_branch_sha,
+                    template_branch_sha=template_branch_sha,
+                    merged_branch_name=merged_branch_name,
+                    template_branch_name=template_branch_name,
                 )
                 return
 

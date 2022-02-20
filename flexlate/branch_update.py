@@ -1,8 +1,8 @@
 import os
 from pathlib import Path
-from typing import Callable, Union, List
+from typing import Callable, Union, List, Optional
 
-from git import Repo
+from git import Repo, repo, Head
 
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.ext_git import (
@@ -11,6 +11,8 @@ from flexlate.ext_git import (
     fast_forward_branch_without_checkout,
     checked_out_template_branch,
     merge_branch_into_current,
+    abort_merge,
+    reset_branch_to_commit_without_checkout,
 )
 from flexlate.path_ops import make_func_that_creates_cwd_and_out_root_before_running
 from flexlate.transactions.transaction import (
@@ -86,6 +88,28 @@ def undo_transaction_in_flexlate_branches(
         )
 
 
+def abort_merge_and_reset_flexlate_branches(
+    repo: Repo,
+    current_branch: Head,
+    merged_branch_sha: Optional[str] = None,
+    template_branch_sha: Optional[str] = None,
+    merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
+    template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
+):
+    abort_merge(repo)
+    current_branch.checkout()
+    reset_branch_to_commit_without_checkout(repo, merged_branch_name, merged_branch_sha)
+    reset_branch_to_commit_without_checkout(
+        repo, template_branch_name, template_branch_sha
+    )
+
+
 def get_flexlate_branch_name(repo: Repo, base_branch_name: str) -> str:
     current_branch = repo.active_branch.name
-    return f"{base_branch_name}/{current_branch}"
+    return get_flexlate_branch_name_for_feature_branch(current_branch, base_branch_name)
+
+
+def get_flexlate_branch_name_for_feature_branch(
+    feature_branch: str, base_branch_name: str
+) -> str:
+    return f"{base_branch_name}/{feature_branch}"

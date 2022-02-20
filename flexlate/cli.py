@@ -289,5 +289,28 @@ def sync(
     app.sync(no_input=no_input, project_path=path)
 
 
+@cli.command(name="merge")
+def merge(
+    branch_name: Optional[str] = typer.Argument(
+        None,
+        help="Optional name of feature branch for which to merge "
+        "corresponding flexlate branches. Defaults to current branch",
+    ),
+    path: Path = typer.Argument(Path("."), help=PROJECT_PATH_DOC),
+    quiet: bool = QUIET_OPTION,
+):
+    """
+    Merges feature flexlate branches into the main flexlate branches
+
+    Feature flexlate branches should be merged into main flexlate branches when
+    the corresponding feature branch is merged into the repo's main branch. This
+    command provides a convenient way to do so.
+
+    :return:
+    """
+    app = Flexlate(quiet=quiet)
+    app.merge_flexlate_branches(branch_name, project_path=path)
+
+
 if __name__ == "__main__":
     cli()

@@ -9,6 +9,7 @@ from flexlate.branch_update import get_flexlate_branch_name
 from flexlate.config_manager import ConfigManager
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.finder.multi import MultiFinder
+from flexlate.merger import Merger
 from flexlate.remover import Remover
 from flexlate.render.multi import MultiRenderer
 from flexlate.styles import console
@@ -27,6 +28,7 @@ class Flexlate:
         adder: Adder = Adder(),
         remover: Remover = Remover(),
         config_manager: ConfigManager = ConfigManager(),
+        merger: Merger = Merger(),
         finder: MultiFinder = MultiFinder(),
         renderer: MultiRenderer = MultiRenderer(),
         syncer: Syncer = Syncer(),
@@ -40,6 +42,7 @@ class Flexlate:
         self.adder = adder
         self.remover = remover
         self.config_manager = config_manager
+        self.merger = merger
         self.finder = finder
         self.renderer = renderer
         self.syncer = syncer
@@ -312,6 +315,20 @@ class Flexlate:
             updater=self.updater,
             renderer=self.renderer,
             config_manager=self.config_manager,
+        )
+
+    def merge_flexlate_branches(
+        self,
+        branch_name: Optional[str] = None,
+        project_path: Path = Path("."),
+    ):
+        project_config = self.config_manager.load_project_config(project_path)
+        repo = Repo(project_config.path)
+        self.merger.merge_flexlate_branches(
+            repo,
+            branch_name,
+            merged_branch_name=project_config.merged_branch_name,
+            template_branch_name=project_config.template_branch_name,
         )
 
     # TODO: list template sources, list applied templates
