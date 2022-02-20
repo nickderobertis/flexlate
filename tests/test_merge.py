@@ -24,18 +24,15 @@ from tests.gitutils import (
 @pytest.mark.parametrize("delete", [True, False])
 def test_merge_with_non_existent_main_branches(
     delete: bool,
-    repo_with_template_branch_from_cookiecutter_one: Repo,
+    repo_with_template_branch_from_cookiecutter_one_and_feature_flexlate_branches: Repo,
 ):
-    repo = repo_with_template_branch_from_cookiecutter_one
-    # Simulate conditions of developing on feature branch
+    repo = repo_with_template_branch_from_cookiecutter_one_and_feature_flexlate_branches
     feature_merged_branch_name = get_flexlate_branch_name(
         repo, DEFAULT_MERGED_BRANCH_NAME
     )
     feature_template_branch_name = get_flexlate_branch_name(
         repo, DEFAULT_TEMPLATE_BRANCH_NAME
     )
-    rename_branch(repo, DEFAULT_MERGED_BRANCH_NAME, feature_merged_branch_name)
-    rename_branch(repo, DEFAULT_TEMPLATE_BRANCH_NAME, feature_template_branch_name)
 
     merger = Merger()
     merger.merge_flexlate_branches(repo, delete=delete)
