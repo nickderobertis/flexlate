@@ -8,7 +8,6 @@ from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRAN
 from flexlate.main import Flexlate
 
 cli = typer.Typer()
-app = Flexlate()
 
 add_cli = typer.Typer(
     help="Add template sources and generate new projects and "
@@ -71,10 +70,12 @@ def add_source(
     version: Optional[str] = VERSION_OPTION,
     template_root: Path = TEMPLATE_ROOT_OPTION,
     add_mode: Optional[AddMode] = ADD_MODE_OPTION,
+    quiet: bool = QUIET_OPTION,
 ):
     """
     Adds a new template source, so that files can be generated from it
     """
+    app = Flexlate(quiet=quiet)
     app.add_template_source(
         path,
         name=name,
@@ -98,12 +99,12 @@ def generate_applied_template(
     """
     Applies a template to a given location, and stores it in config so it can be updated
     """
+    app = Flexlate(quiet=quiet)
     app.apply_template_and_add(
         name,
         out_root=template_root,
         add_mode=add_mode,
         no_input=no_input,
-        quiet=quiet,
     )
 
 
@@ -120,7 +121,9 @@ def remove_template_source(
         ..., help="The name of the template source to remove"
     ),
     template_root: Path = TEMPLATE_ROOT_OPTION,
+    quiet: bool = QUIET_OPTION,
 ):
+    app = Flexlate(quiet=quiet)
     app.remove_template_source(template_name, template_root=template_root)
 
 
@@ -134,9 +137,8 @@ def remove_template_output(
     template_root: Path = TEMPLATE_ROOT_OPTION,
     quiet: bool = QUIET_OPTION,
 ):
-    app.remove_applied_template_and_output(
-        template_name, out_root=template_root, quiet=quiet
-    )
+    app = Flexlate(quiet=quiet)
+    app.remove_applied_template_and_output(template_name, out_root=template_root)
 
 
 cli.add_typer(remove_cli, name="remove")
@@ -165,10 +167,12 @@ def init_project(
         "--user",
         help=PROJECT_USER_DOC,
     ),
+    quiet: bool = QUIET_OPTION,
 ):
     """
     Initializes a flexlate project. This must be run before other commands
     """
+    app = Flexlate(quiet=quiet)
     app.init_project(
         path,
         default_add_mode=default_add_mode,
@@ -213,13 +217,13 @@ def init_project_from(
     """
     Generates a project from a template and sets it up as a Flexlate project.
     """
+    app = Flexlate(quiet=quiet)
     app.init_project_from(
         template_path,
         path,
         template_version=version,
         default_folder_name=folder_name,
         no_input=no_input,
-        quiet=quiet,
         default_add_mode=default_add_mode,
         merged_branch_name=merged_branch_name,
         template_branch_name=template_branch_name,
@@ -241,7 +245,8 @@ def update_templates(
     Updates applied templates in the project to the newest versions
     available that still satisfy source target versions
     """
-    app.update(names=names, no_input=no_input, quiet=quiet, project_path=path)
+    app = Flexlate(quiet=quiet)
+    app.update(names=names, no_input=no_input, project_path=path)
 
 
 @cli.command(name="undo")
@@ -251,6 +256,7 @@ def undo(
         help="Number of flexlate operations to undo",
     ),
     path: Path = typer.Option(Path("."), help=PROJECT_PATH_DOC),
+    quiet: bool = QUIET_OPTION,
 ):
     """
     Undoes the last flexlate operation, like ctrl/cmd + z for flexlate.
@@ -259,6 +265,7 @@ def undo(
     use this on a feature branch.
     :return:
     """
+    app = Flexlate(quiet=quiet)
     app.undo(num_operations=num_operations, project_path=path)
 
 
@@ -278,7 +285,8 @@ def sync(
     Note: Be sure to commit your changes before running sync
     :return:
     """
-    app.sync(no_input=no_input, quiet=quiet, project_path=path)
+    app = Flexlate(quiet=quiet)
+    app.sync(no_input=no_input, project_path=path)
 
 
 if __name__ == "__main__":

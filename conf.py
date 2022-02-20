@@ -68,6 +68,7 @@ PACKAGE_INSTALL_REQUIRES = [
     "gitpython",
     "typer",
     "rich",
+    "markupsafe<2.1",
 ]
 
 # Add any third party packages you use in requirements for optional features of your package here

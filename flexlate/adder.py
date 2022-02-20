@@ -1,6 +1,7 @@
 import os
 import shutil
 import tempfile
+import time
 from copy import deepcopy
 from pathlib import Path
 from typing import Optional
@@ -23,6 +24,7 @@ from flexlate.path_ops import (
     location_relative_to_new_parent,
 )
 from flexlate.render.multi import MultiRenderer
+from flexlate.styles import SUCCESS_STYLE, INFO_STYLE, console, styled, print_styled
 from flexlate.template.base import Template
 from flexlate.template_data import TemplateData
 from flexlate.transactions.transaction import (
@@ -69,39 +71,49 @@ class Adder:
                 os.path.relpath(template.path.resolve(), config_path.parent.resolve())
             )
 
-        if add_mode == AddMode.USER:
-            # No need to use git if adding for user
-            config_manager.add_template_source(
-                template,
-                config_path,
-                target_version=target_version,
-                project_root=Path(repo.working_dir),  # type: ignore
+        with console.status(print_styled("Adding template source...", INFO_STYLE)):
+            print_styled(
+                f"Adding template source {template.name} from {template.git_url or template.path}",
+                INFO_STYLE,
             )
-            return
 
-        commit_message = create_transaction_commit_message(
-            _add_template_source_commit_message(
-                template, out_root, Path(repo.working_dir)
-            ),
-            transaction,
-        )
+            if add_mode == AddMode.USER:
+                # No need to use git if adding for user
+                config_manager.add_template_source(
+                    template,
+                    config_path,
+                    target_version=target_version,
+                    project_root=Path(repo.working_dir),  # type: ignore
+                )
+                return
 
-        # Local or project config, add in git
-        modify_files_via_branches_and_temp_repo(
-            lambda temp_path: config_manager.add_template_source(
-                template,
-                location_relative_to_new_parent(
-                    config_path, project_root, temp_path, Path(os.getcwd())
+            commit_message = create_transaction_commit_message(
+                _add_template_source_commit_message(
+                    template, out_root, Path(repo.working_dir)
                 ),
-                target_version=target_version,
-                project_root=temp_path,
-            ),
-            repo,
-            commit_message,
-            out_root,
-            merged_branch_name=merged_branch_name,
-            template_branch_name=template_branch_name,
-        )
+                transaction,
+            )
+
+            # Local or project config, add in git
+            modify_files_via_branches_and_temp_repo(
+                lambda temp_path: config_manager.add_template_source(
+                    template,
+                    location_relative_to_new_parent(
+                        config_path, project_root, temp_path, Path(os.getcwd())
+                    ),
+                    target_version=target_version,
+                    project_root=temp_path,
+                ),
+                repo,
+                commit_message,
+                out_root,
+                merged_branch_name=merged_branch_name,
+                template_branch_name=template_branch_name,
+            )
+
+            print_styled(
+                f"Sucessfully added template source {template.name}", INFO_STYLE
+            )
 
     def apply_template_and_add(
         self,
@@ -114,7 +126,6 @@ class Adder:
         merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
         template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
         no_input: bool = False,
-        quiet: bool = False,
         config_manager: ConfigManager = ConfigManager(),
         updater: Updater = Updater(),
         renderer: MultiRenderer = MultiRenderer(),
@@ -130,6 +141,11 @@ class Adder:
         )
         expanded_out_root = get_expanded_out_root(
             out_root, project_root, template.render_relative_root_in_output, add_mode
+        )
+
+        print_styled(
+            f"Applying template {template.name} to {expanded_out_root.resolve()}",
+            INFO_STYLE,
         )
 
         if add_mode == AddMode.USER:
@@ -184,10 +200,13 @@ class Adder:
             merged_branch_name=merged_branch_name,
             template_branch_name=template_branch_name,
             no_input=no_input,
-            quiet=quiet,
             full_rerender=False,
             renderer=renderer,
             config_manager=config_manager,
+        )
+        print_styled(
+            f"Successfully applied template {template.name} to {expanded_out_root.resolve()}",
+            SUCCESS_STYLE,
         )
 
     def init_project_and_add_to_branches(
@@ -205,31 +224,44 @@ class Adder:
 
         path = Path(repo.working_dir)
 
-        if user:
-            # Simply init the project for the user
-            config_manager.add_project(
-                path=path,
-                default_add_mode=default_add_mode,
-                user=user,
+        with console.status(styled("Initializing...", INFO_STYLE)):
+            print_styled(
+                f"Initializing flexlate project with default add mode "
+                f"{default_add_mode.value} and user={user} in "
+                f"{Path(repo.working_dir).resolve()}",
+                INFO_STYLE,
+            )
+
+            if user:
+                # Simply init the project for the user
+                config_manager.add_project(
+                    path=path,
+                    default_add_mode=default_add_mode,
+                    user=user,
+                    merged_branch_name=merged_branch_name,
+                    template_branch_name=template_branch_name,
+                )
+                return
+
+            # Config resides in project, so add it via branches
+            modify_files_via_branches_and_temp_repo(
+                lambda temp_path: config_manager.add_project(
+                    path=temp_path,
+                    default_add_mode=default_add_mode,
+                    user=user,
+                    merged_branch_name=merged_branch_name,
+                    template_branch_name=template_branch_name,
+                ),
+                repo,
+                "Initialized flexlate project",
+                path,
                 merged_branch_name=merged_branch_name,
                 template_branch_name=template_branch_name,
             )
-            return
 
-        # Config resides in project, so add it via branches
-        modify_files_via_branches_and_temp_repo(
-            lambda temp_path: config_manager.add_project(
-                path=temp_path,
-                default_add_mode=default_add_mode,
-                user=user,
-                merged_branch_name=merged_branch_name,
-                template_branch_name=template_branch_name,
-            ),
-            repo,
-            "Initialized flexlate project",
-            path,
-            merged_branch_name=merged_branch_name,
-            template_branch_name=template_branch_name,
+        print_styled(
+            f"Finished initializing flexlate project",
+            SUCCESS_STYLE,
         )
 
     def init_project_from_template_source_path(
@@ -244,7 +276,6 @@ class Adder:
         merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
         template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
         no_input: bool = False,
-        quiet: bool = False,
         config_manager: ConfigManager = ConfigManager(),
         updater: Updater = Updater(),
         renderer: MultiRenderer = MultiRenderer(),
@@ -284,7 +315,6 @@ class Adder:
                 merged_branch_name=merged_branch_name,
                 template_branch_name=template_branch_name,
                 no_input=no_input,
-                quiet=quiet,
                 config_manager=config_manager,
                 updater=updater,
                 renderer=renderer,
