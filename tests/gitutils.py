@@ -54,9 +54,5 @@ def checkout_existing_branch(repo: Repo, branch_name: str):
     repo.git.checkout(branch_name)
 
 
-def merge_branch_into_current(repo: Repo, branch_name: str):
-    repo.git.merge(branch_name)
-
-
 def _get_main_message_from_commit_message(message: str) -> str:
     return message.split("\n")[0]

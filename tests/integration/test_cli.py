@@ -14,6 +14,7 @@ from flexlate.add_mode import AddMode
 from flexlate.branch_update import get_flexlate_branch_name
 from flexlate.config import FlexlateConfig, FlexlateProjectConfig
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
+from flexlate.ext_git import merge_branch_into_current
 from flexlate.main import Flexlate
 from flexlate.template.types import TemplateType
 from flexlate.template_data import TemplateData
@@ -46,7 +47,6 @@ from tests.gitutils import (
     assert_main_commit_message_matches,
     checkout_new_branch,
     checkout_existing_branch,
-    merge_branch_into_current,
 )
 from tests.integration.cli_stub import CLIRunnerException
 from tests.integration.undoables import UNDOABLE_OPERATIONS
