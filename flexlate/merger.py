@@ -64,13 +64,13 @@ class Merger:
         except GitCommandError as e:
             # TODO: make sure it's the right git error
             # Could not fast forward. Must do a merge in a temp repo and have user resolve any conflicts
-            with temp_repo_that_pushes_to_branch(
+            with temp_repo_that_pushes_to_branch(  # type: ignore
                 repo,
                 branch_name=template_branch_name,
                 base_branch_name=template_branch_name,
                 additional_branches=(flexlate_feature_template_branch_name,),
             ) as temp_repo:
-                temp_repo.git.merge(flexlate_feature_template_branch_name)
+                temp_repo.git.merge(flexlate_feature_template_branch_name)  # type: ignore
                 if repo_has_merge_conflicts(temp_repo):
                     print_styled(
                         f"Encountered merge conflicts while merging "
@@ -79,7 +79,7 @@ class Merger:
                     )
                     print_styled(
                         f"Flexlate uses a temporary repo for this merge. "
-                        f"Please resolve conflicts in {temp_repo.working_dir}",
+                        f"Please resolve conflicts in {temp_repo.working_dir}",  # type: ignore
                         ACTION_REQUIRED_STYLE,
                     )
                     handled_conflicts = confirm_user(
