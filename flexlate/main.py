@@ -10,6 +10,7 @@ from flexlate.config_manager import ConfigManager
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.finder.multi import MultiFinder
 from flexlate.merger import Merger
+from flexlate.pusher import Pusher
 from flexlate.remover import Remover
 from flexlate.render.multi import MultiRenderer
 from flexlate.styles import console
@@ -30,6 +31,7 @@ class Flexlate:
         config_manager: ConfigManager = ConfigManager(),
         merger: Merger = Merger(),
         finder: MultiFinder = MultiFinder(),
+        pusher: Pusher = Pusher(),
         renderer: MultiRenderer = MultiRenderer(),
         syncer: Syncer = Syncer(),
         updater: Updater = Updater(),
@@ -44,6 +46,7 @@ class Flexlate:
         self.config_manager = config_manager
         self.merger = merger
         self.finder = finder
+        self.pusher = pusher
         self.renderer = renderer
         self.syncer = syncer
         self.updater = updater
@@ -343,6 +346,36 @@ class Flexlate:
             repo,
             branch_name,
             delete=delete,
+            merged_branch_name=project_config.merged_branch_name,
+            template_branch_name=project_config.template_branch_name,
+        )
+
+    def push_main_flexlate_branches(
+        self,
+        remote: str = "origin",
+        project_path: Path = Path("."),
+    ):
+        project_config = self.config_manager.load_project_config(project_path)
+        repo = Repo(project_config.path)
+        self.pusher.push_main_flexlate_branches(
+            repo,
+            remote,
+            merged_branch_name=project_config.merged_branch_name,
+            template_branch_name=project_config.template_branch_name,
+        )
+
+    def push_feature_flexlate_branches(
+        self,
+        feature_branch: Optional[str] = None,
+        remote: str = "origin",
+        project_path: Path = Path("."),
+    ):
+        project_config = self.config_manager.load_project_config(project_path)
+        repo = Repo(project_config.path)
+        self.pusher.push_feature_flexlate_branches(
+            repo,
+            feature_branch,
+            remote,
             merged_branch_name=project_config.merged_branch_name,
             template_branch_name=project_config.template_branch_name,
         )

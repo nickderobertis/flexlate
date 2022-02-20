@@ -11,7 +11,10 @@ import pytest
 from git import GitCommandError
 
 from flexlate.add_mode import AddMode
-from flexlate.branch_update import get_flexlate_branch_name
+from flexlate.branch_update import (
+    get_flexlate_branch_name,
+    get_flexlate_branch_name_for_feature_branch,
+)
 from flexlate.config import FlexlateConfig, FlexlateProjectConfig
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.ext_git import merge_branch_into_current
@@ -50,6 +53,7 @@ from tests.gitutils import (
 )
 from tests.integration.cli_stub import CLIRunnerException
 from tests.integration.undoables import UNDOABLE_OPERATIONS
+from tests.test_pusher import add_local_remote_and_check_branches_on_exit
 
 
 def test_init_project_and_add_source_and_template(
@@ -719,11 +723,48 @@ def test_merge(flexlates: FlexlateFixture, repo_with_placeholder_committed: Repo
     )
 
 
+def test_push(flexlates: FlexlateFixture, repo_with_placeholder_committed: Repo):
+    fxt = flexlates.flexlate
+    repo = repo_with_placeholder_committed
+
+    with change_directory_to(GENERATED_REPO_DIR):
+        fxt.init_project()
+        # Make a dummy change
+        dummy_file = GENERATED_REPO_DIR / "something.txt"
+        dummy_file.write_text("text")
+        stage_and_commit_all(repo, "Add a dummy change to the main branch")
+        with _checkout_new_branch_that_merges_back(repo, fxt, "add-source"):
+            fxt.add_template_source(COOKIECUTTER_REMOTE_URL)
+        with _checkout_new_branch_that_merges_back(
+            repo, fxt, "add-template", delete=False
+        ):
+            fxt.apply_template_and_add(COOKIECUTTER_REMOTE_NAME, no_input=True)
+
+        feature_merged_branch_name = get_flexlate_branch_name_for_feature_branch(
+            "add-template", DEFAULT_MERGED_BRANCH_NAME
+        )
+        feature_template_branch_name = get_flexlate_branch_name_for_feature_branch(
+            "add-template", DEFAULT_TEMPLATE_BRANCH_NAME
+        )
+        all_branches = [
+            DEFAULT_TEMPLATE_BRANCH_NAME,
+            DEFAULT_MERGED_BRANCH_NAME,
+            feature_merged_branch_name,
+            feature_template_branch_name,
+        ]
+
+        with add_local_remote_and_check_branches_on_exit(repo, all_branches):
+            fxt.push_feature_flexlate_branches("add-template")
+            fxt.push_main_flexlate_branches()
+
+
 @contextlib.contextmanager
-def _checkout_new_branch_that_merges_back(repo: Repo, fxt: Flexlate, branch_name: str):
+def _checkout_new_branch_that_merges_back(
+    repo: Repo, fxt: Flexlate, branch_name: str, delete: bool = True
+):
     checkout_new_branch(repo, branch_name)
     yield
-    fxt.merge_flexlate_branches()
+    fxt.merge_flexlate_branches(delete=delete)
     checkout_existing_branch(repo, "master")
     merge_branch_into_current(repo, branch_name)
 

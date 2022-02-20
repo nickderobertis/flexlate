@@ -242,6 +242,31 @@ class CLIStubFlexlate(Flexlate):
             ]
         )
 
+    def push_main_flexlate_branches(
+        self,
+        remote: str = "origin",
+        project_path: Path = Path("."),
+    ):
+        return fxt(["push", "main", "--remote", remote, "--path", str(project_path)])
+
+    def push_feature_flexlate_branches(
+        self,
+        feature_branch: Optional[str] = None,
+        remote: str = "origin",
+        project_path: Path = Path("."),
+    ):
+        return fxt(
+            [
+                "push",
+                "feature",
+                *_value_if_not_none(feature_branch),
+                "--remote",
+                remote,
+                "--path",
+                str(project_path),
+            ]
+        )
+
 
 def _bool_flag(value: bool, name: str) -> List[str]:
     return [f"--{name}"] if value else []

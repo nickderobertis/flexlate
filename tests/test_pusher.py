@@ -21,7 +21,7 @@ def test_push_feature_flexlate_branches(
         repo, DEFAULT_TEMPLATE_BRANCH_NAME
     )
     pusher = Pusher()
-    with _add_local_remote_and_check_branches_on_exit(
+    with add_local_remote_and_check_branches_on_exit(
         repo, [feature_merged_branch_name, feature_template_branch_name]
     ):
         pusher.push_feature_flexlate_branches(repo)
@@ -32,14 +32,14 @@ def test_push_main_flexlate_branches(
 ):
     repo = repo_with_template_branch_from_cookiecutter_one
     pusher = Pusher()
-    with _add_local_remote_and_check_branches_on_exit(
+    with add_local_remote_and_check_branches_on_exit(
         repo, [DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME]
     ):
         pusher.push_main_flexlate_branches(repo)
 
 
 @contextlib.contextmanager
-def _add_local_remote_and_check_branches_on_exit(
+def add_local_remote_and_check_branches_on_exit(
     repo: Repo, branch_names: Sequence[str]
 ):
     remote_path = GENERATED_FILES_DIR / "remote"
