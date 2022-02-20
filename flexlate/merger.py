@@ -112,6 +112,10 @@ class Merger:
             # Could not fast forward. Must do a merge and have user resolve any conflicts
             merged_branch = repo.branches[merged_branch_name]  # type: ignore
             merged_branch.checkout()
+            # First merge the template branch, so that user won't have to resolve the same conflict
+            # from there again
+            merge_branch_into_current(repo, template_branch_name)
+            # Now merge the feature merged branch to get new changes from feature branch
             merge_branch_into_current(repo, flexlate_feature_merged_branch_name)
             if repo_has_merge_conflicts(repo):
                 print_styled(
