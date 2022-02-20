@@ -14,6 +14,7 @@ from flexlate.ext_git import (
     repo_has_merge_conflicts,
     get_branch_sha,
     delete_local_branch,
+    merge_branch_into_current,
 )
 from flexlate.styles import (
     print_styled,
@@ -62,7 +63,9 @@ class Merger:
                 repo, template_branch_name, flexlate_feature_template_branch_name
             )
         except GitCommandError as e:
-            # TODO: make sure it's the right git error
+            if not "non-fast-forward" in str(e):
+                # Got some unexpected git error, raise it
+                raise e
             # Could not fast forward. Must do a merge in a temp repo and have user resolve any conflicts
             with temp_repo_that_pushes_to_branch(  # type: ignore
                 repo,
@@ -70,7 +73,7 @@ class Merger:
                 base_branch_name=template_branch_name,
                 additional_branches=(flexlate_feature_template_branch_name,),
             ) as temp_repo:
-                temp_repo.git.merge(flexlate_feature_template_branch_name)  # type: ignore
+                merge_branch_into_current(temp_repo, flexlate_feature_template_branch_name)  # type: ignore
                 if repo_has_merge_conflicts(temp_repo):
                     print_styled(
                         f"Encountered merge conflicts while merging "
@@ -84,7 +87,8 @@ class Merger:
                     )
                     handled_conflicts = confirm_user(
                         styled(
-                            "Successfully handled conflicts? n to abort", QUESTION_STYLE
+                            f"Successfully handled conflicts in {temp_repo.working_dir}? n to abort",
+                            QUESTION_STYLE,
                         )
                     )
                     if not handled_conflicts:
@@ -102,12 +106,14 @@ class Merger:
                 repo, merged_branch_name, flexlate_feature_merged_branch_name
             )
         except GitCommandError as e:
-            # TODO: make sure it's the right git error
+            if not "non-fast-forward" in str(e):
+                # Got some unexpected git error, raise it
+                raise e
             # Could not fast forward. Must do a merge and have user resolve any conflicts
             merged_branch = repo.branches[merged_branch_name]  # type: ignore
             merged_branch.checkout()
-            repo.git.merge(flexlate_feature_merged_branch_name)
-            if repo_has_merge_conflicts(temp_repo):
+            merge_branch_into_current(repo, flexlate_feature_merged_branch_name)
+            if repo_has_merge_conflicts(repo):
                 print_styled(
                     f"Encountered merge conflicts while merging "
                     f"{flexlate_feature_template_branch_name} into {template_branch_name}",
@@ -130,6 +136,7 @@ class Merger:
                     )
 
                     return
+            current_branch.checkout()
 
         print_styled(
             f"Successfully merged {flexlate_feature_merged_branch_name} to {merged_branch_name}",

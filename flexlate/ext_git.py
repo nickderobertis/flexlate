@@ -128,7 +128,7 @@ def get_branch_sha(repo: Repo, branch_name: str) -> Optional[str]:
 
 
 def delete_local_branch(repo: Repo, branch_name: str):
-    repo.git.branch("-d", branch_name)
+    repo.git.branch("-D", branch_name)
 
 
 @contextmanager  # type: ignore
