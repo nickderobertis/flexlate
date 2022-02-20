@@ -84,3 +84,8 @@ def undo_transaction_in_flexlate_branches(
         reset_last_transaction(
             temp_repo, transaction, merged_branch_name, template_branch_name
         )
+
+
+def get_flexlate_branch_name(repo: Repo, base_branch_name: str) -> str:
+    current_branch = repo.active_branch.name
+    return f"{base_branch_name}/{current_branch}"

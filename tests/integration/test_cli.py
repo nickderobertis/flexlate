@@ -10,6 +10,7 @@ import pytest
 from git import GitCommandError
 
 from flexlate.add_mode import AddMode
+from flexlate.branch_update import get_flexlate_branch_name
 from flexlate.config import FlexlateConfig, FlexlateProjectConfig
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.template.types import TemplateType
@@ -573,15 +574,18 @@ def test_undo(
     )
     _assert_project_config_is_correct()
 
-    for branch_name in [DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME]:
+    merged_branch_name = get_flexlate_branch_name(repo, DEFAULT_MERGED_BRANCH_NAME)
+    template_branch_name = get_flexlate_branch_name(repo, DEFAULT_TEMPLATE_BRANCH_NAME)
+
+    for branch_name in [merged_branch_name, template_branch_name]:
         branch = repo.branches[branch_name]  # type: ignore
         branch.checkout()
 
-    merged_branch = repo.branches[DEFAULT_MERGED_BRANCH_NAME]  # type: ignore
+    merged_branch = repo.branches[merged_branch_name]  # type: ignore
     merged_branch.checkout()
     assert_merged_commit_history_is_correct()
 
-    template_branch = repo.branches[DEFAULT_TEMPLATE_BRANCH_NAME]  # type: ignore
+    template_branch = repo.branches[template_branch_name]  # type: ignore
     template_branch.checkout()
 
     assert_main_commit_message_matches(
@@ -664,10 +668,13 @@ def test_sync_manually_remove_applied_template(
 
         fxt.sync(no_input=True)
 
+    merged_branch_name = get_flexlate_branch_name(repo, DEFAULT_MERGED_BRANCH_NAME)
+    template_branch_name = get_flexlate_branch_name(repo, DEFAULT_TEMPLATE_BRANCH_NAME)
+
     for branch_name in [
         "master",
-        DEFAULT_MERGED_BRANCH_NAME,
-        DEFAULT_TEMPLATE_BRANCH_NAME,
+        merged_branch_name,
+        template_branch_name,
     ]:
         branch: Head = repo.branches[branch_name]  # type: ignore
         branch.checkout()
