@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Union
 
 from git import Repo
 
@@ -52,6 +53,14 @@ def checkout_new_branch(repo: Repo, branch_name: str):
 
 def checkout_existing_branch(repo: Repo, branch_name: str):
     repo.git.checkout(branch_name)
+
+
+def add_remote(repo: Repo, path: Union[str, Path], remote_name: str = "origin"):
+    if isinstance(path, Path):
+        remote_path = str(path.resolve())
+    else:
+        remote_path = path
+    repo.git.remote("add", remote_name, remote_path)
 
 
 def _get_main_message_from_commit_message(message: str) -> str:
