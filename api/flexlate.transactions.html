@@ -8,7 +8,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.transactions package &mdash; flexlate 0.4.0 documentation</title>
+  <title>flexlate.transactions package &mdash; flexlate 0.5.0 documentation</title>
   
 
   
@@ -73,7 +73,7 @@
             
             
               <div class="version">
-                0.4.0
+                0.5.0
               </div>
             
           
@@ -128,7 +128,9 @@
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.exc">flexlate.exc module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.ext_git">flexlate.ext_git module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.main">flexlate.main module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.merger">flexlate.merger module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.path_ops">flexlate.path_ops module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.pusher">flexlate.pusher module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.remover">flexlate.remover module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.styles">flexlate.styles module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flexlate.html#module-flexlate.syncer">flexlate.syncer module</a></li>
@@ -394,12 +396,12 @@
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="flexlate.transactions.undoer.Undoer.undo_transaction">
-<span class="sig-name descname"><span class="pre">undo_transaction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">repo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">merged_branch_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'flexlate-output'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template_branch_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'flexlate-templates'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/transactions/undoer.html#Undoer.undo_transaction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.transactions.undoer.Undoer.undo_transaction" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">undo_transaction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">repo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">merged_branch_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'flexlate-output'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_merged_branch_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'flexlate-output'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template_branch_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'flexlate-templates'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_template_branch_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'flexlate-templates'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/transactions/undoer.html#Undoer.undo_transaction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.transactions.undoer.Undoer.undo_transaction" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="flexlate.transactions.undoer.Undoer.undo_transactions">
-<span class="sig-name descname"><span class="pre">undo_transactions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">repo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_transactions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">merged_branch_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'flexlate-output'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template_branch_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'flexlate-templates'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/transactions/undoer.html#Undoer.undo_transactions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.transactions.undoer.Undoer.undo_transactions" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">undo_transactions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">repo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_transactions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">merged_branch_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'flexlate-output'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_merged_branch_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'flexlate-output'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template_branch_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'flexlate-templates'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_template_branch_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'flexlate-templates'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/transactions/undoer.html#Undoer.undo_transactions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.transactions.undoer.Undoer.undo_transactions" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

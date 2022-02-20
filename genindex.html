@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Index &mdash; flexlate 0.4.0 documentation</title>
+  <title>Index &mdash; flexlate 0.5.0 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.4.0
+                0.5.0
               </div>
             
           
@@ -223,6 +223,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/flexlate.html#flexlate.ext_git.abort_merge">abort_merge() (in module flexlate.ext_git)</a>
 </li>
+      <li><a href="api/flexlate.html#flexlate.branch_update.abort_merge_and_reset_flexlate_branches">abort_merge_and_reset_flexlate_branches() (in module flexlate.branch_update)</a>
+</li>
       <li><a href="api/flexlate.html#flexlate.config.TemplateSource.absolute_local_path">absolute_local_path (flexlate.config.TemplateSource property)</a>
 </li>
       <li><a href="api/flexlate.html#flexlate.config_manager.ConfigManager.add_applied_template">add_applied_template() (flexlate.config_manager.ConfigManager method)</a>
@@ -234,6 +236,8 @@
       <li><a href="api/flexlate.html#flexlate.config_manager.ConfigManager.add_project">add_project() (flexlate.config_manager.ConfigManager method)</a>
 </li>
       <li><a href="api/flexlate.transactions.html#flexlate.transactions.transaction.TransactionType.ADD_SOURCE">ADD_SOURCE (flexlate.transactions.transaction.TransactionType attribute)</a>
+</li>
+      <li><a href="api/flexlate.html#flexlate.cli.add_source">add_source() (in module flexlate.cli)</a>
 </li>
       <li><a href="api/flexlate.transactions.html#flexlate.transactions.transaction.TransactionType.ADD_SOURCE_AND_OUTPUT">ADD_SOURCE_AND_OUTPUT (flexlate.transactions.transaction.TransactionType attribute)</a>
 </li>
@@ -247,10 +251,10 @@
       </ul></li>
       <li><a href="api/flexlate.html#flexlate.adder.Adder">Adder (class in flexlate.adder)</a>
 </li>
-      <li><a href="api/flexlate.html#flexlate.add_mode.AddMode">AddMode (class in flexlate.add_mode)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/flexlate.html#flexlate.add_mode.AddMode">AddMode (class in flexlate.add_mode)</a>
+</li>
       <li><a href="api/flexlate.html#flexlate.config.AppliedTemplateWithSource.applied_template">applied_template (flexlate.config.AppliedTemplateWithSource attribute)</a>
 </li>
       <li><a href="api/flexlate.html#flexlate.config.FlexlateConfig.applied_templates">applied_templates (flexlate.config.FlexlateConfig attribute)</a>
@@ -288,6 +292,10 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/flexlate.template.html#flexlate.template.types.TemplateType.BASE">BASE (flexlate.template.types.TemplateType attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/flexlate.html#flexlate.ext_git.branch_exists">branch_exists() (in module flexlate.ext_git)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -383,15 +391,17 @@
       </ul></li>
       <li><a href="api/flexlate.update.html#flexlate.update.template.data_from_template_updates">data_from_template_updates() (in module flexlate.update.template)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/flexlate.finder.specific.html#flexlate.finder.specific.copier.DefaultData.default">default (flexlate.finder.specific.copier.DefaultData attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/flexlate.html#flexlate.config.ProjectConfig.default_add_mode">default_add_mode (flexlate.config.ProjectConfig attribute)</a>
 </li>
       <li><a href="api/flexlate.template.html#flexlate.template.base.Template.default_name">default_name (flexlate.template.base.Template property)</a>
 </li>
       <li><a href="api/flexlate.finder.specific.html#flexlate.finder.specific.copier.DefaultData">DefaultData (class in flexlate.finder.specific.copier)</a>
+</li>
+      <li><a href="api/flexlate.html#flexlate.ext_git.delete_local_branch">delete_local_branch() (in module flexlate.ext_git)</a>
 </li>
       <li><a href="api/flexlate.html#flexlate.ext_git.delete_tracked_files_excluding_initial_commit">delete_tracked_files_excluding_initial_commit() (in module flexlate.ext_git)</a>
 </li>
@@ -571,10 +581,24 @@
 </li>
       </ul></li>
       <li>
+    flexlate.merger
+
+      <ul>
+        <li><a href="api/flexlate.html#module-flexlate.merger">module</a>
+</li>
+      </ul></li>
+      <li>
     flexlate.path_ops
 
       <ul>
         <li><a href="api/flexlate.html#module-flexlate.path_ops">module</a>
+</li>
+      </ul></li>
+      <li>
+    flexlate.pusher
+
+      <ul>
+        <li><a href="api/flexlate.html#module-flexlate.pusher">module</a>
 </li>
       </ul></li>
       <li>
@@ -612,6 +636,8 @@
         <li><a href="api/flexlate.render.specific.html#module-flexlate.render.specific">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     flexlate.render.specific.base
 
@@ -619,8 +645,6 @@
         <li><a href="api/flexlate.render.specific.html#module-flexlate.render.specific.base">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     flexlate.render.specific.cookiecutter
 
@@ -820,6 +844,8 @@
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/flexlate.html#flexlate.cli.generate_applied_template">generate_applied_template() (in module flexlate.cli)</a>
+</li>
       <li><a href="api/flexlate.html#flexlate.config_manager.ConfigManager.get_all_renderables">get_all_renderables() (flexlate.config_manager.ConfigManager method)</a>
 </li>
       <li><a href="api/flexlate.html#flexlate.config_manager.ConfigManager.get_applied_templates_with_sources">get_applied_templates_with_sources() (flexlate.config_manager.ConfigManager method)</a>
@@ -842,12 +868,16 @@
 </li>
       <li><a href="api/flexlate.html#flexlate.add_mode.get_expanded_out_root">get_expanded_out_root() (in module flexlate.add_mode)</a>
 </li>
+      <li><a href="api/flexlate.html#flexlate.branch_update.get_flexlate_branch_name">get_flexlate_branch_name() (in module flexlate.branch_update)</a>
+</li>
+      <li><a href="api/flexlate.html#flexlate.branch_update.get_flexlate_branch_name_for_feature_branch">get_flexlate_branch_name_for_feature_branch() (in module flexlate.branch_update)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/flexlate.finder.specific.html#flexlate.finder.specific.git.get_git_url_from_source_path">get_git_url_from_source_path() (in module flexlate.finder.specific.git)</a>
 </li>
       <li><a href="api/flexlate.html#flexlate.template_path.get_local_repo_path_and_name_cloning_if_repo_url">get_local_repo_path_and_name_cloning_if_repo_url() (in module flexlate.template_path)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/flexlate.html#flexlate.config_manager.ConfigManager.get_no_op_updates">get_no_op_updates() (flexlate.config_manager.ConfigManager method)</a>
 </li>
       <li><a href="api/flexlate.html#flexlate.config_manager.ConfigManager.get_num_applied_templates_in_child_config">get_num_applied_templates_in_child_config() (flexlate.config_manager.ConfigManager method)</a>
@@ -895,17 +925,25 @@
       <li><a href="api/flexlate.update.html#flexlate.update.template.TemplateUpdate.index">index (flexlate.update.template.TemplateUpdate attribute)</a>
 </li>
       <li><a href="api/flexlate.html#flexlate.main.Flexlate.init_project">init_project() (flexlate.main.Flexlate method)</a>
+
+      <ul>
+        <li><a href="api/flexlate.html#flexlate.cli.init_project">(in module flexlate.cli)</a>
 </li>
+      </ul></li>
       <li><a href="api/flexlate.html#flexlate.adder.Adder.init_project_and_add_to_branches">init_project_and_add_to_branches() (flexlate.adder.Adder method)</a>
 </li>
       <li><a href="api/flexlate.html#flexlate.main.Flexlate.init_project_from">init_project_from() (flexlate.main.Flexlate method)</a>
+
+      <ul>
+        <li><a href="api/flexlate.html#flexlate.cli.init_project_from">(in module flexlate.cli)</a>
 </li>
+      </ul></li>
       <li><a href="api/flexlate.html#flexlate.adder.Adder.init_project_from_template_source_path">init_project_from_template_source_path() (flexlate.adder.Adder method)</a>
-</li>
-      <li><a href="api/flexlate.html#flexlate.exc.InvalidNumberOfTransactionsException">InvalidNumberOfTransactionsException</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/flexlate.html#flexlate.exc.InvalidNumberOfTransactionsException">InvalidNumberOfTransactionsException</a>
+</li>
       <li><a href="api/flexlate.html#flexlate.exc.InvalidTemplateClassException">InvalidTemplateClassException</a>
 </li>
       <li><a href="api/flexlate.html#flexlate.exc.InvalidTemplateDataException">InvalidTemplateDataException</a>
@@ -976,13 +1014,23 @@
 </li>
       <li><a href="api/flexlate.template.html#flexlate.template.hashing.md5_update_from_file">md5_update_from_file() (in module flexlate.template.hashing)</a>
 </li>
+      <li><a href="api/flexlate.html#flexlate.cli.merge">merge() (in module flexlate.cli)</a>
+</li>
       <li><a href="api/flexlate.html#flexlate.ext_git.merge_branch_into_current">merge_branch_into_current() (in module flexlate.ext_git)</a>
 </li>
       <li><a href="api/flexlate.html#flexlate.template_data.merge_data">merge_data() (in module flexlate.template_data)</a>
 </li>
+      <li><a href="api/flexlate.html#flexlate.main.Flexlate.merge_flexlate_branches">merge_flexlate_branches() (flexlate.main.Flexlate method)</a>
+
+      <ul>
+        <li><a href="api/flexlate.html#flexlate.merger.Merger.merge_flexlate_branches">(flexlate.merger.Merger method)</a>
+</li>
+      </ul></li>
       <li><a href="api/flexlate.html#flexlate.exc.MergeCommitIsNotMergingAFlexlateTransactionException">MergeCommitIsNotMergingAFlexlateTransactionException</a>
 </li>
       <li><a href="api/flexlate.html#flexlate.config.ProjectConfig.merged_branch_name">merged_branch_name (flexlate.config.ProjectConfig attribute)</a>
+</li>
+      <li><a href="api/flexlate.html#flexlate.merger.Merger">Merger (class in flexlate.merger)</a>
 </li>
       <li><a href="api/flexlate.html#flexlate.branch_update.modify_files_via_branches_and_temp_repo">modify_files_via_branches_and_temp_repo() (in module flexlate.branch_update)</a>
 </li>
@@ -1028,7 +1076,11 @@
 </li>
         <li><a href="api/flexlate.html#module-flexlate.main">flexlate.main</a>
 </li>
+        <li><a href="api/flexlate.html#module-flexlate.merger">flexlate.merger</a>
+</li>
         <li><a href="api/flexlate.html#module-flexlate.path_ops">flexlate.path_ops</a>
+</li>
+        <li><a href="api/flexlate.html#module-flexlate.pusher">flexlate.pusher</a>
 </li>
         <li><a href="api/flexlate.html#module-flexlate.remover">flexlate.remover</a>
 </li>
@@ -1145,8 +1197,6 @@
       </ul></li>
       <li><a href="api/flexlate.html#flexlate.styles.print_styled">print_styled() (in module flexlate.styles)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/flexlate.html#flexlate.add_mode.AddMode.PROJECT">PROJECT (flexlate.add_mode.AddMode attribute)</a>
 </li>
       <li><a href="api/flexlate.html#flexlate.config_manager.ConfigManager.remove_applied_template.params.project_root">project_root (flexlate.config_manager.ConfigManager.remove_applied_template parameter)</a>
@@ -1154,6 +1204,28 @@
       <li><a href="api/flexlate.html#flexlate.config.ProjectConfig">ProjectConfig (class in flexlate.config)</a>
 </li>
       <li><a href="api/flexlate.html#flexlate.config.FlexlateProjectConfig.projects">projects (flexlate.config.FlexlateProjectConfig attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/flexlate.html#flexlate.cli.push_feature">push_feature() (in module flexlate.cli)</a>
+</li>
+      <li><a href="api/flexlate.html#flexlate.main.Flexlate.push_feature_flexlate_branches">push_feature_flexlate_branches() (flexlate.main.Flexlate method)</a>
+
+      <ul>
+        <li><a href="api/flexlate.html#flexlate.pusher.Pusher.push_feature_flexlate_branches">(flexlate.pusher.Pusher method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/flexlate.html#flexlate.cli.push_main">push_main() (in module flexlate.cli)</a>
+</li>
+      <li><a href="api/flexlate.html#flexlate.main.Flexlate.push_main_flexlate_branches">push_main_flexlate_branches() (flexlate.main.Flexlate method)</a>
+
+      <ul>
+        <li><a href="api/flexlate.html#flexlate.pusher.Pusher.push_main_flexlate_branches">(flexlate.pusher.Pusher method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/flexlate.html#flexlate.ext_git.push_to_remote">push_to_remote() (in module flexlate.ext_git)</a>
+</li>
+      <li><a href="api/flexlate.html#flexlate.pusher.Pusher">Pusher (class in flexlate.pusher)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1173,12 +1245,16 @@
 </li>
       <li><a href="api/flexlate.transactions.html#flexlate.transactions.transaction.TransactionType.REMOVE_SOURCE">REMOVE_SOURCE (flexlate.transactions.transaction.TransactionType attribute)</a>
 </li>
+      <li><a href="api/flexlate.html#flexlate.cli.remove_template_output">remove_template_output() (in module flexlate.cli)</a>
+</li>
       <li><a href="api/flexlate.html#flexlate.config_manager.ConfigManager.remove_template_source">remove_template_source() (flexlate.config_manager.ConfigManager method)</a>
 
       <ul>
         <li><a href="api/flexlate.html#flexlate.main.Flexlate.remove_template_source">(flexlate.main.Flexlate method)</a>
 </li>
         <li><a href="api/flexlate.html#flexlate.remover.Remover.remove_template_source">(flexlate.remover.Remover method)</a>
+</li>
+        <li><a href="api/flexlate.html#flexlate.cli.remove_template_source">(in module flexlate.cli)</a>
 </li>
       </ul></li>
       <li><a href="api/flexlate.html#flexlate.remover.Remover">Remover (class in flexlate.remover)</a>
@@ -1254,7 +1330,11 @@
       <li><a href="api/flexlate.transactions.html#flexlate.transactions.transaction.TransactionType.SYNC">SYNC (flexlate.transactions.transaction.TransactionType attribute)</a>
 </li>
       <li><a href="api/flexlate.html#flexlate.main.Flexlate.sync">sync() (flexlate.main.Flexlate method)</a>
+
+      <ul>
+        <li><a href="api/flexlate.html#flexlate.cli.sync">(in module flexlate.cli)</a>
 </li>
+      </ul></li>
       <li><a href="api/flexlate.html#flexlate.syncer.Syncer.sync_local_changes_to_flexlate_branches">sync_local_changes_to_flexlate_branches() (flexlate.syncer.Syncer method)</a>
 </li>
       <li><a href="api/flexlate.html#flexlate.syncer.Syncer">Syncer (class in flexlate.syncer)</a>
@@ -1340,7 +1420,11 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/flexlate.html#flexlate.main.Flexlate.undo">undo() (flexlate.main.Flexlate method)</a>
+
+      <ul>
+        <li><a href="api/flexlate.html#flexlate.cli.undo">(in module flexlate.cli)</a>
 </li>
+      </ul></li>
       <li><a href="api/flexlate.transactions.html#flexlate.transactions.undoer.Undoer.undo_transaction">undo_transaction() (flexlate.transactions.undoer.Undoer method)</a>
 </li>
       <li><a href="api/flexlate.html#flexlate.branch_update.undo_transaction_in_flexlate_branches">undo_transaction_in_flexlate_branches() (in module flexlate.branch_update)</a>
@@ -1364,7 +1448,11 @@
       <li><a href="api/flexlate.update.html#flexlate.update.main.Updater.update_passed_templates_to_target_versions">update_passed_templates_to_target_versions() (flexlate.update.main.Updater method)</a>
 </li>
       <li><a href="api/flexlate.html#flexlate.config_manager.ConfigManager.update_templates">update_templates() (flexlate.config_manager.ConfigManager method)</a>
+
+      <ul>
+        <li><a href="api/flexlate.html#flexlate.cli.update_templates">(in module flexlate.cli)</a>
 </li>
+      </ul></li>
       <li><a href="api/flexlate.update.html#flexlate.update.main.Updater">Updater (class in flexlate.update.main)</a>
 </li>
       <li><a href="api/flexlate.update.html#flexlate.update.template.updates_with_updated_data">updates_with_updated_data() (in module flexlate.update.template)</a>

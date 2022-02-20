@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.styles &mdash; flexlate 0.4.0 documentation</title>
+  <title>flexlate.styles &mdash; flexlate 0.5.0 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.4.0
+                0.5.0
               </div>
             
           
@@ -169,19 +169,24 @@
   <h1>Source code for flexlate.styles</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Final</span>
 
-<span class="kn">from</span> <span class="nn">rich</span> <span class="kn">import</span> <span class="nb">print</span>
+<span class="kn">from</span> <span class="nn">rich.console</span> <span class="kn">import</span> <span class="n">Console</span>
+
+<span class="n">console</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="n">Console</span><span class="p">]</span> <span class="o">=</span> <span class="n">Console</span><span class="p">()</span>
+
 
 <span class="n">ACTION_REQUIRED_STYLE</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;[yellow]:pencil:&quot;</span>
 <span class="n">QUESTION_STYLE</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;:question:&quot;</span>
 <span class="n">ALERT_STYLE</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;[red]:x:&quot;</span>
+<span class="n">INFO_STYLE</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+<span class="n">SUCCESS_STYLE</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;[green]:heavy_check_mark:&quot;</span>
 
 
 <div class="viewcode-block" id="styled"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.styles.styled">[docs]</a><span class="k">def</span> <span class="nf">styled</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">style</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">style</span><span class="si">}{</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span></div>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">style</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span></div>
 
 
 <div class="viewcode-block" id="print_styled"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.styles.print_styled">[docs]</a><span class="k">def</span> <span class="nf">print_styled</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">style</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">styled</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">style</span><span class="p">))</span></div>
+    <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">styled</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">style</span><span class="p">))</span></div>
 </pre></div>
 
            </div>

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.transactions.undoer &mdash; flexlate 0.4.0 documentation</title>
+  <title>flexlate.transactions.undoer &mdash; flexlate 0.5.0 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.4.0
+                0.5.0
               </div>
             
           
@@ -172,6 +172,7 @@
 <span class="kn">from</span> <span class="nn">flexlate.branch_update</span> <span class="kn">import</span> <span class="n">undo_transaction_in_flexlate_branches</span>
 <span class="kn">from</span> <span class="nn">flexlate.constants</span> <span class="kn">import</span> <span class="n">DEFAULT_MERGED_BRANCH_NAME</span><span class="p">,</span> <span class="n">DEFAULT_TEMPLATE_BRANCH_NAME</span>
 <span class="kn">from</span> <span class="nn">flexlate.ext_git</span> <span class="kn">import</span> <span class="n">assert_repo_is_in_clean_state</span>
+<span class="kn">from</span> <span class="nn">flexlate.styles</span> <span class="kn">import</span> <span class="n">console</span><span class="p">,</span> <span class="n">styled</span><span class="p">,</span> <span class="n">INFO_STYLE</span><span class="p">,</span> <span class="n">print_styled</span><span class="p">,</span> <span class="n">SUCCESS_STYLE</span>
 <span class="kn">from</span> <span class="nn">flexlate.transactions.transaction</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">assert_last_commit_was_in_a_flexlate_transaction</span><span class="p">,</span>
     <span class="n">FlexlateTransaction</span><span class="p">,</span>
@@ -186,7 +187,9 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">repo</span><span class="p">:</span> <span class="n">Repo</span><span class="p">,</span>
         <span class="n">merged_branch_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_MERGED_BRANCH_NAME</span><span class="p">,</span>
+        <span class="n">base_merged_branch_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_MERGED_BRANCH_NAME</span><span class="p">,</span>
         <span class="n">template_branch_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_TEMPLATE_BRANCH_NAME</span><span class="p">,</span>
+        <span class="n">base_template_branch_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_TEMPLATE_BRANCH_NAME</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="n">last_transaction</span> <span class="o">=</span> <span class="n">find_last_transaction_from_commit</span><span class="p">(</span>
             <span class="n">repo</span><span class="o">.</span><span class="n">commit</span><span class="p">(),</span> <span class="n">merged_branch_name</span><span class="p">,</span> <span class="n">template_branch_name</span>
@@ -197,7 +200,9 @@
             <span class="n">repo</span><span class="p">,</span>
             <span class="n">last_transaction</span><span class="p">,</span>
             <span class="n">merged_branch_name</span><span class="o">=</span><span class="n">merged_branch_name</span><span class="p">,</span>
+            <span class="n">base_merged_branch_name</span><span class="o">=</span><span class="n">base_merged_branch_name</span><span class="p">,</span>
             <span class="n">template_branch_name</span><span class="o">=</span><span class="n">template_branch_name</span><span class="p">,</span>
+            <span class="n">base_template_branch_name</span><span class="o">=</span><span class="n">base_template_branch_name</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="c1"># Reset the user&#39;s branch</span>
@@ -210,7 +215,9 @@
         <span class="n">repo</span><span class="p">:</span> <span class="n">Repo</span><span class="p">,</span>
         <span class="n">num_transactions</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
         <span class="n">merged_branch_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_MERGED_BRANCH_NAME</span><span class="p">,</span>
+        <span class="n">base_merged_branch_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_MERGED_BRANCH_NAME</span><span class="p">,</span>
         <span class="n">template_branch_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_TEMPLATE_BRANCH_NAME</span><span class="p">,</span>
+        <span class="n">base_template_branch_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_TEMPLATE_BRANCH_NAME</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="n">assert_repo_is_in_clean_state</span><span class="p">(</span><span class="n">repo</span><span class="p">)</span>
         <span class="n">assert_last_commit_was_in_a_flexlate_transaction</span><span class="p">(</span>
@@ -223,12 +230,21 @@
             <span class="n">repo</span><span class="p">,</span> <span class="n">num_transactions</span><span class="p">,</span> <span class="n">merged_branch_name</span><span class="p">,</span> <span class="n">template_branch_name</span>
         <span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_transactions</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">undo_transaction</span><span class="p">(</span>
-                <span class="n">repo</span><span class="p">,</span>
-                <span class="n">merged_branch_name</span><span class="o">=</span><span class="n">merged_branch_name</span><span class="p">,</span>
-                <span class="n">template_branch_name</span><span class="o">=</span><span class="n">template_branch_name</span><span class="p">,</span>
-            <span class="p">)</span></div></div>
+        <span class="k">with</span> <span class="n">console</span><span class="o">.</span><span class="n">status</span><span class="p">(</span>
+            <span class="n">styled</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Undoing </span><span class="si">{</span><span class="n">num_transactions</span><span class="si">}</span><span class="s2"> flexlate transactions&quot;</span><span class="p">,</span> <span class="n">INFO_STYLE</span><span class="p">)</span>
+        <span class="p">):</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_transactions</span><span class="p">):</span>
+                <span class="n">print_styled</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Undoing transaction </span><span class="si">{</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">INFO_STYLE</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">undo_transaction</span><span class="p">(</span>
+                    <span class="n">repo</span><span class="p">,</span>
+                    <span class="n">merged_branch_name</span><span class="o">=</span><span class="n">merged_branch_name</span><span class="p">,</span>
+                    <span class="n">base_merged_branch_name</span><span class="o">=</span><span class="n">base_merged_branch_name</span><span class="p">,</span>
+                    <span class="n">template_branch_name</span><span class="o">=</span><span class="n">template_branch_name</span><span class="p">,</span>
+                    <span class="n">base_template_branch_name</span><span class="o">=</span><span class="n">base_template_branch_name</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">print_styled</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Successfully reversed transaction </span><span class="si">{</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">SUCCESS_STYLE</span>
+                <span class="p">)</span></div></div>
 </pre></div>
 
            </div>

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.branch_update &mdash; flexlate 0.4.0 documentation</title>
+  <title>flexlate.branch_update &mdash; flexlate 0.5.0 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.4.0
+                0.5.0
               </div>
             
           
@@ -169,9 +169,9 @@
   <h1>Source code for flexlate.branch_update</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
 
-<span class="kn">from</span> <span class="nn">git</span> <span class="kn">import</span> <span class="n">Repo</span>
+<span class="kn">from</span> <span class="nn">git</span> <span class="kn">import</span> <span class="n">Repo</span><span class="p">,</span> <span class="n">repo</span><span class="p">,</span> <span class="n">Head</span>
 
 <span class="kn">from</span> <span class="nn">flexlate.constants</span> <span class="kn">import</span> <span class="n">DEFAULT_MERGED_BRANCH_NAME</span><span class="p">,</span> <span class="n">DEFAULT_TEMPLATE_BRANCH_NAME</span>
 <span class="kn">from</span> <span class="nn">flexlate.ext_git</span> <span class="kn">import</span> <span class="p">(</span>
@@ -180,6 +180,8 @@
     <span class="n">fast_forward_branch_without_checkout</span><span class="p">,</span>
     <span class="n">checked_out_template_branch</span><span class="p">,</span>
     <span class="n">merge_branch_into_current</span><span class="p">,</span>
+    <span class="n">abort_merge</span><span class="p">,</span>
+    <span class="n">reset_branch_to_commit_without_checkout</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">flexlate.path_ops</span> <span class="kn">import</span> <span class="n">make_func_that_creates_cwd_and_out_root_before_running</span>
 <span class="kn">from</span> <span class="nn">flexlate.transactions.transaction</span> <span class="kn">import</span> <span class="p">(</span>
@@ -194,7 +196,9 @@
     <span class="n">commit_message</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">out_root</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
     <span class="n">merged_branch_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_MERGED_BRANCH_NAME</span><span class="p">,</span>
+    <span class="n">base_merged_branch_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_MERGED_BRANCH_NAME</span><span class="p">,</span>
     <span class="n">template_branch_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_TEMPLATE_BRANCH_NAME</span><span class="p">,</span>
+    <span class="n">base_template_branch_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_TEMPLATE_BRANCH_NAME</span><span class="p">,</span>
 <span class="p">):</span>
     <span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
     <span class="n">current_branch</span> <span class="o">=</span> <span class="n">repo</span><span class="o">.</span><span class="n">active_branch</span>
@@ -205,7 +209,9 @@
 
     <span class="c1"># Update the template only branch with the new template</span>
     <span class="k">with</span> <span class="n">temp_repo_that_pushes_to_branch</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
-        <span class="n">repo</span><span class="p">,</span> <span class="n">branch_name</span><span class="o">=</span><span class="n">template_branch_name</span>
+        <span class="n">repo</span><span class="p">,</span>
+        <span class="n">branch_name</span><span class="o">=</span><span class="n">template_branch_name</span><span class="p">,</span>
+        <span class="n">base_branch_name</span><span class="o">=</span><span class="n">base_template_branch_name</span><span class="p">,</span>
     <span class="p">)</span> <span class="k">as</span> <span class="n">temp_repo</span><span class="p">:</span>
         <span class="n">make_dirs_add_operation</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">temp_repo</span><span class="o">.</span><span class="n">working_dir</span><span class="p">))</span>  <span class="c1"># type: ignore</span>
         <span class="n">stage_and_commit_all</span><span class="p">(</span><span class="n">temp_repo</span><span class="p">,</span> <span class="n">commit_message</span><span class="p">)</span>
@@ -213,7 +219,9 @@
     <span class="c1"># Bring the change into the merged branch</span>
     <span class="c1"># Update with changes from the main repo</span>
     <span class="n">fast_forward_branch_without_checkout</span><span class="p">(</span><span class="n">repo</span><span class="p">,</span> <span class="n">merged_branch_name</span><span class="p">,</span> <span class="n">current_branch</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-    <span class="k">with</span> <span class="n">checked_out_template_branch</span><span class="p">(</span><span class="n">repo</span><span class="p">,</span> <span class="n">branch_name</span><span class="o">=</span><span class="n">merged_branch_name</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">checked_out_template_branch</span><span class="p">(</span>
+        <span class="n">repo</span><span class="p">,</span> <span class="n">branch_name</span><span class="o">=</span><span class="n">merged_branch_name</span><span class="p">,</span> <span class="n">base_branch_name</span><span class="o">=</span><span class="n">base_merged_branch_name</span>
+    <span class="p">):</span>
         <span class="c1"># Update with the new template</span>
         <span class="n">merge_branch_into_current</span><span class="p">(</span><span class="n">repo</span><span class="p">,</span> <span class="n">template_branch_name</span><span class="p">)</span>
 
@@ -236,11 +244,16 @@
     <span class="n">repo</span><span class="p">:</span> <span class="n">Repo</span><span class="p">,</span>
     <span class="n">transaction</span><span class="p">:</span> <span class="n">FlexlateTransaction</span><span class="p">,</span>
     <span class="n">merged_branch_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_MERGED_BRANCH_NAME</span><span class="p">,</span>
+    <span class="n">base_merged_branch_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_MERGED_BRANCH_NAME</span><span class="p">,</span>
     <span class="n">template_branch_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_TEMPLATE_BRANCH_NAME</span><span class="p">,</span>
+    <span class="n">base_template_branch_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_TEMPLATE_BRANCH_NAME</span><span class="p">,</span>
 <span class="p">):</span>
     <span class="c1"># Reset the template only branch to the appropriate commit</span>
     <span class="k">with</span> <span class="n">temp_repo_that_pushes_to_branch</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
-        <span class="n">repo</span><span class="p">,</span> <span class="n">branch_name</span><span class="o">=</span><span class="n">template_branch_name</span><span class="p">,</span> <span class="n">force_push</span><span class="o">=</span><span class="kc">True</span>
+        <span class="n">repo</span><span class="p">,</span>
+        <span class="n">branch_name</span><span class="o">=</span><span class="n">template_branch_name</span><span class="p">,</span>
+        <span class="n">base_branch_name</span><span class="o">=</span><span class="n">base_template_branch_name</span><span class="p">,</span>
+        <span class="n">force_push</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span> <span class="k">as</span> <span class="n">temp_repo</span><span class="p">:</span>
         <span class="n">reset_last_transaction</span><span class="p">(</span>
             <span class="n">temp_repo</span><span class="p">,</span> <span class="n">transaction</span><span class="p">,</span> <span class="n">merged_branch_name</span><span class="p">,</span> <span class="n">template_branch_name</span>
@@ -248,11 +261,41 @@
 
     <span class="c1"># Reset the merged template branch to the appropriate commit</span>
     <span class="k">with</span> <span class="n">temp_repo_that_pushes_to_branch</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
-        <span class="n">repo</span><span class="p">,</span> <span class="n">branch_name</span><span class="o">=</span><span class="n">merged_branch_name</span><span class="p">,</span> <span class="n">force_push</span><span class="o">=</span><span class="kc">True</span>
+        <span class="n">repo</span><span class="p">,</span>
+        <span class="n">branch_name</span><span class="o">=</span><span class="n">merged_branch_name</span><span class="p">,</span>
+        <span class="n">base_branch_name</span><span class="o">=</span><span class="n">base_merged_branch_name</span><span class="p">,</span>
+        <span class="n">force_push</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span> <span class="k">as</span> <span class="n">temp_repo</span><span class="p">:</span>
         <span class="n">reset_last_transaction</span><span class="p">(</span>
             <span class="n">temp_repo</span><span class="p">,</span> <span class="n">transaction</span><span class="p">,</span> <span class="n">merged_branch_name</span><span class="p">,</span> <span class="n">template_branch_name</span>
         <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="abort_merge_and_reset_flexlate_branches"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.branch_update.abort_merge_and_reset_flexlate_branches">[docs]</a><span class="k">def</span> <span class="nf">abort_merge_and_reset_flexlate_branches</span><span class="p">(</span>
+    <span class="n">repo</span><span class="p">:</span> <span class="n">Repo</span><span class="p">,</span>
+    <span class="n">current_branch</span><span class="p">:</span> <span class="n">Head</span><span class="p">,</span>
+    <span class="n">merged_branch_sha</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">template_branch_sha</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">merged_branch_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_MERGED_BRANCH_NAME</span><span class="p">,</span>
+    <span class="n">template_branch_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_TEMPLATE_BRANCH_NAME</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="n">abort_merge</span><span class="p">(</span><span class="n">repo</span><span class="p">)</span>
+    <span class="n">current_branch</span><span class="o">.</span><span class="n">checkout</span><span class="p">()</span>
+    <span class="n">reset_branch_to_commit_without_checkout</span><span class="p">(</span><span class="n">repo</span><span class="p">,</span> <span class="n">merged_branch_name</span><span class="p">,</span> <span class="n">merged_branch_sha</span><span class="p">)</span>
+    <span class="n">reset_branch_to_commit_without_checkout</span><span class="p">(</span>
+        <span class="n">repo</span><span class="p">,</span> <span class="n">template_branch_name</span><span class="p">,</span> <span class="n">template_branch_sha</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_flexlate_branch_name"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.branch_update.get_flexlate_branch_name">[docs]</a><span class="k">def</span> <span class="nf">get_flexlate_branch_name</span><span class="p">(</span><span class="n">repo</span><span class="p">:</span> <span class="n">Repo</span><span class="p">,</span> <span class="n">base_branch_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">current_branch</span> <span class="o">=</span> <span class="n">repo</span><span class="o">.</span><span class="n">active_branch</span><span class="o">.</span><span class="n">name</span>
+    <span class="k">return</span> <span class="n">get_flexlate_branch_name_for_feature_branch</span><span class="p">(</span><span class="n">current_branch</span><span class="p">,</span> <span class="n">base_branch_name</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_flexlate_branch_name_for_feature_branch"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.branch_update.get_flexlate_branch_name_for_feature_branch">[docs]</a><span class="k">def</span> <span class="nf">get_flexlate_branch_name_for_feature_branch</span><span class="p">(</span>
+    <span class="n">feature_branch</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">base_branch_name</span><span class="p">:</span> <span class="nb">str</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_branch_name</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">feature_branch</span><span class="si">}</span><span class="s2">&quot;</span></div>
 </pre></div>
 
            </div>
