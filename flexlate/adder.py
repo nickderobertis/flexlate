@@ -71,39 +71,49 @@ class Adder:
                 os.path.relpath(template.path.resolve(), config_path.parent.resolve())
             )
 
-        if add_mode == AddMode.USER:
-            # No need to use git if adding for user
-            config_manager.add_template_source(
-                template,
-                config_path,
-                target_version=target_version,
-                project_root=Path(repo.working_dir),  # type: ignore
+        with console.status(print_styled("Adding template source...", INFO_STYLE)):
+            print_styled(
+                f"Adding template source {template.name} from {template.git_url or template.path}",
+                INFO_STYLE,
             )
-            return
 
-        commit_message = create_transaction_commit_message(
-            _add_template_source_commit_message(
-                template, out_root, Path(repo.working_dir)
-            ),
-            transaction,
-        )
+            if add_mode == AddMode.USER:
+                # No need to use git if adding for user
+                config_manager.add_template_source(
+                    template,
+                    config_path,
+                    target_version=target_version,
+                    project_root=Path(repo.working_dir),  # type: ignore
+                )
+                return
 
-        # Local or project config, add in git
-        modify_files_via_branches_and_temp_repo(
-            lambda temp_path: config_manager.add_template_source(
-                template,
-                location_relative_to_new_parent(
-                    config_path, project_root, temp_path, Path(os.getcwd())
+            commit_message = create_transaction_commit_message(
+                _add_template_source_commit_message(
+                    template, out_root, Path(repo.working_dir)
                 ),
-                target_version=target_version,
-                project_root=temp_path,
-            ),
-            repo,
-            commit_message,
-            out_root,
-            merged_branch_name=merged_branch_name,
-            template_branch_name=template_branch_name,
-        )
+                transaction,
+            )
+
+            # Local or project config, add in git
+            modify_files_via_branches_and_temp_repo(
+                lambda temp_path: config_manager.add_template_source(
+                    template,
+                    location_relative_to_new_parent(
+                        config_path, project_root, temp_path, Path(os.getcwd())
+                    ),
+                    target_version=target_version,
+                    project_root=temp_path,
+                ),
+                repo,
+                commit_message,
+                out_root,
+                merged_branch_name=merged_branch_name,
+                template_branch_name=template_branch_name,
+            )
+
+            print_styled(
+                f"Sucessfully added template source {template.name}", INFO_STYLE
+            )
 
     def apply_template_and_add(
         self,
@@ -131,6 +141,11 @@ class Adder:
         )
         expanded_out_root = get_expanded_out_root(
             out_root, project_root, template.render_relative_root_in_output, add_mode
+        )
+
+        print_styled(
+            f"Applying template {template.name} to {expanded_out_root.resolve()}",
+            INFO_STYLE,
         )
 
         if add_mode == AddMode.USER:
@@ -188,6 +203,10 @@ class Adder:
             full_rerender=False,
             renderer=renderer,
             config_manager=config_manager,
+        )
+        print_styled(
+            f"Successfully applied template {template.name} to {expanded_out_root.resolve()}",
+            SUCCESS_STYLE,
         )
 
     def init_project_and_add_to_branches(

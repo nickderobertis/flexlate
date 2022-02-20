@@ -3,6 +3,7 @@ from git import Repo
 from flexlate.branch_update import undo_transaction_in_flexlate_branches
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.ext_git import assert_repo_is_in_clean_state
+from flexlate.styles import console, styled, INFO_STYLE, print_styled, SUCCESS_STYLE
 from flexlate.transactions.transaction import (
     assert_last_commit_was_in_a_flexlate_transaction,
     FlexlateTransaction,
@@ -54,9 +55,16 @@ class Undoer:
             repo, num_transactions, merged_branch_name, template_branch_name
         )
 
-        for _ in range(num_transactions):
-            self.undo_transaction(
-                repo,
-                merged_branch_name=merged_branch_name,
-                template_branch_name=template_branch_name,
-            )
+        with console.status(
+            styled(f"Undoing {num_transactions} flexlate transactions", INFO_STYLE)
+        ):
+            for i in range(num_transactions):
+                print_styled(f"Undoing transaction {i + 1}", INFO_STYLE)
+                self.undo_transaction(
+                    repo,
+                    merged_branch_name=merged_branch_name,
+                    template_branch_name=template_branch_name,
+                )
+                print_styled(
+                    f"Successfully reversed transaction {i + 1}", SUCCESS_STYLE
+                )

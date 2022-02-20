@@ -22,6 +22,8 @@ from flexlate.styles import (
     styled,
     QUESTION_STYLE,
     ALERT_STYLE,
+    INFO_STYLE,
+    SUCCESS_STYLE,
 )
 from flexlate.template.base import Template
 from flexlate.ext_git import (
@@ -97,6 +99,15 @@ class Updater:
                     updates, project_root=project_root
                 )
             )
+            if full_rerender:
+                print_styled(
+                    f"Syncing changes in flexlate configs to output", INFO_STYLE
+                )
+            else:
+                print_styled(
+                    f"Updating {len(orig_renderables)} applied templates", INFO_STYLE
+                )
+
             renderables = _move_renderable_out_roots_to_new_parent(
                 orig_renderables,
                 project_root,
@@ -195,6 +206,8 @@ class Updater:
         # Folder may have been deleted again while switching branches, so
         # need to set cwd again
         os.chdir(cwd)
+
+        print_styled("Successfully updated template output", SUCCESS_STYLE)
 
     def get_updates_for_templates(
         self,

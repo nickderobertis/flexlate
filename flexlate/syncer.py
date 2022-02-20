@@ -3,6 +3,7 @@ from git import Repo
 from flexlate.config_manager import ConfigManager
 from flexlate.constants import DEFAULT_TEMPLATE_BRANCH_NAME, DEFAULT_MERGED_BRANCH_NAME
 from flexlate.render.multi import MultiRenderer
+from flexlate.styles import print_styled, INFO_STYLE, SUCCESS_STYLE
 from flexlate.transactions.transaction import FlexlateTransaction
 from flexlate.update.main import Updater
 
@@ -19,6 +20,7 @@ class Syncer:
         renderer: MultiRenderer = MultiRenderer(),
         config_manager: ConfigManager = ConfigManager(),
     ):
+        print_styled("Syncing local changes to flexlate branches", INFO_STYLE)
         updater.update(
             repo,
             [],
@@ -29,4 +31,7 @@ class Syncer:
             full_rerender=True,
             renderer=renderer,
             config_manager=config_manager,
+        )
+        print_styled(
+            "Successfully synced local changes to flexlate branches", SUCCESS_STYLE
         )
