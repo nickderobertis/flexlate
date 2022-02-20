@@ -224,9 +224,7 @@ class Adder:
         repo: Repo,
         default_add_mode: AddMode = AddMode.LOCAL,
         merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
-        base_merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
         template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
-        base_template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
         user: bool = False,
         config_manager: ConfigManager = ConfigManager(),
     ):
@@ -268,9 +266,9 @@ class Adder:
                 "Initialized flexlate project",
                 path,
                 merged_branch_name=merged_branch_name,
-                base_merged_branch_name=base_merged_branch_name,
+                base_merged_branch_name=merged_branch_name,
                 template_branch_name=template_branch_name,
-                base_template_branch_name=base_template_branch_name,
+                base_template_branch_name=template_branch_name,
             )
 
         print_styled(

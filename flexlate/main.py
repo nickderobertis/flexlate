@@ -63,10 +63,8 @@ class Flexlate:
             repo,
             default_add_mode=default_add_mode,
             user=user,
-            merged_branch_name=get_flexlate_branch_name(repo, merged_branch_name),
-            base_merged_branch_name=merged_branch_name,
-            template_branch_name=get_flexlate_branch_name(repo, template_branch_name),
-            base_template_branch_name=template_branch_name,
+            merged_branch_name=merged_branch_name,
+            template_branch_name=template_branch_name,
         )
 
     def init_project_from(
