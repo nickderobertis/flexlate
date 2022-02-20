@@ -72,6 +72,7 @@ class Merger:
                 branch_name=template_branch_name,
                 base_branch_name=template_branch_name,
                 additional_branches=(flexlate_feature_template_branch_name,),
+                copy_current_configs=False,
             ) as temp_repo:
                 merge_branch_into_current(temp_repo, flexlate_feature_template_branch_name)  # type: ignore
                 if repo_has_merge_conflicts(temp_repo):

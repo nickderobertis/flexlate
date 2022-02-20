@@ -137,6 +137,7 @@ def temp_repo_that_pushes_to_branch(  # type: ignore
     branch_name: str,
     base_branch_name: str,
     delete_tracked_files: bool = False,
+    copy_current_configs: bool = True,
     force_push: bool = False,
     additional_branches: Sequence[str] = tuple(),
 ) -> ContextManager[Repo]:
@@ -150,9 +151,12 @@ def temp_repo_that_pushes_to_branch(  # type: ignore
         # For type narrowing
         if repo.working_dir is None or temp_repo.working_dir is None:
             raise ValueError("repo working dir cannot be None")
-        copy_flexlate_configs(
-            Path(repo.working_dir), Path(temp_repo.working_dir), Path(repo.working_dir)
-        )
+        if copy_current_configs:
+            copy_flexlate_configs(
+                Path(repo.working_dir),
+                Path(temp_repo.working_dir),
+                Path(repo.working_dir),
+            )
         yield temp_repo
         _push_branch_from_one_local_repo_to_another(
             temp_repo, repo, branch_name, force=force_push

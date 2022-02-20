@@ -87,8 +87,10 @@ def test_merge_with_existing_main_branches(
 
 
 @pytest.mark.parametrize("delete", [True, False])
+@pytest.mark.parametrize("commit_first", [True, False])
 def test_merge_with_existing_main_branches_and_conflicts(
     delete: bool,
+    commit_first: bool,
     repo_with_template_branch_from_cookiecutter_one: Repo,
     cookiecutter_one_template: CookiecutterTemplate,
     add_output_transaction: FlexlateTransaction,
@@ -147,11 +149,16 @@ def test_merge_with_existing_main_branches_and_conflicts(
         stage_and_commit_all(use_repo, manual_commit_message)
         return True
 
+    if commit_first:
+        merge_branch_into_current(repo, "feature-2")
+        stage_and_commit_all(repo, manual_commit_message)
+
     with patch.object(merger_mod, "confirm_user", _resolve_conflicts_then_type_yes):
         merger.merge_flexlate_branches(repo, "feature-2", delete=delete)
 
-    merge_branch_into_current(repo, "feature-2")
-    stage_and_commit_all(repo, manual_commit_message)
+    if not commit_first:
+        merge_branch_into_current(repo, "feature-2")
+        stage_and_commit_all(repo, manual_commit_message)
 
     _assert_successful_merge(
         repo,
