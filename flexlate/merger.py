@@ -67,6 +67,7 @@ class Merger:
             with temp_repo_that_pushes_to_branch(
                 repo,
                 branch_name=template_branch_name,
+                base_branch_name=template_branch_name,
                 additional_branches=(flexlate_feature_template_branch_name,),
             ) as temp_repo:
                 temp_repo.git.merge(flexlate_feature_template_branch_name)

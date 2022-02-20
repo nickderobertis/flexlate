@@ -18,7 +18,9 @@ class Undoer:
         self,
         repo: Repo,
         merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
+        base_merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
         template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
+        base_template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
     ):
         last_transaction = find_last_transaction_from_commit(
             repo.commit(), merged_branch_name, template_branch_name
@@ -29,7 +31,9 @@ class Undoer:
             repo,
             last_transaction,
             merged_branch_name=merged_branch_name,
+            base_merged_branch_name=base_merged_branch_name,
             template_branch_name=template_branch_name,
+            base_template_branch_name=base_template_branch_name,
         )
 
         # Reset the user's branch
@@ -42,7 +46,9 @@ class Undoer:
         repo: Repo,
         num_transactions: int = 1,
         merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
+        base_merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
         template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
+        base_template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
     ):
         assert_repo_is_in_clean_state(repo)
         assert_last_commit_was_in_a_flexlate_transaction(
@@ -63,7 +69,9 @@ class Undoer:
                 self.undo_transaction(
                     repo,
                     merged_branch_name=merged_branch_name,
+                    base_merged_branch_name=base_merged_branch_name,
                     template_branch_name=template_branch_name,
+                    base_template_branch_name=base_template_branch_name,
                 )
                 print_styled(
                     f"Successfully reversed transaction {i + 1}", SUCCESS_STYLE

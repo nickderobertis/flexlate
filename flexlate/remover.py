@@ -32,7 +32,9 @@ class Remover:
         transaction: FlexlateTransaction,
         out_root: Path = Path("."),
         merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
+        base_merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
         template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
+        base_template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
         add_mode: AddMode = AddMode.LOCAL,
         config_manager: ConfigManager = ConfigManager(),
     ):
@@ -73,7 +75,9 @@ class Remover:
                 commit_message,
                 out_root,
                 merged_branch_name=merged_branch_name,
+                base_merged_branch_name=base_merged_branch_name,
                 template_branch_name=template_branch_name,
+                base_template_branch_name=base_template_branch_name,
             )
             print_styled(
                 f"Successfully removed template source {template_name}", SUCCESS_STYLE
@@ -87,7 +91,9 @@ class Remover:
         out_root: Path = Path("."),
         add_mode: AddMode = AddMode.LOCAL,
         merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
+        base_merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
         template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
+        base_template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
         config_manager: ConfigManager = ConfigManager(),
         updater: Updater = Updater(),
         renderer: MultiRenderer = MultiRenderer(),
@@ -165,7 +171,9 @@ class Remover:
                     commit_message,
                     out_root,
                     merged_branch_name=merged_branch_name,
+                    base_merged_branch_name=base_merged_branch_name,
                     template_branch_name=template_branch_name,
+                    base_template_branch_name=base_template_branch_name,
                 )
 
             updater.update(
@@ -173,7 +181,9 @@ class Remover:
                 [],
                 transaction,
                 merged_branch_name=merged_branch_name,
+                base_merged_branch_name=base_merged_branch_name,
                 template_branch_name=template_branch_name,
+                base_template_branch_name=base_template_branch_name,
                 no_input=True,
                 renderer=renderer,
                 config_manager=config_manager,

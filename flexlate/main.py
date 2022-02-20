@@ -64,7 +64,9 @@ class Flexlate:
             default_add_mode=default_add_mode,
             user=user,
             merged_branch_name=get_flexlate_branch_name(repo, merged_branch_name),
+            base_merged_branch_name=merged_branch_name,
             template_branch_name=get_flexlate_branch_name(repo, template_branch_name),
+            base_template_branch_name=template_branch_name,
         )
 
     def init_project_from(
@@ -123,9 +125,11 @@ class Flexlate:
             merged_branch_name=get_flexlate_branch_name(
                 repo, project_config.merged_branch_name
             ),
+            base_merged_branch_name=project_config.merged_branch_name,
             template_branch_name=get_flexlate_branch_name(
                 repo, project_config.template_branch_name
             ),
+            base_template_branch_name=project_config.template_branch_name,
             add_mode=add_mode,
             config_manager=self.config_manager,
         )
@@ -150,9 +154,11 @@ class Flexlate:
             merged_branch_name=get_flexlate_branch_name(
                 repo, project_config.merged_branch_name
             ),
+            base_merged_branch_name=project_config.merged_branch_name,
             template_branch_name=get_flexlate_branch_name(
                 repo, project_config.template_branch_name
             ),
+            base_template_branch_name=project_config.template_branch_name,
             add_mode=project_config.default_add_mode,
             config_manager=self.config_manager,
         )
@@ -185,9 +191,11 @@ class Flexlate:
             merged_branch_name=get_flexlate_branch_name(
                 repo, project_config.merged_branch_name
             ),
+            base_merged_branch_name=project_config.merged_branch_name,
             template_branch_name=get_flexlate_branch_name(
                 repo, project_config.template_branch_name
             ),
+            base_template_branch_name=project_config.template_branch_name,
             config_manager=self.config_manager,
             renderer=self.renderer,
             updater=self.updater,
@@ -213,9 +221,11 @@ class Flexlate:
             merged_branch_name=get_flexlate_branch_name(
                 repo, project_config.merged_branch_name
             ),
+            base_merged_branch_name=project_config.merged_branch_name,
             template_branch_name=get_flexlate_branch_name(
                 repo, project_config.template_branch_name
             ),
+            base_template_branch_name=project_config.template_branch_name,
             config_manager=self.config_manager,
             updater=self.updater,
             renderer=self.renderer,
@@ -271,9 +281,11 @@ class Flexlate:
             merged_branch_name=get_flexlate_branch_name(
                 repo, project_config.merged_branch_name
             ),
+            base_merged_branch_name=project_config.merged_branch_name,
             template_branch_name=get_flexlate_branch_name(
                 repo, project_config.template_branch_name
             ),
+            base_template_branch_name=project_config.template_branch_name,
             renderer=self.renderer,
             config_manager=self.config_manager,
         )
@@ -287,9 +299,11 @@ class Flexlate:
             merged_branch_name=get_flexlate_branch_name(
                 repo, project_config.merged_branch_name
             ),
+            base_merged_branch_name=project_config.merged_branch_name,
             template_branch_name=get_flexlate_branch_name(
                 repo, project_config.template_branch_name
             ),
+            base_template_branch_name=project_config.template_branch_name,
         )
 
     def sync(
@@ -308,9 +322,11 @@ class Flexlate:
             merged_branch_name=get_flexlate_branch_name(
                 repo, project_config.merged_branch_name
             ),
+            base_merged_branch_name=project_config.merged_branch_name,
             template_branch_name=get_flexlate_branch_name(
                 repo, project_config.template_branch_name
             ),
+            base_template_branch_name=project_config.template_branch_name,
             no_input=no_input,
             updater=self.updater,
             renderer=self.renderer,

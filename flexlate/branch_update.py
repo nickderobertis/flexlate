@@ -27,7 +27,9 @@ def modify_files_via_branches_and_temp_repo(
     commit_message: str,
     out_root: Path,
     merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
+    base_merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
     template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
+    base_template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
 ):
     cwd = os.getcwd()
     current_branch = repo.active_branch
@@ -38,7 +40,9 @@ def modify_files_via_branches_and_temp_repo(
 
     # Update the template only branch with the new template
     with temp_repo_that_pushes_to_branch(  # type: ignore
-        repo, branch_name=template_branch_name
+        repo,
+        branch_name=template_branch_name,
+        base_branch_name=base_template_branch_name,
     ) as temp_repo:
         make_dirs_add_operation(Path(temp_repo.working_dir))  # type: ignore
         stage_and_commit_all(temp_repo, commit_message)
@@ -46,7 +50,9 @@ def modify_files_via_branches_and_temp_repo(
     # Bring the change into the merged branch
     # Update with changes from the main repo
     fast_forward_branch_without_checkout(repo, merged_branch_name, current_branch.name)
-    with checked_out_template_branch(repo, branch_name=merged_branch_name):
+    with checked_out_template_branch(
+        repo, branch_name=merged_branch_name, base_branch_name=base_merged_branch_name
+    ):
         # Update with the new template
         merge_branch_into_current(repo, template_branch_name)
 
@@ -69,11 +75,16 @@ def undo_transaction_in_flexlate_branches(
     repo: Repo,
     transaction: FlexlateTransaction,
     merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
+    base_merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
     template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
+    base_template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
 ):
     # Reset the template only branch to the appropriate commit
     with temp_repo_that_pushes_to_branch(  # type: ignore
-        repo, branch_name=template_branch_name, force_push=True
+        repo,
+        branch_name=template_branch_name,
+        base_branch_name=base_template_branch_name,
+        force_push=True,
     ) as temp_repo:
         reset_last_transaction(
             temp_repo, transaction, merged_branch_name, template_branch_name
@@ -81,7 +92,10 @@ def undo_transaction_in_flexlate_branches(
 
     # Reset the merged template branch to the appropriate commit
     with temp_repo_that_pushes_to_branch(  # type: ignore
-        repo, branch_name=merged_branch_name, force_push=True
+        repo,
+        branch_name=merged_branch_name,
+        base_branch_name=base_merged_branch_name,
+        force_push=True,
     ) as temp_repo:
         reset_last_transaction(
             temp_repo, transaction, merged_branch_name, template_branch_name

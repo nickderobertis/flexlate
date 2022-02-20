@@ -44,7 +44,9 @@ class Adder:
         target_version: Optional[str] = None,
         out_root: Path = Path("."),
         merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
+        base_merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
         template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
+        base_template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
         add_mode: AddMode = AddMode.LOCAL,
         config_manager: ConfigManager = ConfigManager(),
     ):
@@ -108,7 +110,9 @@ class Adder:
                 commit_message,
                 out_root,
                 merged_branch_name=merged_branch_name,
+                base_merged_branch_name=base_merged_branch_name,
                 template_branch_name=template_branch_name,
+                base_template_branch_name=base_template_branch_name,
             )
 
             print_styled(
@@ -124,7 +128,9 @@ class Adder:
         out_root: Path = Path("."),
         add_mode: AddMode = AddMode.LOCAL,
         merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
+        base_merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
         template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
+        base_template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
         no_input: bool = False,
         config_manager: ConfigManager = ConfigManager(),
         updater: Updater = Updater(),
@@ -182,7 +188,9 @@ class Adder:
                 commit_message,
                 out_root,
                 merged_branch_name=merged_branch_name,
+                base_merged_branch_name=base_merged_branch_name,
                 template_branch_name=template_branch_name,
+                base_template_branch_name=base_template_branch_name,
             )
         template_update = TemplateUpdate(
             template=template,
@@ -198,7 +206,9 @@ class Adder:
             [template_update],
             transaction,
             merged_branch_name=merged_branch_name,
+            base_merged_branch_name=base_merged_branch_name,
             template_branch_name=template_branch_name,
+            base_template_branch_name=base_template_branch_name,
             no_input=no_input,
             full_rerender=False,
             renderer=renderer,
@@ -214,7 +224,9 @@ class Adder:
         repo: Repo,
         default_add_mode: AddMode = AddMode.LOCAL,
         merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
+        base_merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
         template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
+        base_template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
         user: bool = False,
         config_manager: ConfigManager = ConfigManager(),
     ):
@@ -256,7 +268,9 @@ class Adder:
                 "Initialized flexlate project",
                 path,
                 merged_branch_name=merged_branch_name,
+                base_merged_branch_name=base_merged_branch_name,
                 template_branch_name=template_branch_name,
+                base_template_branch_name=base_template_branch_name,
             )
 
         print_styled(
