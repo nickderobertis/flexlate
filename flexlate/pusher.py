@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Sequence
 
 from git import Repo
 
@@ -12,10 +12,13 @@ class Pusher:
     def push_main_flexlate_branches(
         self,
         repo: Repo,
+        remote: str = "origin",
         merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
         template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
     ):
-        ...
+        _push_branches_to_remote(
+            repo, [template_branch_name, merged_branch_name], remote=remote
+        )
 
     def push_feature_flexlate_branches(
         self,
@@ -32,18 +35,27 @@ class Pusher:
         feature_template_branch_name = get_flexlate_branch_name_for_feature_branch(
             branch_name, template_branch_name
         )
-
-        for branch in [feature_template_branch_name, feature_merged_branch_name]:
-            if not branch_exists(repo, branch):
-                print_styled(
-                    f"Could not push branch {branch} as it does not exist", ALERT_STYLE
-                )
-                return
-
-        print_styled(
-            f"Pushing {feature_template_branch_name} and {feature_merged_branch_name} to remote {remote}",
-            INFO_STYLE,
+        _push_branches_to_remote(
+            repo,
+            [feature_template_branch_name, feature_merged_branch_name],
+            remote=remote,
         )
-        push_to_remote(repo, feature_template_branch_name, remote_name=remote)
-        push_to_remote(repo, feature_merged_branch_name, remote_name=remote)
-        print_styled("Successfully pushed branches to remote", SUCCESS_STYLE)
+
+
+def _push_branches_to_remote(
+    repo: Repo, branch_names: Sequence[str], remote: str = "origin"
+):
+    for branch in branch_names:
+        if not branch_exists(repo, branch):
+            print_styled(
+                f"Could not push branch {branch} as it does not exist", ALERT_STYLE
+            )
+            return
+    and_branches = " and ".join(branch_names)
+    print_styled(
+        f"Pushing {and_branches} to remote {remote}",
+        INFO_STYLE,
+    )
+    for branch in branch_names:
+        push_to_remote(repo, branch, remote_name=remote)
+    print_styled("Successfully pushed branches to remote", SUCCESS_STYLE)
