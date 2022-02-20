@@ -165,7 +165,6 @@ class CLIStubFlexlate(Flexlate):
                 "add",
                 "output",
                 name,
-                "--root",
                 str(out_root),
                 *_bool_flag(no_input, "no-input"),
                 *_bool_flag(quiet, "quiet"),
@@ -184,7 +183,6 @@ class CLIStubFlexlate(Flexlate):
                 "remove",
                 "output",
                 template_name,
-                "--root",
                 str(out_root),
                 *_bool_flag(quiet, "quiet"),
             ]
