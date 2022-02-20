@@ -320,6 +320,7 @@ class Flexlate:
     def merge_flexlate_branches(
         self,
         branch_name: Optional[str] = None,
+        delete: bool = True,
         project_path: Path = Path("."),
     ):
         project_config = self.config_manager.load_project_config(project_path)
@@ -327,6 +328,7 @@ class Flexlate:
         self.merger.merge_flexlate_branches(
             repo,
             branch_name,
+            delete=delete,
             merged_branch_name=project_config.merged_branch_name,
             template_branch_name=project_config.template_branch_name,
         )

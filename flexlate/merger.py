@@ -13,6 +13,7 @@ from flexlate.ext_git import (
     temp_repo_that_pushes_to_branch,
     repo_has_merge_conflicts,
     get_branch_sha,
+    delete_local_branch,
 )
 from flexlate.styles import (
     print_styled,
@@ -30,6 +31,7 @@ class Merger:
         self,
         repo: Repo,
         branch_name: Optional[str] = None,
+        delete: bool = True,
         merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
         template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
     ):
@@ -132,3 +134,15 @@ class Merger:
             f"Successfully merged {flexlate_feature_merged_branch_name} to {merged_branch_name}",
             SUCCESS_STYLE,
         )
+
+        if not delete:
+            return
+
+        # Handle delete
+        print_styled(
+            f"Deleting flexlate feature branches {flexlate_feature_template_branch_name} and {flexlate_feature_merged_branch_name}",
+            INFO_STYLE,
+        )
+        delete_local_branch(repo, flexlate_feature_template_branch_name)
+        delete_local_branch(repo, flexlate_feature_merged_branch_name)
+        print_styled(f"Successfully deleted flexlate feature branches", SUCCESS_STYLE)

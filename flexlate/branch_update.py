@@ -112,4 +112,4 @@ def get_flexlate_branch_name(repo: Repo, base_branch_name: str) -> str:
 def get_flexlate_branch_name_for_feature_branch(
     feature_branch: str, base_branch_name: str
 ) -> str:
-    return f"{base_branch_name}/{feature_branch}"
+    return f"{base_branch_name}-{feature_branch}"

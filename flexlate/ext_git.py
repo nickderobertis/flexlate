@@ -122,6 +122,10 @@ def get_branch_sha(repo: Repo, branch_name: str) -> Optional[str]:
     return branch.commit.hexsha
 
 
+def delete_local_branch(repo: Repo, branch_name: str):
+    repo.git.branch("-d", branch_name)
+
+
 @contextmanager  # type: ignore
 def temp_repo_that_pushes_to_branch(  # type: ignore
     repo: Repo,
@@ -188,14 +192,20 @@ def _clone_specific_branches_from_local_repo(
     repo: Repo, out_dir: Path, branch_names: Sequence[str], checkout_branch: str
 ) -> Repo:
     temp_repo = Repo.init(out_dir)
+    valid_branches = [name for name in branch_names if _branch_exists(repo, name)]
     branch_arguments = list(
-        itertools.chain(*[["-t", branch] for branch in branch_names])
+        itertools.chain(*[["-t", branch] for branch in valid_branches])
     )
     temp_repo.git.remote("add", "-f", *branch_arguments, "origin", repo.working_dir)
-    for branch in branch_names:
+    for branch in valid_branches:
         # TODO: is there a way to set up remote tracking branches without checkout?
         temp_repo.git.checkout("-t", f"origin/{branch}")
-    temp_repo.branches[checkout_branch].checkout()  # type: ignore
+
+    if _branch_exists(repo, checkout_branch):
+        temp_repo.branches[checkout_branch].checkout()  # type: ignore
+    else:
+        # Create the branch
+        checkout_template_branch(repo, checkout_branch)
     return temp_repo
 
 
