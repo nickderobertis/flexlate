@@ -226,6 +226,22 @@ class CLIStubFlexlate(Flexlate):
             ]
         )
 
+    def merge_flexlate_branches(
+        self,
+        branch_name: Optional[str] = None,
+        delete: bool = True,
+        project_path: Path = Path("."),
+    ):
+        return fxt(
+            [
+                "merge",
+                *_value_if_not_none(branch_name),
+                *_bool_flag(not delete, "no-delete"),
+                "--path",
+                str(project_path),
+            ]
+        )
+
 
 def _bool_flag(value: bool, name: str) -> List[str]:
     return [f"--{name}"] if value else []

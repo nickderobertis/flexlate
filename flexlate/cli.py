@@ -61,6 +61,8 @@ VERSION_OPTION = typer.Option(
     show_default=False,
 )
 QUIET_OPTION = typer.Option(False, "--quiet", "-q", show_default=False)
+PROJECT_PATH_ARGUMENT = typer.Argument(Path("."), help=PROJECT_PATH_DOC)
+PROJECT_PATH_OPTION = typer.Option(Path("."), help=PROJECT_PATH_DOC)
 
 
 @add_cli.command(name="source")
@@ -151,7 +153,7 @@ cli.add_typer(remove_cli, name="remove")
 
 @cli.command(name="init")
 def init_project(
-    path: Path = typer.Argument(Path("."), help=PROJECT_PATH_DOC),
+    path: Path = PROJECT_PATH_ARGUMENT,
     default_add_mode: AddMode = typer.Option(
         AddMode.LOCAL,
         "--add-mode",
@@ -193,7 +195,7 @@ def init_project_from(
         ...,
         help=f"A template source path to initialize the project from. {TEMPLATE_SOURCE_EXTRA_DOC}",
     ),
-    path: Path = typer.Argument(Path("."), help=PROJECT_PATH_DOC),
+    path: Path = PROJECT_PATH_ARGUMENT,
     version: Optional[str] = VERSION_OPTION,
     folder_name: str = typer.Option(
         "project",
@@ -244,7 +246,7 @@ def update_templates(
     ),
     no_input: bool = NO_INPUT_OPTION,
     quiet: bool = QUIET_OPTION,
-    path: Path = typer.Option(Path("."), help=PROJECT_PATH_DOC),
+    path: Path = PROJECT_PATH_OPTION,
 ):
     """
     Updates applied templates in the project to the newest versions
@@ -260,7 +262,7 @@ def undo(
         1,
         help="Number of flexlate operations to undo",
     ),
-    path: Path = typer.Option(Path("."), help=PROJECT_PATH_DOC),
+    path: Path = PROJECT_PATH_OPTION,
     quiet: bool = QUIET_OPTION,
 ):
     """
@@ -268,7 +270,6 @@ def undo(
     Note that this modifies the git history, discarding the last commits.
     It has protections against deleting user commits but you should only
     use this on a feature branch.
-    :return:
     """
     app = Flexlate(quiet=quiet)
     app.undo(num_operations=num_operations, project_path=path)
@@ -276,7 +277,7 @@ def undo(
 
 @cli.command(name="sync")
 def sync(
-    path: Path = typer.Argument(Path("."), help=PROJECT_PATH_DOC),
+    path: Path = PROJECT_PATH_ARGUMENT,
     no_input: bool = NO_INPUT_OPTION,
     quiet: bool = QUIET_OPTION,
 ):
@@ -288,10 +289,37 @@ def sync(
     specific command for it: manually change the version and run sync.
 
     Note: Be sure to commit your changes before running sync
-    :return:
     """
     app = Flexlate(quiet=quiet)
     app.sync(no_input=no_input, project_path=path)
+
+
+@cli.command(name="merge")
+def merge(
+    branch_name: Optional[str] = typer.Argument(
+        None,
+        help="Optional name of feature branch for which to merge "
+        "corresponding flexlate branches. Defaults to current branch",
+    ),
+    delete: bool = typer.Option(
+        True,
+        "--no-delete",
+        "-n",
+        help="Pass to prevent deleting feature flexlate branches after merge",
+        show_default=False,
+    ),
+    path: Path = PROJECT_PATH_OPTION,
+    quiet: bool = QUIET_OPTION,
+):
+    """
+    Merges feature flexlate branches into the main flexlate branches
+
+    Feature flexlate branches should be merged into main flexlate branches when
+    the corresponding feature branch is merged into the repo's main branch. This
+    command provides a convenient way to do so.
+    """
+    app = Flexlate(quiet=quiet)
+    app.merge_flexlate_branches(branch_name, delete=delete, project_path=path)
 
 
 if __name__ == "__main__":

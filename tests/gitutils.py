@@ -42,5 +42,21 @@ def assert_main_commit_message_matches(message1: str, message2: str):
     assert main_1 == main_2
 
 
+def rename_branch(repo: Repo, branch_name: str, new_branch_name: str):
+    repo.git.branch("-m", branch_name, new_branch_name)
+
+
+def checkout_new_branch(repo: Repo, branch_name: str):
+    repo.git.checkout("-b", branch_name)
+
+
+def checkout_existing_branch(repo: Repo, branch_name: str):
+    repo.git.checkout(branch_name)
+
+
+def merge_branch_into_current(repo: Repo, branch_name: str):
+    repo.git.merge(branch_name)
+
+
 def _get_main_message_from_commit_message(message: str) -> str:
     return message.split("\n")[0]

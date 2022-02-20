@@ -5,9 +5,11 @@ from git import Repo
 
 from flexlate.adder import Adder
 from flexlate.add_mode import AddMode
+from flexlate.branch_update import get_flexlate_branch_name
 from flexlate.config_manager import ConfigManager
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.finder.multi import MultiFinder
+from flexlate.merger import Merger
 from flexlate.remover import Remover
 from flexlate.render.multi import MultiRenderer
 from flexlate.styles import console
@@ -26,6 +28,7 @@ class Flexlate:
         adder: Adder = Adder(),
         remover: Remover = Remover(),
         config_manager: ConfigManager = ConfigManager(),
+        merger: Merger = Merger(),
         finder: MultiFinder = MultiFinder(),
         renderer: MultiRenderer = MultiRenderer(),
         syncer: Syncer = Syncer(),
@@ -39,6 +42,7 @@ class Flexlate:
         self.adder = adder
         self.remover = remover
         self.config_manager = config_manager
+        self.merger = merger
         self.finder = finder
         self.renderer = renderer
         self.syncer = syncer
@@ -116,8 +120,14 @@ class Flexlate:
             transaction,
             target_version=target_version,
             out_root=template_root,
-            merged_branch_name=project_config.merged_branch_name,
-            template_branch_name=project_config.template_branch_name,
+            merged_branch_name=get_flexlate_branch_name(
+                repo, project_config.merged_branch_name
+            ),
+            base_merged_branch_name=project_config.merged_branch_name,
+            template_branch_name=get_flexlate_branch_name(
+                repo, project_config.template_branch_name
+            ),
+            base_template_branch_name=project_config.template_branch_name,
             add_mode=add_mode,
             config_manager=self.config_manager,
         )
@@ -139,8 +149,14 @@ class Flexlate:
             template_name,
             transaction,
             out_root=template_root,
-            merged_branch_name=project_config.merged_branch_name,
-            template_branch_name=project_config.template_branch_name,
+            merged_branch_name=get_flexlate_branch_name(
+                repo, project_config.merged_branch_name
+            ),
+            base_merged_branch_name=project_config.merged_branch_name,
+            template_branch_name=get_flexlate_branch_name(
+                repo, project_config.template_branch_name
+            ),
+            base_template_branch_name=project_config.template_branch_name,
             add_mode=project_config.default_add_mode,
             config_manager=self.config_manager,
         )
@@ -170,8 +186,14 @@ class Flexlate:
             out_root=out_root,
             add_mode=add_mode,
             no_input=no_input,
-            merged_branch_name=project_config.merged_branch_name,
-            template_branch_name=project_config.template_branch_name,
+            merged_branch_name=get_flexlate_branch_name(
+                repo, project_config.merged_branch_name
+            ),
+            base_merged_branch_name=project_config.merged_branch_name,
+            template_branch_name=get_flexlate_branch_name(
+                repo, project_config.template_branch_name
+            ),
+            base_template_branch_name=project_config.template_branch_name,
             config_manager=self.config_manager,
             renderer=self.renderer,
             updater=self.updater,
@@ -194,8 +216,14 @@ class Flexlate:
             transaction,
             out_root=out_root,
             add_mode=project_config.default_add_mode,
-            merged_branch_name=project_config.merged_branch_name,
-            template_branch_name=project_config.template_branch_name,
+            merged_branch_name=get_flexlate_branch_name(
+                repo, project_config.merged_branch_name
+            ),
+            base_merged_branch_name=project_config.merged_branch_name,
+            template_branch_name=get_flexlate_branch_name(
+                repo, project_config.template_branch_name
+            ),
+            base_template_branch_name=project_config.template_branch_name,
             config_manager=self.config_manager,
             updater=self.updater,
             renderer=self.renderer,
@@ -248,8 +276,14 @@ class Flexlate:
             updates,
             transaction,
             no_input=no_input,
-            merged_branch_name=project_config.merged_branch_name,
-            template_branch_name=project_config.template_branch_name,
+            merged_branch_name=get_flexlate_branch_name(
+                repo, project_config.merged_branch_name
+            ),
+            base_merged_branch_name=project_config.merged_branch_name,
+            template_branch_name=get_flexlate_branch_name(
+                repo, project_config.template_branch_name
+            ),
+            base_template_branch_name=project_config.template_branch_name,
             renderer=self.renderer,
             config_manager=self.config_manager,
         )
@@ -260,8 +294,14 @@ class Flexlate:
         self.undoer.undo_transactions(
             repo,
             num_transactions=num_operations,
-            merged_branch_name=project_config.merged_branch_name,
-            template_branch_name=project_config.template_branch_name,
+            merged_branch_name=get_flexlate_branch_name(
+                repo, project_config.merged_branch_name
+            ),
+            base_merged_branch_name=project_config.merged_branch_name,
+            template_branch_name=get_flexlate_branch_name(
+                repo, project_config.template_branch_name
+            ),
+            base_template_branch_name=project_config.template_branch_name,
         )
 
     def sync(
@@ -277,12 +317,34 @@ class Flexlate:
         self.syncer.sync_local_changes_to_flexlate_branches(
             repo,
             transaction,
-            merged_branch_name=project_config.merged_branch_name,
-            template_branch_name=project_config.template_branch_name,
+            merged_branch_name=get_flexlate_branch_name(
+                repo, project_config.merged_branch_name
+            ),
+            base_merged_branch_name=project_config.merged_branch_name,
+            template_branch_name=get_flexlate_branch_name(
+                repo, project_config.template_branch_name
+            ),
+            base_template_branch_name=project_config.template_branch_name,
             no_input=no_input,
             updater=self.updater,
             renderer=self.renderer,
             config_manager=self.config_manager,
+        )
+
+    def merge_flexlate_branches(
+        self,
+        branch_name: Optional[str] = None,
+        delete: bool = True,
+        project_path: Path = Path("."),
+    ):
+        project_config = self.config_manager.load_project_config(project_path)
+        repo = Repo(project_config.path)
+        self.merger.merge_flexlate_branches(
+            repo,
+            branch_name,
+            delete=delete,
+            merged_branch_name=project_config.merged_branch_name,
+            template_branch_name=project_config.template_branch_name,
         )
 
     # TODO: list template sources, list applied templates

@@ -1,10 +1,11 @@
+import itertools
 import os
 import re
 import shutil
 import tempfile
 from contextlib import contextmanager
 from pathlib import Path
-from typing import cast, Set, Generator, ContextManager, Optional, Tuple, List
+from typing import cast, Set, Generator, ContextManager, Optional, Tuple, List, Sequence
 
 from git import Repo, Blob, Tree, GitCommandError, Commit, Git  # type: ignore
 
@@ -16,16 +17,21 @@ from flexlate.exc import (
 from flexlate.path_ops import copy_flexlate_configs, change_directory_to
 
 
-def checkout_template_branch(repo: Repo, branch_name: str):
+def checkout_template_branch(repo: Repo, branch_name: str, base_branch_name: str):
     try:
         # Get branch if it exists already
         branch = repo.branches[branch_name]  # type: ignore
     except IndexError as e:
         if "No item found with id" in str(e) and branch_name in str(e):
             # Could not find branch, must not exist, create it
-            # Get the initial root commit to base it off of
-            initial_commit = repo.git.rev_list("HEAD", max_parents=0)
-            branch = repo.create_head(branch_name, initial_commit)
+            if _branch_exists(repo, base_branch_name):
+                # Base branch exists, branch off it for feature branch
+                target = base_branch_name
+            else:
+                # Base branch doesn't exist, use the initial commit
+                target = repo.git.rev_list("HEAD", max_parents=0)
+
+            branch = repo.create_head(branch_name, target)
         else:
             # Unknown error, raise it
             raise e
@@ -121,16 +127,24 @@ def get_branch_sha(repo: Repo, branch_name: str) -> Optional[str]:
     return branch.commit.hexsha
 
 
+def delete_local_branch(repo: Repo, branch_name: str):
+    repo.git.branch("-d", branch_name)
+
+
 @contextmanager  # type: ignore
 def temp_repo_that_pushes_to_branch(  # type: ignore
     repo: Repo,
     branch_name: str,
+    base_branch_name: str,
     delete_tracked_files: bool = False,
     force_push: bool = False,
+    additional_branches: Sequence[str] = tuple(),
 ) -> ContextManager[Repo]:
     with tempfile.TemporaryDirectory() as tmp_dir:
         tmp_path = Path(tmp_dir)
-        temp_repo = _clone_single_branch_from_local_repo(repo, tmp_path, branch_name)
+        temp_repo = _clone_from_local_repo(
+            repo, tmp_path, branch_name, base_branch_name, additional_branches
+        )
         if delete_tracked_files:
             delete_tracked_files_excluding_initial_commit(temp_repo)
         # For type narrowing
@@ -145,14 +159,37 @@ def temp_repo_that_pushes_to_branch(  # type: ignore
         )
 
 
+def _clone_from_local_repo(
+    repo: Repo,
+    out_dir: Path,
+    branch_name: str,
+    base_branch_name: str,
+    additional_branches: Sequence[str] = tuple(),
+) -> Repo:
+    if additional_branches:
+        return _clone_specific_branches_from_local_repo(
+            repo,
+            out_dir,
+            [branch_name, *additional_branches],
+            branch_name,
+            base_branch_name,
+        )
+    return _clone_single_branch_from_local_repo(
+        repo, out_dir, branch_name, base_branch_name
+    )
+
+
 def _clone_single_branch_from_local_repo(
-    repo: Repo, out_dir: Path, branch_name: str
+    repo: Repo, out_dir: Path, branch_name: str, base_branch_name: str
 ) -> Repo:
     use_branch_name = branch_name
     if not _branch_exists(repo, branch_name):
-        # Branch doesn't exist, instead clone the current one
+        # Branch doesn't exist, instead clone either the base branch or the current one
         # Will need to do the checkout later after adding files
-        use_branch_name = repo.active_branch.name
+        if _branch_exists(repo, base_branch_name):
+            use_branch_name = base_branch_name
+        else:
+            use_branch_name = repo.active_branch.name
 
     # Branch exists, clone only that branch
     repo.git.clone(
@@ -162,8 +199,33 @@ def _clone_single_branch_from_local_repo(
 
     if not _branch_exists(temp_repo, branch_name):
         # Now create the new branch
-        checkout_template_branch(temp_repo, branch_name)
+        checkout_template_branch(temp_repo, branch_name, base_branch_name)
 
+    return temp_repo
+
+
+def _clone_specific_branches_from_local_repo(
+    repo: Repo,
+    out_dir: Path,
+    branch_names: Sequence[str],
+    checkout_branch: str,
+    base_checkout_branch: str,
+) -> Repo:
+    temp_repo = Repo.init(out_dir)
+    valid_branches = [name for name in branch_names if _branch_exists(repo, name)]
+    branch_arguments = list(
+        itertools.chain(*[["-t", branch] for branch in valid_branches])
+    )
+    temp_repo.git.remote("add", "-f", *branch_arguments, "origin", repo.working_dir)
+    for branch in valid_branches:
+        # TODO: is there a way to set up remote tracking branches without checkout?
+        temp_repo.git.checkout("-t", f"origin/{branch}")
+
+    if _branch_exists(repo, checkout_branch):
+        temp_repo.branches[checkout_branch].checkout()  # type: ignore
+    else:
+        # Create the branch
+        checkout_template_branch(repo, checkout_branch, base_checkout_branch)
     return temp_repo
 
 
@@ -187,9 +249,11 @@ def _branch_exists(repo: Repo, branch_name: str) -> bool:
 
 
 @contextmanager
-def checked_out_template_branch(repo: Repo, branch_name: str):
+def checked_out_template_branch(repo: Repo, branch_name: str, base_branch_name: str):
     orig_branch = repo.active_branch
-    checkout_template_branch(repo, branch_name=branch_name)
+    checkout_template_branch(
+        repo, branch_name=branch_name, base_branch_name=base_branch_name
+    )
     yield
     orig_branch.checkout()
 
