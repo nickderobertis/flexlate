@@ -9,7 +9,11 @@ from flexlate.merger import Merger
 from tests.fixtures.templated_repo import *
 from tests.fixtures.template import *
 from tests.fixtures.transaction import add_output_transaction
-from tests.gitutils import rename_branch, assert_main_commit_message_matches
+from tests.gitutils import (
+    rename_branch,
+    assert_main_commit_message_matches,
+    checkout_new_branch,
+)
 
 
 @pytest.mark.parametrize("delete", [True, False])
@@ -54,7 +58,7 @@ def test_merge_with_existing_main_branches(
     )
 
     # Existing repo has main flexlate branches. Now do another operation with feature branch
-    repo.git.checkout("-b", feature_branch_name)
+    checkout_new_branch(repo, feature_branch_name)
     subdir = GENERATED_REPO_DIR / "subdir"
     subdir.mkdir()
     with change_directory_to(subdir):

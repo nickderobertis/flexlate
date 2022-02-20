@@ -1,4 +1,5 @@
 # Integration tests
+import contextlib
 import os
 import shutil
 from pathlib import Path
@@ -13,6 +14,7 @@ from flexlate.add_mode import AddMode
 from flexlate.branch_update import get_flexlate_branch_name
 from flexlate.config import FlexlateConfig, FlexlateProjectConfig
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
+from flexlate.main import Flexlate
 from flexlate.template.types import TemplateType
 from flexlate.template_data import TemplateData
 from tests.config import (
@@ -40,7 +42,12 @@ from tests.fixtures.template_source import (
     TemplateSourceType,
     COOKIECUTTER_REMOTE_DEFAULT_EXPECT_PATH,
 )
-from tests.gitutils import assert_main_commit_message_matches
+from tests.gitutils import (
+    assert_main_commit_message_matches,
+    checkout_new_branch,
+    checkout_existing_branch,
+    merge_branch_into_current,
+)
 from tests.integration.cli_stub import CLIRunnerException
 from tests.integration.undoables import UNDOABLE_OPERATIONS
 
@@ -679,6 +686,46 @@ def test_sync_manually_remove_applied_template(
         branch: Head = repo.branches[branch_name]  # type: ignore
         branch.checkout()
         assert not output_folder.exists()
+
+
+def test_merge(flexlates: FlexlateFixture, repo_with_placeholder_committed: Repo):
+    fxt = flexlates.flexlate
+    repo = repo_with_placeholder_committed
+
+    with change_directory_to(GENERATED_REPO_DIR):
+        fxt.init_project()
+        # Make a dummy change
+        dummy_file = GENERATED_REPO_DIR / "something.txt"
+        dummy_file.write_text("text")
+        stage_and_commit_all(repo, "Add a dummy change to the main branch")
+        with _checkout_new_branch_that_merges_back(repo, fxt, "add-source"):
+            fxt.add_template_source(COOKIECUTTER_REMOTE_URL)
+        with _checkout_new_branch_that_merges_back(repo, fxt, "add-template"):
+            fxt.apply_template_and_add(COOKIECUTTER_REMOTE_NAME, no_input=True)
+
+    for branch_name in ["master", DEFAULT_MERGED_BRANCH_NAME]:
+        branch = repo.branches[branch_name]  # type: ignore
+        branch.checkout()
+        _assert_project_files_are_correct()
+        assert_main_commit_message_matches(
+            "Merge branch 'flexlate-templates-add-template' into flexlate-output-add-template",
+            repo.commit().message,
+        )
+
+    template_branch = repo.branches[DEFAULT_TEMPLATE_BRANCH_NAME]  # type: ignore
+    template_branch.checkout()
+    assert_main_commit_message_matches(
+        "Update flexlate templates", repo.commit().message
+    )
+
+
+@contextlib.contextmanager
+def _checkout_new_branch_that_merges_back(repo: Repo, fxt: Flexlate, branch_name: str):
+    checkout_new_branch(repo, branch_name)
+    yield
+    fxt.merge_flexlate_branches()
+    checkout_existing_branch(repo, "master")
+    merge_branch_into_current(repo, branch_name)
 
 
 def _assert_project_files_are_correct(
