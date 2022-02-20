@@ -39,6 +39,11 @@ TEMPLATE_ROOT_OPTION = typer.Option(
     help=TEMPLATE_ROOT_DOC,
     show_default=False,
 )
+TEMPLATE_ROOT_ARGUMENT = typer.Argument(
+    Path("."),
+    help=TEMPLATE_ROOT_DOC,
+    show_default=False,
+)
 ADD_MODE_OPTION = typer.Option(
     None,
     "--add-mode",
@@ -91,7 +96,7 @@ def generate_applied_template(
         ...,
         help="The name of the template. It must match a name in template sources",
     ),
-    template_root: Path = TEMPLATE_ROOT_OPTION,
+    template_root: Path = TEMPLATE_ROOT_ARGUMENT,
     add_mode: Optional[AddMode] = ADD_MODE_OPTION,
     no_input: bool = NO_INPUT_OPTION,
     quiet: bool = QUIET_OPTION,
@@ -134,7 +139,7 @@ def remove_template_output(
         help="The name of the template source corresponding to "
         "the applied template output to remove",
     ),
-    template_root: Path = TEMPLATE_ROOT_OPTION,
+    template_root: Path = TEMPLATE_ROOT_ARGUMENT,
     quiet: bool = QUIET_OPTION,
 ):
     app = Flexlate(quiet=quiet)
