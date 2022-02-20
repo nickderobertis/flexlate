@@ -2,6 +2,8 @@ import pytest
 
 from flexlate.add_mode import AddMode
 from flexlate.adder import Adder
+from flexlate.branch_update import get_flexlate_branch_name
+from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.remover import Remover
 from flexlate.transactions.transaction import FlexlateTransaction
 from flexlate.update.main import Updater
@@ -17,6 +19,7 @@ from tests.fixtures.transaction import (
     remove_output_transaction,
     update_transaction,
 )
+from tests.gitutils import rename_branch
 
 
 @pytest.fixture
@@ -131,6 +134,23 @@ def repo_with_template_branch_from_cookiecutter_one(
             out_root=GENERATED_REPO_DIR,
             no_input=True,
         )
+    yield repo
+
+
+@pytest.fixture
+def repo_with_template_branch_from_cookiecutter_one_and_feature_flexlate_branches(
+    repo_with_template_branch_from_cookiecutter_one: Repo,
+) -> Repo:
+    repo = repo_with_template_branch_from_cookiecutter_one
+    # Simulate conditions of developing on feature branch
+    feature_merged_branch_name = get_flexlate_branch_name(
+        repo, DEFAULT_MERGED_BRANCH_NAME
+    )
+    feature_template_branch_name = get_flexlate_branch_name(
+        repo, DEFAULT_TEMPLATE_BRANCH_NAME
+    )
+    rename_branch(repo, DEFAULT_MERGED_BRANCH_NAME, feature_merged_branch_name)
+    rename_branch(repo, DEFAULT_TEMPLATE_BRANCH_NAME, feature_template_branch_name)
     yield repo
 
 

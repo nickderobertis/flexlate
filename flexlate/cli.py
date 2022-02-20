@@ -31,6 +31,7 @@ PROJECT_USER_DOC = "Store the flexlate project configuration in the user directo
 TARGET_VERSION_DOC = "A specific version to target. Only useful for git repos, pass a branch name or commit SHA"
 TEMPLATE_SOURCE_EXTRA_DOC = "Can be a file path or a git url"
 QUIET_DOC = "Suppress CLI output except for prompts"
+REMOTE_DOC = "The name of the remote repository to push to"
 
 TEMPLATE_ROOT_OPTION = typer.Option(
     Path("."),
@@ -63,6 +64,7 @@ VERSION_OPTION = typer.Option(
 QUIET_OPTION = typer.Option(False, "--quiet", "-q", show_default=False)
 PROJECT_PATH_ARGUMENT = typer.Argument(Path("."), help=PROJECT_PATH_DOC)
 PROJECT_PATH_OPTION = typer.Option(Path("."), help=PROJECT_PATH_DOC)
+REMOTE_OPTION = typer.Option("origin", "--remote", "-r", help=REMOTE_DOC)
 
 
 @add_cli.command(name="source")
@@ -321,6 +323,41 @@ def merge(
     app = Flexlate(quiet=quiet)
     app.merge_flexlate_branches(branch_name, delete=delete, project_path=path)
 
+
+push_cli = typer.Typer(help="Push flexlate branches to remote repositories")
+
+
+@push_cli.command("main")
+def push_main(
+    remote: str = REMOTE_OPTION,
+    path: Path = PROJECT_PATH_OPTION,
+    quiet: bool = QUIET_OPTION,
+):
+    """
+    Pushes main flexlate branches to remote
+    """
+    app = Flexlate(quiet=quiet)
+    app.push_main_flexlate_branches(remote, project_path=path)
+
+
+@push_cli.command("feature")
+def push_feature(
+    feature_branch: Optional[str] = typer.Argument(
+        None,
+        help="The name of the branch used while running the flexlate operations for which we want to push the corresponding flexlate branches",
+    ),
+    remote: str = REMOTE_OPTION,
+    path: Path = PROJECT_PATH_OPTION,
+    quiet: bool = QUIET_OPTION,
+):
+    """
+    Pushes main flexlate branches to remote
+    """
+    app = Flexlate(quiet=quiet)
+    app.push_feature_flexlate_branches(feature_branch, remote, project_path=path)
+
+
+cli.add_typer(push_cli, name="push")
 
 if __name__ == "__main__":
     cli()

@@ -24,7 +24,7 @@ def checkout_template_branch(repo: Repo, branch_name: str, base_branch_name: str
     except IndexError as e:
         if "No item found with id" in str(e) and branch_name in str(e):
             # Could not find branch, must not exist, create it
-            if _branch_exists(repo, base_branch_name):
+            if branch_exists(repo, base_branch_name):
                 # Base branch exists, branch off it for feature branch
                 target = base_branch_name
             else:
@@ -187,10 +187,10 @@ def _clone_single_branch_from_local_repo(
     repo: Repo, out_dir: Path, branch_name: str, base_branch_name: str
 ) -> Repo:
     use_branch_name = branch_name
-    if not _branch_exists(repo, branch_name):
+    if not branch_exists(repo, branch_name):
         # Branch doesn't exist, instead clone either the base branch or the current one
         # Will need to do the checkout later after adding files
-        if _branch_exists(repo, base_branch_name):
+        if branch_exists(repo, base_branch_name):
             use_branch_name = base_branch_name
         else:
             use_branch_name = repo.active_branch.name
@@ -201,7 +201,7 @@ def _clone_single_branch_from_local_repo(
     )
     temp_repo = Repo(out_dir)
 
-    if not _branch_exists(temp_repo, branch_name):
+    if not branch_exists(temp_repo, branch_name):
         # Now create the new branch
         checkout_template_branch(temp_repo, branch_name, base_branch_name)
 
@@ -216,7 +216,7 @@ def _clone_specific_branches_from_local_repo(
     base_checkout_branch: str,
 ) -> Repo:
     temp_repo = Repo.init(out_dir)
-    valid_branches = [name for name in branch_names if _branch_exists(repo, name)]
+    valid_branches = [name for name in branch_names if branch_exists(repo, name)]
     branch_arguments = list(
         itertools.chain(*[["-t", branch] for branch in valid_branches])
     )
@@ -225,7 +225,7 @@ def _clone_specific_branches_from_local_repo(
         # TODO: is there a way to set up remote tracking branches without checkout?
         temp_repo.git.checkout("-t", f"origin/{branch}")
 
-    if _branch_exists(repo, checkout_branch):
+    if branch_exists(repo, checkout_branch):
         temp_repo.branches[checkout_branch].checkout()  # type: ignore
     else:
         # Create the branch
@@ -244,7 +244,7 @@ def _push_branch_from_one_local_repo_to_another(
     from_repo.git.push(*args)
 
 
-def _branch_exists(repo: Repo, branch_name: str) -> bool:
+def branch_exists(repo: Repo, branch_name: str) -> bool:
     try:
         repo.branches[branch_name]  # type: ignore
         return True
@@ -331,3 +331,7 @@ def get_commits_between_two_commits(
     )
     commit_shas = raw_commit_output.split("\n")
     return [repo.commit(sha) for sha in commit_shas]
+
+
+def push_to_remote(repo: Repo, branch_name: str, remote_name: str = "origin"):
+    repo.git.push("-u", remote_name, f"{branch_name}:{branch_name}")
