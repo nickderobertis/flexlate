@@ -8,6 +8,7 @@ import pytest
 from _pytest.monkeypatch import MonkeyPatch
 from git import Repo, Head
 
+from flexlate.branch_update import get_flexlate_branch_name_for_feature_branch
 from flexlate.config import FlexlateConfig, TemplateSource, TemplateSourceWithTemplates
 from flexlate.exc import GitRepoDirtyException
 from flexlate.finder.multi import MultiFinder
@@ -41,7 +42,7 @@ from flexlate.ext_git import repo_has_merge_conflicts
 
 
 # TODO: check that config is updated after tests
-from tests.gitutils import assert_main_commit_message_matches
+from tests.gitutils import assert_main_commit_message_matches, checkout_new_branch
 
 
 def test_update_template_dirty_repo(
@@ -197,6 +198,58 @@ def test_update_modify_template_conflict_with_reject(
         assert_main_commit_message_matches(
             repo.commit().message, "Update flexlate templates"
         )
+
+
+@patch.object(
+    cookiecutter, "prompt_for_config", lambda context, no_input: {"a": "b", "c": ""}
+)
+def test_update_modify_template_conflict_with_reject_on_feature_branches(
+    cookiecutter_one_modified_template: CookiecutterTemplate,
+    repo_from_cookiecutter_one_with_modifications: Repo,
+    update_transaction: FlexlateTransaction,
+):
+    repo = repo_from_cookiecutter_one_with_modifications
+
+    def _reject_update(prompt: str) -> bool:
+        return False
+
+    feature_branch = "feature"
+    checkout_new_branch(repo, feature_branch)
+
+    feature_merged_branch_name = get_flexlate_branch_name_for_feature_branch(
+        feature_branch, DEFAULT_MERGED_BRANCH_NAME
+    )
+    feature_template_branch_name = get_flexlate_branch_name_for_feature_branch(
+        feature_branch, DEFAULT_TEMPLATE_BRANCH_NAME
+    )
+
+    updater = Updater()
+    template_updates = updater.get_updates_for_templates(
+        [cookiecutter_one_modified_template], project_root=GENERATED_FILES_DIR
+    )
+    with patch.object(main, "confirm_user", _reject_update):
+        updater.update(
+            repo,
+            template_updates,
+            update_transaction,
+            merged_branch_name=feature_merged_branch_name,
+            template_branch_name=feature_template_branch_name,
+        )
+
+    assert repo.commit().message == "Prepend cookiecutter text with hello\n"
+
+    # Main branches are at original state
+    for branch_name in [DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME]:
+        branch: Head = repo.branches[branch_name]  # type: ignore
+        branch.checkout()
+        assert_main_commit_message_matches(
+            repo.commit().message, "Update flexlate templates"
+        )
+
+    # Feature branches are now deleted
+    for branch_name in [feature_template_branch_name, feature_merged_branch_name]:
+        with pytest.raises(IndexError):
+            branch = repo.branches[branch_name]  # type: ignore
 
 
 @pytest.mark.parametrize(
