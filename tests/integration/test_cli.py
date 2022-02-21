@@ -677,7 +677,7 @@ def test_sync_manually_remove_applied_template(
         shutil.rmtree(output_folder)
         stage_and_commit_all(repo, "Manual change to remove applied template")
 
-        fxt.sync(no_input=True)
+        fxt.sync()
 
     merged_branch_name = get_flexlate_branch_name(repo, DEFAULT_MERGED_BRANCH_NAME)
     template_branch_name = get_flexlate_branch_name(repo, DEFAULT_TEMPLATE_BRANCH_NAME)

@@ -319,7 +319,7 @@ class Flexlate:
 
     def sync(
         self,
-        no_input: bool = False,
+        prompt: bool = False,
         project_path: Path = Path("."),
     ):
         project_config = self.config_manager.load_project_config(project_path)
@@ -338,7 +338,7 @@ class Flexlate:
                 repo, project_config.template_branch_name
             ),
             base_template_branch_name=project_config.template_branch_name,
-            no_input=no_input,
+            no_input=not prompt,
             updater=self.updater,
             renderer=self.renderer,
             config_manager=self.config_manager,

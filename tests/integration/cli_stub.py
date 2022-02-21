@@ -221,7 +221,7 @@ class CLIStubFlexlate(Flexlate):
 
     def sync(
         self,
-        no_input: bool = False,
+        prompt: bool = False,
         quiet: bool = False,
         project_path: Path = Path("."),
     ):
@@ -229,7 +229,7 @@ class CLIStubFlexlate(Flexlate):
             [
                 "sync",
                 str(project_path),
-                *_bool_flag(no_input, "no-input"),
+                *_bool_flag(prompt, "prompt"),
                 *_bool_flag(quiet, "quiet"),
             ]
         )
