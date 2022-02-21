@@ -87,7 +87,7 @@ def test_sync_change_to_applied_template_location(
     new_out_path = new_folder / "b" / "text.txt"
     assert expect_out_path.exists()
 
-    shutil.move(GENERATED_REPO_DIR / "b", new_folder)
+    shutil.move(str(GENERATED_REPO_DIR / "b"), new_folder)
     stage_and_commit_all(repo, "Manually move applied template")
 
     # Sync changes to flexlate branches
