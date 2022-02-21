@@ -257,6 +257,12 @@ def update_templates(
         show_default=False,
     ),
     no_input: bool = NO_INPUT_OPTION,
+    abort_on_conflict: bool = typer.Option(
+        False,
+        "--abort",
+        "-a",
+        help="Automatically abort the update if a merge conflict is encountered. Useful in combination with --no-input for CI systems",
+    ),
     quiet: bool = QUIET_OPTION,
     path: Path = PROJECT_PATH_OPTION,
 ):
@@ -265,7 +271,12 @@ def update_templates(
     available that still satisfy source target versions
     """
     app = Flexlate(quiet=quiet)
-    app.update(names=names, no_input=no_input, project_path=path)
+    app.update(
+        names=names,
+        no_input=no_input,
+        abort_on_conflict=abort_on_conflict,
+        project_path=path,
+    )
 
 
 @cli.command(name="undo")
