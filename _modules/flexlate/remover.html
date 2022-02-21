@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.remover &mdash; flexlate 0.5.1 documentation</title>
+  <title>flexlate.remover &mdash; flexlate 0.6.0 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.5.1
+                0.6.0
               </div>
             
           
@@ -205,6 +205,7 @@
         <span class="n">template_branch_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_TEMPLATE_BRANCH_NAME</span><span class="p">,</span>
         <span class="n">base_template_branch_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_TEMPLATE_BRANCH_NAME</span><span class="p">,</span>
         <span class="n">add_mode</span><span class="p">:</span> <span class="n">AddMode</span> <span class="o">=</span> <span class="n">AddMode</span><span class="o">.</span><span class="n">LOCAL</span><span class="p">,</span>
+        <span class="n">remote</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;origin&quot;</span><span class="p">,</span>
         <span class="n">config_manager</span><span class="p">:</span> <span class="n">ConfigManager</span> <span class="o">=</span> <span class="n">ConfigManager</span><span class="p">(),</span>
     <span class="p">):</span>
         <span class="n">assert_repo_is_in_clean_state</span><span class="p">(</span><span class="n">repo</span><span class="p">)</span>
@@ -247,6 +248,7 @@
                 <span class="n">base_merged_branch_name</span><span class="o">=</span><span class="n">base_merged_branch_name</span><span class="p">,</span>
                 <span class="n">template_branch_name</span><span class="o">=</span><span class="n">template_branch_name</span><span class="p">,</span>
                 <span class="n">base_template_branch_name</span><span class="o">=</span><span class="n">base_template_branch_name</span><span class="p">,</span>
+                <span class="n">remote</span><span class="o">=</span><span class="n">remote</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="n">print_styled</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;Successfully removed template source </span><span class="si">{</span><span class="n">template_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">SUCCESS_STYLE</span>
@@ -263,6 +265,7 @@
         <span class="n">base_merged_branch_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_MERGED_BRANCH_NAME</span><span class="p">,</span>
         <span class="n">template_branch_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_TEMPLATE_BRANCH_NAME</span><span class="p">,</span>
         <span class="n">base_template_branch_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_TEMPLATE_BRANCH_NAME</span><span class="p">,</span>
+        <span class="n">remote</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;origin&quot;</span><span class="p">,</span>
         <span class="n">config_manager</span><span class="p">:</span> <span class="n">ConfigManager</span> <span class="o">=</span> <span class="n">ConfigManager</span><span class="p">(),</span>
         <span class="n">updater</span><span class="p">:</span> <span class="n">Updater</span> <span class="o">=</span> <span class="n">Updater</span><span class="p">(),</span>
         <span class="n">renderer</span><span class="p">:</span> <span class="n">MultiRenderer</span> <span class="o">=</span> <span class="n">MultiRenderer</span><span class="p">(),</span>
@@ -343,6 +346,7 @@
                     <span class="n">base_merged_branch_name</span><span class="o">=</span><span class="n">base_merged_branch_name</span><span class="p">,</span>
                     <span class="n">template_branch_name</span><span class="o">=</span><span class="n">template_branch_name</span><span class="p">,</span>
                     <span class="n">base_template_branch_name</span><span class="o">=</span><span class="n">base_template_branch_name</span><span class="p">,</span>
+                    <span class="n">remote</span><span class="o">=</span><span class="n">remote</span><span class="p">,</span>
                 <span class="p">)</span>
 
             <span class="n">updater</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>

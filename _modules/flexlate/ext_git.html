@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.ext_git &mdash; flexlate 0.5.1 documentation</title>
+  <title>flexlate.ext_git &mdash; flexlate 0.6.0 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.5.1
+                0.6.0
               </div>
             
           
@@ -309,11 +309,17 @@
     <span class="n">copy_current_configs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">force_push</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">additional_branches</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(),</span>
+    <span class="n">remote</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;origin&quot;</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ContextManager</span><span class="p">[</span><span class="n">Repo</span><span class="p">]:</span>
     <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">tmp_dir</span><span class="p">:</span>
         <span class="n">tmp_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">tmp_dir</span><span class="p">)</span>
         <span class="n">temp_repo</span> <span class="o">=</span> <span class="n">_clone_from_local_repo</span><span class="p">(</span>
-            <span class="n">repo</span><span class="p">,</span> <span class="n">tmp_path</span><span class="p">,</span> <span class="n">branch_name</span><span class="p">,</span> <span class="n">base_branch_name</span><span class="p">,</span> <span class="n">additional_branches</span>
+            <span class="n">repo</span><span class="p">,</span>
+            <span class="n">tmp_path</span><span class="p">,</span>
+            <span class="n">branch_name</span><span class="p">,</span>
+            <span class="n">base_branch_name</span><span class="p">,</span>
+            <span class="n">additional_branches</span><span class="p">,</span>
+            <span class="n">remote</span><span class="o">=</span><span class="n">remote</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="n">delete_tracked_files</span><span class="p">:</span>
             <span class="n">delete_tracked_files_excluding_initial_commit</span><span class="p">(</span><span class="n">temp_repo</span><span class="p">)</span>
@@ -338,6 +344,7 @@
     <span class="n">branch_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">base_branch_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">additional_branches</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(),</span>
+    <span class="n">remote</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;origin&quot;</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Repo</span><span class="p">:</span>
     <span class="k">if</span> <span class="n">additional_branches</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">_clone_specific_branches_from_local_repo</span><span class="p">(</span>
@@ -346,19 +353,27 @@
             <span class="p">[</span><span class="n">branch_name</span><span class="p">,</span> <span class="o">*</span><span class="n">additional_branches</span><span class="p">],</span>
             <span class="n">branch_name</span><span class="p">,</span>
             <span class="n">base_branch_name</span><span class="p">,</span>
+            <span class="n">remote</span><span class="o">=</span><span class="n">remote</span><span class="p">,</span>
         <span class="p">)</span>
     <span class="k">return</span> <span class="n">_clone_single_branch_from_local_repo</span><span class="p">(</span>
-        <span class="n">repo</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">,</span> <span class="n">branch_name</span><span class="p">,</span> <span class="n">base_branch_name</span>
+        <span class="n">repo</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">,</span> <span class="n">branch_name</span><span class="p">,</span> <span class="n">base_branch_name</span><span class="p">,</span> <span class="n">remote</span><span class="o">=</span><span class="n">remote</span>
     <span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_clone_single_branch_from_local_repo</span><span class="p">(</span>
-    <span class="n">repo</span><span class="p">:</span> <span class="n">Repo</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">branch_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">base_branch_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">repo</span><span class="p">:</span> <span class="n">Repo</span><span class="p">,</span>
+    <span class="n">out_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">branch_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">base_branch_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">remote</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;origin&quot;</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Repo</span><span class="p">:</span>
     <span class="n">use_branch_name</span> <span class="o">=</span> <span class="n">branch_name</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">branch_exists</span><span class="p">(</span><span class="n">repo</span><span class="p">,</span> <span class="n">branch_name</span><span class="p">):</span>
         <span class="c1"># Branch doesn&#39;t exist, instead clone either the base branch or the current one</span>
         <span class="c1"># Will need to do the checkout later after adding files</span>
+        <span class="n">_update_local_branch_from_remote_without_checkout</span><span class="p">(</span>
+            <span class="n">repo</span><span class="p">,</span> <span class="n">base_branch_name</span><span class="p">,</span> <span class="n">remote</span><span class="o">=</span><span class="n">remote</span>
+        <span class="p">)</span>
         <span class="k">if</span> <span class="n">branch_exists</span><span class="p">(</span><span class="n">repo</span><span class="p">,</span> <span class="n">base_branch_name</span><span class="p">):</span>
             <span class="n">use_branch_name</span> <span class="o">=</span> <span class="n">base_branch_name</span>
         <span class="k">else</span><span class="p">:</span>
@@ -383,6 +398,7 @@
     <span class="n">branch_names</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
     <span class="n">checkout_branch</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">base_checkout_branch</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">remote</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;origin&quot;</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Repo</span><span class="p">:</span>
     <span class="n">temp_repo</span> <span class="o">=</span> <span class="n">Repo</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">out_dir</span><span class="p">)</span>
     <span class="n">valid_branches</span> <span class="o">=</span> <span class="p">[</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">branch_names</span> <span class="k">if</span> <span class="n">branch_exists</span><span class="p">(</span><span class="n">repo</span><span class="p">,</span> <span class="n">name</span><span class="p">)]</span>
@@ -398,8 +414,32 @@
         <span class="n">temp_repo</span><span class="o">.</span><span class="n">branches</span><span class="p">[</span><span class="n">checkout_branch</span><span class="p">]</span><span class="o">.</span><span class="n">checkout</span><span class="p">()</span>  <span class="c1"># type: ignore</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># Create the branch</span>
+        <span class="n">_update_local_branch_from_remote_without_checkout</span><span class="p">(</span>
+            <span class="n">repo</span><span class="p">,</span> <span class="n">base_checkout_branch</span><span class="p">,</span> <span class="n">remote</span><span class="o">=</span><span class="n">remote</span>
+        <span class="p">)</span>
         <span class="n">checkout_template_branch</span><span class="p">(</span><span class="n">repo</span><span class="p">,</span> <span class="n">checkout_branch</span><span class="p">,</span> <span class="n">base_checkout_branch</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">temp_repo</span>
+
+
+<span class="k">def</span> <span class="nf">_update_local_branch_from_remote_without_checkout</span><span class="p">(</span>
+    <span class="n">repo</span><span class="p">:</span> <span class="n">Repo</span><span class="p">,</span> <span class="n">branch_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">remote</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;origin&quot;</span>
+<span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">repo</span><span class="o">.</span><span class="n">git</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">remote</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">branch_name</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">branch_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">GitCommandError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;couldn&#39;t find remote ref&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">):</span>
+            <span class="c1"># No remote branch, so this is a no-op</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="s2">&quot;non-fast-forward&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">):</span>
+            <span class="c1"># The local branch is ahead of the remote branch,</span>
+            <span class="c1"># so this is a no-op</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="s2">&quot;Could not read from remote repository&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">):</span>
+            <span class="c1"># There is likely not a remote for this repo. If there is,</span>
+            <span class="c1"># it has a different name than what was passed</span>
+            <span class="k">return</span>
+        <span class="c1"># Unknown git error, raise it</span>
+        <span class="k">raise</span> <span class="n">e</span>
 
 
 <span class="k">def</span> <span class="nf">_push_branch_from_one_local_repo_to_another</span><span class="p">(</span>
