@@ -38,7 +38,7 @@ def test_sync_change_in_template_source_name(
     _check_config_on_each_branch(config_path, repo, check_config)
 
 
-def test_sync_change_to_applied_template_location(
+def test_sync_change_to_applied_template_root(
     repo_with_template_branch_from_cookiecutter_one_project_add_mode: Repo,
     sync_transaction: FlexlateTransaction,
 ):
@@ -72,6 +72,35 @@ def test_sync_change_to_applied_template_location(
         assert expect_new_output_path.exists()
 
     _check_config_on_each_branch(config_path, repo, check_config)
+
+
+def test_sync_change_to_applied_template_location(
+    repo_with_template_branch_from_cookiecutter_one: Repo,
+    sync_transaction: FlexlateTransaction,
+):
+    repo = repo_with_template_branch_from_cookiecutter_one
+    expect_out_path = GENERATED_REPO_DIR / "b" / "text.txt"
+    config_path = GENERATED_REPO_DIR / "b" / "flexlate.json"
+    new_folder = GENERATED_REPO_DIR / "subdir"
+    new_folder.mkdir()
+    new_config_path = new_folder / "b" / "flexlate.json"
+    new_out_path = new_folder / "b" / "text.txt"
+    assert expect_out_path.exists()
+
+    shutil.move(GENERATED_REPO_DIR / "b", new_folder)
+    stage_and_commit_all(repo, "Manually move applied template")
+
+    # Sync changes to flexlate branches
+    syncer = Syncer()
+    syncer.sync_local_changes_to_flexlate_branches(
+        repo, sync_transaction, no_input=True
+    )
+
+    def check_config(config: FlexlateConfig):
+        assert new_out_path.exists()
+        assert new_out_path.read_text() == "b"
+
+    _check_config_on_each_branch(new_config_path, repo, check_config)
 
 
 def test_sync_change_to_data(
