@@ -110,7 +110,7 @@ def reset_branch_to_commit_without_checkout(
 ):
     if commit_sha is None:
         # Branch didn't previously exist, delete
-        repo.git.branch("-d", branch_name)
+        delete_local_branch(repo, branch_name)
         return
     repo.git.branch("--force", branch_name, commit_sha)
 
