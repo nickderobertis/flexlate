@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.update.main &mdash; flexlate 0.6.0 documentation</title>
+  <title>flexlate.update.main &mdash; flexlate 0.7.0 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.6.0
+                0.7.0
               </div>
             
           
@@ -168,6 +168,7 @@
             
   <h1>Source code for flexlate.update.main</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
 
@@ -269,7 +270,9 @@
                 <span class="n">use_template_source_path</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="n">orig_renderables</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="n">config_manager</span><span class="o">.</span><span class="n">get_all_renderables</span><span class="p">(</span><span class="n">project_root</span><span class="o">=</span><span class="n">temp_project_root</span><span class="p">)</span>
+                <span class="n">config_manager</span><span class="o">.</span><span class="n">get_all_renderables</span><span class="p">(</span>
+                    <span class="n">relative_to</span><span class="o">=</span><span class="n">project_root</span><span class="p">,</span> <span class="n">project_root</span><span class="o">=</span><span class="n">temp_project_root</span>
+                <span class="p">)</span>
                 <span class="k">if</span> <span class="n">full_rerender</span>
                 <span class="k">else</span> <span class="n">config_manager</span><span class="o">.</span><span class="n">get_renderables_for_updates</span><span class="p">(</span>
                     <span class="n">updates</span><span class="p">,</span> <span class="n">project_root</span><span class="o">=</span><span class="n">project_root</span>
@@ -480,7 +483,7 @@
 
 
 <span class="k">def</span> <span class="nf">_move_renderable_out_roots_to_new_parent</span><span class="p">(</span>
-    <span class="n">renderbales</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Renderable</span><span class="p">],</span> <span class="n">orig_parent</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">new_parent</span><span class="p">:</span> <span class="n">Path</span>
+    <span class="n">renderables</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Renderable</span><span class="p">],</span> <span class="n">orig_parent</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">new_parent</span><span class="p">:</span> <span class="n">Path</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Renderable</span><span class="p">]:</span>
     <span class="k">return</span> <span class="p">[</span>
         <span class="n">renderable</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span>
@@ -490,7 +493,7 @@
                 <span class="p">)</span>
             <span class="p">)</span>
         <span class="p">)</span>
-        <span class="k">for</span> <span class="n">renderable</span> <span class="ow">in</span> <span class="n">renderbales</span>
+        <span class="k">for</span> <span class="n">renderable</span> <span class="ow">in</span> <span class="n">renderables</span>
     <span class="p">]</span>
 </pre></div>
 
