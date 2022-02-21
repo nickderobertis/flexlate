@@ -301,7 +301,13 @@ def undo(
 @cli.command(name="sync")
 def sync(
     path: Path = PROJECT_PATH_ARGUMENT,
-    no_input: bool = NO_INPUT_OPTION,
+    prompt: bool = typer.Option(
+        False,
+        "--prompt",
+        "-p",
+        help="Pass to enable answering template prompts",
+        show_default=False,
+    ),
     quiet: bool = QUIET_OPTION,
 ):
     """
@@ -314,7 +320,7 @@ def sync(
     Note: Be sure to commit your changes before running sync
     """
     app = Flexlate(quiet=quiet)
-    app.sync(no_input=no_input, project_path=path)
+    app.sync(prompt=prompt, project_path=path)
 
 
 @cli.command(name="merge")
