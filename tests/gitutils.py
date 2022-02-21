@@ -3,7 +3,7 @@ from typing import Union
 
 from git import Repo
 
-from tests.config import GENERATED_REPO_DIR
+from tests.config import GENERATED_REPO_DIR, GENERATED_FILES_DIR
 
 
 def create_empty_repo(out_dir: Path = GENERATED_REPO_DIR) -> Repo:
@@ -61,6 +61,16 @@ def add_remote(repo: Repo, path: Union[str, Path], remote_name: str = "origin"):
     else:
         remote_path = path
     repo.git.remote("add", remote_name, remote_path)
+
+
+def add_local_remote(
+    repo: Repo, remote_path: Path = GENERATED_FILES_DIR / "remote"
+) -> Repo:
+    if not remote_path.exists():
+        remote_path.mkdir()
+    remote_repo = Repo.init(remote_path)
+    add_remote(repo, remote_path)
+    return remote_repo
 
 
 def _get_main_message_from_commit_message(message: str) -> str:
