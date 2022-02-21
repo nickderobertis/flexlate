@@ -104,28 +104,43 @@ class ConfigManager:
         self.save_projects_config(config)
 
     def get_applied_templates_with_sources(
-        self, project_root: Path = Path("."), config: Optional[FlexlateConfig] = None
+        self,
+        relative_to: Optional[Path] = None,
+        project_root: Path = Path("."),
+        config: Optional[FlexlateConfig] = None,
     ) -> List[AppliedTemplateWithSource]:
         config = config or self.load_config(project_root)
         sources = config.template_sources_dict
         applied_template_with_sources: List[AppliedTemplateWithSource] = []
         for applied_template in config.applied_templates:
             source = sources[applied_template.name]
+            if (
+                relative_to is not None
+                and source.git_url is None
+                and not Path(source.path).is_absolute()
+            ):
+                new_path = (relative_to / Path(source.path)).resolve()
+                use_source = source.copy(update=dict(path=new_path))
+            else:
+                use_source = source
             applied_template_with_sources.append(
                 AppliedTemplateWithSource(
-                    applied_template=applied_template, source=source
+                    applied_template=applied_template, source=use_source
                 )
             )
         return applied_template_with_sources
 
     def get_all_renderables(
-        self, project_root: Path = Path("."), config: Optional[FlexlateConfig] = None
+        self,
+        relative_to: Optional[Path] = None,
+        project_root: Path = Path("."),
+        config: Optional[FlexlateConfig] = None,
     ) -> List[Renderable]:
         config = config or self.load_config(project_root)
         return [
             Renderable.from_applied_template_with_source(applied_with_source)
             for applied_with_source in self.get_applied_templates_with_sources(
-                project_root=project_root, config=config
+                relative_to=relative_to, project_root=project_root, config=config
             )
         ]
 
