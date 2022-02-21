@@ -20,7 +20,7 @@ REPO_MAINTAINERS = [
 ]
 
 # Package version in the format (major, minor, release)
-PACKAGE_VERSION_TUPLE = (0, 5, 0)
+PACKAGE_VERSION_TUPLE = (0, 5, 1)
 
 # Short description of the package
 PACKAGE_SHORT_DESCRIPTION = "A composable, maintainable system for managing templates"
