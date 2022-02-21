@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.ext_git &mdash; flexlate 0.5.0 documentation</title>
+  <title>flexlate.ext_git &mdash; flexlate 0.5.1 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.5.0
+                0.5.1
               </div>
             
           
@@ -279,7 +279,7 @@
 <span class="p">):</span>
     <span class="k">if</span> <span class="n">commit_sha</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># Branch didn&#39;t previously exist, delete</span>
-        <span class="n">repo</span><span class="o">.</span><span class="n">git</span><span class="o">.</span><span class="n">branch</span><span class="p">(</span><span class="s2">&quot;-d&quot;</span><span class="p">,</span> <span class="n">branch_name</span><span class="p">)</span>
+        <span class="n">delete_local_branch</span><span class="p">(</span><span class="n">repo</span><span class="p">,</span> <span class="n">branch_name</span><span class="p">)</span>
         <span class="k">return</span>
     <span class="n">repo</span><span class="o">.</span><span class="n">git</span><span class="o">.</span><span class="n">branch</span><span class="p">(</span><span class="s2">&quot;--force&quot;</span><span class="p">,</span> <span class="n">branch_name</span><span class="p">,</span> <span class="n">commit_sha</span><span class="p">)</span></div>
 
