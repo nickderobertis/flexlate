@@ -245,6 +245,7 @@ class Flexlate:
         names: Optional[List[str]] = None,
         data: Optional[Sequence[TemplateData]] = None,
         no_input: bool = False,
+        abort_on_conflict: bool = False,
         project_path: Path = Path("."),
     ):
         transaction = FlexlateTransaction(
@@ -287,6 +288,7 @@ class Flexlate:
             updates,
             transaction,
             no_input=no_input,
+            abort_on_conflict=abort_on_conflict,
             merged_branch_name=get_flexlate_branch_name(
                 repo, project_config.merged_branch_name
             ),

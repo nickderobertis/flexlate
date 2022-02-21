@@ -206,8 +206,15 @@ def test_update_modify_template_conflict(
     template_updates = updater.get_updates_for_templates(
         [cookiecutter_one_modified_template], project_root=GENERATED_FILES_DIR
     )
-    updater.update(repo, template_updates, update_transaction, no_input=True)
-    assert repo_has_merge_conflicts(repo)
+    manual_commit_message = "Manually resolve conflicts"
+
+    def _resolve_conflicts_then_type_yes(prompt: str) -> bool:
+        assert repo_has_merge_conflicts(repo)
+        stage_and_commit_all(repo, manual_commit_message)
+        return True
+
+    with patch.object(main, "confirm_user", _resolve_conflicts_then_type_yes):
+        updater.update(repo, template_updates, update_transaction, no_input=True)
 
 
 @patch.object(

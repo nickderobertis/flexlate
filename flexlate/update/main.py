@@ -61,6 +61,7 @@ class Updater:
         template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
         base_template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
         no_input: bool = False,
+        abort_on_conflict: bool = False,
         full_rerender: bool = True,
         renderer: MultiRenderer = MultiRenderer(),
         config_manager: ConfigManager = ConfigManager(),
@@ -162,10 +163,19 @@ class Updater:
         merge_branch_into_current(repo, template_branch_name)
 
         if repo_has_merge_conflicts(repo):
-            if no_input:
-                # Not receiving input, so there is no way the user could resolve conflicts
-                # during the process
-                print_styled("Repo has merge conflicts after update", ALERT_STYLE)
+            if abort_on_conflict:
+                print_styled(
+                    "Repo has merge conflicts after update, aborting due to abort_on_conflict=True",
+                    ALERT_STYLE,
+                )
+                abort_merge_and_reset_flexlate_branches(
+                    repo,
+                    current_branch,
+                    merged_branch_sha=merged_branch_sha,
+                    template_branch_sha=template_branch_sha,
+                    merged_branch_name=merged_branch_name,
+                    template_branch_name=template_branch_name,
+                )
                 return
 
             # Need to wait for user to resolve merge conflicts

@@ -58,6 +58,7 @@ class CLIStubFlexlate(Flexlate):
         template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
         template_path_from: Optional[str] = None,
         user: bool = False,
+        remote: str = "origin",
     ):
         fxt(
             [
@@ -71,6 +72,8 @@ class CLIStubFlexlate(Flexlate):
                 template_branch_name,
                 *_bool_flag(user, "user"),
                 *_flag_if_not_none(template_path_from, "from"),
+                "--remote",
+                remote,
             ]
         )
 
@@ -84,6 +87,7 @@ class CLIStubFlexlate(Flexlate):
         no_input: bool = False,
         quiet: bool = False,
         default_add_mode: AddMode = AddMode.LOCAL,
+        remote: str = "origin",
         merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
         template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
     ):
@@ -107,6 +111,8 @@ class CLIStubFlexlate(Flexlate):
                 merged_branch_name,
                 "--template-branch-name",
                 template_branch_name,
+                "--remote",
+                remote,
             ],
             input_data=all_data,
         )
@@ -193,6 +199,7 @@ class CLIStubFlexlate(Flexlate):
         names: Optional[List[str]] = None,
         data: Optional[Sequence[TemplateData]] = None,
         no_input: bool = False,
+        abort_on_conflict: bool = False,
         quiet: bool = False,
         project_path: Path = Path("."),
     ):
@@ -204,6 +211,7 @@ class CLIStubFlexlate(Flexlate):
                 str(project_path),
                 *_bool_flag(no_input, "no-input"),
                 *_bool_flag(quiet, "quiet"),
+                *_bool_flag(abort_on_conflict, "abort"),
             ],
             input_data=data,
         )
