@@ -264,6 +264,7 @@ class ProjectConfig(BaseModel):
     default_add_mode: AddMode = AddMode.LOCAL
     merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME
     template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME
+    remote: str = "origin"
 
 
 class FlexlateProjectConfig(BaseConfig):

@@ -31,7 +31,10 @@ PROJECT_USER_DOC = "Store the flexlate project configuration in the user directo
 TARGET_VERSION_DOC = "A specific version to target. Only useful for git repos, pass a branch name or commit SHA"
 TEMPLATE_SOURCE_EXTRA_DOC = "Can be a file path or a git url"
 QUIET_DOC = "Suppress CLI output except for prompts"
-REMOTE_DOC = "The name of the remote repository to push to"
+REMOTE_DOC = "The name of the remote repository"
+PUSH_REMOTE_DOC = (
+    "The name of the remote repository to push to, defaults to project config remote"
+)
 
 TEMPLATE_ROOT_OPTION = typer.Option(
     Path("."),
@@ -65,6 +68,9 @@ QUIET_OPTION = typer.Option(False, "--quiet", "-q", show_default=False)
 PROJECT_PATH_ARGUMENT = typer.Argument(Path("."), help=PROJECT_PATH_DOC)
 PROJECT_PATH_OPTION = typer.Option(Path("."), help=PROJECT_PATH_DOC)
 REMOTE_OPTION = typer.Option("origin", "--remote", "-r", help=REMOTE_DOC)
+PUSH_REMOTE_OPTION = typer.Option(
+    None, "--remote", "-r", help=REMOTE_DOC, show_default=False
+)
 
 
 @add_cli.command(name="source")
@@ -176,6 +182,7 @@ def init_project(
         "--user",
         help=PROJECT_USER_DOC,
     ),
+    remote: str = REMOTE_OPTION,
     quiet: bool = QUIET_OPTION,
 ):
     """
@@ -188,6 +195,7 @@ def init_project(
         merged_branch_name=merged_branch_name,
         template_branch_name=template_branch_name,
         user=user,
+        remote=remote,
     )
 
 
@@ -215,6 +223,7 @@ def init_project_from(
         case_sensitive=False,
         show_choices=True,
     ),
+    remote: str = REMOTE_OPTION,
     merged_branch_name: str = typer.Option(
         DEFAULT_MERGED_BRANCH_NAME, help=MERGED_BRANCH_DOC
     ),
@@ -234,6 +243,7 @@ def init_project_from(
         default_folder_name=folder_name,
         no_input=no_input,
         default_add_mode=default_add_mode,
+        remote=remote,
         merged_branch_name=merged_branch_name,
         template_branch_name=template_branch_name,
     )
@@ -329,7 +339,7 @@ push_cli = typer.Typer(help="Push flexlate branches to remote repositories")
 
 @push_cli.command("main")
 def push_main(
-    remote: str = REMOTE_OPTION,
+    remote: Optional[str] = PUSH_REMOTE_OPTION,
     path: Path = PROJECT_PATH_OPTION,
     quiet: bool = QUIET_OPTION,
 ):

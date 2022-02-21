@@ -160,13 +160,10 @@ def test_update_modify_template_with_feature_branches_and_main_branches_are_only
     )
 
     # Ensure that flexlate base branches were used properly
-    merged_branch = repo.branches[feature_merged_branch_name]  # type: ignore
-    base_merged_branch: Head = repo.branches[DEFAULT_MERGED_BRANCH_NAME]  # type: ignore
     base_template_branch: Head = repo.branches[DEFAULT_TEMPLATE_BRANCH_NAME]  # type: ignore
     assert (
         template_branch.commit.parents[0].hexsha == base_template_branch.commit.hexsha
     )
-    assert merged_branch.commit.parents[0].hexsha == base_merged_branch.commit.hexsha
 
 
 def test_update_modify_data(

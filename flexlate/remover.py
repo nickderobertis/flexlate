@@ -36,6 +36,7 @@ class Remover:
         template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
         base_template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
         add_mode: AddMode = AddMode.LOCAL,
+        remote: str = "origin",
         config_manager: ConfigManager = ConfigManager(),
     ):
         assert_repo_is_in_clean_state(repo)
@@ -78,6 +79,7 @@ class Remover:
                 base_merged_branch_name=base_merged_branch_name,
                 template_branch_name=template_branch_name,
                 base_template_branch_name=base_template_branch_name,
+                remote=remote,
             )
             print_styled(
                 f"Successfully removed template source {template_name}", SUCCESS_STYLE
@@ -94,6 +96,7 @@ class Remover:
         base_merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
         template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
         base_template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
+        remote: str = "origin",
         config_manager: ConfigManager = ConfigManager(),
         updater: Updater = Updater(),
         renderer: MultiRenderer = MultiRenderer(),
@@ -174,6 +177,7 @@ class Remover:
                     base_merged_branch_name=base_merged_branch_name,
                     template_branch_name=template_branch_name,
                     base_template_branch_name=base_template_branch_name,
+                    remote=remote,
                 )
 
             updater.update(
