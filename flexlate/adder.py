@@ -48,6 +48,7 @@ class Adder:
         template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
         base_template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
         add_mode: AddMode = AddMode.LOCAL,
+        remote: str = "origin",
         config_manager: ConfigManager = ConfigManager(),
     ):
         assert_repo_is_in_clean_state(repo)
@@ -113,6 +114,7 @@ class Adder:
                 base_merged_branch_name=base_merged_branch_name,
                 template_branch_name=template_branch_name,
                 base_template_branch_name=base_template_branch_name,
+                remote=remote,
             )
 
             print_styled(
@@ -132,6 +134,7 @@ class Adder:
         template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
         base_template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
         no_input: bool = False,
+        remote: str = "origin",
         config_manager: ConfigManager = ConfigManager(),
         updater: Updater = Updater(),
         renderer: MultiRenderer = MultiRenderer(),
@@ -191,6 +194,7 @@ class Adder:
                 base_merged_branch_name=base_merged_branch_name,
                 template_branch_name=template_branch_name,
                 base_template_branch_name=base_template_branch_name,
+                remote=remote,
             )
         template_update = TemplateUpdate(
             template=template,
@@ -226,6 +230,7 @@ class Adder:
         merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
         template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
         user: bool = False,
+        remote: str = "origin",
         config_manager: ConfigManager = ConfigManager(),
     ):
         assert_repo_is_in_clean_state(repo)
@@ -250,6 +255,7 @@ class Adder:
                     user=user,
                     merged_branch_name=merged_branch_name,
                     template_branch_name=template_branch_name,
+                    remote=remote,
                 )
                 return
 
@@ -261,6 +267,7 @@ class Adder:
                     user=user,
                     merged_branch_name=merged_branch_name,
                     template_branch_name=template_branch_name,
+                    remote=remote,
                 ),
                 repo,
                 "Initialized flexlate project",
@@ -269,6 +276,7 @@ class Adder:
                 base_merged_branch_name=merged_branch_name,
                 template_branch_name=template_branch_name,
                 base_template_branch_name=template_branch_name,
+                remote=remote,
             )
 
         print_styled(
@@ -287,6 +295,7 @@ class Adder:
         default_add_mode: AddMode = AddMode.LOCAL,
         merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
         template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
+        remote: str = "origin",
         no_input: bool = False,
         config_manager: ConfigManager = ConfigManager(),
         updater: Updater = Updater(),
@@ -304,6 +313,7 @@ class Adder:
                 merged_branch_name=merged_branch_name,
                 template_branch_name=template_branch_name,
                 user=False,
+                remote=remote,
                 config_manager=config_manager,
             )
             self.add_template_source(
@@ -315,6 +325,7 @@ class Adder:
                 merged_branch_name=merged_branch_name,
                 template_branch_name=template_branch_name,
                 add_mode=AddMode.LOCAL,
+                remote=remote,
                 config_manager=config_manager,
             )
             self.apply_template_and_add(
@@ -327,6 +338,7 @@ class Adder:
                 merged_branch_name=merged_branch_name,
                 template_branch_name=template_branch_name,
                 no_input=no_input,
+                remote=remote,
                 config_manager=config_manager,
                 updater=updater,
                 renderer=renderer,

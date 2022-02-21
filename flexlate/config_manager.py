@@ -89,6 +89,7 @@ class ConfigManager:
         merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
         template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
         user: bool = False,
+        remote: str = "origin",
     ):
         config = self.load_specific_projects_config(path, user)
         output_path = path.absolute() if user else Path(".")
@@ -97,6 +98,7 @@ class ConfigManager:
             default_add_mode=default_add_mode,
             merged_branch_name=merged_branch_name,
             template_branch_name=template_branch_name,
+            remote=remote,
         )
         config.projects.append(project_config)
         self.save_projects_config(config)

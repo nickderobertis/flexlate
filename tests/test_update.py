@@ -12,6 +12,7 @@ from flexlate.branch_update import get_flexlate_branch_name_for_feature_branch
 from flexlate.config import FlexlateConfig, TemplateSource, TemplateSourceWithTemplates
 from flexlate.exc import GitRepoDirtyException
 from flexlate.finder.multi import MultiFinder
+from flexlate.pusher import Pusher
 from flexlate.render.specific import cookiecutter
 from flexlate.template.base import Template
 from flexlate.template.cookiecutter import CookiecutterTemplate
@@ -38,11 +39,14 @@ from tests.fixtures.template import *
 from tests.fixtures.templated_repo import *
 from tests.fixtures.updates import *
 from tests.fixtures.transaction import update_transaction
-from flexlate.ext_git import repo_has_merge_conflicts
-
+from flexlate.ext_git import repo_has_merge_conflicts, delete_local_branch
 
 # TODO: check that config is updated after tests
-from tests.gitutils import assert_main_commit_message_matches, checkout_new_branch
+from tests.gitutils import (
+    assert_main_commit_message_matches,
+    checkout_new_branch,
+    add_local_remote,
+)
 
 
 def test_update_template_dirty_repo(
@@ -91,6 +95,74 @@ def test_update_modify_template(
     assert (
         cookiecutter_one_generated_text_content(gen_dir=GENERATED_REPO_DIR)
         == "b and extra"
+    )
+
+
+def test_update_modify_template_with_feature_branches_and_main_branches_are_only_on_remote(
+    cookiecutter_one_modified_template: CookiecutterTemplate,
+    repo_with_gitignore_and_template_branch_from_cookiecutter_one: Repo,
+    update_transaction: FlexlateTransaction,
+):
+    repo = repo_with_gitignore_and_template_branch_from_cookiecutter_one
+    updater = Updater()
+    template_updates = updater.get_updates_for_templates(
+        [cookiecutter_one_modified_template], project_root=GENERATED_REPO_DIR
+    )
+
+    feature_branch = "feature"
+    checkout_new_branch(repo, feature_branch)
+    feature_merged_branch_name = get_flexlate_branch_name_for_feature_branch(
+        feature_branch, DEFAULT_MERGED_BRANCH_NAME
+    )
+    feature_template_branch_name = get_flexlate_branch_name_for_feature_branch(
+        feature_branch, DEFAULT_TEMPLATE_BRANCH_NAME
+    )
+
+    # Push to remote and delete local branches, so it will have to fetch from remote to branch off
+    add_local_remote(repo)
+    pusher = Pusher()
+    pusher.push_main_flexlate_branches(repo)
+    delete_local_branch(repo, DEFAULT_MERGED_BRANCH_NAME)
+    delete_local_branch(repo, DEFAULT_TEMPLATE_BRANCH_NAME)
+
+    updater.update(
+        repo,
+        template_updates,
+        update_transaction,
+        no_input=True,
+        merged_branch_name=feature_merged_branch_name,
+        template_branch_name=feature_template_branch_name,
+    )
+
+    # Ensure the output is correct
+    main_branch: Head = repo.branches[feature_branch]  # type: ignore
+    template_branch: Head = repo.branches[feature_template_branch_name]  # type: ignore
+    assert repo.active_branch == main_branch
+    assert (
+        repo.commit().message
+        == "Merge branch 'flexlate-templates-feature' into flexlate-output-feature\n"
+    )
+    assert_main_commit_message_matches(
+        repo.commit().parents[1].message,
+        f"Update flexlate templates\n\none: {COOKIECUTTER_ONE_MODIFIED_VERSION}",
+    )
+    assert (
+        cookiecutter_one_generated_text_content(gen_dir=GENERATED_REPO_DIR)
+        == "b and extra"
+    )
+    assert (GENERATED_REPO_DIR / "ignored" / "ignored.txt").exists()
+    assert (GENERATED_REPO_DIR / ".gitignore").exists()
+    template_branch.checkout()
+    assert repo.active_branch == template_branch
+    assert (
+        cookiecutter_one_generated_text_content(gen_dir=GENERATED_REPO_DIR)
+        == "b and extra"
+    )
+
+    # Ensure that flexlate base branches were used properly
+    base_template_branch: Head = repo.branches[DEFAULT_TEMPLATE_BRANCH_NAME]  # type: ignore
+    assert (
+        template_branch.commit.parents[0].hexsha == base_template_branch.commit.hexsha
     )
 
 

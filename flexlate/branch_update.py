@@ -30,6 +30,7 @@ def modify_files_via_branches_and_temp_repo(
     base_merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
     template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
     base_template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
+    remote: str = "origin",
 ):
     cwd = os.getcwd()
     current_branch = repo.active_branch
@@ -43,6 +44,7 @@ def modify_files_via_branches_and_temp_repo(
         repo,
         branch_name=template_branch_name,
         base_branch_name=base_template_branch_name,
+        remote=remote,
     ) as temp_repo:
         make_dirs_add_operation(Path(temp_repo.working_dir))  # type: ignore
         stage_and_commit_all(temp_repo, commit_message)

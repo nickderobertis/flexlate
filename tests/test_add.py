@@ -445,6 +445,10 @@ def test_add_project_config_with_git(repo_with_placeholder_committed: Repo):
         assert len(config.projects) == 1
         project = config.projects[0]
         assert project.path == Path(".")
+        assert project.default_add_mode == AddMode.LOCAL
+        assert project.merged_branch_name == DEFAULT_MERGED_BRANCH_NAME
+        assert project.template_branch_name == DEFAULT_TEMPLATE_BRANCH_NAME
+        assert project.remote == "origin"
 
 
 def test_init_project_from_template_source_path_remote_cookiecutter(

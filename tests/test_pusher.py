@@ -7,7 +7,7 @@ from flexlate.pusher import Pusher
 from tests.config import GENERATED_FILES_DIR
 from tests.dirutils import assert_dir_trees_are_equal
 from tests.fixtures.templated_repo import *
-from tests.gitutils import add_remote
+from tests.gitutils import add_remote, add_local_remote
 
 
 def test_push_feature_flexlate_branches(
@@ -43,9 +43,7 @@ def add_local_remote_and_check_branches_on_exit(
     repo: Repo, branch_names: Sequence[str]
 ):
     remote_path = GENERATED_FILES_DIR / "remote"
-    remote_path.mkdir()
-    remote_repo = Repo.init(remote_path)
-    add_remote(repo, remote_path)
+    remote_repo = add_local_remote(repo, remote_path=remote_path)
 
     yield
 

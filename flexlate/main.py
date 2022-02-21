@@ -60,6 +60,7 @@ class Flexlate:
         template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
         template_version: Optional[str] = None,
         user: bool = False,
+        remote: str = "origin",
     ):
         repo = Repo(path)
         self.adder.init_project_and_add_to_branches(
@@ -68,6 +69,7 @@ class Flexlate:
             user=user,
             merged_branch_name=merged_branch_name,
             template_branch_name=template_branch_name,
+            remote=remote,
         )
 
     def init_project_from(
@@ -79,6 +81,7 @@ class Flexlate:
         default_folder_name: str = "project",
         no_input: bool = False,
         default_add_mode: AddMode = AddMode.LOCAL,
+        remote: str = "origin",
         merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
         template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
     ):
@@ -96,6 +99,7 @@ class Flexlate:
             data=data,
             no_input=no_input,
             default_add_mode=default_add_mode,
+            remote=remote,
             merged_branch_name=merged_branch_name,
             template_branch_name=template_branch_name,
         )
@@ -132,6 +136,7 @@ class Flexlate:
             ),
             base_template_branch_name=project_config.template_branch_name,
             add_mode=add_mode,
+            remote=project_config.remote,
             config_manager=self.config_manager,
         )
 
@@ -161,6 +166,7 @@ class Flexlate:
             ),
             base_template_branch_name=project_config.template_branch_name,
             add_mode=project_config.default_add_mode,
+            remote=project_config.remote,
             config_manager=self.config_manager,
         )
 
@@ -197,6 +203,7 @@ class Flexlate:
                 repo, project_config.template_branch_name
             ),
             base_template_branch_name=project_config.template_branch_name,
+            remote=project_config.remote,
             config_manager=self.config_manager,
             renderer=self.renderer,
             updater=self.updater,
@@ -227,6 +234,7 @@ class Flexlate:
                 repo, project_config.template_branch_name
             ),
             base_template_branch_name=project_config.template_branch_name,
+            remote=project_config.remote,
             config_manager=self.config_manager,
             updater=self.updater,
             renderer=self.renderer,
@@ -352,14 +360,15 @@ class Flexlate:
 
     def push_main_flexlate_branches(
         self,
-        remote: str = "origin",
+        remote: Optional[str] = None,
         project_path: Path = Path("."),
     ):
         project_config = self.config_manager.load_project_config(project_path)
+        use_remote = remote or project_config.remote
         repo = Repo(project_config.path)
         self.pusher.push_main_flexlate_branches(
             repo,
-            remote,
+            use_remote,
             merged_branch_name=project_config.merged_branch_name,
             template_branch_name=project_config.template_branch_name,
         )

@@ -140,11 +140,17 @@ def temp_repo_that_pushes_to_branch(  # type: ignore
     copy_current_configs: bool = True,
     force_push: bool = False,
     additional_branches: Sequence[str] = tuple(),
+    remote: str = "origin",
 ) -> ContextManager[Repo]:
     with tempfile.TemporaryDirectory() as tmp_dir:
         tmp_path = Path(tmp_dir)
         temp_repo = _clone_from_local_repo(
-            repo, tmp_path, branch_name, base_branch_name, additional_branches
+            repo,
+            tmp_path,
+            branch_name,
+            base_branch_name,
+            additional_branches,
+            remote=remote,
         )
         if delete_tracked_files:
             delete_tracked_files_excluding_initial_commit(temp_repo)
@@ -169,6 +175,7 @@ def _clone_from_local_repo(
     branch_name: str,
     base_branch_name: str,
     additional_branches: Sequence[str] = tuple(),
+    remote: str = "origin",
 ) -> Repo:
     if additional_branches:
         return _clone_specific_branches_from_local_repo(
@@ -177,19 +184,27 @@ def _clone_from_local_repo(
             [branch_name, *additional_branches],
             branch_name,
             base_branch_name,
+            remote=remote,
         )
     return _clone_single_branch_from_local_repo(
-        repo, out_dir, branch_name, base_branch_name
+        repo, out_dir, branch_name, base_branch_name, remote=remote
     )
 
 
 def _clone_single_branch_from_local_repo(
-    repo: Repo, out_dir: Path, branch_name: str, base_branch_name: str
+    repo: Repo,
+    out_dir: Path,
+    branch_name: str,
+    base_branch_name: str,
+    remote: str = "origin",
 ) -> Repo:
     use_branch_name = branch_name
     if not branch_exists(repo, branch_name):
         # Branch doesn't exist, instead clone either the base branch or the current one
         # Will need to do the checkout later after adding files
+        _update_local_branch_from_remote_without_checkout(
+            repo, base_branch_name, remote=remote
+        )
         if branch_exists(repo, base_branch_name):
             use_branch_name = base_branch_name
         else:
@@ -214,6 +229,7 @@ def _clone_specific_branches_from_local_repo(
     branch_names: Sequence[str],
     checkout_branch: str,
     base_checkout_branch: str,
+    remote: str = "origin",
 ) -> Repo:
     temp_repo = Repo.init(out_dir)
     valid_branches = [name for name in branch_names if branch_exists(repo, name)]
@@ -229,8 +245,32 @@ def _clone_specific_branches_from_local_repo(
         temp_repo.branches[checkout_branch].checkout()  # type: ignore
     else:
         # Create the branch
+        _update_local_branch_from_remote_without_checkout(
+            repo, base_checkout_branch, remote=remote
+        )
         checkout_template_branch(repo, checkout_branch, base_checkout_branch)
     return temp_repo
+
+
+def _update_local_branch_from_remote_without_checkout(
+    repo: Repo, branch_name: str, remote: str = "origin"
+):
+    try:
+        repo.git.fetch(remote, f"{branch_name}:{branch_name}")
+    except GitCommandError as e:
+        if "couldn't find remote ref" in str(e):
+            # No remote branch, so this is a no-op
+            return
+        if "non-fast-forward" in str(e):
+            # The local branch is ahead of the remote branch,
+            # so this is a no-op
+            return
+        if "Could not read from remote repository" in str(e):
+            # There is likely not a remote for this repo. If there is,
+            # it has a different name than what was passed
+            return
+        # Unknown git error, raise it
+        raise e
 
 
 def _push_branch_from_one_local_repo_to_another(
