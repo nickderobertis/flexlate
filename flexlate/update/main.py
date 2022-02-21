@@ -1,4 +1,5 @@
 import os
+from copy import deepcopy
 from pathlib import Path
 from typing import Sequence, Optional, List, Dict, Any
 
@@ -100,7 +101,9 @@ class Updater:
                 use_template_source_path=False,
             )
             orig_renderables = (
-                config_manager.get_all_renderables(project_root=temp_project_root)
+                config_manager.get_all_renderables(
+                    relative_to=project_root, project_root=temp_project_root
+                )
                 if full_rerender
                 else config_manager.get_renderables_for_updates(
                     updates, project_root=project_root
@@ -311,7 +314,7 @@ def _move_update_config_locations_to_new_parent(
 
 
 def _move_renderable_out_roots_to_new_parent(
-    renderbales: Sequence[Renderable], orig_parent: Path, new_parent: Path
+    renderables: Sequence[Renderable], orig_parent: Path, new_parent: Path
 ) -> List[Renderable]:
     return [
         renderable.copy(
@@ -321,5 +324,5 @@ def _move_renderable_out_roots_to_new_parent(
                 )
             )
         )
-        for renderable in renderbales
+        for renderable in renderables
     ]

@@ -196,6 +196,36 @@ def test_update_modify_data(
     assert at.data == {"a": "d", "c": "e"}
 
 
+def test_update_modify_data_for_template_in_repo(
+    cookiecutter_one_template_in_repo: CookiecutterTemplate,
+    repo_with_gitignore_and_template_branch_from_cookiecutter_one_in_repo: Repo,
+    update_transaction: FlexlateTransaction,
+):
+    repo = repo_with_gitignore_and_template_branch_from_cookiecutter_one_in_repo
+    updater = Updater()
+    template_updates = updater.get_updates_for_templates(
+        [cookiecutter_one_template_in_repo],
+        data=[{"a": "d", "c": "e"}],
+        project_root=GENERATED_REPO_DIR,
+    )
+    updater.update(repo, template_updates, update_transaction, no_input=True)
+    assert (
+        cookiecutter_one_generated_text_content(folder="d", gen_dir=GENERATED_REPO_DIR)
+        == "de"
+    )
+    assert (GENERATED_REPO_DIR / "ignored" / "ignored.txt").exists()
+    assert (GENERATED_REPO_DIR / ".gitignore").exists()
+
+    # Original b directory should no longer exist, everything moved to d
+    assert not (GENERATED_REPO_DIR / "b").exists()
+
+    config_path = GENERATED_REPO_DIR / "d" / "flexlate.json"
+    config = FlexlateConfig.load(config_path)
+    assert len(config.applied_templates) == 1
+    at = config.applied_templates[0]
+    assert at.data == {"a": "d", "c": "e"}
+
+
 def test_update_modify_template_conflict(
     cookiecutter_one_modified_template: CookiecutterTemplate,
     repo_from_cookiecutter_one_with_modifications: Repo,

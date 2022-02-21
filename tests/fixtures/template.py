@@ -8,6 +8,7 @@ import pytest
 
 from flexlate.finder.specific.cookiecutter import CookiecutterFinder
 from flexlate.finder.specific.copier import CopierFinder
+from flexlate.path_ops import change_directory_to
 from flexlate.template.cookiecutter import CookiecutterTemplate
 from flexlate.template_path import get_local_repo_path_and_name_cloning_if_repo_url
 from tests.config import (
@@ -24,6 +25,7 @@ from tests.config import (
     COPIER_ONE_VERSION,
     COPIER_ONE_MODIFIED_VERSION,
     COPIER_OUTPUT_SUBDIR_DIR,
+    GENERATED_REPO_DIR,
 )
 
 
@@ -72,6 +74,21 @@ def get_footer_for_copier_local_template(version: str) -> str:
 def cookiecutter_one_template() -> CookiecutterTemplate:
     finder = CookiecutterFinder()
     yield finder.find(str(COOKIECUTTER_ONE_DIR), COOKIECUTTER_ONE_DIR)
+
+
+@pytest.fixture
+def cookiecutter_one_template_in_repo() -> CookiecutterTemplate:
+    # NOTE: Must be used in conjunction with an in_repo templated repo because
+    # these changes only affect the template and not the generated repo
+    new_folder = GENERATED_REPO_DIR / "templates"
+    new_folder.mkdir(parents=True)
+    new_path = new_folder / COOKIECUTTER_ONE_DIR.name
+    shutil.copytree(COOKIECUTTER_ONE_DIR, new_path)
+    finder = CookiecutterFinder()
+    with change_directory_to(GENERATED_REPO_DIR):
+        relative_path = new_path.relative_to(GENERATED_REPO_DIR)
+        template = finder.find(str(relative_path), relative_path)
+    yield template
 
 
 @pytest.fixture

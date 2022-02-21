@@ -101,6 +101,31 @@ def repo_with_gitignore_and_cookiecutter_one_template_source(
 
 
 @pytest.fixture
+def repo_with_gitignore_and_cookiecutter_one_template_source_in_repo(
+    repo_with_gitignore: Repo,
+    cookiecutter_one_template_in_repo: CookiecutterTemplate,
+    add_source_transaction: FlexlateTransaction,
+) -> Repo:
+    repo = repo_with_gitignore
+    # While the same changes are in cookiecutter_one_template_in_repo, they do not persist,
+    # so make them again
+    new_folder = GENERATED_REPO_DIR / "templates"
+    new_folder.mkdir(parents=True)
+    new_path = new_folder / COOKIECUTTER_ONE_DIR.name
+    shutil.copytree(COOKIECUTTER_ONE_DIR, new_path)
+    stage_and_commit_all(repo, "Add cookiecutter one template in repo")
+    with change_directory_to(GENERATED_REPO_DIR):
+        adder = Adder()
+        adder.add_template_source(
+            repo,
+            cookiecutter_one_template_in_repo,
+            add_source_transaction,
+            out_root=GENERATED_REPO_DIR,
+        )
+    yield repo
+
+
+@pytest.fixture
 def repo_with_remote_cookiecutter_template_source(
     repo_with_placeholder_committed: Repo,
     cookiecutter_remote_template: CookiecutterTemplate,
@@ -206,6 +231,25 @@ def repo_with_gitignore_and_template_branch_from_cookiecutter_one(
         adder.apply_template_and_add(
             repo,
             cookiecutter_one_template,
+            add_output_transaction,
+            out_root=GENERATED_REPO_DIR,
+            no_input=True,
+        )
+    yield repo
+
+
+@pytest.fixture
+def repo_with_gitignore_and_template_branch_from_cookiecutter_one_in_repo(
+    repo_with_gitignore_and_cookiecutter_one_template_source_in_repo: Repo,
+    cookiecutter_one_template_in_repo: CookiecutterTemplate,
+    add_output_transaction: FlexlateTransaction,
+) -> Repo:
+    repo = repo_with_gitignore_and_cookiecutter_one_template_source_in_repo
+    with change_directory_to(GENERATED_REPO_DIR):
+        adder = Adder()
+        adder.apply_template_and_add(
+            repo,
+            cookiecutter_one_template_in_repo,
             add_output_transaction,
             out_root=GENERATED_REPO_DIR,
             no_input=True,
