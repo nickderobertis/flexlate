@@ -7,7 +7,7 @@ from typing import Callable, Type, Tuple
 from flexlate.styles import print_styled, ALERT_STYLE
 
 
-def simple_output_for_exceptions(*exceptions: Type[Exception]):
+def simple_output_for_exceptions(*exceptions: Type[BaseException]):
     exception_handler = _create_exception_handler(exceptions)
 
     def _simple_output_for_exceptions(func):
@@ -21,22 +21,22 @@ def simple_output_for_exceptions(*exceptions: Type[Exception]):
     return _simple_output_for_exceptions
 
 
-ExceptionHandler = Callable[[Type[Exception], Exception, TracebackType], None]
+ExceptionHandler = Callable[[Type[BaseException], BaseException, TracebackType], None]
 
 
 @contextmanager
 def _handle_exceptions_with(exc_handler: ExceptionHandler):
     "Sets a custom exception handler for the scope of a 'with' block."
-    sys.excepthook = exc_handler
+    sys.excepthook = exc_handler  #  type: ignore
     yield
-    sys.excepthook = sys.__excepthook__
+    sys.excepthook = sys.__excepthook__  # type: ignore
 
 
 def _create_exception_handler(
-    exceptions: Tuple[Type[Exception], ...]
+    exceptions: Tuple[Type[BaseException], ...]
 ) -> ExceptionHandler:
     def handle_specific_exceptions(
-        type_: Type[Exception], value: Exception, traceback: TracebackType
+        type_: Type[BaseException], value: BaseException, traceback: TracebackType
     ):
         if isinstance(value, exceptions):
             print_styled(f"{type_.__name__}: {value}", ALERT_STYLE)
