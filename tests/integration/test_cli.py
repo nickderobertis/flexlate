@@ -17,6 +17,7 @@ from flexlate.branch_update import (
 )
 from flexlate.config import FlexlateConfig, FlexlateProjectConfig
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
+from flexlate.exc import TriedToCommitButNoChangesException
 from flexlate.ext_git import merge_branch_into_current
 from flexlate.main import Flexlate
 from flexlate.template.types import TemplateType
@@ -345,14 +346,14 @@ def test_update_project(
             # First update does nothing, because version is at target version
             # When using app, it will throw an error
             if flexlates.type == FlexlateType.APP:
-                with pytest.raises(GitCommandError) as excinfo:
+                with pytest.raises(TriedToCommitButNoChangesException) as excinfo:
                     fxt.update(no_input=True)
-                assert "Your branch is up to date" in str(excinfo.value)
+                assert "update did not make any new changes" in str(excinfo.value)
             else:
                 # When using CLI stub, it will throw a CLIRunnerException
                 with pytest.raises(CLIRunnerException) as excinfo:
                     fxt.update(no_input=True)
-                assert "Your branch is up to date" in str(excinfo.value)
+                assert "update did not make any new changes" in str(excinfo.value)
 
             assert_root_template_output_is_correct()
             assert_subdir_template_output_is_correct()
