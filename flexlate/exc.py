@@ -58,6 +58,10 @@ class GitRepoHasNoCommitsException(FlexlateGitException):
     pass
 
 
+class TriedToCommitButNoChangesException(FlexlateGitException):
+    pass
+
+
 class FlexlateConfigException(FlexlateException):
     pass
 
@@ -129,4 +133,12 @@ class MergeCommitIsNotMergingAFlexlateTransactionException(
 
 
 class CannotFindMergeForTransactionException(FlexlateTransactionException):
+    pass
+
+
+class FlexlateSyncException(FlexlateException):
+    pass
+
+
+class UnnecessarySyncException(FlexlateSyncException):
     pass

@@ -3,13 +3,14 @@ from copy import deepcopy
 from pathlib import Path
 from typing import Sequence, Optional, List, Dict, Any
 
-from git import Repo
+from git import Repo, GitCommandError
 from rich.prompt import Confirm
 
 from flexlate.branch_update import abort_merge_and_reset_flexlate_branches
 from flexlate.cli_utils import confirm_user
 from flexlate.config_manager import ConfigManager
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
+from flexlate.exc import TriedToCommitButNoChangesException
 from flexlate.finder.multi import MultiFinder
 from flexlate.path_ops import (
     make_all_dirs,
@@ -153,7 +154,16 @@ class Updater:
             commit_message = create_transaction_commit_message(
                 _commit_message(renderables), transaction
             )
-            stage_and_commit_all(temp_repo, commit_message)
+            try:
+                stage_and_commit_all(temp_repo, commit_message)
+            except GitCommandError as e:
+                if "nothing to commit, working tree clean" in str(e):
+                    # This is expected if user tries to run update or sync when not needed
+                    raise TriedToCommitButNoChangesException(
+                        "update did not make any new changes"
+                    ) from e
+                # Unexpected exception, raise it
+                raise e
 
         # Now prepare the merged (output) branch, by merging the current
         # branch into it and then the template branch into it.
