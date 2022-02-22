@@ -85,6 +85,14 @@ flexlate.constants module
    :undoc-members:
    :show-inheritance:
 
+flexlate.error\_handler module
+------------------------------
+
+.. automodule:: flexlate.error_handler
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 flexlate.exc module
 -------------------
 

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.syncer &mdash; flexlate 0.7.0 documentation</title>
+  <title>flexlate.syncer &mdash; flexlate 0.7.1 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.7.0
+                0.7.1
               </div>
             
           
@@ -169,6 +169,7 @@
   <h1>Source code for flexlate.syncer</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">git</span> <span class="kn">import</span> <span class="n">Repo</span>
 
+<span class="kn">from</span> <span class="nn">flexlate</span> <span class="kn">import</span> <span class="n">exc</span>
 <span class="kn">from</span> <span class="nn">flexlate.config_manager</span> <span class="kn">import</span> <span class="n">ConfigManager</span>
 <span class="kn">from</span> <span class="nn">flexlate.constants</span> <span class="kn">import</span> <span class="n">DEFAULT_TEMPLATE_BRANCH_NAME</span><span class="p">,</span> <span class="n">DEFAULT_MERGED_BRANCH_NAME</span>
 <span class="kn">from</span> <span class="nn">flexlate.render.multi</span> <span class="kn">import</span> <span class="n">MultiRenderer</span>
@@ -192,19 +193,22 @@
         <span class="n">config_manager</span><span class="p">:</span> <span class="n">ConfigManager</span> <span class="o">=</span> <span class="n">ConfigManager</span><span class="p">(),</span>
     <span class="p">):</span>
         <span class="n">print_styled</span><span class="p">(</span><span class="s2">&quot;Syncing local changes to flexlate branches&quot;</span><span class="p">,</span> <span class="n">INFO_STYLE</span><span class="p">)</span>
-        <span class="n">updater</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
-            <span class="n">repo</span><span class="p">,</span>
-            <span class="p">[],</span>
-            <span class="n">transaction</span><span class="p">,</span>
-            <span class="n">merged_branch_name</span><span class="o">=</span><span class="n">merged_branch_name</span><span class="p">,</span>
-            <span class="n">base_merged_branch_name</span><span class="o">=</span><span class="n">base_merged_branch_name</span><span class="p">,</span>
-            <span class="n">template_branch_name</span><span class="o">=</span><span class="n">template_branch_name</span><span class="p">,</span>
-            <span class="n">base_template_branch_name</span><span class="o">=</span><span class="n">base_template_branch_name</span><span class="p">,</span>
-            <span class="n">no_input</span><span class="o">=</span><span class="n">no_input</span><span class="p">,</span>
-            <span class="n">full_rerender</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">renderer</span><span class="o">=</span><span class="n">renderer</span><span class="p">,</span>
-            <span class="n">config_manager</span><span class="o">=</span><span class="n">config_manager</span><span class="p">,</span>
-        <span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">updater</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+                <span class="n">repo</span><span class="p">,</span>
+                <span class="p">[],</span>
+                <span class="n">transaction</span><span class="p">,</span>
+                <span class="n">merged_branch_name</span><span class="o">=</span><span class="n">merged_branch_name</span><span class="p">,</span>
+                <span class="n">base_merged_branch_name</span><span class="o">=</span><span class="n">base_merged_branch_name</span><span class="p">,</span>
+                <span class="n">template_branch_name</span><span class="o">=</span><span class="n">template_branch_name</span><span class="p">,</span>
+                <span class="n">base_template_branch_name</span><span class="o">=</span><span class="n">base_template_branch_name</span><span class="p">,</span>
+                <span class="n">no_input</span><span class="o">=</span><span class="n">no_input</span><span class="p">,</span>
+                <span class="n">full_rerender</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">renderer</span><span class="o">=</span><span class="n">renderer</span><span class="p">,</span>
+                <span class="n">config_manager</span><span class="o">=</span><span class="n">config_manager</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="n">exc</span><span class="o">.</span><span class="n">TriedToCommitButNoChangesException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">exc</span><span class="o">.</span><span class="n">UnnecessarySyncException</span><span class="p">(</span><span class="s2">&quot;Everything is up to date&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
         <span class="n">print_styled</span><span class="p">(</span>
             <span class="s2">&quot;Successfully synced local changes to flexlate branches&quot;</span><span class="p">,</span> <span class="n">SUCCESS_STYLE</span>
         <span class="p">)</span></div></div>

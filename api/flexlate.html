@@ -8,7 +8,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate package &mdash; flexlate 0.7.0 documentation</title>
+  <title>flexlate package &mdash; flexlate 0.7.1 documentation</title>
   
 
   
@@ -73,7 +73,7 @@
             
             
               <div class="version">
-                0.7.0
+                0.7.1
               </div>
             
           
@@ -125,6 +125,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#module-flexlate.config">flexlate.config module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-flexlate.config_manager">flexlate.config_manager module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-flexlate.constants">flexlate.constants module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-flexlate.error_handler">flexlate.error_handler module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-flexlate.exc">flexlate.exc module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-flexlate.ext_git">flexlate.ext_git module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-flexlate.main">flexlate.main module</a></li>
@@ -1022,6 +1023,14 @@ when working in a temp directory)</p></li>
 <section id="module-flexlate.constants">
 <span id="flexlate-constants-module"></span><h2>flexlate.constants module<a class="headerlink" href="#module-flexlate.constants" title="Permalink to this headline">¶</a></h2>
 </section>
+<section id="module-flexlate.error_handler">
+<span id="flexlate-error-handler-module"></span><h2>flexlate.error_handler module<a class="headerlink" href="#module-flexlate.error_handler" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="flexlate.error_handler.simple_output_for_exceptions">
+<span class="sig-prename descclassname"><span class="pre">flexlate.error_handler.</span></span><span class="sig-name descname"><span class="pre">simple_output_for_exceptions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">exceptions</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/error_handler.html#simple_output_for_exceptions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.error_handler.simple_output_for_exceptions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
 <section id="module-flexlate.exc">
 <span id="flexlate-exc-module"></span><h2>flexlate.exc module<a class="headerlink" href="#module-flexlate.exc" title="Permalink to this headline">¶</a></h2>
 <dl class="py exception">
@@ -1121,6 +1130,12 @@ when working in a temp directory)</p></li>
 </dd></dl>
 
 <dl class="py exception">
+<dt class="sig sig-object py" id="flexlate.exc.FlexlateSyncException">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">flexlate.exc.</span></span><span class="sig-name descname"><span class="pre">FlexlateSyncException</span></span><a class="reference internal" href="../_modules/flexlate/exc.html#FlexlateSyncException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.exc.FlexlateSyncException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#flexlate.exc.FlexlateException" title="flexlate.exc.FlexlateException"><code class="xref py py-class docutils literal notranslate"><span class="pre">flexlate.exc.FlexlateException</span></code></a></p>
+</dd></dl>
+
+<dl class="py exception">
 <dt class="sig sig-object py" id="flexlate.exc.FlexlateTemplateException">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">flexlate.exc.</span></span><span class="sig-name descname"><span class="pre">FlexlateTemplateException</span></span><a class="reference internal" href="../_modules/flexlate/exc.html#FlexlateTemplateException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.exc.FlexlateTemplateException" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#flexlate.exc.FlexlateException" title="flexlate.exc.FlexlateException"><code class="xref py py-class docutils literal notranslate"><span class="pre">flexlate.exc.FlexlateException</span></code></a></p>
@@ -1214,6 +1229,18 @@ when working in a temp directory)</p></li>
 <dt class="sig sig-object py" id="flexlate.exc.TransactionMismatchBetweenBranchesException">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">flexlate.exc.</span></span><span class="sig-name descname"><span class="pre">TransactionMismatchBetweenBranchesException</span></span><a class="reference internal" href="../_modules/flexlate/exc.html#TransactionMismatchBetweenBranchesException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.exc.TransactionMismatchBetweenBranchesException" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#flexlate.exc.FlexlateTransactionException" title="flexlate.exc.FlexlateTransactionException"><code class="xref py py-class docutils literal notranslate"><span class="pre">flexlate.exc.FlexlateTransactionException</span></code></a></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="flexlate.exc.TriedToCommitButNoChangesException">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">flexlate.exc.</span></span><span class="sig-name descname"><span class="pre">TriedToCommitButNoChangesException</span></span><a class="reference internal" href="../_modules/flexlate/exc.html#TriedToCommitButNoChangesException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.exc.TriedToCommitButNoChangesException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#flexlate.exc.FlexlateGitException" title="flexlate.exc.FlexlateGitException"><code class="xref py py-class docutils literal notranslate"><span class="pre">flexlate.exc.FlexlateGitException</span></code></a></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="flexlate.exc.UnnecessarySyncException">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">flexlate.exc.</span></span><span class="sig-name descname"><span class="pre">UnnecessarySyncException</span></span><a class="reference internal" href="../_modules/flexlate/exc.html#UnnecessarySyncException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.exc.UnnecessarySyncException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#flexlate.exc.FlexlateSyncException" title="flexlate.exc.FlexlateSyncException"><code class="xref py py-class docutils literal notranslate"><span class="pre">flexlate.exc.FlexlateSyncException</span></code></a></p>
 </dd></dl>
 
 <dl class="py exception">
