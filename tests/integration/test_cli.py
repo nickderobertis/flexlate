@@ -515,7 +515,9 @@ def test_remove_template_source(
     flexlates: FlexlateFixture,
     add_mode: AddMode,
     subdir_style: SubdirStyle,
+    repo_with_placeholder_committed: Repo,
 ):
+    repo = repo_with_placeholder_committed
     fxt = flexlates.flexlate
     config_root = (
         GENERATED_FILES_DIR if add_mode == AddMode.USER else GENERATED_REPO_DIR
