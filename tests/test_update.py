@@ -110,7 +110,9 @@ def test_update_modify_template(
     )
 
 
+@pytest.mark.parametrize("target_specific_template", [False, True])
 def test_update_modify_specific_template(
+    target_specific_template: bool,
     cookiecutter_one_modified_template: CookiecutterTemplate,
     copier_output_subdir_template: CopierTemplate,
     repo_with_gitignore_and_template_branch_from_cookiecutter_one: Repo,
@@ -138,8 +140,16 @@ def test_update_modify_specific_template(
         )
 
     updater = Updater()
+    update_templates: List[Template]
+    if target_specific_template:
+        update_templates = [cookiecutter_one_modified_template]
+    else:
+        update_templates = [
+            cookiecutter_one_modified_template,
+            copier_output_subdir_template,
+        ]
     template_updates = updater.get_updates_for_templates(
-        [cookiecutter_one_modified_template, copier_output_subdir_template], project_root=GENERATED_REPO_DIR
+        update_templates, project_root=GENERATED_REPO_DIR
     )
     updater.update(repo, template_updates, update_transaction, no_input=True)
     _assert_update_of_cookiecutter_one_modified_template_was_successful(
