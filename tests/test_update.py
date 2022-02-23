@@ -17,6 +17,7 @@ from flexlate.render.specific import cookiecutter
 from flexlate.template.base import Template
 from flexlate.template.cookiecutter import CookiecutterTemplate
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
+from flexlate.template.copier import CopierTemplate
 from flexlate.template.types import TemplateType
 from flexlate.transactions.transaction import FlexlateTransaction
 from flexlate.update import main
@@ -107,6 +108,47 @@ def test_update_modify_template(
     _assert_update_of_cookiecutter_one_modified_template_was_successful(
         repo, "master", DEFAULT_TEMPLATE_BRANCH_NAME, DEFAULT_MERGED_BRANCH_NAME
     )
+
+
+def test_update_modify_specific_template(
+    cookiecutter_one_modified_template: CookiecutterTemplate,
+    copier_output_subdir_template: CopierTemplate,
+    repo_with_gitignore_and_template_branch_from_cookiecutter_one: Repo,
+    update_transaction: FlexlateTransaction,
+    add_source_transaction: FlexlateTransaction,
+    add_output_transaction: FlexlateTransaction,
+):
+    repo = repo_with_gitignore_and_template_branch_from_cookiecutter_one
+
+    # Add a second template source and output that we are not updating
+    adder = Adder()
+    with change_directory_to(GENERATED_REPO_DIR):
+        adder.add_template_source(
+            repo,
+            copier_output_subdir_template,
+            add_source_transaction,
+            out_root=GENERATED_REPO_DIR,
+        )
+        adder.apply_template_and_add(
+            repo,
+            copier_output_subdir_template,
+            add_output_transaction,
+            out_root=GENERATED_REPO_DIR,
+            no_input=True,
+        )
+
+    updater = Updater()
+    template_updates = updater.get_updates_for_templates(
+        [cookiecutter_one_modified_template, copier_output_subdir_template], project_root=GENERATED_REPO_DIR
+    )
+    updater.update(repo, template_updates, update_transaction, no_input=True)
+    _assert_update_of_cookiecutter_one_modified_template_was_successful(
+        repo, "master", DEFAULT_TEMPLATE_BRANCH_NAME, DEFAULT_MERGED_BRANCH_NAME
+    )
+
+    # Check to make sure other output was not affected
+    output_path = GENERATED_REPO_DIR / "aone.txt"
+    assert output_path.read_text() == "atwo"
 
 
 def test_update_modify_template_with_feature_branches_and_main_branches_are_only_on_remote(
