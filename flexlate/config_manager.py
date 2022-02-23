@@ -453,6 +453,20 @@ class ConfigManager:
             name, project_root=project_root, config=config
         ).to_template()
 
+    def template_source_exists(
+        self,
+        name: str,
+        project_root: Path = Path("."),
+        config: Optional[FlexlateConfig] = None,
+    ) -> bool:
+        try:
+            self._get_template_source_by_name(
+                name, project_root=project_root, config=config
+            )
+            return True
+        except TemplateNotRegisteredException:
+            return False
+
     def get_sources_with_templates(
         self,
         templates: Sequence[Template],

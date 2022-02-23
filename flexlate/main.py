@@ -107,7 +107,9 @@ class Flexlate:
             template_branch_name=template_branch_name,
         )
 
-    @simple_output_for_exceptions(exc.GitRepoDirtyException)
+    @simple_output_for_exceptions(
+        exc.GitRepoDirtyException, exc.TemplateSourceWithNameAlreadyExistsException
+    )
     def add_template_source(
         self,
         path: str,

@@ -46,6 +46,10 @@ class CannotFindClonedTemplateException(FlexlateTemplateException):
     pass
 
 
+class TemplateSourceWithNameAlreadyExistsException(FlexlateTemplateException):
+    pass
+
+
 class FlexlateGitException(FlexlateException):
     pass
 
