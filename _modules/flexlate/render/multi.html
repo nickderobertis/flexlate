@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.render.multi &mdash; flexlate 0.7.1 documentation</title>
+  <title>flexlate.render.multi &mdash; flexlate 0.8.0 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.7.1
+                0.8.0
               </div>
             
           
@@ -215,7 +215,10 @@
                     <span class="n">relative_root</span> <span class="o">=</span> <span class="n">renderable</span><span class="o">.</span><span class="n">out_root</span>
                 <span class="n">new_root</span> <span class="o">=</span> <span class="n">temp_folder</span> <span class="o">/</span> <span class="n">relative_root</span>
                 <span class="n">temp_renderable</span> <span class="o">=</span> <span class="n">renderable</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">out_root</span><span class="o">=</span><span class="n">new_root</span><span class="p">))</span>
-                <span class="n">template_data</span> <span class="o">=</span> <span class="n">renderer</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">temp_renderable</span><span class="p">,</span> <span class="n">no_input</span><span class="o">=</span><span class="n">no_input</span><span class="p">)</span>
+                <span class="n">renderable_no_input</span> <span class="o">=</span> <span class="n">no_input</span> <span class="ow">or</span> <span class="n">temp_renderable</span><span class="o">.</span><span class="n">skip_prompts</span>
+                <span class="n">template_data</span> <span class="o">=</span> <span class="n">renderer</span><span class="o">.</span><span class="n">render</span><span class="p">(</span>
+                    <span class="n">temp_renderable</span><span class="p">,</span> <span class="n">no_input</span><span class="o">=</span><span class="n">renderable_no_input</span>
+                <span class="p">)</span>
                 <span class="n">out_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">template_data</span><span class="p">)</span>
             <span class="n">_merge_file_trees</span><span class="p">(</span><span class="n">temp_folders</span><span class="p">,</span> <span class="n">project_root</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">out_data</span></div>

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.main &mdash; flexlate 0.7.1 documentation</title>
+  <title>flexlate.main &mdash; flexlate 0.8.0 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.7.1
+                0.8.0
               </div>
             
           
@@ -276,7 +276,9 @@
             <span class="n">template_branch_name</span><span class="o">=</span><span class="n">template_branch_name</span><span class="p">,</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="Flexlate.add_template_source"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.main.Flexlate.add_template_source">[docs]</a>    <span class="nd">@simple_output_for_exceptions</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">GitRepoDirtyException</span><span class="p">)</span>
+<div class="viewcode-block" id="Flexlate.add_template_source"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.main.Flexlate.add_template_source">[docs]</a>    <span class="nd">@simple_output_for_exceptions</span><span class="p">(</span>
+        <span class="n">exc</span><span class="o">.</span><span class="n">GitRepoDirtyException</span><span class="p">,</span> <span class="n">exc</span><span class="o">.</span><span class="n">TemplateSourceWithNameAlreadyExistsException</span>
+    <span class="p">)</span>
     <span class="k">def</span> <span class="nf">add_template_source</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -442,10 +444,9 @@
             <span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># User wants to update all templates</span>
-            <span class="n">renderables</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_manager</span><span class="o">.</span><span class="n">get_all_renderables</span><span class="p">(</span>
+            <span class="n">templates</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_manager</span><span class="o">.</span><span class="n">get_all_templates</span><span class="p">(</span>
                 <span class="n">project_root</span><span class="o">=</span><span class="n">project_config</span><span class="o">.</span><span class="n">path</span>
             <span class="p">)</span>
-            <span class="n">templates</span> <span class="o">=</span> <span class="p">[</span><span class="n">renderable</span><span class="o">.</span><span class="n">template</span> <span class="k">for</span> <span class="n">renderable</span> <span class="ow">in</span> <span class="n">renderables</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">updater</span><span class="o">.</span><span class="n">update_passed_templates_to_target_versions</span><span class="p">(</span>
             <span class="n">templates</span><span class="p">,</span>
             <span class="n">project_root</span><span class="o">=</span><span class="n">project_config</span><span class="o">.</span><span class="n">path</span><span class="p">,</span>

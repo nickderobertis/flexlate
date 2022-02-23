@@ -8,7 +8,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate package &mdash; flexlate 0.7.1 documentation</title>
+  <title>flexlate package &mdash; flexlate 0.8.0 documentation</title>
   
 
   
@@ -73,7 +73,7 @@
             
             
               <div class="version">
-                0.7.1
+                0.8.0
               </div>
             
           
@@ -853,6 +853,16 @@ available that still satisfy source target versions</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="flexlate.config_manager.ConfigManager.get_all_templates">
+<span class="sig-name descname"><span class="pre">get_all_templates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">relative_to</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project_root</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('.')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/config_manager.html#ConfigManager.get_all_templates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.config_manager.ConfigManager.get_all_templates" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>[<a class="reference internal" href="flexlate.template.html#flexlate.template.base.Template" title="flexlate.template.base.Template"><code class="xref py py-class docutils literal notranslate"><span class="pre">Template</span></code></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="flexlate.config_manager.ConfigManager.get_applied_templates_with_sources">
 <span class="sig-name descname"><span class="pre">get_applied_templates_with_sources</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">relative_to</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project_root</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('.')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/config_manager.html#ConfigManager.get_applied_templates_with_sources"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.config_manager.ConfigManager.get_applied_templates_with_sources" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
@@ -1001,6 +1011,16 @@ when working in a temp directory)</p></li>
 <dt class="sig sig-object py" id="flexlate.config_manager.ConfigManager.save_projects_config">
 <span class="sig-name descname"><span class="pre">save_projects_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/config_manager.html#ConfigManager.save_projects_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.config_manager.ConfigManager.save_projects_config" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="flexlate.config_manager.ConfigManager.template_source_exists">
+<span class="sig-name descname"><span class="pre">template_source_exists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project_root</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('.')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/config_manager.html#ConfigManager.template_source_exists"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.config_manager.ConfigManager.template_source_exists" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="flexlate.config_manager.ConfigManager.update_templates">
@@ -1216,6 +1236,12 @@ when working in a temp directory)</p></li>
 <dl class="py exception">
 <dt class="sig sig-object py" id="flexlate.exc.TemplateNotRegisteredException">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">flexlate.exc.</span></span><span class="sig-name descname"><span class="pre">TemplateNotRegisteredException</span></span><a class="reference internal" href="../_modules/flexlate/exc.html#TemplateNotRegisteredException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.exc.TemplateNotRegisteredException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#flexlate.exc.FlexlateTemplateException" title="flexlate.exc.FlexlateTemplateException"><code class="xref py py-class docutils literal notranslate"><span class="pre">flexlate.exc.FlexlateTemplateException</span></code></a></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="flexlate.exc.TemplateSourceWithNameAlreadyExistsException">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">flexlate.exc.</span></span><span class="sig-name descname"><span class="pre">TemplateSourceWithNameAlreadyExistsException</span></span><a class="reference internal" href="../_modules/flexlate/exc.html#TemplateSourceWithNameAlreadyExistsException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.exc.TemplateSourceWithNameAlreadyExistsException" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#flexlate.exc.FlexlateTemplateException" title="flexlate.exc.FlexlateTemplateException"><code class="xref py py-class docutils literal notranslate"><span class="pre">flexlate.exc.FlexlateTemplateException</span></code></a></p>
 </dd></dl>
 

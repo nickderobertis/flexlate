@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.template_config.base &mdash; flexlate 0.7.1 documentation</title>
+  <title>flexlate.template_config.base &mdash; flexlate 0.8.0 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.7.1
+                0.8.0
               </div>
             
           
@@ -174,7 +174,13 @@
 
 <div class="viewcode-block" id="TemplateConfig"><a class="viewcode-back" href="../../../api/flexlate.template_config.html#flexlate.template_config.base.TemplateConfig">[docs]</a><span class="k">class</span> <span class="nc">TemplateConfig</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
 <div class="viewcode-block" id="TemplateConfig.__init__"><a class="viewcode-back" href="../../../api/flexlate.template_config.html#flexlate.template_config.base.TemplateConfig.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">defaults</span><span class="p">:</span> <span class="n">TemplateData</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">defaults</span> <span class="o">=</span> <span class="n">defaults</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">defaults</span> <span class="o">=</span> <span class="n">defaults</span></div>
+
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">all</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">defaults</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">defaults</span><span class="p">])</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
 </pre></div>
 
            </div>
