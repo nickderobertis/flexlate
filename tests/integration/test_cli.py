@@ -46,6 +46,9 @@ from tests.fixtures.template_source import (
     template_source_with_relative,
     TemplateSourceType,
     COOKIECUTTER_REMOTE_DEFAULT_EXPECT_PATH,
+    COPIER_LOCAL_FIXTURE,
+    COOKIECUTTER_REMOTE_FIXTURE,
+    template_source_with_temp_dir_if_local_template,
 )
 from tests.gitutils import (
     assert_main_commit_message_matches,
@@ -252,39 +255,8 @@ def test_update_project(
     def assert_root_template_output_is_correct(
         after_version_update: bool = False, after_data_update: bool = False
     ):
-        version = (
-            template_source.version_2
-            if after_version_update
-            else template_source.version_1
-        )
-        input_data = (
-            template_source.update_input_data
-            if after_data_update
-            else template_source.input_data
-        )
-        at_config_path = (
-            GENERATED_REPO_DIR
-            / template_source.evaluated_render_relative_root_in_output_creator(
-                input_data
-            )
-            / "flexlate.json"
-        )
-        _assert_project_files_are_correct(
-            expect_data=input_data,
-            version=version,
-            template_source_type=template_source.type,
-        )
-        _assert_config_is_correct(
-            at_config_path=at_config_path,
-            expect_applied_template_root=template_source.expect_local_applied_template_path,
-            expect_data=input_data,
-            version=version,
-            template_source_type=template_source.type,
-            name=template_source.name,
-            url=template_source.url,
-            path=template_source.path,
-            render_relative_root_in_output=template_source.render_relative_root_in_output,
-            render_relative_root_in_template=template_source.render_relative_root_in_template,
+        _assert_root_template_output_is_correct(
+            template_source, after_version_update, after_data_update
         )
 
     def assert_subdir_template_output_is_correct(
@@ -372,7 +344,7 @@ def test_update_project(
             source.target_version = template_source.version_2
             config.save()
             stage_and_commit_all(
-                repo, "Update target version for cookiecutter to version 2"
+                repo, f"Update target version for {template_source.name} to version 2"
             )
 
             # Make changes to update local templates to new version (no-op for remote templates)
@@ -392,6 +364,150 @@ def test_update_project(
     _assert_project_config_is_correct(project_config_path, user=False)
 
 
+def _assert_root_template_output_is_correct(
+    template_source: TemplateSourceFixture,
+    after_version_update: bool = False,
+    after_data_update: bool = False,
+    num_template_sources: int = 1,
+    template_source_index: int = 0,
+):
+    version = (
+        template_source.version_2 if after_version_update else template_source.version_1
+    )
+    input_data = (
+        template_source.update_input_data
+        if after_data_update
+        else template_source.input_data
+    )
+    at_config_path = (
+        GENERATED_REPO_DIR
+        / template_source.evaluated_render_relative_root_in_output_creator(input_data)
+        / "flexlate.json"
+    )
+    _assert_project_files_are_correct(
+        expect_data=input_data,
+        version=version,
+        template_source_type=template_source.type,
+    )
+    _assert_config_is_correct(
+        at_config_path=at_config_path,
+        expect_applied_template_root=template_source.expect_local_applied_template_path,
+        expect_data=input_data,
+        version=version,
+        template_source_type=template_source.type,
+        name=template_source.name,
+        url=template_source.url,
+        path=template_source.path,
+        render_relative_root_in_output=template_source.render_relative_root_in_output,
+        render_relative_root_in_template=template_source.render_relative_root_in_template,
+        num_template_sources=num_template_sources,
+        template_source_index=template_source_index,
+    )
+
+
+def test_update_one_template(
+    flexlates: FlexlateFixture,
+    repo_with_placeholder_committed: Repo,
+):
+    fxt = flexlates.flexlate
+    repo = repo_with_placeholder_committed
+    no_input = flexlates.type == FlexlateType.APP
+
+    def assert_root_template_output_is_correct(
+        template_source: TemplateSourceFixture,
+        after_version_update: bool = False,
+        after_data_update: bool = False,
+        num_template_sources: int = 2,
+        template_source_index: int = 0,
+    ):
+        _assert_root_template_output_is_correct(
+            template_source,
+            after_version_update,
+            after_data_update,
+            num_template_sources=num_template_sources,
+            template_source_index=template_source_index,
+        )
+
+    non_update_template_source: TemplateSourceFixture = COOKIECUTTER_REMOTE_FIXTURE
+    with template_source_with_temp_dir_if_local_template(
+        COPIER_LOCAL_FIXTURE
+    ) as template_source:
+        with change_directory_to(GENERATED_REPO_DIR):
+            fxt.init_project()
+            # Add both template sources and outputs in the main directory at version 1
+            for i, ts in enumerate([template_source, non_update_template_source]):
+                fxt.add_template_source(ts.path, target_version=ts.version_1)
+                fxt.apply_template_and_add(
+                    ts.name, data=ts.input_data, no_input=no_input
+                )
+                num_template_sources = i + 1
+                assert_root_template_output_is_correct(
+                    ts,
+                    num_template_sources=num_template_sources,
+                    template_source_index=i,
+                )
+
+            # First update does nothing, because version is at target version
+            # When using app, it will throw an error
+            if flexlates.type == FlexlateType.APP:
+                with pytest.raises(TriedToCommitButNoChangesException) as excinfo:
+                    fxt.update([template_source.name], no_input=True)
+                assert "update did not make any new changes" in str(excinfo.value)
+            else:
+                # When using CLI stub, it will throw a CLIRunnerException
+                with pytest.raises(CLIRunnerException) as excinfo:
+                    fxt.update([template_source.name], no_input=True)
+                assert "update did not make any new changes" in str(excinfo.value)
+
+            assert_root_template_output_is_correct(template_source)
+            assert_root_template_output_is_correct(
+                non_update_template_source, template_source_index=1
+            )
+
+            # Now update by just passing new data, should change the output
+            # even though the version has not changed
+            fxt.update(
+                [template_source.name],
+                data=[template_source.update_input_data],
+                no_input=no_input,
+            )
+            assert_root_template_output_is_correct(
+                template_source, after_data_update=True
+            )
+            # Other template unaffected
+            assert_root_template_output_is_correct(
+                non_update_template_source, template_source_index=1
+            )
+
+            # Now update the target version
+            # TODO: replace with cli command to update target version once it exists
+            config_path = GENERATED_REPO_DIR / "flexlate.json"
+            config = FlexlateConfig.load(config_path)
+            source = config.template_sources[0]
+            source.target_version = template_source.version_2
+            config.save()
+            stage_and_commit_all(
+                repo, f"Update target version for {template_source.name} to version 2"
+            )
+
+            # Make changes to update local templates to new version (no-op for remote templates)
+            template_source.version_migrate_func(template_source.url_or_absolute_path)
+
+            # Now update should go to new version
+            fxt.update([template_source.name], no_input=True)
+
+        assert_root_template_output_is_correct(
+            template_source, after_version_update=True, after_data_update=True
+        )
+        # Other template unaffected
+        assert_root_template_output_is_correct(
+            non_update_template_source, template_source_index=1
+        )
+
+        project_config_path = GENERATED_REPO_DIR / "flexlate-project.json"
+        _assert_project_config_is_correct(project_config_path, user=False)
+
+
 @patch.object(appdirs, "user_config_dir", lambda name: GENERATED_FILES_DIR)
 @pytest.mark.parametrize("user", [False, True])
 def test_remove_template_source(
@@ -399,7 +515,6 @@ def test_remove_template_source(
     flexlates: FlexlateFixture,
     add_mode: AddMode,
     subdir_style: SubdirStyle,
-    repo_with_placeholder_committed: Repo,
 ):
     fxt = flexlates.flexlate
     config_root = (
@@ -820,12 +935,14 @@ def _assert_template_sources_config_is_correct(
     path: str = COOKIECUTTER_REMOTE_DEFAULT_EXPECT_PATH,
     render_relative_root_in_output: Path = Path("."),
     render_relative_root_in_template: Path = Path("."),
+    num_template_sources: int = 1,
+    template_source_index: int = 0,
 ):
     assert config_path.exists()
     config = FlexlateConfig.load(config_path)
     # Template source
-    assert len(config.template_sources) == 1
-    template_source = config.template_sources[0]
+    assert len(config.template_sources) == num_template_sources
+    template_source = config.template_sources[template_source_index]
     assert template_source.name == name
     assert template_source.version == version
     assert template_source.git_url == url
@@ -890,6 +1007,8 @@ def _assert_config_is_correct(
     render_relative_root_in_output: Path = Path("{{ cookiecutter.name }}"),
     render_relative_root_in_template: Path = Path("{{ cookiecutter.name }}"),
     expect_add_mode: AddMode = AddMode.LOCAL,
+    num_template_sources: int = 1,
+    template_source_index: int = 0,
 ):
     _assert_applied_templates_config_is_correct(
         at_config_path,
@@ -908,6 +1027,8 @@ def _assert_config_is_correct(
         path=path,
         render_relative_root_in_output=render_relative_root_in_output,
         render_relative_root_in_template=render_relative_root_in_template,
+        num_template_sources=num_template_sources,
+        template_source_index=template_source_index,
     )
 
 
