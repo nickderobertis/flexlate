@@ -119,8 +119,13 @@ class Updater:
                     f"Updating {len(orig_renderables)} applied templates", INFO_STYLE
                 )
 
+            prompt_set_renderables = (
+                _copy_renderables_skipping_prompts_if_not_in_updates(
+                    orig_renderables, updates, project_root=project_root
+                )
+            )
             renderables = _move_renderable_out_roots_to_new_parent(
-                orig_renderables,
+                prompt_set_renderables,
                 project_root,
                 temp_project_root,
             )
@@ -333,5 +338,19 @@ def _move_renderable_out_roots_to_new_parent(
                 )
             )
         )
+        for renderable in renderables
+    ]
+
+
+def _copy_renderables_skipping_prompts_if_not_in_updates(
+    renderables: Sequence[Renderable],
+    updates: Sequence[TemplateUpdate],
+    project_root: Path,
+) -> List[Renderable]:
+    update_renderables = [
+        update.to_renderable(project_root=project_root) for update in updates
+    ]
+    return [
+        renderable.copy(update=dict(skip_prompts=renderable not in update_renderables))
         for renderable in renderables
     ]

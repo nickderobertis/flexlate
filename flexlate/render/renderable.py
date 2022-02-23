@@ -14,6 +14,7 @@ class Renderable(BaseModel, Generic[T]):
     template: T
     data: TemplateData = Field(default_factory=dict)
     out_root: Path = Path(".")
+    skip_prompts: bool = False
 
     @classmethod
     def from_applied_template_with_source(

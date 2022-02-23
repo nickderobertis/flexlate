@@ -46,7 +46,10 @@ class MultiRenderer:
                     relative_root = renderable.out_root
                 new_root = temp_folder / relative_root
                 temp_renderable = renderable.copy(update=dict(out_root=new_root))
-                template_data = renderer.render(temp_renderable, no_input=no_input)
+                renderable_no_input = no_input or temp_renderable.skip_prompts
+                template_data = renderer.render(
+                    temp_renderable, no_input=renderable_no_input
+                )
                 out_data.append(template_data)
             _merge_file_trees(temp_folders, project_root)
         return out_data

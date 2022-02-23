@@ -40,3 +40,23 @@ class Template(abc.ABC):
     @property
     def folder_hash(self) -> str:
         return md5_dir(self.path)
+
+    def __eq__(self, other):
+        try:
+            return all(
+                [
+                    self.config == other.config,
+                    self.path == other.path,
+                    self.git_url == other.git_url,
+                    self.target_version == other.target_version,
+                    self.name == other.name,
+                    self.version == other.version,
+                    self.template_source_path == other.template_source_path,
+                    self.render_relative_root_in_output
+                    == other.render_relative_root_in_output,
+                    self.render_relative_root_in_template
+                    == other.render_relative_root_in_template,
+                ]
+            )
+        except AttributeError:
+            return False
