@@ -3,11 +3,13 @@ from dataclasses import dataclass
 from unittest.mock import patch
 
 import appdirs
+import pytest
 from git import Head
 
 from flexlate.add_mode import AddMode
 from flexlate.config import FlexlateConfig, FlexlateProjectConfig
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
+from flexlate.exc import TemplateSourceWithNameAlreadyExistsException
 from flexlate.template.copier import CopierTemplate
 from flexlate.template.types import TemplateType
 from flexlate.transactions.transaction import FlexlateTransaction
@@ -47,6 +49,22 @@ def test_add_template_source_to_repo(
     assert source.target_version == "some version"
     assert source.render_relative_root_in_output == Path("{{ cookiecutter.a }}")
     assert source.render_relative_root_in_template == Path("{{ cookiecutter.a }}")
+
+
+def test_add_template_source_with_existing_name_fails(
+    repo_with_cookiecutter_one_template_source: Repo,
+    copier_one_template: CopierTemplate,
+    add_source_transaction: FlexlateTransaction,
+):
+    repo = repo_with_cookiecutter_one_template_source
+    adder = Adder()
+    with pytest.raises(TemplateSourceWithNameAlreadyExistsException):
+        adder.add_template_source(
+            repo,
+            copier_one_template,
+            add_source_transaction,
+            out_root=GENERATED_REPO_DIR,
+        )
 
 
 @patch.object(appdirs, "user_config_dir", lambda name: GENERATED_FILES_DIR)

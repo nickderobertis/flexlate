@@ -17,6 +17,7 @@ from flexlate.render.specific import cookiecutter
 from flexlate.template.base import Template
 from flexlate.template.cookiecutter import CookiecutterTemplate
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
+from flexlate.template.copier import CopierTemplate
 from flexlate.template.types import TemplateType
 from flexlate.transactions.transaction import FlexlateTransaction
 from flexlate.update import main
@@ -62,23 +63,18 @@ def test_update_template_dirty_repo(
         )
 
 
-def test_update_modify_template(
-    cookiecutter_one_modified_template: CookiecutterTemplate,
-    repo_with_gitignore_and_template_branch_from_cookiecutter_one: Repo,
-    update_transaction: FlexlateTransaction,
+def _assert_update_of_cookiecutter_one_modified_template_was_successful(
+    repo: Repo,
+    main_branch_name: str,
+    template_branch_name: str,
+    merged_branch_name: str,
 ):
-    repo = repo_with_gitignore_and_template_branch_from_cookiecutter_one
-    updater = Updater()
-    template_updates = updater.get_updates_for_templates(
-        [cookiecutter_one_modified_template], project_root=GENERATED_REPO_DIR
-    )
-    updater.update(repo, template_updates, update_transaction, no_input=True)
-    main_branch: Head = repo.branches["master"]  # type: ignore
-    template_branch: Head = repo.branches[DEFAULT_MERGED_BRANCH_NAME]  # type: ignore
+    main_branch: Head = repo.branches[main_branch_name]  # type: ignore
+    merged_branch: Head = repo.branches[merged_branch_name]  # type: ignore
     assert repo.active_branch == main_branch
     assert (
         repo.commit().message
-        == "Merge branch 'flexlate-templates' into flexlate-output\n"
+        == f"Merge branch '{template_branch_name}' into {merged_branch_name}\n"
     )
     assert_main_commit_message_matches(
         repo.commit().parents[1].message,
@@ -90,12 +86,79 @@ def test_update_modify_template(
     )
     assert (GENERATED_REPO_DIR / "ignored" / "ignored.txt").exists()
     assert (GENERATED_REPO_DIR / ".gitignore").exists()
-    template_branch.checkout()
-    assert repo.active_branch == template_branch
+    merged_branch.checkout()
+    assert repo.active_branch == merged_branch
     assert (
         cookiecutter_one_generated_text_content(gen_dir=GENERATED_REPO_DIR)
         == "b and extra"
     )
+
+
+def test_update_modify_template(
+    cookiecutter_one_modified_template: CookiecutterTemplate,
+    repo_with_gitignore_and_template_branch_from_cookiecutter_one: Repo,
+    update_transaction: FlexlateTransaction,
+):
+    repo = repo_with_gitignore_and_template_branch_from_cookiecutter_one
+    updater = Updater()
+    template_updates = updater.get_updates_for_templates(
+        [cookiecutter_one_modified_template], project_root=GENERATED_REPO_DIR
+    )
+    updater.update(repo, template_updates, update_transaction, no_input=True)
+    _assert_update_of_cookiecutter_one_modified_template_was_successful(
+        repo, "master", DEFAULT_TEMPLATE_BRANCH_NAME, DEFAULT_MERGED_BRANCH_NAME
+    )
+
+
+@pytest.mark.parametrize("target_specific_template", [False, True])
+def test_update_modify_specific_template(
+    target_specific_template: bool,
+    cookiecutter_one_modified_template: CookiecutterTemplate,
+    copier_output_subdir_template: CopierTemplate,
+    repo_with_gitignore_and_template_branch_from_cookiecutter_one: Repo,
+    update_transaction: FlexlateTransaction,
+    add_source_transaction: FlexlateTransaction,
+    add_output_transaction: FlexlateTransaction,
+):
+    repo = repo_with_gitignore_and_template_branch_from_cookiecutter_one
+
+    # Add a second template source and output that we are not updating
+    adder = Adder()
+    with change_directory_to(GENERATED_REPO_DIR):
+        adder.add_template_source(
+            repo,
+            copier_output_subdir_template,
+            add_source_transaction,
+            out_root=GENERATED_REPO_DIR,
+        )
+        adder.apply_template_and_add(
+            repo,
+            copier_output_subdir_template,
+            add_output_transaction,
+            out_root=GENERATED_REPO_DIR,
+            no_input=True,
+        )
+
+    updater = Updater()
+    update_templates: List[Template]
+    if target_specific_template:
+        update_templates = [cookiecutter_one_modified_template]
+    else:
+        update_templates = [
+            cookiecutter_one_modified_template,
+            copier_output_subdir_template,
+        ]
+    template_updates = updater.get_updates_for_templates(
+        update_templates, project_root=GENERATED_REPO_DIR
+    )
+    updater.update(repo, template_updates, update_transaction, no_input=True)
+    _assert_update_of_cookiecutter_one_modified_template_was_successful(
+        repo, "master", DEFAULT_TEMPLATE_BRANCH_NAME, DEFAULT_MERGED_BRANCH_NAME
+    )
+
+    # Check to make sure other output was not affected
+    output_path = GENERATED_REPO_DIR / "aone.txt"
+    assert output_path.read_text() == "atwo"
 
 
 def test_update_modify_template_with_feature_branches_and_main_branches_are_only_on_remote(
@@ -135,31 +198,12 @@ def test_update_modify_template_with_feature_branches_and_main_branches_are_only
     )
 
     # Ensure the output is correct
-    main_branch: Head = repo.branches[feature_branch]  # type: ignore
-    template_branch: Head = repo.branches[feature_template_branch_name]  # type: ignore
-    assert repo.active_branch == main_branch
-    assert (
-        repo.commit().message
-        == "Merge branch 'flexlate-templates-feature' into flexlate-output-feature\n"
-    )
-    assert_main_commit_message_matches(
-        repo.commit().parents[1].message,
-        f"Update flexlate templates\n\none: {COOKIECUTTER_ONE_MODIFIED_VERSION}",
-    )
-    assert (
-        cookiecutter_one_generated_text_content(gen_dir=GENERATED_REPO_DIR)
-        == "b and extra"
-    )
-    assert (GENERATED_REPO_DIR / "ignored" / "ignored.txt").exists()
-    assert (GENERATED_REPO_DIR / ".gitignore").exists()
-    template_branch.checkout()
-    assert repo.active_branch == template_branch
-    assert (
-        cookiecutter_one_generated_text_content(gen_dir=GENERATED_REPO_DIR)
-        == "b and extra"
+    _assert_update_of_cookiecutter_one_modified_template_was_successful(
+        repo, feature_branch, feature_template_branch_name, feature_merged_branch_name
     )
 
     # Ensure that flexlate base branches were used properly
+    template_branch: Head = repo.branches[feature_template_branch_name]  # type: ignore
     base_template_branch: Head = repo.branches[DEFAULT_TEMPLATE_BRANCH_NAME]  # type: ignore
     assert (
         template_branch.commit.parents[0].hexsha == base_template_branch.commit.hexsha

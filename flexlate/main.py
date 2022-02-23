@@ -107,7 +107,9 @@ class Flexlate:
             template_branch_name=template_branch_name,
         )
 
-    @simple_output_for_exceptions(exc.GitRepoDirtyException)
+    @simple_output_for_exceptions(
+        exc.GitRepoDirtyException, exc.TemplateSourceWithNameAlreadyExistsException
+    )
     def add_template_source(
         self,
         path: str,
@@ -273,10 +275,9 @@ class Flexlate:
             ]
         else:
             # User wants to update all templates
-            renderables = self.config_manager.get_all_renderables(
+            templates = self.config_manager.get_all_templates(
                 project_root=project_config.path
             )
-            templates = [renderable.template for renderable in renderables]
         self.updater.update_passed_templates_to_target_versions(
             templates,
             project_root=project_config.path,

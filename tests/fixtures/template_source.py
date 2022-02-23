@@ -123,7 +123,7 @@ copier_remote_fixture: Final[TemplateSourceFixture] = TemplateSourceFixture(
 
 cookiecutter_local_fixture: Final[TemplateSourceFixture] = TemplateSourceFixture(
     name=COOKIECUTTER_ONE_NAME,
-    path=COOKIECUTTER_ONE_DIR,
+    path=str(COOKIECUTTER_ONE_DIR),
     type=TemplateSourceType.COOKIECUTTER_LOCAL,
     template_type=TemplateType.COOKIECUTTER,
     input_data=dict(a="z", c="f"),
@@ -138,9 +138,9 @@ cookiecutter_local_fixture: Final[TemplateSourceFixture] = TemplateSourceFixture
     expect_local_applied_template_path=Path(".."),
 )
 
-copier_local_fixture: Final[TemplateSourceFixture] = TemplateSourceFixture(
+COPIER_LOCAL_FIXTURE: Final[TemplateSourceFixture] = TemplateSourceFixture(
     name=COPIER_ONE_NAME,
-    path=COPIER_ONE_DIR,
+    path=str(COPIER_ONE_DIR),
     type=TemplateSourceType.COPIER_LOCAL,
     template_type=TemplateType.COPIER,
     input_data=dict(q1="abc", q2=2, q3="def"),
@@ -154,7 +154,7 @@ copier_local_fixture: Final[TemplateSourceFixture] = TemplateSourceFixture(
 
 local_absolute_path_fixtures: Final[List[TemplateSourceFixture]] = [
     cookiecutter_local_fixture,
-    copier_local_fixture,
+    COPIER_LOCAL_FIXTURE,
 ]
 
 remote_fixtures: Final[List[TemplateSourceFixture]] = [
@@ -175,7 +175,7 @@ all_standard_template_source_fixtures: Final[List[TemplateSourceFixture]] = [
 
 
 @contextlib.contextmanager
-def _template_source_with_temp_dir_if_local_template(
+def template_source_with_temp_dir_if_local_template(
     template_source: TemplateSourceFixture,
 ) -> ContextManager[TemplateSourceFixture]:
     template_source = deepcopy(template_source)
@@ -201,7 +201,7 @@ def _template_source_with_temp_dir_if_local_template(
 
 @pytest.fixture(scope="function", params=all_standard_template_source_fixtures)
 def template_source(request) -> TemplateSourceFixture:
-    with _template_source_with_temp_dir_if_local_template(
+    with template_source_with_temp_dir_if_local_template(
         request.param
     ) as template_source:
         yield template_source
@@ -215,7 +215,7 @@ all_template_source_fixtures = [
 
 @pytest.fixture(scope="function", params=all_template_source_fixtures)
 def template_source_with_relative(request) -> TemplateSourceFixture:
-    with _template_source_with_temp_dir_if_local_template(
+    with template_source_with_temp_dir_if_local_template(
         request.param
     ) as template_source:
         yield template_source

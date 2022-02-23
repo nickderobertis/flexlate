@@ -16,6 +16,7 @@ from flexlate.config_manager import (
     determine_config_path_from_roots_and_add_mode,
 )
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
+from flexlate.exc import TemplateSourceWithNameAlreadyExistsException
 from flexlate.ext_git import (
     assert_repo_is_in_clean_state,
     stage_and_commit_all,
@@ -59,6 +60,14 @@ class Adder:
             out_root, Path(repo.working_dir), add_mode
         )
         project_root = Path(repo.working_dir)
+
+        if config_manager.template_source_exists(
+            template.name, project_root=project_root
+        ):
+            raise TemplateSourceWithNameAlreadyExistsException(
+                f"There is an existing template source with the name {template.name}. "
+                f"To add this one, give it a custom name or remove the existing one"
+            )
 
         if not template.path.is_absolute() and not (
             config_path.parent.resolve() == Path(os.getcwd())

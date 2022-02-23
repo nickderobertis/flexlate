@@ -155,6 +155,22 @@ class ConfigManager:
             for update in updates
         ]
 
+    def get_all_templates(
+        self,
+        relative_to: Optional[Path] = None,
+        project_root: Path = Path("."),
+        config: Optional[FlexlateConfig] = None,
+    ) -> List[Template]:
+        renderables = self.get_all_renderables(
+            relative_to=relative_to, project_root=project_root, config=config
+        )
+        templates: List[Template] = []
+        for renderable in renderables:
+            if renderable.template in templates:
+                continue
+            templates.append(renderable.template)
+        return templates
+
     def get_data_for_updates(
         self,
         updates: Sequence[TemplateUpdate],
@@ -452,6 +468,20 @@ class ConfigManager:
         return self._get_template_source_by_name(
             name, project_root=project_root, config=config
         ).to_template()
+
+    def template_source_exists(
+        self,
+        name: str,
+        project_root: Path = Path("."),
+        config: Optional[FlexlateConfig] = None,
+    ) -> bool:
+        try:
+            self._get_template_source_by_name(
+                name, project_root=project_root, config=config
+            )
+            return True
+        except TemplateNotRegisteredException:
+            return False
 
     def get_sources_with_templates(
         self,
