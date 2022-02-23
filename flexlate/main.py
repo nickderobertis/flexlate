@@ -177,7 +177,9 @@ class Flexlate:
             config_manager=self.config_manager,
         )
 
-    @simple_output_for_exceptions(exc.GitRepoDirtyException)
+    @simple_output_for_exceptions(
+        exc.GitRepoDirtyException, exc.TemplateNotRegisteredException
+    )
     def apply_template_and_add(
         self,
         name: str,
