@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.main &mdash; flexlate 0.8.0 documentation</title>
+  <title>flexlate.main &mdash; flexlate 0.8.1 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.8.0
+                0.8.1
               </div>
             
           
@@ -346,7 +346,9 @@
             <span class="n">config_manager</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config_manager</span><span class="p">,</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="Flexlate.apply_template_and_add"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.main.Flexlate.apply_template_and_add">[docs]</a>    <span class="nd">@simple_output_for_exceptions</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">GitRepoDirtyException</span><span class="p">)</span>
+<div class="viewcode-block" id="Flexlate.apply_template_and_add"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.main.Flexlate.apply_template_and_add">[docs]</a>    <span class="nd">@simple_output_for_exceptions</span><span class="p">(</span>
+        <span class="n">exc</span><span class="o">.</span><span class="n">GitRepoDirtyException</span><span class="p">,</span> <span class="n">exc</span><span class="o">.</span><span class="n">TemplateNotRegisteredException</span>
+    <span class="p">)</span>
     <span class="k">def</span> <span class="nf">apply_template_and_add</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
