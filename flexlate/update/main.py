@@ -246,7 +246,6 @@ class Updater:
     ) -> List[TemplateUpdate]:
         data = data or []
         all_updates = config_manager.get_no_op_updates(project_root=project_root)
-        templates_by_name = {template.name: template for template in templates}
         out_updates: List[TemplateUpdate] = []
         for i, template in enumerate(templates):
             try:
@@ -255,7 +254,7 @@ class Updater:
                 template_data = {}
             # TODO: more efficient algorithm for matching updates to templates
             for update in all_updates:
-                if update.template.name in templates_by_name:
+                if update.template.name == template.name:
                     update.data = merge_data([template_data], [update.data or {}])[0]
                     update.template.version = template.version
                     update.template.path = template.path
