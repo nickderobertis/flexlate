@@ -536,7 +536,7 @@ def test_add_source_with_merge_conflicts_and_abort(
 
 
 def test_add_output_with_merge_conflicts_and_resolution(
-    repo_with_cookiecutter_remote_version_one_template_source_and_output_that_will_have_merge_conflict_on_flexlate_operation,
+    repo_with_cookiecutter_remote_version_one_template_source_and_output_that_will_have_merge_conflict_on_flexlate_operation: Repo,
     cookiecutter_remote_template: CookiecutterTemplate,
     add_output_transaction: FlexlateTransaction,
 ):
