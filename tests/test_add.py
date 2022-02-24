@@ -7,10 +7,12 @@ import appdirs
 import pytest
 from git import Head
 
+from flexlate import branch_update
 from flexlate.add_mode import AddMode
 from flexlate.config import FlexlateConfig, FlexlateProjectConfig
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.exc import TemplateSourceWithNameAlreadyExistsException
+from flexlate.ext_git import repo_has_merge_conflicts
 from flexlate.template.copier import CopierTemplate
 from flexlate.template.types import TemplateType
 from flexlate.transactions.transaction import FlexlateTransaction
@@ -22,6 +24,7 @@ from tests.fixtures.template import *
 from tests.fixtures.templated_repo import *
 from tests.fixtures.add_mode import add_mode
 from tests.fixtures.transaction import *
+from tests.gitutils import accept_theirs_in_merge_conflict
 
 
 def test_add_template_source_to_repo(
@@ -43,12 +46,14 @@ def test_add_template_source_to_repo(
 
 def _assert_template_source_cookiecutter_one_added_correctly(
     cookiecutter_one_template: CookiecutterTemplate,
+    num_sources: int = 1,
+    source_idx: int = 0,
 ):
     config_path = GENERATED_REPO_DIR / "flexlate.json"
     config = FlexlateConfig.load(config_path)
     assert len(config.applied_templates) == 0
-    assert len(config.template_sources) == 1
-    source = config.template_sources[0]
+    assert len(config.template_sources) == num_sources
+    source = config.template_sources[source_idx]
     assert source.name == cookiecutter_one_template.name
     assert source.path == str(cookiecutter_one_template.path)
     assert source.version == cookiecutter_one_template.version
@@ -462,14 +467,25 @@ def test_add_source_with_merge_conflicts(
     stage_and_commit_all(repo, "Reformat flexlate config")
 
     adder = Adder()
-    adder.add_template_source(
-        repo,
-        cookiecutter_one_template,
-        add_source_transaction,
-        out_root=GENERATED_REPO_DIR,
-        target_version="some version",
+
+    def _resolve_conflicts_then_type_yes(prompt: str) -> bool:
+        assert repo_has_merge_conflicts(repo)
+        accept_theirs_in_merge_conflict(repo)
+        stage_and_commit_all(repo, "Manually resolve conflicts")
+        return True
+
+    with patch.object(branch_update, "confirm_user", _resolve_conflicts_then_type_yes):
+        adder.add_template_source(
+            repo,
+            cookiecutter_one_template,
+            add_source_transaction,
+            out_root=GENERATED_REPO_DIR,
+            target_version="some version",
+        )
+
+    _assert_template_source_cookiecutter_one_added_correctly(
+        cookiecutter_one_template, num_sources=2, source_idx=1
     )
-    _assert_template_source_cookiecutter_one_added_correctly(cookiecutter_one_template)
 
 
 def test_add_project_config_with_git(repo_with_placeholder_committed: Repo):

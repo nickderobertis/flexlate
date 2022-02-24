@@ -73,5 +73,9 @@ def add_local_remote(
     return remote_repo
 
 
+def accept_theirs_in_merge_conflict(repo: Repo):
+    repo.git.checkout("--theirs", ".")
+
+
 def _get_main_message_from_commit_message(message: str) -> str:
     return message.split("\n")[0]
