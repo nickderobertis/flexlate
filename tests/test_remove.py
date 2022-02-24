@@ -228,3 +228,36 @@ def test_remove_applied_template_when_multiple_exist(
     assert at.data == {"a": "b", "c": ""}
     assert at.name == "one"
     assert at.root == Path("..")
+
+
+def test_remove_applied_template_with_merge_conflict_resolution(
+    repo_with_cookiecutter_remote_version_one_template_source_and_output_that_will_have_merge_conflict_on_flexlate_operation: Repo,
+    remove_output_transaction: FlexlateTransaction,
+):
+    repo = repo_with_cookiecutter_remote_version_one_template_source_and_output_that_will_have_merge_conflict_on_flexlate_operation
+    remover = Remover()
+    config_path = GENERATED_REPO_DIR / "flexlate.json"
+    output_path = GENERATED_REPO_DIR / "abc" / "abc.txt"
+
+    def _resolve_conflicts_then_type_yes(prompt: str) -> bool:
+        assert repo_has_merge_conflicts(repo)
+        accept_theirs_in_merge_conflict(repo)
+        stage_and_commit_all(repo, "Manually resolve conflicts")
+        return True
+
+    with change_directory_to(GENERATED_REPO_DIR):
+        assert output_path.read_text() == "some new header\nvalue"
+        with patch.object(
+            branch_update, "confirm_user", _resolve_conflicts_then_type_yes
+        ):
+            remover.remove_applied_template_and_output(
+                repo,
+                COOKIECUTTER_REMOTE_NAME,
+                remove_output_transaction,
+                add_mode=AddMode.PROJECT,
+            )
+
+    assert not output_path.exists()
+    config = FlexlateConfig.load(config_path)
+    assert len(config.template_sources) == 1
+    assert len(config.applied_templates) == 0
