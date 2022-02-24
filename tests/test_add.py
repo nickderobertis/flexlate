@@ -24,7 +24,10 @@ from tests.fixtures.template import *
 from tests.fixtures.templated_repo import *
 from tests.fixtures.add_mode import add_mode
 from tests.fixtures.transaction import *
-from tests.gitutils import accept_theirs_in_merge_conflict
+from tests.gitutils import (
+    accept_theirs_in_merge_conflict,
+    assert_main_commit_message_matches,
+)
 
 
 def test_add_template_source_to_repo(
@@ -48,10 +51,11 @@ def _assert_template_source_cookiecutter_one_added_correctly(
     cookiecutter_one_template: CookiecutterTemplate,
     num_sources: int = 1,
     source_idx: int = 0,
+    num_applied_templates: int = 0,
 ):
     config_path = GENERATED_REPO_DIR / "flexlate.json"
     config = FlexlateConfig.load(config_path)
-    assert len(config.applied_templates) == 0
+    assert len(config.applied_templates) == num_applied_templates
     assert len(config.template_sources) == num_sources
     source = config.template_sources[source_idx]
     assert source.name == cookiecutter_one_template.name
@@ -454,12 +458,12 @@ def test_add_source_to_project_with_existing_outputs(
     assert len(at_config.applied_templates) == 1
 
 
-def test_add_source_with_merge_conflicts(
-    repo_with_cookiecutter_remote_version_one_template_source_that_will_have_merge_conflict_on_flexlate_operation: Repo,
+def test_add_source_with_merge_conflicts_and_resolution(
+    repo_with_cookiecutter_remote_version_one_template_source_and_output_that_will_have_merge_conflict_on_flexlate_operation,
     cookiecutter_one_template: CookiecutterTemplate,
     add_source_transaction: FlexlateTransaction,
 ):
-    repo = repo_with_cookiecutter_remote_version_one_template_source_that_will_have_merge_conflict_on_flexlate_operation
+    repo = repo_with_cookiecutter_remote_version_one_template_source_and_output_that_will_have_merge_conflict_on_flexlate_operation
 
     adder = Adder()
 
@@ -479,8 +483,44 @@ def test_add_source_with_merge_conflicts(
         )
 
     _assert_template_source_cookiecutter_one_added_correctly(
-        cookiecutter_one_template, num_sources=2, source_idx=1
+        cookiecutter_one_template, num_sources=2, source_idx=1, num_applied_templates=1
     )
+
+
+def test_add_source_with_merge_conflicts_and_abort(
+    repo_with_cookiecutter_remote_version_one_template_source_and_output_that_will_have_merge_conflict_on_flexlate_operation,
+    cookiecutter_one_template: CookiecutterTemplate,
+    add_source_transaction: FlexlateTransaction,
+):
+    repo = repo_with_cookiecutter_remote_version_one_template_source_and_output_that_will_have_merge_conflict_on_flexlate_operation
+
+    adder = Adder()
+
+    def _reject(prompt: str) -> bool:
+        return False
+
+    with patch.object(branch_update, "confirm_user", _reject):
+        adder.add_template_source(
+            repo,
+            cookiecutter_one_template,
+            add_source_transaction,
+            out_root=GENERATED_REPO_DIR,
+            target_version="some version",
+        )
+
+    config_path = GENERATED_REPO_DIR / "flexlate.json"
+    config = FlexlateConfig.load(config_path)
+    assert len(config.template_sources) == 1
+
+    assert_main_commit_message_matches(
+        repo.commit().message, "Reformat flexlate config"
+    )
+    for branch_name in [DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME]:
+        branch = repo.branches[branch_name]  # type: ignore
+        branch.checkout()
+        assert_main_commit_message_matches(
+            repo.commit().message, "Update flexlate templates"
+        )
 
 
 def test_add_project_config_with_git(repo_with_placeholder_committed: Repo):
