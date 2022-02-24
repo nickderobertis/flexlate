@@ -455,16 +455,11 @@ def test_add_source_to_project_with_existing_outputs(
 
 
 def test_add_source_with_merge_conflicts(
-    repo_with_cookiecutter_remote_version_one_template_source: Repo,
+    repo_with_cookiecutter_remote_version_one_template_source_that_will_have_merge_conflict_on_flexlate_operation: Repo,
     cookiecutter_one_template: CookiecutterTemplate,
     add_source_transaction: FlexlateTransaction,
 ):
-    repo = repo_with_cookiecutter_remote_version_one_template_source
-
-    # Force a merge conflict by reformatting flexlate config
-    config_path = GENERATED_REPO_DIR / "flexlate.json"
-    config_path.write_text(json.dumps(json.loads(config_path.read_text()), indent=4))
-    stage_and_commit_all(repo, "Reformat flexlate config")
+    repo = repo_with_cookiecutter_remote_version_one_template_source_that_will_have_merge_conflict_on_flexlate_operation
 
     adder = Adder()
 

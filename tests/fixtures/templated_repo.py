@@ -1,3 +1,5 @@
+import json
+
 import pytest
 
 from flexlate.add_mode import AddMode
@@ -59,6 +61,21 @@ def repo_with_cookiecutter_remote_version_one_template_source(
         out_root=GENERATED_REPO_DIR,
         target_version=COOKIECUTTER_REMOTE_VERSION_1,
     )
+    yield repo
+
+
+@pytest.fixture
+def repo_with_cookiecutter_remote_version_one_template_source_that_will_have_merge_conflict_on_flexlate_operation(
+    repo_with_cookiecutter_remote_version_one_template_source: Repo,
+) -> Repo:
+    repo = repo_with_cookiecutter_remote_version_one_template_source
+    template = cookiecutter_remote_version_one_template
+
+    # Force a merge conflict by reformatting flexlate config
+    config_path = GENERATED_REPO_DIR / "flexlate.json"
+    config_path.write_text(json.dumps(json.loads(config_path.read_text()), indent=4))
+    stage_and_commit_all(repo, "Reformat flexlate config")
+
     yield repo
 
 
