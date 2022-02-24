@@ -1,3 +1,4 @@
+import json
 import os
 from dataclasses import dataclass
 from unittest.mock import patch
@@ -37,6 +38,12 @@ def test_add_template_source_to_repo(
         out_root=GENERATED_REPO_DIR,
         target_version="some version",
     )
+    _assert_template_source_cookiecutter_one_added_correctly(cookiecutter_one_template)
+
+
+def _assert_template_source_cookiecutter_one_added_correctly(
+    cookiecutter_one_template: CookiecutterTemplate,
+):
     config_path = GENERATED_REPO_DIR / "flexlate.json"
     config = FlexlateConfig.load(config_path)
     assert len(config.applied_templates) == 0
@@ -442,7 +449,27 @@ def test_add_source_to_project_with_existing_outputs(
     assert len(at_config.applied_templates) == 1
 
 
-# TODO: test for adding to existing
+def test_add_source_with_merge_conflicts(
+    repo_with_cookiecutter_remote_version_one_template_source: Repo,
+    cookiecutter_one_template: CookiecutterTemplate,
+    add_source_transaction: FlexlateTransaction,
+):
+    repo = repo_with_cookiecutter_remote_version_one_template_source
+
+    # Force a merge conflict by reformatting flexlate config
+    config_path = GENERATED_REPO_DIR / "flexlate.json"
+    config_path.write_text(json.dumps(json.loads(config_path.read_text()), indent=4))
+    stage_and_commit_all(repo, "Reformat flexlate config")
+
+    adder = Adder()
+    adder.add_template_source(
+        repo,
+        cookiecutter_one_template,
+        add_source_transaction,
+        out_root=GENERATED_REPO_DIR,
+        target_version="some version",
+    )
+    _assert_template_source_cookiecutter_one_added_correctly(cookiecutter_one_template)
 
 
 def test_add_project_config_with_git(repo_with_placeholder_committed: Repo):
