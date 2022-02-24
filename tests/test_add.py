@@ -13,6 +13,7 @@ from flexlate.config import FlexlateConfig, FlexlateProjectConfig
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.exc import TemplateSourceWithNameAlreadyExistsException
 from flexlate.ext_git import repo_has_merge_conflicts
+from flexlate.template.base import Template
 from flexlate.template.copier import CopierTemplate
 from flexlate.template.types import TemplateType
 from flexlate.transactions.transaction import FlexlateTransaction
@@ -202,15 +203,9 @@ def test_add_remote_cookiecutter_applied_template_to_repo(
     else:
         raise ValueError(f"unsupported add mode {add_mode}")
 
-    config_path = config_dir / "flexlate.json"
-    config = FlexlateConfig.load(config_path)
-    assert len(config.applied_templates) == 1
-    at = config.applied_templates[0]
-    assert at.name == template.name
-    assert at.version == template.version
-    assert at.data == {"name": "abc", "key": "value"}
-    assert at.root == template_root
-    assert at.add_mode == add_mode
+    _assert_remote_cookiecutter_applied_correctly(
+        template, template_root, add_mode, config_dir=config_dir
+    )
 
     template_sources_config_path = GENERATED_REPO_DIR / "flexlate.json"
     ts_config = FlexlateConfig.load(template_sources_config_path)
@@ -222,6 +217,23 @@ def test_add_remote_cookiecutter_applied_template_to_repo(
     assert source.type == TemplateType.COOKIECUTTER
     assert source.render_relative_root_in_output == Path("{{ cookiecutter.name }}")
     assert source.render_relative_root_in_template == Path("{{ cookiecutter.name }}")
+
+
+def _assert_remote_cookiecutter_applied_correctly(
+    template: Template,
+    template_root: Path,
+    add_mode: AddMode,
+    config_dir: Path = GENERATED_REPO_DIR,
+):
+    config_path = config_dir / "flexlate.json"
+    config = FlexlateConfig.load(config_path)
+    assert len(config.applied_templates) == 1
+    at = config.applied_templates[0]
+    assert at.name == template.name
+    assert at.version == template.version
+    assert at.data == {"name": "abc", "key": "value"}
+    assert at.root == template_root
+    assert at.add_mode == add_mode
 
 
 def test_add_source_and_output_at_target_version(
@@ -521,6 +533,39 @@ def test_add_source_with_merge_conflicts_and_abort(
         assert_main_commit_message_matches(
             repo.commit().message, "Update flexlate templates"
         )
+
+
+def test_add_output_with_merge_conflicts_and_resolution(
+    repo_with_cookiecutter_remote_version_one_template_source_and_output_that_will_have_merge_conflict_on_flexlate_operation,
+    cookiecutter_remote_template: CookiecutterTemplate,
+    add_output_transaction: FlexlateTransaction,
+):
+    repo = repo_with_cookiecutter_remote_version_one_template_source_and_output_that_will_have_merge_conflict_on_flexlate_operation
+    template = cookiecutter_remote_template
+
+    adder = Adder()
+
+    def _resolve_conflicts_then_type_yes(prompt: str) -> bool:
+        assert repo_has_merge_conflicts(repo)
+        accept_theirs_in_merge_conflict(repo)
+        stage_and_commit_all(repo, "Manually resolve conflicts")
+        return True
+
+    subdir = GENERATED_REPO_DIR / "subdir"
+    subdir.mkdir()
+
+    with patch.object(branch_update, "confirm_user", _resolve_conflicts_then_type_yes):
+        with change_directory_to(subdir):
+            adder.apply_template_and_add(
+                repo,
+                template,
+                add_output_transaction,
+                no_input=True,
+            )
+
+    _assert_remote_cookiecutter_applied_correctly(
+        template, Path(".."), AddMode.LOCAL, config_dir=subdir / "abc"
+    )
 
 
 def test_add_project_config_with_git(repo_with_placeholder_committed: Repo):
