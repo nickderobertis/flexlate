@@ -8,6 +8,7 @@ import pytest
 from _pytest.monkeypatch import MonkeyPatch
 from git import Repo, Head
 
+from flexlate import branch_update
 from flexlate.branch_update import get_flexlate_branch_name_for_feature_branch
 from flexlate.config import FlexlateConfig, TemplateSource, TemplateSourceWithTemplates
 from flexlate.exc import GitRepoDirtyException
@@ -20,7 +21,6 @@ from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRAN
 from flexlate.template.copier import CopierTemplate
 from flexlate.template.types import TemplateType
 from flexlate.transactions.transaction import FlexlateTransaction
-from flexlate.update import main
 from flexlate.update.main import Updater
 from flexlate.update.template import TemplateUpdate
 from tests.config import (
@@ -287,7 +287,7 @@ def test_update_modify_template_conflict(
         stage_and_commit_all(repo, manual_commit_message)
         return True
 
-    with patch.object(main, "confirm_user", _resolve_conflicts_then_type_yes):
+    with patch.object(branch_update, "confirm_user", _resolve_conflicts_then_type_yes):
         updater.update(repo, template_updates, update_transaction, no_input=True)
 
 
@@ -310,7 +310,7 @@ def test_update_modify_template_conflict_with_resolution(
     template_updates = updater.get_updates_for_templates(
         [cookiecutter_one_modified_template], project_root=GENERATED_FILES_DIR
     )
-    with patch.object(main, "confirm_user", _resolve_conflicts_then_type_yes):
+    with patch.object(branch_update, "confirm_user", _resolve_conflicts_then_type_yes):
         updater.update(repo, template_updates, update_transaction)
     assert not repo_has_merge_conflicts(repo)
 
@@ -340,7 +340,7 @@ def test_update_modify_template_conflict_with_reject(
     template_updates = updater.get_updates_for_templates(
         [cookiecutter_one_modified_template], project_root=GENERATED_FILES_DIR
     )
-    with patch.object(main, "confirm_user", _reject_update):
+    with patch.object(branch_update, "confirm_user", _reject_update):
         updater.update(repo, template_updates, update_transaction)
 
     assert repo.commit().message == "Prepend cookiecutter text with hello\n"
@@ -380,7 +380,7 @@ def test_update_modify_template_conflict_with_reject_on_feature_branches(
     template_updates = updater.get_updates_for_templates(
         [cookiecutter_one_modified_template], project_root=GENERATED_FILES_DIR
     )
-    with patch.object(main, "confirm_user", _reject_update):
+    with patch.object(branch_update, "confirm_user", _reject_update):
         updater.update(
             repo,
             template_updates,
