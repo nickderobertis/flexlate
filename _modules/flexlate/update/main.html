@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.update.main &mdash; flexlate 0.8.1 documentation</title>
+  <title>flexlate.update.main &mdash; flexlate 0.8.2 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.8.1
+                0.8.2
               </div>
             
           
@@ -175,7 +175,10 @@
 <span class="kn">from</span> <span class="nn">git</span> <span class="kn">import</span> <span class="n">Repo</span><span class="p">,</span> <span class="n">GitCommandError</span>
 <span class="kn">from</span> <span class="nn">rich.prompt</span> <span class="kn">import</span> <span class="n">Confirm</span>
 
-<span class="kn">from</span> <span class="nn">flexlate.branch_update</span> <span class="kn">import</span> <span class="n">abort_merge_and_reset_flexlate_branches</span>
+<span class="kn">from</span> <span class="nn">flexlate.branch_update</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">abort_merge_and_reset_flexlate_branches</span><span class="p">,</span>
+    <span class="n">prompt_to_fix_conflicts_and_reset_on_abort_return_aborted</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">flexlate.cli_utils</span> <span class="kn">import</span> <span class="n">confirm_user</span>
 <span class="kn">from</span> <span class="nn">flexlate.config_manager</span> <span class="kn">import</span> <span class="n">ConfigManager</span>
 <span class="kn">from</span> <span class="nn">flexlate.constants</span> <span class="kn">import</span> <span class="n">DEFAULT_MERGED_BRANCH_NAME</span><span class="p">,</span> <span class="n">DEFAULT_TEMPLATE_BRANCH_NAME</span>
@@ -366,26 +369,15 @@
                 <span class="k">return</span>
 
             <span class="c1"># Need to wait for user to resolve merge conflicts</span>
-            <span class="n">print_styled</span><span class="p">(</span>
-                <span class="s2">&quot;Repo has merge conflicts after update, please resolve them&quot;</span><span class="p">,</span>
-                <span class="n">ACTION_REQUIRED_STYLE</span><span class="p">,</span>
+            <span class="n">aborted</span> <span class="o">=</span> <span class="n">prompt_to_fix_conflicts_and_reset_on_abort_return_aborted</span><span class="p">(</span>
+                <span class="n">repo</span><span class="p">,</span>
+                <span class="n">current_branch</span><span class="p">,</span>
+                <span class="n">merged_branch_sha</span><span class="p">,</span>
+                <span class="n">template_branch_sha</span><span class="p">,</span>
+                <span class="n">merged_branch_name</span><span class="p">,</span>
+                <span class="n">template_branch_name</span><span class="p">,</span>
             <span class="p">)</span>
-            <span class="n">user_fixed</span> <span class="o">=</span> <span class="n">confirm_user</span><span class="p">(</span>
-                <span class="n">styled</span><span class="p">(</span><span class="s2">&quot;Conflicts fixed? n to abort&quot;</span><span class="p">,</span> <span class="n">QUESTION_STYLE</span><span class="p">)</span>
-            <span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">user_fixed</span><span class="p">:</span>
-                <span class="n">print_styled</span><span class="p">(</span>
-                    <span class="s2">&quot;Aborting update.&quot;</span><span class="p">,</span>
-                    <span class="n">ALERT_STYLE</span><span class="p">,</span>
-                <span class="p">)</span>
-                <span class="n">abort_merge_and_reset_flexlate_branches</span><span class="p">(</span>
-                    <span class="n">repo</span><span class="p">,</span>
-                    <span class="n">current_branch</span><span class="p">,</span>
-                    <span class="n">merged_branch_sha</span><span class="o">=</span><span class="n">merged_branch_sha</span><span class="p">,</span>
-                    <span class="n">template_branch_sha</span><span class="o">=</span><span class="n">template_branch_sha</span><span class="p">,</span>
-                    <span class="n">merged_branch_name</span><span class="o">=</span><span class="n">merged_branch_name</span><span class="p">,</span>
-                    <span class="n">template_branch_name</span><span class="o">=</span><span class="n">template_branch_name</span><span class="p">,</span>
-                <span class="p">)</span>
+            <span class="k">if</span> <span class="n">aborted</span><span class="p">:</span>
                 <span class="k">return</span>
 
         <span class="c1"># No conflicts, merge back into current branch</span>

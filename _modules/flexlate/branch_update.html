@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.branch_update &mdash; flexlate 0.8.1 documentation</title>
+  <title>flexlate.branch_update &mdash; flexlate 0.8.2 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.8.1
+                0.8.2
               </div>
             
           
@@ -173,6 +173,7 @@
 
 <span class="kn">from</span> <span class="nn">git</span> <span class="kn">import</span> <span class="n">Repo</span><span class="p">,</span> <span class="n">repo</span><span class="p">,</span> <span class="n">Head</span>
 
+<span class="kn">from</span> <span class="nn">flexlate.cli_utils</span> <span class="kn">import</span> <span class="n">confirm_user</span>
 <span class="kn">from</span> <span class="nn">flexlate.constants</span> <span class="kn">import</span> <span class="n">DEFAULT_MERGED_BRANCH_NAME</span><span class="p">,</span> <span class="n">DEFAULT_TEMPLATE_BRANCH_NAME</span>
 <span class="kn">from</span> <span class="nn">flexlate.ext_git</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">temp_repo_that_pushes_to_branch</span><span class="p">,</span>
@@ -182,8 +183,17 @@
     <span class="n">merge_branch_into_current</span><span class="p">,</span>
     <span class="n">abort_merge</span><span class="p">,</span>
     <span class="n">reset_branch_to_commit_without_checkout</span><span class="p">,</span>
+    <span class="n">repo_has_merge_conflicts</span><span class="p">,</span>
+    <span class="n">get_branch_sha</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">flexlate.path_ops</span> <span class="kn">import</span> <span class="n">make_func_that_creates_cwd_and_out_root_before_running</span>
+<span class="kn">from</span> <span class="nn">flexlate.styles</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">print_styled</span><span class="p">,</span>
+    <span class="n">ACTION_REQUIRED_STYLE</span><span class="p">,</span>
+    <span class="n">styled</span><span class="p">,</span>
+    <span class="n">QUESTION_STYLE</span><span class="p">,</span>
+    <span class="n">ALERT_STYLE</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">flexlate.transactions.transaction</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">FlexlateTransaction</span><span class="p">,</span>
     <span class="n">reset_last_transaction</span><span class="p">,</span>
@@ -203,6 +213,11 @@
 <span class="p">):</span>
     <span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
     <span class="n">current_branch</span> <span class="o">=</span> <span class="n">repo</span><span class="o">.</span><span class="n">active_branch</span>
+
+    <span class="c1"># Save the status of the flexlate branches. We may need to roll back to this state</span>
+    <span class="c1"># if the user aborts the operation</span>
+    <span class="n">merged_branch_sha</span> <span class="o">=</span> <span class="n">get_branch_sha</span><span class="p">(</span><span class="n">repo</span><span class="p">,</span> <span class="n">merged_branch_name</span><span class="p">)</span>
+    <span class="n">template_branch_sha</span> <span class="o">=</span> <span class="n">get_branch_sha</span><span class="p">(</span><span class="n">repo</span><span class="p">,</span> <span class="n">template_branch_name</span><span class="p">)</span>
 
     <span class="n">make_dirs_add_operation</span> <span class="o">=</span> <span class="n">make_func_that_creates_cwd_and_out_root_before_running</span><span class="p">(</span>
         <span class="n">out_root</span><span class="p">,</span> <span class="n">file_operation</span>
@@ -226,6 +241,17 @@
     <span class="p">):</span>
         <span class="c1"># Update with the new template</span>
         <span class="n">merge_branch_into_current</span><span class="p">(</span><span class="n">repo</span><span class="p">,</span> <span class="n">template_branch_name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">repo_has_merge_conflicts</span><span class="p">(</span><span class="n">repo</span><span class="p">):</span>
+            <span class="n">aborted</span> <span class="o">=</span> <span class="n">prompt_to_fix_conflicts_and_reset_on_abort_return_aborted</span><span class="p">(</span>
+                <span class="n">repo</span><span class="p">,</span>
+                <span class="n">current_branch</span><span class="p">,</span>
+                <span class="n">merged_branch_sha</span><span class="p">,</span>
+                <span class="n">template_branch_sha</span><span class="p">,</span>
+                <span class="n">merged_branch_name</span><span class="p">,</span>
+                <span class="n">template_branch_name</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">aborted</span><span class="p">:</span>
+                <span class="k">return</span>
 
     <span class="c1"># Merge back into current branch</span>
     <span class="n">merge_branch_into_current</span><span class="p">(</span><span class="n">repo</span><span class="p">,</span> <span class="n">merged_branch_name</span><span class="p">)</span>
@@ -287,6 +313,36 @@
     <span class="n">reset_branch_to_commit_without_checkout</span><span class="p">(</span>
         <span class="n">repo</span><span class="p">,</span> <span class="n">template_branch_name</span><span class="p">,</span> <span class="n">template_branch_sha</span>
     <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="prompt_to_fix_conflicts_and_reset_on_abort_return_aborted"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.branch_update.prompt_to_fix_conflicts_and_reset_on_abort_return_aborted">[docs]</a><span class="k">def</span> <span class="nf">prompt_to_fix_conflicts_and_reset_on_abort_return_aborted</span><span class="p">(</span>
+    <span class="n">repo</span><span class="p">:</span> <span class="n">Repo</span><span class="p">,</span>
+    <span class="n">current_branch</span><span class="p">:</span> <span class="n">Head</span><span class="p">,</span>
+    <span class="n">merged_branch_sha</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">template_branch_sha</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">merged_branch_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">template_branch_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="n">print_styled</span><span class="p">(</span>
+        <span class="s2">&quot;Repo has merge conflicts after update, please resolve them&quot;</span><span class="p">,</span>
+        <span class="n">ACTION_REQUIRED_STYLE</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">user_fixed</span> <span class="o">=</span> <span class="n">confirm_user</span><span class="p">(</span><span class="n">styled</span><span class="p">(</span><span class="s2">&quot;Conflicts fixed? n to abort&quot;</span><span class="p">,</span> <span class="n">QUESTION_STYLE</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">user_fixed</span><span class="p">:</span>
+        <span class="n">print_styled</span><span class="p">(</span>
+            <span class="s2">&quot;Aborting update.&quot;</span><span class="p">,</span>
+            <span class="n">ALERT_STYLE</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">abort_merge_and_reset_flexlate_branches</span><span class="p">(</span>
+            <span class="n">repo</span><span class="p">,</span>
+            <span class="n">current_branch</span><span class="p">,</span>
+            <span class="n">merged_branch_sha</span><span class="o">=</span><span class="n">merged_branch_sha</span><span class="p">,</span>
+            <span class="n">template_branch_sha</span><span class="o">=</span><span class="n">template_branch_sha</span><span class="p">,</span>
+            <span class="n">merged_branch_name</span><span class="o">=</span><span class="n">merged_branch_name</span><span class="p">,</span>
+            <span class="n">template_branch_name</span><span class="o">=</span><span class="n">template_branch_name</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">return</span> <span class="kc">False</span></div>
 
 
 <div class="viewcode-block" id="get_flexlate_branch_name"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.branch_update.get_flexlate_branch_name">[docs]</a><span class="k">def</span> <span class="nf">get_flexlate_branch_name</span><span class="p">(</span><span class="n">repo</span><span class="p">:</span> <span class="n">Repo</span><span class="p">,</span> <span class="n">base_branch_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
