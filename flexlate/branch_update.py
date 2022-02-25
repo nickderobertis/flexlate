@@ -4,6 +4,7 @@ from typing import Callable, Union, List, Optional
 
 from git import Repo, repo, Head
 
+from flexlate.cli_utils import confirm_user
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.ext_git import (
     temp_repo_that_pushes_to_branch,
@@ -13,8 +14,17 @@ from flexlate.ext_git import (
     merge_branch_into_current,
     abort_merge,
     reset_branch_to_commit_without_checkout,
+    repo_has_merge_conflicts,
+    get_branch_sha,
 )
 from flexlate.path_ops import make_func_that_creates_cwd_and_out_root_before_running
+from flexlate.styles import (
+    print_styled,
+    ACTION_REQUIRED_STYLE,
+    styled,
+    QUESTION_STYLE,
+    ALERT_STYLE,
+)
 from flexlate.transactions.transaction import (
     FlexlateTransaction,
     reset_last_transaction,
@@ -34,6 +44,11 @@ def modify_files_via_branches_and_temp_repo(
 ):
     cwd = os.getcwd()
     current_branch = repo.active_branch
+
+    # Save the status of the flexlate branches. We may need to roll back to this state
+    # if the user aborts the operation
+    merged_branch_sha = get_branch_sha(repo, merged_branch_name)
+    template_branch_sha = get_branch_sha(repo, template_branch_name)
 
     make_dirs_add_operation = make_func_that_creates_cwd_and_out_root_before_running(
         out_root, file_operation
@@ -57,6 +72,17 @@ def modify_files_via_branches_and_temp_repo(
     ):
         # Update with the new template
         merge_branch_into_current(repo, template_branch_name)
+        if repo_has_merge_conflicts(repo):
+            aborted = prompt_to_fix_conflicts_and_reset_on_abort_return_aborted(
+                repo,
+                current_branch,
+                merged_branch_sha,
+                template_branch_sha,
+                merged_branch_name,
+                template_branch_name,
+            )
+            if aborted:
+                return
 
     # Merge back into current branch
     merge_branch_into_current(repo, merged_branch_name)
@@ -118,6 +144,36 @@ def abort_merge_and_reset_flexlate_branches(
     reset_branch_to_commit_without_checkout(
         repo, template_branch_name, template_branch_sha
     )
+
+
+def prompt_to_fix_conflicts_and_reset_on_abort_return_aborted(
+    repo: Repo,
+    current_branch: Head,
+    merged_branch_sha: Optional[str],
+    template_branch_sha: Optional[str],
+    merged_branch_name: str,
+    template_branch_name: str,
+) -> bool:
+    print_styled(
+        "Repo has merge conflicts after update, please resolve them",
+        ACTION_REQUIRED_STYLE,
+    )
+    user_fixed = confirm_user(styled("Conflicts fixed? n to abort", QUESTION_STYLE))
+    if not user_fixed:
+        print_styled(
+            "Aborting update.",
+            ALERT_STYLE,
+        )
+        abort_merge_and_reset_flexlate_branches(
+            repo,
+            current_branch,
+            merged_branch_sha=merged_branch_sha,
+            template_branch_sha=template_branch_sha,
+            merged_branch_name=merged_branch_name,
+            template_branch_name=template_branch_name,
+        )
+        return True
+    return False
 
 
 def get_flexlate_branch_name(repo: Repo, base_branch_name: str) -> str:

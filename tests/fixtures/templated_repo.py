@@ -1,3 +1,5 @@
+import json
+
 import pytest
 
 from flexlate.add_mode import AddMode
@@ -59,6 +61,34 @@ def repo_with_cookiecutter_remote_version_one_template_source(
         out_root=GENERATED_REPO_DIR,
         target_version=COOKIECUTTER_REMOTE_VERSION_1,
     )
+    yield repo
+
+
+@pytest.fixture
+def repo_with_cookiecutter_remote_version_one_template_source_that_will_have_merge_conflict_on_flexlate_operation(
+    repo_with_cookiecutter_remote_version_one_template_source: Repo,
+) -> Repo:
+    repo = repo_with_cookiecutter_remote_version_one_template_source
+
+    # Force a merge conflict by reformatting flexlate config
+    config_path = GENERATED_REPO_DIR / "flexlate.json"
+    config_path.write_text(json.dumps(json.loads(config_path.read_text()), indent=4))
+    stage_and_commit_all(repo, "Reformat flexlate config")
+
+    yield repo
+
+
+@pytest.fixture
+def repo_with_cookiecutter_remote_version_one_template_source_and_output_that_will_have_merge_conflict_on_flexlate_operation(
+    repo_with_template_branch_from_cookiecutter_remote: Repo,
+) -> Repo:
+    repo = repo_with_template_branch_from_cookiecutter_remote
+
+    # Force a merge conflict by reformatting flexlate config
+    config_path = GENERATED_REPO_DIR / "flexlate.json"
+    config_path.write_text(json.dumps(json.loads(config_path.read_text()), indent=4))
+    stage_and_commit_all(repo, "Reformat flexlate config")
+
     yield repo
 
 
@@ -157,6 +187,26 @@ def repo_with_template_branch_from_cookiecutter_one(
             cookiecutter_one_template,
             add_output_transaction,
             out_root=GENERATED_REPO_DIR,
+            no_input=True,
+        )
+    yield repo
+
+
+@pytest.fixture
+def repo_with_template_branch_from_cookiecutter_remote(
+    repo_with_cookiecutter_remote_version_one_template_source: Repo,
+    cookiecutter_remote_template: CookiecutterTemplate,
+    add_output_transaction: FlexlateTransaction,
+) -> Repo:
+    repo = repo_with_cookiecutter_remote_version_one_template_source
+    with change_directory_to(GENERATED_REPO_DIR):
+        adder = Adder()
+        adder.apply_template_and_add(
+            repo,
+            cookiecutter_remote_template,
+            add_output_transaction,
+            out_root=GENERATED_REPO_DIR,
+            add_mode=AddMode.PROJECT,
             no_input=True,
         )
     yield repo

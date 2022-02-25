@@ -88,7 +88,7 @@ class Merger:
                     )
                     handled_conflicts = confirm_user(
                         styled(
-                            f"Successfully handled conflicts in {temp_repo.working_dir}? n to abort",
+                            f"Successfully handled conflicts in {temp_repo.working_dir}? n to abort",  # type: ignore
                             QUESTION_STYLE,
                         )
                     )

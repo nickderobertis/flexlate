@@ -6,7 +6,10 @@ from typing import Sequence, Optional, List, Dict, Any
 from git import Repo, GitCommandError
 from rich.prompt import Confirm
 
-from flexlate.branch_update import abort_merge_and_reset_flexlate_branches
+from flexlate.branch_update import (
+    abort_merge_and_reset_flexlate_branches,
+    prompt_to_fix_conflicts_and_reset_on_abort_return_aborted,
+)
 from flexlate.cli_utils import confirm_user
 from flexlate.config_manager import ConfigManager
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
@@ -197,26 +200,15 @@ class Updater:
                 return
 
             # Need to wait for user to resolve merge conflicts
-            print_styled(
-                "Repo has merge conflicts after update, please resolve them",
-                ACTION_REQUIRED_STYLE,
+            aborted = prompt_to_fix_conflicts_and_reset_on_abort_return_aborted(
+                repo,
+                current_branch,
+                merged_branch_sha,
+                template_branch_sha,
+                merged_branch_name,
+                template_branch_name,
             )
-            user_fixed = confirm_user(
-                styled("Conflicts fixed? n to abort", QUESTION_STYLE)
-            )
-            if not user_fixed:
-                print_styled(
-                    "Aborting update.",
-                    ALERT_STYLE,
-                )
-                abort_merge_and_reset_flexlate_branches(
-                    repo,
-                    current_branch,
-                    merged_branch_sha=merged_branch_sha,
-                    template_branch_sha=template_branch_sha,
-                    merged_branch_name=merged_branch_name,
-                    template_branch_name=template_branch_name,
-                )
+            if aborted:
                 return
 
         # No conflicts, merge back into current branch
