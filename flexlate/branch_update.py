@@ -149,8 +149,8 @@ def abort_merge_and_reset_flexlate_branches(
 def prompt_to_fix_conflicts_and_reset_on_abort_return_aborted(
     repo: Repo,
     current_branch: Head,
-    merged_branch_sha: str,
-    template_branch_sha: str,
+    merged_branch_sha: Optional[str],
+    template_branch_sha: Optional[str],
     merged_branch_name: str,
     template_branch_name: str,
 ) -> bool:
