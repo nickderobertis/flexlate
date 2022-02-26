@@ -444,6 +444,22 @@ class ConfigManager:
         child_config = _get_child_config_by_path(config, child_config_path)
         return len(child_config.applied_templates)
 
+    def get_template_sources(
+        self,
+        names: Optional[Sequence[str]] = None,
+        project_root: Path = Path("."),
+        config: Optional[FlexlateConfig] = None,
+    ) -> List[TemplateSource]:
+        config = config or self.load_config(project_root)
+        if names:
+            return [
+                self._get_template_source_by_name(
+                    name, project_root=project_root, config=config
+                )
+                for name in names
+            ]
+        return config.template_sources
+
     def _get_template_source_by_name(
         self,
         name: str,
