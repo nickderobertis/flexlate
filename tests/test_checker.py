@@ -10,22 +10,14 @@ from tests.fixtures.transaction import *
 
 
 def test_check_for_remote_template_update(
-    repo_with_cookiecutter_remote_version_one_template_source: Repo,
+    repo_with_cookiecutter_remote_version_one_template_source_and_no_target_version: Repo,
     copier_one_template: CopierTemplate,
     add_source_transaction: FlexlateTransaction,
 ):
-    repo = repo_with_cookiecutter_remote_version_one_template_source
+    repo = repo_with_cookiecutter_remote_version_one_template_source_and_no_target_version
     template = copier_one_template
     checker = Checker()
     adder = Adder()
-
-    # Remove target version, allowing the remote version to update
-    config_path = GENERATED_REPO_DIR / "flexlate.json"
-    config = FlexlateConfig.load(config_path)
-    ts = config.template_sources[0]
-    ts.target_version = None
-    config.save()
-    stage_and_commit_all(repo, "Remove target version")
 
     # Add a source that is already up to date
     adder.add_template_source(

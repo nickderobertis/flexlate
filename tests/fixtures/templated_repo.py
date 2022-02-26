@@ -5,6 +5,7 @@ import pytest
 from flexlate.add_mode import AddMode
 from flexlate.adder import Adder
 from flexlate.branch_update import get_flexlate_branch_name
+from flexlate.config import FlexlateConfig
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.remover import Remover
 from flexlate.transactions.transaction import FlexlateTransaction
@@ -61,6 +62,23 @@ def repo_with_cookiecutter_remote_version_one_template_source(
         out_root=GENERATED_REPO_DIR,
         target_version=COOKIECUTTER_REMOTE_VERSION_1,
     )
+    yield repo
+
+
+@pytest.fixture
+def repo_with_cookiecutter_remote_version_one_template_source_and_no_target_version(
+    repo_with_cookiecutter_remote_version_one_template_source: Repo,
+) -> Repo:
+    repo = repo_with_cookiecutter_remote_version_one_template_source
+
+    # Remove target version, allowing the remote version to update
+    config_path = GENERATED_REPO_DIR / "flexlate.json"
+    config = FlexlateConfig.load(config_path)
+    ts = config.template_sources[0]
+    ts.target_version = None
+    config.save()
+    stage_and_commit_all(repo, "Remove target version")
+
     yield repo
 
 
