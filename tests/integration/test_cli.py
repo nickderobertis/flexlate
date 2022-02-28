@@ -3,11 +3,12 @@ import contextlib
 import os
 import shutil
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Callable
 from unittest.mock import patch
 
 import appdirs
 import pytest
+from _pytest.capture import CaptureFixture
 from git import GitCommandError
 
 from flexlate.add_mode import AddMode
@@ -49,6 +50,7 @@ from tests.fixtures.template_source import (
     COPIER_LOCAL_FIXTURE,
     COOKIECUTTER_REMOTE_FIXTURE,
     template_source_with_temp_dir_if_local_template,
+    COPIER_REMOTE_FIXTURE,
 )
 from tests.gitutils import (
     assert_main_commit_message_matches,
@@ -874,6 +876,81 @@ def test_push(flexlates: FlexlateFixture, repo_with_placeholder_committed: Repo)
         with add_local_remote_and_check_branches_on_exit(repo, all_branches):
             fxt.push_feature_flexlate_branches("add-template")
             fxt.push_main_flexlate_branches()
+
+
+def test_check(
+    flexlates: FlexlateFixture,
+    repo_with_placeholder_committed: Repo,
+    capsys: CaptureFixture,
+):
+    fxt = flexlates.flexlate
+    repo = repo_with_placeholder_committed
+    template_source: TemplateSourceFixture = COPIER_REMOTE_FIXTURE
+
+    def _run_check_and_asserter_on_output(
+        stdout_asserter: Callable[[str], None], stderr_asserter: Callable[[str], None]
+    ):
+        # Clear the captured output
+        capsys.readouterr()
+
+        # Run the check with no names
+        fxt.check()
+        capture1 = capsys.readouterr()
+        stdout_asserter(capture1.out)
+        stderr_asserter(capture1.err)
+
+        # Run the same check passing the name
+        fxt.check(names=[template_source.name])
+        capture2 = capsys.readouterr()
+        stdout_asserter(capture2.out)
+        stderr_asserter(capture2.err)
+
+    def _assert_no_output(output: str):
+        assert not output
+
+    def _assert_template_name_old_version_and_new_version_in_output(output: str):
+        assert template_source.name in output
+        assert template_source.version_1 in output
+        assert template_source.version_2 in output
+
+    def _assert_success_output(output: str):
+        assert "up to date" in output
+
+    def _assert_run_update_output(output: str):
+        assert "run fxt update" in output
+
+    def assert_no_templates_need_to_be_updated():
+        _run_check_and_asserter_on_output(_assert_success_output, _assert_no_output)
+
+    def assert_template_needs_to_be_updated():
+        _run_check_and_asserter_on_output(
+            _assert_template_name_old_version_and_new_version_in_output,
+            _assert_run_update_output,
+        )
+
+    with change_directory_to(GENERATED_REPO_DIR):
+        fxt.init_project()
+        fxt.add_template_source(
+            template_source.path, target_version=template_source.version_1
+        )
+
+        assert_no_templates_need_to_be_updated()
+
+        # Now update the target version
+        # TODO: replace with cli command to update target version once it exists
+        config_path = GENERATED_REPO_DIR / "flexlate.json"
+        config = FlexlateConfig.load(config_path)
+        source = config.template_sources[0]
+        source.target_version = template_source.version_2
+        config.save()
+        stage_and_commit_all(
+            repo, f"Update target version for {template_source.name} to version 2"
+        )
+
+        # Make changes to update local templates to new version (no-op for remote templates)
+        template_source.version_migrate_func(template_source.url_or_absolute_path)
+
+        assert_template_needs_to_be_updated()
 
 
 @contextlib.contextmanager

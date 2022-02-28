@@ -275,6 +275,13 @@ class CLIStubFlexlate(Flexlate):
             ]
         )
 
+    def check(
+        self, template_names: Optional[str] = None, project_path: Path = Path(".")
+    ):
+        return fxt(
+            ["check", *_value_if_not_none(template_names), "--path", str(project_path)]
+        )
+
 
 def _bool_flag(value: bool, name: str) -> List[str]:
     return [f"--{name}"] if value else []

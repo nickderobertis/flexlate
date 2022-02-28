@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Optional, List, Sequence
+from typing import Optional, List, Sequence, Dict
 
 from git import Repo
 
@@ -7,6 +7,7 @@ from flexlate import exc
 from flexlate.adder import Adder
 from flexlate.add_mode import AddMode
 from flexlate.branch_update import get_flexlate_branch_name
+from flexlate.checker import Checker
 from flexlate.config_manager import ConfigManager
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.error_handler import simple_output_for_exceptions
@@ -29,6 +30,7 @@ class Flexlate:
         self,
         quiet: bool = False,
         adder: Adder = Adder(),
+        checker: Checker = Checker(),
         remover: Remover = Remover(),
         config_manager: ConfigManager = ConfigManager(),
         merger: Merger = Merger(),
@@ -44,6 +46,7 @@ class Flexlate:
         console.quiet = quiet
 
         self.adder = adder
+        self.checker = checker
         self.remover = remover
         self.config_manager = config_manager
         self.merger = merger
@@ -405,6 +408,18 @@ class Flexlate:
             merged_branch_name=project_config.merged_branch_name,
             template_branch_name=project_config.template_branch_name,
         )
+
+    @simple_output_for_exceptions(exc.TemplateNotRegisteredException)
+    def check(
+        self, template_names: Optional[str] = None, project_path: Path = Path(".")
+    ) -> Dict[str, str]:
+        templates_needed = self.checker.find_new_versions_for_template_sources(
+            template_names,
+            project_root=project_path,
+            config_manager=self.config_manager,
+            finder=self.finder,
+        )
+        return templates_needed
 
     # TODO: list template sources, list applied templates
     # TODO: Update target versions in template sources
