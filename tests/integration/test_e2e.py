@@ -3,12 +3,13 @@ import contextlib
 import os
 import shutil
 from pathlib import Path
-from typing import Optional, Callable
+from typing import Optional, Callable, cast
 from unittest.mock import patch
 
 import appdirs
 import pytest
 from _pytest.capture import CaptureFixture
+from click.testing import Result
 from git import GitCommandError
 
 from flexlate.add_mode import AddMode
@@ -38,7 +39,12 @@ from tests.fixtures.template import (
     get_footer_for_cookiecutter_local_template,
     get_footer_for_copier_local_template,
 )
-from tests.fixtures.cli import FlexlateFixture, FlexlateType, flexlates
+from tests.fixtures.cli import (
+    FlexlateFixture,
+    FlexlateType,
+    flexlates,
+    flexlates_ignore_cli_exceptions,
+)
 from tests.fixtures.add_mode import add_mode
 from tests.fixtures.template_source import (
     TemplateSourceFixture,
@@ -57,7 +63,7 @@ from tests.gitutils import (
     checkout_new_branch,
     checkout_existing_branch,
 )
-from tests.integration.cli_stub import CLIRunnerException
+from tests.integration.cli_stub import CLIRunnerException, capture_output
 from tests.integration.undoables import UNDOABLE_OPERATIONS
 from tests.test_pusher import add_local_remote_and_check_branches_on_exit
 
@@ -879,10 +885,11 @@ def test_push(flexlates: FlexlateFixture, repo_with_placeholder_committed: Repo)
 
 
 def test_check(
-    flexlates: FlexlateFixture,
+    flexlates_ignore_cli_exceptions: FlexlateFixture,
     repo_with_placeholder_committed: Repo,
     capsys: CaptureFixture,
 ):
+    flexlates = flexlates_ignore_cli_exceptions
     fxt = flexlates.flexlate
     repo = repo_with_placeholder_committed
     template_source: TemplateSourceFixture = COPIER_REMOTE_FIXTURE
@@ -894,30 +901,31 @@ def test_check(
         capsys.readouterr()
 
         # Run the check with no names
-        fxt.check()
-        capture1 = capsys.readouterr()
-        stdout_asserter(capture1.out)
-        stderr_asserter(capture1.err)
+        output = capture_output(flexlates, capsys, lambda fxt: fxt.check())
+
+        stdout_asserter(output.stdout)
+        stderr_asserter(output.stderr)
 
         # Run the same check passing the name
-        fxt.check(names=[template_source.name])
-        capture2 = capsys.readouterr()
-        stdout_asserter(capture2.out)
-        stderr_asserter(capture2.err)
+        output2 = capture_output(
+            flexlates, capsys, lambda fxt: fxt.check(names=[template_source.name])
+        )
+        stdout_asserter(output2.stdout)
+        stderr_asserter(output2.stderr)
 
     def _assert_no_output(output: str):
         assert not output
 
     def _assert_template_name_old_version_and_new_version_in_output(output: str):
         assert template_source.name in output
-        assert template_source.version_1 in output
-        assert template_source.version_2 in output
+        # Version truncates in small or no terminal so just check for beginning
+        assert template_source.version_1[:15] in output
+        assert template_source.version_2[:15] in output
+        assert "Run fxt update" in output
 
     def _assert_success_output(output: str):
         assert "up to date" in output
-
-    def _assert_run_update_output(output: str):
-        assert "run fxt update" in output
+        assert not "Run fxt update" in output
 
     def assert_no_templates_need_to_be_updated():
         _run_check_and_asserter_on_output(_assert_success_output, _assert_no_output)
@@ -925,7 +933,7 @@ def test_check(
     def assert_template_needs_to_be_updated():
         _run_check_and_asserter_on_output(
             _assert_template_name_old_version_and_new_version_in_output,
-            _assert_run_update_output,
+            _assert_no_output,
         )
 
     with change_directory_to(GENERATED_REPO_DIR):

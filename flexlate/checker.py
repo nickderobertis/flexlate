@@ -2,9 +2,12 @@ from pathlib import Path
 from typing import Sequence, Optional, Dict, Any, List
 
 from pydantic import BaseModel
+from rich.console import ConsoleOptions, RenderResult, Console
+from rich.table import Table
 
 from flexlate.config_manager import ConfigManager
 from flexlate.finder.multi import MultiFinder
+from flexlate.styles import styled, SUCCESS_STYLE, ACTION_REQUIRED_STYLE
 
 
 class CheckResult(BaseModel):
@@ -31,6 +34,27 @@ class CheckResults(BaseModel):
     @property
     def has_updates(self) -> bool:
         return len(self.updates) != 0
+
+
+class CheckResultsRenderable(BaseModel):
+    results: List[CheckResult]
+
+    def __rich_console__(
+        self, console: Console, options: ConsoleOptions
+    ) -> RenderResult:
+        if len(self.results) == 0:
+            yield styled("All templates up to date", SUCCESS_STYLE)
+            return
+
+        yield styled(
+            "Some templates are not up to date. Run fxt update to update",
+            ACTION_REQUIRED_STYLE,
+        )
+
+        table = Table("Template Name", "Current Version", "Latest Version")
+        for res in self.results:
+            table.add_row(res.source_name, res.existing_version, res.latest_version)
+        yield table
 
 
 class Checker:
