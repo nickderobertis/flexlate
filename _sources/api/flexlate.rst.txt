@@ -45,6 +45,14 @@ flexlate.branch\_update module
    :undoc-members:
    :show-inheritance:
 
+flexlate.checker module
+-----------------------
+
+.. automodule:: flexlate.checker
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 flexlate.cli module
 -------------------
 

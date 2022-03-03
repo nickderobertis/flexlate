@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.main &mdash; flexlate 0.8.2 documentation</title>
+  <title>flexlate.main &mdash; flexlate 0.9.0 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.8.2
+                0.9.0
               </div>
             
           
@@ -168,7 +168,7 @@
             
   <h1>Source code for flexlate.main</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Sequence</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Dict</span>
 
 <span class="kn">from</span> <span class="nn">git</span> <span class="kn">import</span> <span class="n">Repo</span>
 
@@ -176,6 +176,7 @@
 <span class="kn">from</span> <span class="nn">flexlate.adder</span> <span class="kn">import</span> <span class="n">Adder</span>
 <span class="kn">from</span> <span class="nn">flexlate.add_mode</span> <span class="kn">import</span> <span class="n">AddMode</span>
 <span class="kn">from</span> <span class="nn">flexlate.branch_update</span> <span class="kn">import</span> <span class="n">get_flexlate_branch_name</span>
+<span class="kn">from</span> <span class="nn">flexlate.checker</span> <span class="kn">import</span> <span class="n">Checker</span><span class="p">,</span> <span class="n">CheckResults</span><span class="p">,</span> <span class="n">CheckResultsRenderable</span>
 <span class="kn">from</span> <span class="nn">flexlate.config_manager</span> <span class="kn">import</span> <span class="n">ConfigManager</span>
 <span class="kn">from</span> <span class="nn">flexlate.constants</span> <span class="kn">import</span> <span class="n">DEFAULT_MERGED_BRANCH_NAME</span><span class="p">,</span> <span class="n">DEFAULT_TEMPLATE_BRANCH_NAME</span>
 <span class="kn">from</span> <span class="nn">flexlate.error_handler</span> <span class="kn">import</span> <span class="n">simple_output_for_exceptions</span>
@@ -198,6 +199,7 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">quiet</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">adder</span><span class="p">:</span> <span class="n">Adder</span> <span class="o">=</span> <span class="n">Adder</span><span class="p">(),</span>
+        <span class="n">checker</span><span class="p">:</span> <span class="n">Checker</span> <span class="o">=</span> <span class="n">Checker</span><span class="p">(),</span>
         <span class="n">remover</span><span class="p">:</span> <span class="n">Remover</span> <span class="o">=</span> <span class="n">Remover</span><span class="p">(),</span>
         <span class="n">config_manager</span><span class="p">:</span> <span class="n">ConfigManager</span> <span class="o">=</span> <span class="n">ConfigManager</span><span class="p">(),</span>
         <span class="n">merger</span><span class="p">:</span> <span class="n">Merger</span> <span class="o">=</span> <span class="n">Merger</span><span class="p">(),</span>
@@ -213,6 +215,7 @@
         <span class="n">console</span><span class="o">.</span><span class="n">quiet</span> <span class="o">=</span> <span class="n">quiet</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">adder</span> <span class="o">=</span> <span class="n">adder</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">checker</span> <span class="o">=</span> <span class="n">checker</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">remover</span> <span class="o">=</span> <span class="n">remover</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config_manager</span> <span class="o">=</span> <span class="n">config_manager</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">merger</span> <span class="o">=</span> <span class="n">merger</span>
@@ -573,7 +576,20 @@
             <span class="n">remote</span><span class="p">,</span>
             <span class="n">merged_branch_name</span><span class="o">=</span><span class="n">project_config</span><span class="o">.</span><span class="n">merged_branch_name</span><span class="p">,</span>
             <span class="n">template_branch_name</span><span class="o">=</span><span class="n">project_config</span><span class="o">.</span><span class="n">template_branch_name</span><span class="p">,</span>
-        <span class="p">)</span></div></div>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Flexlate.check"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.main.Flexlate.check">[docs]</a>    <span class="nd">@simple_output_for_exceptions</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">TemplateNotRegisteredException</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">check</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">names</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">project_path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CheckResults</span><span class="p">:</span>
+        <span class="n">check_results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">checker</span><span class="o">.</span><span class="n">find_new_versions_for_template_sources</span><span class="p">(</span>
+            <span class="n">names</span><span class="p">,</span>
+            <span class="n">project_root</span><span class="o">=</span><span class="n">project_path</span><span class="p">,</span>
+            <span class="n">config_manager</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config_manager</span><span class="p">,</span>
+            <span class="n">finder</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">finder</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">CheckResultsRenderable</span><span class="p">(</span><span class="n">results</span><span class="o">=</span><span class="n">check_results</span><span class="o">.</span><span class="n">updates</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">check_results</span></div></div>
 
     <span class="c1"># TODO: list template sources, list applied templates</span>
     <span class="c1"># TODO: Update target versions in template sources</span>

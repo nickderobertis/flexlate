@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Index &mdash; flexlate 0.8.2 documentation</title>
+  <title>Index &mdash; flexlate 0.9.0 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.8.2
+                0.9.0
               </div>
             
           
@@ -327,18 +327,32 @@
 </li>
       <li><a href="api/flexlate.html#flexlate.path_ops.change_directory_to">change_directory_to() (in module flexlate.path_ops)</a>
 </li>
+      <li><a href="api/flexlate.html#flexlate.main.Flexlate.check">check() (flexlate.main.Flexlate method)</a>
+
+      <ul>
+        <li><a href="api/flexlate.html#flexlate.cli.check">(in module flexlate.cli)</a>
+</li>
+      </ul></li>
       <li><a href="api/flexlate.html#flexlate.ext_git.checked_out_template_branch">checked_out_template_branch() (in module flexlate.ext_git)</a>
+</li>
+      <li><a href="api/flexlate.html#flexlate.checker.Checker">Checker (class in flexlate.checker)</a>
 </li>
       <li><a href="api/flexlate.html#flexlate.ext_git.checkout_template_branch">checkout_template_branch() (in module flexlate.ext_git)</a>
 </li>
       <li><a href="api/flexlate.html#flexlate.ext_git.checkout_version">checkout_version() (in module flexlate.ext_git)</a>
 </li>
+      <li><a href="api/flexlate.html#flexlate.checker.CheckResult">CheckResult (class in flexlate.checker)</a>
+</li>
+      <li><a href="api/flexlate.html#flexlate.checker.CheckResults">CheckResults (class in flexlate.checker)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/flexlate.html#flexlate.checker.CheckResultsRenderable">CheckResultsRenderable (class in flexlate.checker)</a>
+</li>
       <li><a href="api/flexlate.html#flexlate.config.FlexlateConfig.child_configs">child_configs (flexlate.config.FlexlateConfig property)</a>
 </li>
       <li><a href="api/flexlate.html#flexlate.ext_git.clone_repo_at_version_get_repo_and_name">clone_repo_at_version_get_repo_and_name() (in module flexlate.ext_git)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/flexlate.transactions.html#flexlate.transactions.transaction.FlexlateTransaction.commit_message">commit_message (flexlate.transactions.transaction.FlexlateTransaction property)</a>
 </li>
       <li><a href="api/flexlate.update.html#flexlate.update.template.TemplateUpdate.config_location">config_location (flexlate.update.template.TemplateUpdate attribute)</a>
@@ -415,6 +429,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/flexlate.html#flexlate.config.FlexlateConfig.empty">empty (flexlate.config.FlexlateConfig property)</a>
 </li>
+      <li><a href="api/flexlate.html#flexlate.checker.CheckResult.existing_version">existing_version (flexlate.checker.CheckResult attribute)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/flexlate.html#flexlate.exc.ExpectedMergeCommitException">ExpectedMergeCommitException</a>
@@ -445,6 +461,8 @@
 </li>
       <li><a href="api/flexlate.transactions.html#flexlate.transactions.transaction.find_last_transaction_from_commit">find_last_transaction_from_commit() (in module flexlate.transactions.transaction)</a>
 </li>
+      <li><a href="api/flexlate.html#flexlate.checker.Checker.find_new_versions_for_template_sources">find_new_versions_for_template_sources() (flexlate.checker.Checker method)</a>
+</li>
       <li>
     flexlate
 
@@ -473,6 +491,13 @@
 
       <ul>
         <li><a href="api/flexlate.html#module-flexlate.branch_update">module</a>
+</li>
+      </ul></li>
+      <li>
+    flexlate.checker
+
+      <ul>
+        <li><a href="api/flexlate.html#module-flexlate.checker">module</a>
 </li>
       </ul></li>
       <li>
@@ -636,6 +661,8 @@
         <li><a href="api/flexlate.render.html#module-flexlate.render.renderable">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     flexlate.render.specific
 
@@ -643,8 +670,6 @@
         <li><a href="api/flexlate.render.specific.html#module-flexlate.render.specific">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     flexlate.render.specific.base
 
@@ -903,6 +928,8 @@
 </li>
       <li><a href="api/flexlate.html#flexlate.config_manager.ConfigManager.get_template_by_name">get_template_by_name() (flexlate.config_manager.ConfigManager method)</a>
 </li>
+      <li><a href="api/flexlate.html#flexlate.config_manager.ConfigManager.get_template_sources">get_template_sources() (flexlate.config_manager.ConfigManager method)</a>
+</li>
       <li><a href="api/flexlate.update.html#flexlate.update.main.Updater.get_updates_for_templates">get_updates_for_templates() (flexlate.update.main.Updater method)</a>
 </li>
       <li><a href="api/flexlate.finder.specific.html#flexlate.finder.specific.git.get_version_from_source_path">get_version_from_source_path() (in module flexlate.finder.specific.git)</a>
@@ -919,10 +946,14 @@
 <h2 id="H">H</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/flexlate.transactions.html#flexlate.transactions.transaction.HitInitialCommit">HitInitialCommit</a>
+      <li><a href="api/flexlate.html#flexlate.checker.CheckResult.has_update">has_update (flexlate.checker.CheckResult property)</a>
+</li>
+      <li><a href="api/flexlate.html#flexlate.checker.CheckResults.has_updates">has_updates (flexlate.checker.CheckResults property)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/flexlate.transactions.html#flexlate.transactions.transaction.HitInitialCommit">HitInitialCommit</a>
+</li>
       <li><a href="api/flexlate.transactions.html#flexlate.transactions.transaction.HitMergeCommit">HitMergeCommit</a>
 </li>
   </ul></td>
@@ -976,6 +1007,8 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/flexlate.html#flexlate.exc.LastCommitWasNotByFlexlateException">LastCommitWasNotByFlexlateException</a>
+</li>
+      <li><a href="api/flexlate.html#flexlate.checker.CheckResult.latest_version">latest_version (flexlate.checker.CheckResult attribute)</a>
 </li>
       <li><a href="api/flexlate.html#flexlate.ext_git.list_tracked_files">list_tracked_files() (in module flexlate.ext_git)</a>
 </li>
@@ -1056,6 +1089,8 @@
         <li><a href="api/flexlate.html#module-flexlate.adder">flexlate.adder</a>
 </li>
         <li><a href="api/flexlate.html#module-flexlate.branch_update">flexlate.branch_update</a>
+</li>
+        <li><a href="api/flexlate.html#module-flexlate.checker">flexlate.checker</a>
 </li>
         <li><a href="api/flexlate.html#module-flexlate.cli">flexlate.cli</a>
 </li>
@@ -1316,6 +1351,12 @@
 </li>
       <li><a href="api/flexlate.transactions.html#flexlate.transactions.transaction.reset_last_transaction">reset_last_transaction() (in module flexlate.transactions.transaction)</a>
 </li>
+      <li><a href="api/flexlate.html#flexlate.checker.CheckResults.results">results (flexlate.checker.CheckResults attribute)</a>
+
+      <ul>
+        <li><a href="api/flexlate.html#flexlate.checker.CheckResultsRenderable.results">(flexlate.checker.CheckResultsRenderable attribute)</a>
+</li>
+      </ul></li>
       <li><a href="api/flexlate.html#flexlate.config.AppliedTemplateConfig.root">root (flexlate.config.AppliedTemplateConfig attribute)</a>
 </li>
   </ul></td>
@@ -1340,6 +1381,8 @@
         <li><a href="api/flexlate.html#flexlate.config.TemplateSourceWithTemplates.source">(flexlate.config.TemplateSourceWithTemplates attribute)</a>
 </li>
       </ul></li>
+      <li><a href="api/flexlate.html#flexlate.checker.CheckResult.source_name">source_name (flexlate.checker.CheckResult attribute)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/flexlate.render.specific.html#flexlate.render.specific.base.SpecificTemplateRenderer">SpecificTemplateRenderer (class in flexlate.render.specific.base)</a>
@@ -1482,7 +1525,11 @@
         <li><a href="api/flexlate.html#flexlate.cli.update_templates">(in module flexlate.cli)</a>
 </li>
       </ul></li>
+      <li><a href="api/flexlate.html#flexlate.checker.CheckResults.update_version_dict">update_version_dict (flexlate.checker.CheckResults property)</a>
+</li>
       <li><a href="api/flexlate.update.html#flexlate.update.main.Updater">Updater (class in flexlate.update.main)</a>
+</li>
+      <li><a href="api/flexlate.html#flexlate.checker.CheckResults.updates">updates (flexlate.checker.CheckResults property)</a>
 </li>
       <li><a href="api/flexlate.update.html#flexlate.update.template.updates_with_updated_data">updates_with_updated_data() (in module flexlate.update.template)</a>
 </li>
