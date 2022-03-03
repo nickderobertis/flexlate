@@ -1,8 +1,36 @@
 from pathlib import Path
-from typing import Sequence, Optional, Dict, Any
+from typing import Sequence, Optional, Dict, Any, List
+
+from pydantic import BaseModel
 
 from flexlate.config_manager import ConfigManager
 from flexlate.finder.multi import MultiFinder
+
+
+class CheckResult(BaseModel):
+    source_name: str
+    existing_version: str
+    latest_version: str
+
+    @property
+    def has_update(self) -> bool:
+        return self.existing_version != self.latest_version
+
+
+class CheckResults(BaseModel):
+    results: List[CheckResult]
+
+    @property
+    def updates(self) -> List[CheckResult]:
+        return [result for result in self.results if result.has_update]
+
+    @property
+    def update_version_dict(self) -> Dict[str, str]:
+        return {result.source_name: result.latest_version for result in self.updates}
+
+    @property
+    def has_updates(self) -> bool:
+        return len(self.updates) != 0
 
 
 class Checker:
@@ -12,15 +40,19 @@ class Checker:
         project_root: Path = Path("."),
         config_manager: ConfigManager = ConfigManager(),
         finder: MultiFinder = MultiFinder(),
-    ) -> Dict[str, str]:
+    ) -> CheckResults:
         sources = config_manager.get_template_sources(names, project_root=project_root)
-        new_versions: Dict[str, str] = {}
+        results: List[CheckResult] = []
         for source in sources:
             kwargs: Dict[str, Any] = {}
             if source.target_version:
                 kwargs.update(version=source.target_version)
             new_template = finder.find(str(source.update_location), **kwargs)
-            if source.version != new_template.version:
-                # Source needs to be upgraded
-                new_versions[source.name] = new_template.version
-        return new_versions
+            results.append(
+                CheckResult(
+                    source_name=source.name,
+                    existing_version=source.version,
+                    latest_version=new_template.version,
+                )
+            )
+        return CheckResults(results=results)

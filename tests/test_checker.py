@@ -34,7 +34,7 @@ def test_check_for_remote_template_update(
 
     new_versions = checker.find_new_versions_for_template_sources(
         names=names, project_root=GENERATED_REPO_DIR
-    )
+    ).update_version_dict
     if names is None or names == [COOKIECUTTER_REMOTE_NAME]:
         assert new_versions == {COOKIECUTTER_REMOTE_NAME: COOKIECUTTER_REMOTE_VERSION_2}
     else:
@@ -47,7 +47,7 @@ def test_check_for_update_with_no_template_sources(
     checker = Checker()
     new_versions = checker.find_new_versions_for_template_sources(
         project_root=GENERATED_REPO_DIR
-    )
+    ).update_version_dict
     assert new_versions == {}
 
 

@@ -7,7 +7,7 @@ from flexlate import exc
 from flexlate.adder import Adder
 from flexlate.add_mode import AddMode
 from flexlate.branch_update import get_flexlate_branch_name
-from flexlate.checker import Checker
+from flexlate.checker import Checker, CheckResults
 from flexlate.config_manager import ConfigManager
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.error_handler import simple_output_for_exceptions
@@ -412,7 +412,7 @@ class Flexlate:
     @simple_output_for_exceptions(exc.TemplateNotRegisteredException)
     def check(
         self, template_names: Optional[str] = None, project_path: Path = Path(".")
-    ) -> Dict[str, str]:
+    ) -> CheckResults:
         templates_needed = self.checker.find_new_versions_for_template_sources(
             template_names,
             project_root=project_path,
