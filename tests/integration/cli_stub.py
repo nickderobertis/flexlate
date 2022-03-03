@@ -1,8 +1,14 @@
 import shlex
+from enum import Enum
 from pathlib import Path
-from typing import Union, Sequence, Optional, List
+from typing import Union, Sequence, Optional, List, Callable, Any, cast, TYPE_CHECKING
 
+if TYPE_CHECKING:
+    from tests.fixtures.cli import FlexlateFixture
+
+from _pytest.capture import CaptureFixture
 from click.testing import Result
+from pydantic import BaseModel
 
 from flexlate.add_mode import AddMode
 from flexlate.cli import cli
@@ -20,19 +26,61 @@ class CLIRunnerException(Exception):
     pass
 
 
+class ExceptionHandling(str, Enum):
+    RAISE = "raise"
+    IGNORE = "ignore"
+
+
 def fxt(
     args: Union[str, Sequence[str]],
     input_data: Optional[Union[TemplateData, List[TemplateData]]] = None,
+    exception_handling: ExceptionHandling = ExceptionHandling.RAISE,
 ) -> Result:
     text_input = _get_text_input(input_data)
     result = runner.invoke(cli, args, input=text_input)
-    if result.exit_code != 0:
+    if exception_handling == ExceptionHandling.RAISE and result.exit_code != 0:
         output = ext_click.result_to_message(result)
         command = shlex.join(["fxt", *args])
         raise CLIRunnerException(
             f"{command} with input {text_input} exited with code {result.exit_code}.\n{output}"
         )
     return result
+
+
+class CapturedOutput(BaseModel):
+    stdout: str
+    stderr: str
+
+
+def capture_output(
+    flexlate_fixture: "FlexlateFixture",
+    capsys: CaptureFixture,
+    operation: Callable[[Flexlate], Any],
+) -> CapturedOutput:
+    from tests.fixtures.cli import FlexlateType
+
+    if flexlate_fixture.type == FlexlateType.APP:
+        # Clear the captured output
+        capsys.readouterr()
+
+    result = operation(flexlate_fixture.flexlate)
+
+    if flexlate_fixture.type == FlexlateType.CLI:
+        result = cast(Result, result)
+        stdout = result.stdout
+        try:
+            stderr = result.stderr
+        except ValueError as e:
+            if "stderr not separately captured" in str(e):
+                stderr = ""
+            else:
+                raise e
+    else:
+        capture = capsys.readouterr()
+        stdout = capture.out
+        stderr = capture.err
+
+    return CapturedOutput(stdout=stdout, stderr=stderr)
 
 
 def _get_text_input(
@@ -50,6 +98,12 @@ def _template_data_to_text_input(input_data: TemplateData) -> str:
 
 
 class CLIStubFlexlate(Flexlate):
+    def __init__(self, exception_handling: ExceptionHandling = ExceptionHandling.RAISE):
+        self.exception_handling = exception_handling
+
+    def fxt(self, *args, **kwargs):
+        return fxt(*args, **kwargs, exception_handling=self.exception_handling)
+
     def init_project(
         self,
         path: Path = Path("."),
@@ -60,7 +114,7 @@ class CLIStubFlexlate(Flexlate):
         user: bool = False,
         remote: str = "origin",
     ):
-        fxt(
+        self.fxt(
             [
                 "init",
                 str(path),
@@ -95,7 +149,7 @@ class CLIStubFlexlate(Flexlate):
         project_folder_answer = {"folder": default_folder_name}
         all_data = {**(data or {}), **project_folder_answer}
 
-        fxt(
+        self.fxt(
             [
                 "init-from",
                 template_path,
@@ -125,7 +179,7 @@ class CLIStubFlexlate(Flexlate):
         template_root: Path = Path("."),
         add_mode: Optional[AddMode] = None,
     ):
-        fxt(
+        self.fxt(
             [
                 "add",
                 "source",
@@ -146,7 +200,7 @@ class CLIStubFlexlate(Flexlate):
         template_root: Path = Path("."),
         quiet: bool = False,
     ):
-        fxt(
+        self.fxt(
             [
                 "remove",
                 "source",
@@ -166,7 +220,7 @@ class CLIStubFlexlate(Flexlate):
         no_input: bool = False,
         quiet: bool = False,
     ):
-        fxt(
+        self.fxt(
             [
                 "add",
                 "output",
@@ -184,7 +238,7 @@ class CLIStubFlexlate(Flexlate):
     def remove_applied_template_and_output(
         self, template_name: str, out_root: Path = Path("."), quiet: bool = False
     ):
-        fxt(
+        self.fxt(
             [
                 "remove",
                 "output",
@@ -203,7 +257,7 @@ class CLIStubFlexlate(Flexlate):
         quiet: bool = False,
         project_path: Path = Path("."),
     ):
-        fxt(
+        self.fxt(
             [
                 "update",
                 *_value_if_not_none(names),
@@ -217,7 +271,7 @@ class CLIStubFlexlate(Flexlate):
         )
 
     def undo(self, num_operations: int = 1, project_path: Path = Path(".")):
-        return fxt(["undo", str(num_operations), "--path", str(project_path)])
+        return self.fxt(["undo", str(num_operations), "--path", str(project_path)])
 
     def sync(
         self,
@@ -225,7 +279,7 @@ class CLIStubFlexlate(Flexlate):
         quiet: bool = False,
         project_path: Path = Path("."),
     ):
-        return fxt(
+        return self.fxt(
             [
                 "sync",
                 str(project_path),
@@ -240,7 +294,7 @@ class CLIStubFlexlate(Flexlate):
         delete: bool = True,
         project_path: Path = Path("."),
     ):
-        return fxt(
+        return self.fxt(
             [
                 "merge",
                 *_value_if_not_none(branch_name),
@@ -255,7 +309,9 @@ class CLIStubFlexlate(Flexlate):
         remote: str = "origin",
         project_path: Path = Path("."),
     ):
-        return fxt(["push", "main", "--remote", remote, "--path", str(project_path)])
+        return self.fxt(
+            ["push", "main", "--remote", remote, "--path", str(project_path)]
+        )
 
     def push_feature_flexlate_branches(
         self,
@@ -263,7 +319,7 @@ class CLIStubFlexlate(Flexlate):
         remote: str = "origin",
         project_path: Path = Path("."),
     ):
-        return fxt(
+        return self.fxt(
             [
                 "push",
                 "feature",
@@ -273,6 +329,11 @@ class CLIStubFlexlate(Flexlate):
                 "--path",
                 str(project_path),
             ]
+        )
+
+    def check(self, names: Optional[str] = None, project_path: Path = Path(".")):
+        return self.fxt(
+            ["check", *_value_if_not_none(names), "--path", str(project_path)]
         )
 
 

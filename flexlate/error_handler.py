@@ -14,7 +14,7 @@ def simple_output_for_exceptions(*exceptions: Type[BaseException]):
         @wraps(func)
         def wrapper(*args, **kwargs):
             with _handle_exceptions_with(exception_handler):
-                func(*args, **kwargs)
+                return func(*args, **kwargs)
 
         return wrapper
 

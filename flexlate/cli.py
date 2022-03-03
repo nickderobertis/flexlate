@@ -384,6 +384,28 @@ def push_feature(
     app.push_feature_flexlate_branches(feature_branch, remote, project_path=path)
 
 
+@cli.command(name="check")
+def check(
+    names: Optional[List[str]] = typer.Argument(
+        None,
+        help="Optional names of templates to updates. Defaults to all templates",
+        show_default=False,
+    ),
+    path: Path = PROJECT_PATH_OPTION,
+    quiet: bool = QUIET_OPTION,
+):
+    """
+    Checks whether there are any updates available for the current template sources
+
+    Displays a tabular output of the templates that need to be updated. It will also
+    exist with code 1 when updates are available so that it is easy to use in scripting.
+    """
+    app = Flexlate(quiet=quiet)
+    check_result = app.check(names=names, project_path=path)
+    if check_result.has_updates:
+        exit(1)
+
+
 cli.add_typer(push_cli, name="push")
 
 if __name__ == "__main__":

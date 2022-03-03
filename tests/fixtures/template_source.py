@@ -108,7 +108,7 @@ COOKIECUTTER_REMOTE_FIXTURE: Final[TemplateSourceFixture] = TemplateSourceFixtur
     evaluated_render_relative_root_in_output_creator=lambda data: Path(data["name"]),
     expect_local_applied_template_path=Path(".."),
 )
-copier_remote_fixture: Final[TemplateSourceFixture] = TemplateSourceFixture(
+COPIER_REMOTE_FIXTURE: Final[TemplateSourceFixture] = TemplateSourceFixture(
     name=COPIER_REMOTE_NAME,
     path=COPIER_REMOTE_URL,
     type=TemplateSourceType.COPIER_REMOTE,
@@ -159,7 +159,7 @@ local_absolute_path_fixtures: Final[List[TemplateSourceFixture]] = [
 
 remote_fixtures: Final[List[TemplateSourceFixture]] = [
     COOKIECUTTER_REMOTE_FIXTURE,
-    copier_remote_fixture,
+    COPIER_REMOTE_FIXTURE,
 ]
 
 # Create relative path fixtures
