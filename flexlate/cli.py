@@ -401,7 +401,9 @@ def check(
     exist with code 1 when updates are available so that it is easy to use in scripting.
     """
     app = Flexlate(quiet=quiet)
-    app.check(template_names=names, project_path=path)
+    updates = app.check(template_names=names, project_path=path)
+    if updates:
+        exit(1)
 
 
 cli.add_typer(push_cli, name="push")

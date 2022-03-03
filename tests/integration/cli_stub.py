@@ -1,4 +1,5 @@
 import shlex
+from enum import Enum
 from pathlib import Path
 from typing import Union, Sequence, Optional, List
 
@@ -20,13 +21,19 @@ class CLIRunnerException(Exception):
     pass
 
 
+class ExceptionHandling(str, Enum):
+    RAISE = "raise"
+    IGNORE = "ignore"
+
+
 def fxt(
     args: Union[str, Sequence[str]],
     input_data: Optional[Union[TemplateData, List[TemplateData]]] = None,
+    exception_handling: ExceptionHandling = ExceptionHandling.RAISE,
 ) -> Result:
     text_input = _get_text_input(input_data)
     result = runner.invoke(cli, args, input=text_input)
-    if result.exit_code != 0:
+    if exception_handling == ExceptionHandling.RAISE and result.exit_code != 0:
         output = ext_click.result_to_message(result)
         command = shlex.join(["fxt", *args])
         raise CLIRunnerException(
