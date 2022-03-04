@@ -601,11 +601,11 @@ def test_init_project_from_template_source_path_remote_cookiecutter(
 
     adder = Adder()
     with change_directory_to(GENERATED_FILES_DIR):
-        adder.init_project_from_template_source_path(
+        folder_name = adder.init_project_from_template_source_path(
             template, transaction, no_input=True
         )
 
-    project_dir = GENERATED_FILES_DIR / "abc"
+    project_dir = GENERATED_FILES_DIR / folder_name
     # Ensure project is a git repo
     repo = Repo(project_dir)
     assert repo.commit().message == "Move flexlate config and remove temporary file\n"
@@ -645,11 +645,11 @@ def test_init_project_from_template_source_path_local_copier(
 
     adder = Adder()
     with change_directory_to(GENERATED_FILES_DIR):
-        adder.init_project_from_template_source_path(
+        folder_name = adder.init_project_from_template_source_path(
             template, transaction, no_input=True
         )
 
-    project_dir = GENERATED_FILES_DIR / "project"
+    project_dir = GENERATED_FILES_DIR / folder_name
 
     _assert_init_from_local_copier_output_correct(project_dir, template)
 
@@ -664,11 +664,11 @@ def test_init_project_from_template_source_path_local_copier_in_another_director
     adder = Adder()
     with change_directory_to(GENERATED_FILES_DIR):
         subdir = GENERATED_FILES_DIR / "subdir"
-        adder.init_project_from_template_source_path(
+        folder_name = adder.init_project_from_template_source_path(
             template, transaction, path=subdir, no_input=True
         )
 
-    project_dir = subdir / "project"
+    project_dir = subdir / folder_name
 
     _assert_init_from_local_copier_output_correct(project_dir, template)
 
