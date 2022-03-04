@@ -650,6 +650,32 @@ def test_init_project_from_template_source_path_local_copier(
         )
 
     project_dir = GENERATED_FILES_DIR / "project"
+
+    _assert_init_from_local_copier_output_correct(project_dir, template)
+
+
+def test_init_project_from_template_source_path_local_copier_in_another_directory(
+    copier_one_template: CopierTemplate,
+    add_source_and_output_transaction: FlexlateTransaction,
+):
+    template = copier_one_template
+    transaction = add_source_and_output_transaction
+
+    adder = Adder()
+    with change_directory_to(GENERATED_FILES_DIR):
+        subdir = GENERATED_FILES_DIR / "subdir"
+        adder.init_project_from_template_source_path(
+            template, transaction, path=subdir, no_input=True
+        )
+
+    project_dir = subdir / "project"
+
+    _assert_init_from_local_copier_output_correct(project_dir, template)
+
+
+def _assert_init_from_local_copier_output_correct(
+    project_dir: Path, template: Template
+):
     # Ensure project is a git repo
     repo = Repo(project_dir)
     assert_main_commit_message_matches(

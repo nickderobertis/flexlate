@@ -75,6 +75,7 @@ class Flexlate:
             merged_branch_name=merged_branch_name,
             template_branch_name=template_branch_name,
             remote=remote,
+            config_manager=self.config_manager,
         )
 
     def init_project_from(
@@ -99,6 +100,7 @@ class Flexlate:
         self.adder.init_project_from_template_source_path(
             template,
             transaction,
+            path=path,
             target_version=template_version,
             default_folder_name=default_folder_name,
             data=data,
@@ -107,6 +109,9 @@ class Flexlate:
             remote=remote,
             merged_branch_name=merged_branch_name,
             template_branch_name=template_branch_name,
+            config_manager=self.config_manager,
+            updater=self.updater,
+            renderer=self.renderer,
         )
 
     @simple_output_for_exceptions(
