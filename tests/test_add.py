@@ -658,8 +658,8 @@ def test_init_project_from_template_source_path_local_copier(
     content = content_path.read_text()
     assert content == "1"
 
-    non_content_path = project_dir / "README.md"
-    assert not non_content_path.exists()
+    readme_path = project_dir / "README.md"
+    assert readme_path.read_text() == "some existing content"
 
     config_path = project_dir / "flexlate.json"
     config = FlexlateConfig.load(config_path)
