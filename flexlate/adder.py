@@ -360,8 +360,9 @@ class Adder:
                         "Output folder name? (this template does not provide one)",
                         default=default_folder_name,
                     )
-                os.remove(temp_file)
-                stage_and_commit_all(repo, "Remove temporary file")
+                if not len(temp_file.read_text()):
+                    os.remove(temp_file)
+                    stage_and_commit_all(repo, "Remove temporary file")
             else:
                 # Output renders in a subdirectory. Find that directory
                 renderables = config_manager.get_all_renderables(project_root=temp_path)
