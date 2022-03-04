@@ -652,7 +652,9 @@ def test_init_project_from_template_source_path_local_copier(
     project_dir = GENERATED_FILES_DIR / "project"
     # Ensure project is a git repo
     repo = Repo(project_dir)
-    assert_main_commit_message_matches(repo.commit().message, "Update flexlate templates")
+    assert_main_commit_message_matches(
+        repo.commit().message, "Update flexlate templates"
+    )
 
     content_path = project_dir / "a1.txt"
     content = content_path.read_text()
