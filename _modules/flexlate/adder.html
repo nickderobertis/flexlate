@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.adder &mdash; flexlate 0.9.0 documentation</title>
+  <title>flexlate.adder &mdash; flexlate 0.9.1 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.9.0
+                0.9.1
               </div>
             
           
@@ -529,8 +529,9 @@
                         <span class="s2">&quot;Output folder name? (this template does not provide one)&quot;</span><span class="p">,</span>
                         <span class="n">default</span><span class="o">=</span><span class="n">default_folder_name</span><span class="p">,</span>
                     <span class="p">)</span>
-                <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">temp_file</span><span class="p">)</span>
-                <span class="n">stage_and_commit_all</span><span class="p">(</span><span class="n">repo</span><span class="p">,</span> <span class="s2">&quot;Remove temporary file&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">temp_file</span><span class="o">.</span><span class="n">read_text</span><span class="p">()):</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">temp_file</span><span class="p">)</span>
+                    <span class="n">stage_and_commit_all</span><span class="p">(</span><span class="n">repo</span><span class="p">,</span> <span class="s2">&quot;Remove temporary file&quot;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="c1"># Output renders in a subdirectory. Find that directory</span>
                 <span class="n">renderables</span> <span class="o">=</span> <span class="n">config_manager</span><span class="o">.</span><span class="n">get_all_renderables</span><span class="p">(</span><span class="n">project_root</span><span class="o">=</span><span class="n">temp_path</span><span class="p">)</span>

@@ -1,8 +1,8 @@
-cookiecutter
 rich
-flexlate
-gitpython
 py-app-conf
-typer
 copier
+cookiecutter
 markupsafe<2.1
+gitpython
+typer
+flexlate
