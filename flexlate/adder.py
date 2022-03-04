@@ -309,7 +309,7 @@ class Adder:
         config_manager: ConfigManager = ConfigManager(),
         updater: Updater = Updater(),
         renderer: MultiRenderer = MultiRenderer(),
-    ):
+    ) -> str:
         with tempfile.TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)
             repo = Repo.init(temp_dir)
@@ -408,6 +408,7 @@ class Adder:
 
             final_out_path = path / folder_name
             shutil.copytree(output_folder, final_out_path)
+            return folder_name
 
 
 def _add_template_commit_message(
