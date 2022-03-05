@@ -142,8 +142,9 @@ def temp_repo_that_pushes_to_branch(  # type: ignore
     additional_branches: Sequence[str] = tuple(),
     remote: str = "origin",
 ) -> ContextManager[Repo]:
+    folder_name = Path(repo.working_dir).name
     with tempfile.TemporaryDirectory() as tmp_dir:
-        tmp_path = Path(tmp_dir)
+        tmp_path = Path(tmp_dir) / folder_name
         temp_repo = _clone_from_local_repo(
             repo,
             tmp_path,

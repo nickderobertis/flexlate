@@ -36,7 +36,7 @@ class MultiRenderer:
             for i, renderable in enumerate(renderables):
                 template = renderable.template
                 renderer = _get_specific_renderer(template)
-                temp_folder = temp_root / f"{i + 1}-{template.name}"
+                temp_folder = temp_root / f"{i + 1}-{template.name}" / project_root.name
                 temp_folders.append(temp_folder)
                 if renderable.out_root.is_absolute():
                     relative_root = renderable.out_root.relative_to(

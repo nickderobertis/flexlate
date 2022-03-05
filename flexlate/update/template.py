@@ -80,7 +80,7 @@ class TemplateUpdate(BaseModel):
         self_renderable_out_root: Path = self_renderable.out_root
         if not self_renderable_out_root.is_absolute():
             self_renderable_out_root = (
-                render_root / self_renderable_out_root
+                project_root / self_renderable_out_root
             ).resolve()
         renderable_out_root: Path = renderable.out_root.resolve()
         if not renderable_out_root.is_absolute():
