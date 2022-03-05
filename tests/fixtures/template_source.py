@@ -95,10 +95,12 @@ class TemplateSourceFixture:
         # Must be local relative path. Paths are relative to GENERATED_REPO_DIR
         return str((GENERATED_REPO_DIR / Path(self.path)).resolve())
 
-    def relative_path_relative_to(self, relative: Union[str, Path]) -> str:
+    def relative_path_relative_to(
+        self, relative: Union[str, Path], orig_relative_to: Path = GENERATED_REPO_DIR
+    ) -> str:
         if not self.has_relative_path:
             return self.path
-        return os.path.relpath(self.path, relative)
+        return os.path.relpath((orig_relative_to / self.path).resolve(), relative)
 
 
 COOKIECUTTER_REMOTE_FIXTURE: Final[TemplateSourceFixture] = TemplateSourceFixture(

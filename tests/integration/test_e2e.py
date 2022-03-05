@@ -781,7 +781,7 @@ def test_init_project_from_template(
         version=template_source.default_version,
         name=template_source.name,
         url=template_source.url,
-        path=template_source.relative_path_relative_to(subdir),
+        path=template_source.relative_path_relative_to(root),
         render_relative_root_in_output=template_source.render_relative_root_in_output,
         render_relative_root_in_template=template_source.render_relative_root_in_template,
     )
