@@ -6,7 +6,7 @@ from copy import deepcopy
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from typing import List, Final, Callable, Optional, ContextManager
+from typing import List, Final, Callable, Optional, ContextManager, Union
 
 import pytest
 
@@ -85,13 +85,20 @@ class TemplateSourceFixture:
         return new_fixture
 
     @property
+    def has_relative_path(self) -> bool:
+        return self.is_local_template and not Path(self.path).is_absolute()
+
+    @property
     def url_or_absolute_path(self) -> str:
-        if not self.is_local_template:
-            return self.path
-        if Path(self.path).is_absolute():
+        if not self.has_relative_path:
             return self.path
         # Must be local relative path. Paths are relative to GENERATED_REPO_DIR
         return str((GENERATED_REPO_DIR / Path(self.path)).resolve())
+
+    def relative_path_relative_to(self, relative: Union[str, Path]) -> str:
+        if not self.has_relative_path:
+            return self.path
+        return os.path.relpath(self.path, relative)
 
 
 COOKIECUTTER_REMOTE_FIXTURE: Final[TemplateSourceFixture] = TemplateSourceFixture(

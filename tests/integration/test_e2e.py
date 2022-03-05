@@ -19,7 +19,7 @@ from flexlate.branch_update import (
 )
 from flexlate.config import FlexlateConfig, FlexlateProjectConfig
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
-from flexlate.exc import TriedToCommitButNoChangesException
+from flexlate.exc import TriedToCommitButNoChangesException, UnnecessarySyncException
 from flexlate.ext_git import merge_branch_into_current
 from flexlate.main import Flexlate
 from flexlate.template.types import TemplateType
@@ -737,20 +737,26 @@ def test_undo(
 
 def test_init_project_from_template(
     flexlates: FlexlateFixture,
-    template_source: TemplateSourceFixture,
+    template_source_with_relative: TemplateSourceFixture,
 ):
     fxt = flexlates.flexlate
+    template_source = template_source_with_relative
+
     no_input = flexlates.type == FlexlateType.APP
     with change_directory_to(GENERATED_FILES_DIR):
+        subdir = GENERATED_FILES_DIR / "subdir" / "nested"
         fxt.init_project_from(
-            template_source.path, data=template_source.input_data, no_input=no_input
+            template_source.path,
+            path=subdir,
+            data=template_source.input_data,
+            no_input=no_input,
         )
 
     relative_root = template_source.evaluated_render_relative_root_in_output_creator(
         template_source.input_data
     )
-    root = GENERATED_FILES_DIR / relative_root
-    project_files_check_root = GENERATED_FILES_DIR
+    root = subdir / relative_root
+    project_files_check_root = subdir
     project_folder_name = relative_root.name
     if relative_root == Path("."):
         # When relative root is current directory, init-from creates a new folder
@@ -775,15 +781,21 @@ def test_init_project_from_template(
         version=template_source.default_version,
         name=template_source.name,
         url=template_source.url,
-        path=template_source.path,
+        path=template_source.relative_path_relative_to(subdir),
         render_relative_root_in_output=template_source.render_relative_root_in_output,
         render_relative_root_in_template=template_source.render_relative_root_in_template,
     )
 
     project_config_path = root / "flexlate-project.json"
     _assert_project_config_is_correct(
-        project_config_path, user=False, project_folder_name=project_folder_name
+        project_config_path,
+        user=False,
+        project_folder_name=project_folder_name,
+        project_containing_folder=subdir,
     )
+
+    with change_directory_to(root):
+        _assert_sync_is_a_no_op(flexlates)
 
 
 def test_sync_manually_remove_applied_template(
@@ -1124,8 +1136,9 @@ def _assert_project_config_is_correct(
     user: bool = False,
     add_mode: AddMode = AddMode.LOCAL,
     project_folder_name: str = "project",
+    project_containing_folder: Path = GENERATED_FILES_DIR,
 ):
-    expect_project_path = GENERATED_FILES_DIR / project_folder_name
+    expect_project_path = project_containing_folder / project_folder_name
     project_config = FlexlateProjectConfig.load(path)
     assert len(project_config.projects) == 1
     project = project_config.projects[0]
@@ -1136,6 +1149,17 @@ def _assert_project_config_is_correct(
         assert project.path != project.path.absolute()
         assert (path.parent / project.path).absolute() == expect_project_path
     assert project.default_add_mode == add_mode
+
+
+def _assert_sync_is_a_no_op(flexlate_fixture: FlexlateFixture):
+    fxt = flexlate_fixture.flexlate
+    if flexlate_fixture.type == FlexlateType.APP:
+        with pytest.raises(UnnecessarySyncException):
+            fxt.sync()
+    else:
+        with pytest.raises(CLIRunnerException) as exc_info:
+            fxt.sync()
+        assert "Everything is up to date" in str(exc_info.value)
 
 
 def _get_default_data(template_source_type: TemplateSourceType) -> TemplateData:
