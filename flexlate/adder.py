@@ -11,6 +11,7 @@ from rich.prompt import Prompt
 
 from flexlate.add_mode import AddMode, get_expanded_out_root
 from flexlate.branch_update import modify_files_via_branches_and_temp_repo
+from flexlate.config import TemplateSource
 from flexlate.config_manager import (
     ConfigManager,
     determine_config_path_from_roots_and_add_mode,
@@ -314,7 +315,23 @@ class Adder:
     ) -> str:
         with tempfile.TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)
+
             repo = Repo.init(temp_dir)
+
+            def sync():
+                syncer.sync_local_changes_to_flexlate_branches(
+                    repo,
+                    transaction,
+                    merged_branch_name=merged_branch_name,
+                    base_merged_branch_name=merged_branch_name,
+                    template_branch_name=template_branch_name,
+                    base_template_branch_name=template_branch_name,
+                    no_input=True,
+                    updater=updater,
+                    renderer=renderer,
+                    config_manager=config_manager,
+                )
+
             temp_file = temp_path / "README.md"
             temp_file.touch()
             stage_and_commit_all(repo, "Initial commit")
@@ -412,21 +429,35 @@ class Adder:
                 needs_sync = True
 
             if needs_sync:
-                syncer.sync_local_changes_to_flexlate_branches(
-                    repo,
-                    transaction,
-                    merged_branch_name=merged_branch_name,
-                    base_merged_branch_name=merged_branch_name,
-                    template_branch_name=template_branch_name,
-                    base_template_branch_name=template_branch_name,
-                    no_input=True,
-                    updater=updater,
-                    renderer=renderer,
-                    config_manager=config_manager,
-                )
+                sync()
 
             final_out_path = path / folder_name
             shutil.copytree(output_folder, final_out_path)
+            repo = Repo(final_out_path)
+
+            # Now update template source path that was previously relative to temp directory
+            if template.git_url is None and not Path(template.path).is_absolute():
+                cwd = Path(os.getcwd())
+
+                def move_source_path_to_be_relative_to_destination(
+                    source: TemplateSource,
+                ):
+                    source.path = str(
+                        os.path.relpath(
+                            (cwd / Path(template.template_source_path)).resolve(),
+                            final_out_path,
+                        )
+                    )
+
+                config_manager.update_template_sources(
+                    [template.name], move_source_path_to_be_relative_to_destination
+                )
+                stage_and_commit_all(
+                    repo,
+                    "Move template source path to match permanent destination of project",
+                )
+                sync()
+
             return folder_name
 
 
