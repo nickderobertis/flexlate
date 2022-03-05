@@ -26,6 +26,7 @@ from flexlate.path_ops import (
 )
 from flexlate.render.multi import MultiRenderer
 from flexlate.styles import SUCCESS_STYLE, INFO_STYLE, console, styled, print_styled
+from flexlate.syncer import Syncer
 from flexlate.template.base import Template
 from flexlate.template_data import TemplateData
 from flexlate.transactions.transaction import (
@@ -309,6 +310,7 @@ class Adder:
         config_manager: ConfigManager = ConfigManager(),
         updater: Updater = Updater(),
         renderer: MultiRenderer = MultiRenderer(),
+        syncer: Syncer = Syncer(),
     ) -> str:
         with tempfile.TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)
@@ -352,6 +354,7 @@ class Adder:
                 updater=updater,
                 renderer=renderer,
             )
+            needs_sync = False
             if template.render_relative_root_in_output == Path("."):
                 output_folder = temp_path
                 folder_name = default_folder_name
@@ -363,6 +366,7 @@ class Adder:
                 if not len(temp_file.read_text()):
                     os.remove(temp_file)
                     stage_and_commit_all(repo, "Remove temporary file")
+                    needs_sync = True
             else:
                 # Output renders in a subdirectory. Find that directory
                 renderables = config_manager.get_all_renderables(project_root=temp_path)
@@ -404,6 +408,21 @@ class Adder:
 
                 stage_and_commit_all(
                     repo, "Move flexlate config and remove temporary file"
+                )
+                needs_sync = True
+
+            if needs_sync:
+                syncer.sync_local_changes_to_flexlate_branches(
+                    repo,
+                    transaction,
+                    merged_branch_name=merged_branch_name,
+                    base_merged_branch_name=merged_branch_name,
+                    template_branch_name=template_branch_name,
+                    base_template_branch_name=template_branch_name,
+                    no_input=True,
+                    updater=updater,
+                    renderer=renderer,
+                    config_manager=config_manager,
                 )
 
             final_out_path = path / folder_name

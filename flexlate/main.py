@@ -112,6 +112,7 @@ class Flexlate:
             config_manager=self.config_manager,
             updater=self.updater,
             renderer=self.renderer,
+            syncer=self.syncer,
         )
 
     @simple_output_for_exceptions(
