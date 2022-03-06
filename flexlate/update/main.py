@@ -43,6 +43,7 @@ from flexlate.ext_git import (
     abort_merge,
     reset_branch_to_commit_without_checkout,
     get_branch_sha,
+    restore_initial_commit_files,
 )
 from flexlate.template_data import TemplateData, merge_data
 from flexlate.transactions.transaction import (
@@ -163,6 +164,10 @@ class Updater:
                 orig_project_root=project_root,
                 renderer=renderer,
             )
+
+            # Add back initial commit files if they have not been rendered from a template
+            if full_rerender:
+                restore_initial_commit_files(temp_repo)
 
             commit_message = create_transaction_commit_message(
                 _commit_message(renderables), transaction

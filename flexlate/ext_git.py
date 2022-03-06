@@ -81,6 +81,21 @@ def delete_all_tracked_files(repo: Repo):
         os.remove(path)
 
 
+def restore_initial_commit_files(repo: Repo):
+    inital_commit = _get_initial_commit(repo)
+    initial_commit_files = _list_tracked_files(
+        inital_commit.tree, Path(repo.working_dir)
+    )
+    for file in initial_commit_files:
+        if not file.exists():
+            _check_out_specific_file_from_commit(repo, inital_commit.hexsha, file)
+
+
+def _check_out_specific_file_from_commit(repo: Repo, commit_sha: str, file_path: Path):
+    relative_path = os.path.relpath(file_path, repo.working_dir)
+    repo.git.checkout(commit_sha, relative_path)
+
+
 def merge_branch_into_current(
     repo: Repo, branch_name: str, allow_conflicts: bool = True
 ):
