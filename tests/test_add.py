@@ -608,7 +608,10 @@ def test_init_project_from_template_source_path_remote_cookiecutter(
     project_dir = GENERATED_FILES_DIR / folder_name
     # Ensure project is a git repo
     repo = Repo(project_dir)
-    assert repo.commit().message == "Move flexlate config and remove temporary file\n"
+    assert (
+        repo.commit().message
+        == "Merge branch 'flexlate-templates' into flexlate-output\n"
+    )
 
     content_path = project_dir / "abc.txt"
     content = content_path.read_text()

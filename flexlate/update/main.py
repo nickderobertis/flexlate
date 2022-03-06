@@ -140,16 +140,21 @@ class Updater:
                 renderables, project_root=temp_project_root, no_input=no_input
             )
             new_updates = updates_with_updated_data(
-                temp_updates,
+                updates,
                 updated_data,
                 renderables,
                 project_root=project_root,
                 render_root=temp_project_root,
             )
+            new_temp_updates = _move_update_config_locations_to_new_parent(
+                new_updates, project_root, temp_project_root
+            )
             # On second update, use template source path. This means that it will set the template
             # paths back to how they were originally (relative if needed), so that there will not be
             # unexpected changes from relative to absolute paths in the user configs
-            config_manager.update_templates(new_updates, project_root=temp_project_root)
+            config_manager.update_templates(
+                new_temp_updates, project_root=temp_project_root
+            )
 
             # For applied templates with local add mode, with corresponding template sources that
             # have a render_relative_root_in_output, may need to move the config
