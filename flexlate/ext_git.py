@@ -74,15 +74,28 @@ def _list_tracked_files(tree: Tree, root_path: Path) -> Set[Path]:
     return files
 
 
-def delete_tracked_files_excluding_initial_commit(repo: Repo):
+def delete_all_tracked_files(repo: Repo):
     if repo.working_dir is None:
         raise ValueError("repo working dir should not be none")
-    initial_commit_files = _list_tracked_files(
-        _get_initial_commit(repo).tree, Path(repo.working_dir)
-    )
     for path in list_tracked_files(repo):
-        if path not in initial_commit_files:
-            os.remove(path)
+        os.remove(path)
+
+
+def restore_initial_commit_files(repo: Repo):
+    if repo.working_dir is None:
+        raise ValueError("repo working dir must not be None")
+    inital_commit = _get_initial_commit(repo)
+    initial_commit_files = _list_tracked_files(
+        inital_commit.tree, Path(repo.working_dir)
+    )
+    for file in initial_commit_files:
+        if not file.exists():
+            _check_out_specific_file_from_commit(repo, inital_commit.hexsha, file)
+
+
+def _check_out_specific_file_from_commit(repo: Repo, commit_sha: str, file_path: Path):
+    relative_path = os.path.relpath(file_path, repo.working_dir)
+    repo.git.checkout(commit_sha, relative_path)
 
 
 def merge_branch_into_current(
@@ -142,8 +155,11 @@ def temp_repo_that_pushes_to_branch(  # type: ignore
     additional_branches: Sequence[str] = tuple(),
     remote: str = "origin",
 ) -> ContextManager[Repo]:
+    if repo.working_dir is None:
+        raise ValueError("repo working dir must not be None")
+    folder_name = Path(repo.working_dir).name
     with tempfile.TemporaryDirectory() as tmp_dir:
-        tmp_path = Path(tmp_dir)
+        tmp_path = Path(tmp_dir) / folder_name
         temp_repo = _clone_from_local_repo(
             repo,
             tmp_path,
@@ -153,7 +169,7 @@ def temp_repo_that_pushes_to_branch(  # type: ignore
             remote=remote,
         )
         if delete_tracked_files:
-            delete_tracked_files_excluding_initial_commit(temp_repo)
+            delete_all_tracked_files(temp_repo)
         # For type narrowing
         if repo.working_dir is None or temp_repo.working_dir is None:
             raise ValueError("repo working dir cannot be None")

@@ -86,6 +86,7 @@ def _assert_update_of_cookiecutter_one_modified_template_was_successful(
     )
     assert (GENERATED_REPO_DIR / "ignored" / "ignored.txt").exists()
     assert (GENERATED_REPO_DIR / ".gitignore").exists()
+    assert (GENERATED_REPO_DIR / "some-dir" / "placeholder.txt").exists()
     merged_branch.checkout()
     assert repo.active_branch == merged_branch
     assert (

@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from typing import Sequence, List, Optional, Tuple, Set, Dict
+from typing import Sequence, List, Optional, Tuple, Set, Dict, Callable
 
 from flexlate.add_mode import AddMode
 from flexlate.config import (
@@ -636,6 +636,18 @@ class ConfigManager:
                 out_root=atwc.applied_template._orig_root,
                 orig_project_root=orig_project_root,
             )
+
+    def update_template_sources(
+        self,
+        names: Sequence[str],
+        updater: Callable[[TemplateSource], None],
+        project_root: Path = Path("."),
+    ):
+        config = self.load_config(project_root, adjust_applied_paths=False)
+        sources = self.get_template_sources(names, config=config)
+        for source in sources:
+            updater(source)
+        self.save_config(config)
 
 
 def _get_child_config_by_path(config: FlexlateConfig, path: Path) -> FlexlateConfig:
