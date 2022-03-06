@@ -450,7 +450,9 @@ class Adder:
                     )
 
                 config_manager.update_template_sources(
-                    [template.name], move_source_path_to_be_relative_to_destination
+                    [template.name],
+                    move_source_path_to_be_relative_to_destination,
+                    project_root=final_out_path,
                 )
                 stage_and_commit_all(
                     repo,
