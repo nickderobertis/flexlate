@@ -371,7 +371,6 @@ class Adder:
                 updater=updater,
                 renderer=renderer,
             )
-            needs_sync = False
             if template.render_relative_root_in_output == Path("."):
                 output_folder = temp_path
                 folder_name = default_folder_name
@@ -383,7 +382,6 @@ class Adder:
                 if not len(temp_file.read_text()):
                     os.remove(temp_file)
                     stage_and_commit_all(repo, "Remove temporary file")
-                    needs_sync = True
             else:
                 # Output renders in a subdirectory. Find that directory
                 renderables = config_manager.get_all_renderables(project_root=temp_path)
@@ -426,9 +424,6 @@ class Adder:
                 stage_and_commit_all(
                     repo, "Move flexlate config and remove temporary file"
                 )
-                needs_sync = True
-
-            if needs_sync:
                 sync()
 
             final_out_path = path / folder_name
