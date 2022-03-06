@@ -82,6 +82,8 @@ def delete_all_tracked_files(repo: Repo):
 
 
 def restore_initial_commit_files(repo: Repo):
+    if repo.working_dir is None:
+        raise ValueError("repo working dir must not be None")
     inital_commit = _get_initial_commit(repo)
     initial_commit_files = _list_tracked_files(
         inital_commit.tree, Path(repo.working_dir)
