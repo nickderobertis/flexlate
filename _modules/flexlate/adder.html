@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.adder &mdash; flexlate 0.9.1 documentation</title>
+  <title>flexlate.adder &mdash; flexlate 0.9.2 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.9.1
+                0.9.2
               </div>
             
           
@@ -180,6 +180,7 @@
 
 <span class="kn">from</span> <span class="nn">flexlate.add_mode</span> <span class="kn">import</span> <span class="n">AddMode</span><span class="p">,</span> <span class="n">get_expanded_out_root</span>
 <span class="kn">from</span> <span class="nn">flexlate.branch_update</span> <span class="kn">import</span> <span class="n">modify_files_via_branches_and_temp_repo</span>
+<span class="kn">from</span> <span class="nn">flexlate.config</span> <span class="kn">import</span> <span class="n">TemplateSource</span>
 <span class="kn">from</span> <span class="nn">flexlate.config_manager</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">ConfigManager</span><span class="p">,</span>
     <span class="n">determine_config_path_from_roots_and_add_mode</span><span class="p">,</span>
@@ -195,6 +196,7 @@
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">flexlate.render.multi</span> <span class="kn">import</span> <span class="n">MultiRenderer</span>
 <span class="kn">from</span> <span class="nn">flexlate.styles</span> <span class="kn">import</span> <span class="n">SUCCESS_STYLE</span><span class="p">,</span> <span class="n">INFO_STYLE</span><span class="p">,</span> <span class="n">console</span><span class="p">,</span> <span class="n">styled</span><span class="p">,</span> <span class="n">print_styled</span>
+<span class="kn">from</span> <span class="nn">flexlate.syncer</span> <span class="kn">import</span> <span class="n">Syncer</span>
 <span class="kn">from</span> <span class="nn">flexlate.template.base</span> <span class="kn">import</span> <span class="n">Template</span>
 <span class="kn">from</span> <span class="nn">flexlate.template_data</span> <span class="kn">import</span> <span class="n">TemplateData</span>
 <span class="kn">from</span> <span class="nn">flexlate.transactions.transaction</span> <span class="kn">import</span> <span class="p">(</span>
@@ -478,10 +480,27 @@
         <span class="n">config_manager</span><span class="p">:</span> <span class="n">ConfigManager</span> <span class="o">=</span> <span class="n">ConfigManager</span><span class="p">(),</span>
         <span class="n">updater</span><span class="p">:</span> <span class="n">Updater</span> <span class="o">=</span> <span class="n">Updater</span><span class="p">(),</span>
         <span class="n">renderer</span><span class="p">:</span> <span class="n">MultiRenderer</span> <span class="o">=</span> <span class="n">MultiRenderer</span><span class="p">(),</span>
-    <span class="p">):</span>
+        <span class="n">syncer</span><span class="p">:</span> <span class="n">Syncer</span> <span class="o">=</span> <span class="n">Syncer</span><span class="p">(),</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">temp_dir</span><span class="p">:</span>
             <span class="n">temp_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">temp_dir</span><span class="p">)</span>
+
             <span class="n">repo</span> <span class="o">=</span> <span class="n">Repo</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">temp_dir</span><span class="p">)</span>
+
+            <span class="k">def</span> <span class="nf">sync</span><span class="p">():</span>
+                <span class="n">syncer</span><span class="o">.</span><span class="n">sync_local_changes_to_flexlate_branches</span><span class="p">(</span>
+                    <span class="n">repo</span><span class="p">,</span>
+                    <span class="n">transaction</span><span class="p">,</span>
+                    <span class="n">merged_branch_name</span><span class="o">=</span><span class="n">merged_branch_name</span><span class="p">,</span>
+                    <span class="n">base_merged_branch_name</span><span class="o">=</span><span class="n">merged_branch_name</span><span class="p">,</span>
+                    <span class="n">template_branch_name</span><span class="o">=</span><span class="n">template_branch_name</span><span class="p">,</span>
+                    <span class="n">base_template_branch_name</span><span class="o">=</span><span class="n">template_branch_name</span><span class="p">,</span>
+                    <span class="n">no_input</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">updater</span><span class="o">=</span><span class="n">updater</span><span class="p">,</span>
+                    <span class="n">renderer</span><span class="o">=</span><span class="n">renderer</span><span class="p">,</span>
+                    <span class="n">config_manager</span><span class="o">=</span><span class="n">config_manager</span><span class="p">,</span>
+                <span class="p">)</span>
+
             <span class="n">temp_file</span> <span class="o">=</span> <span class="n">temp_path</span> <span class="o">/</span> <span class="s2">&quot;README.md&quot;</span>
             <span class="n">temp_file</span><span class="o">.</span><span class="n">touch</span><span class="p">()</span>
             <span class="n">stage_and_commit_all</span><span class="p">(</span><span class="n">repo</span><span class="p">,</span> <span class="s2">&quot;Initial commit&quot;</span><span class="p">)</span>
@@ -574,9 +593,38 @@
                 <span class="n">stage_and_commit_all</span><span class="p">(</span>
                     <span class="n">repo</span><span class="p">,</span> <span class="s2">&quot;Move flexlate config and remove temporary file&quot;</span>
                 <span class="p">)</span>
+                <span class="n">sync</span><span class="p">()</span>
 
             <span class="n">final_out_path</span> <span class="o">=</span> <span class="n">path</span> <span class="o">/</span> <span class="n">folder_name</span>
-            <span class="n">shutil</span><span class="o">.</span><span class="n">copytree</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">final_out_path</span><span class="p">)</span></div></div>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">copytree</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">final_out_path</span><span class="p">)</span>
+            <span class="n">repo</span> <span class="o">=</span> <span class="n">Repo</span><span class="p">(</span><span class="n">final_out_path</span><span class="p">)</span>
+
+            <span class="c1"># Now update template source path that was previously relative to temp directory</span>
+            <span class="k">if</span> <span class="n">template</span><span class="o">.</span><span class="n">git_url</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">is_absolute</span><span class="p">():</span>
+                <span class="n">cwd</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span>
+
+                <span class="k">def</span> <span class="nf">move_source_path_to_be_relative_to_destination</span><span class="p">(</span>
+                    <span class="n">source</span><span class="p">:</span> <span class="n">TemplateSource</span><span class="p">,</span>
+                <span class="p">):</span>
+                    <span class="n">source</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span>
+                            <span class="p">(</span><span class="n">cwd</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">template_source_path</span><span class="p">))</span><span class="o">.</span><span class="n">resolve</span><span class="p">(),</span>
+                            <span class="n">final_out_path</span><span class="p">,</span>
+                        <span class="p">)</span>
+                    <span class="p">)</span>
+
+                <span class="n">config_manager</span><span class="o">.</span><span class="n">update_template_sources</span><span class="p">(</span>
+                    <span class="p">[</span><span class="n">template</span><span class="o">.</span><span class="n">name</span><span class="p">],</span>
+                    <span class="n">move_source_path_to_be_relative_to_destination</span><span class="p">,</span>
+                    <span class="n">project_root</span><span class="o">=</span><span class="n">final_out_path</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">stage_and_commit_all</span><span class="p">(</span>
+                    <span class="n">repo</span><span class="p">,</span>
+                    <span class="s2">&quot;Move template source path to match permanent destination of project&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">sync</span><span class="p">()</span>
+
+            <span class="k">return</span> <span class="n">folder_name</span></div></div>
 
 
 <span class="k">def</span> <span class="nf">_add_template_commit_message</span><span class="p">(</span>

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.main &mdash; flexlate 0.9.1 documentation</title>
+  <title>flexlate.main &mdash; flexlate 0.9.2 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.9.1
+                0.9.2
               </div>
             
           
@@ -244,6 +244,7 @@
             <span class="n">merged_branch_name</span><span class="o">=</span><span class="n">merged_branch_name</span><span class="p">,</span>
             <span class="n">template_branch_name</span><span class="o">=</span><span class="n">template_branch_name</span><span class="p">,</span>
             <span class="n">remote</span><span class="o">=</span><span class="n">remote</span><span class="p">,</span>
+            <span class="n">config_manager</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config_manager</span><span class="p">,</span>
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="Flexlate.init_project_from"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.main.Flexlate.init_project_from">[docs]</a>    <span class="k">def</span> <span class="nf">init_project_from</span><span class="p">(</span>
@@ -258,16 +259,17 @@
         <span class="n">remote</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;origin&quot;</span><span class="p">,</span>
         <span class="n">merged_branch_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_MERGED_BRANCH_NAME</span><span class="p">,</span>
         <span class="n">template_branch_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_TEMPLATE_BRANCH_NAME</span><span class="p">,</span>
-    <span class="p">):</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">transaction</span> <span class="o">=</span> <span class="n">FlexlateTransaction</span><span class="p">(</span>
             <span class="nb">type</span><span class="o">=</span><span class="n">TransactionType</span><span class="o">.</span><span class="n">ADD_SOURCE_AND_OUTPUT</span><span class="p">,</span>
             <span class="n">target</span><span class="o">=</span><span class="n">template_path</span><span class="p">,</span>
             <span class="n">out_root</span><span class="o">=</span><span class="n">path</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">template</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">finder</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">template_path</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="n">template_version</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">adder</span><span class="o">.</span><span class="n">init_project_from_template_source_path</span><span class="p">(</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">adder</span><span class="o">.</span><span class="n">init_project_from_template_source_path</span><span class="p">(</span>
             <span class="n">template</span><span class="p">,</span>
             <span class="n">transaction</span><span class="p">,</span>
+            <span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">,</span>
             <span class="n">target_version</span><span class="o">=</span><span class="n">template_version</span><span class="p">,</span>
             <span class="n">default_folder_name</span><span class="o">=</span><span class="n">default_folder_name</span><span class="p">,</span>
             <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
@@ -276,6 +278,10 @@
             <span class="n">remote</span><span class="o">=</span><span class="n">remote</span><span class="p">,</span>
             <span class="n">merged_branch_name</span><span class="o">=</span><span class="n">merged_branch_name</span><span class="p">,</span>
             <span class="n">template_branch_name</span><span class="o">=</span><span class="n">template_branch_name</span><span class="p">,</span>
+            <span class="n">config_manager</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config_manager</span><span class="p">,</span>
+            <span class="n">updater</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">updater</span><span class="p">,</span>
+            <span class="n">renderer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="p">,</span>
+            <span class="n">syncer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">syncer</span><span class="p">,</span>
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="Flexlate.add_template_source"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.main.Flexlate.add_template_source">[docs]</a>    <span class="nd">@simple_output_for_exceptions</span><span class="p">(</span>
