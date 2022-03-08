@@ -102,7 +102,7 @@ def merge_branch_into_current(
     repo: Repo, branch_name: str, allow_conflicts: bool = True
 ):
     try:
-        repo.git.merge(branch_name)
+        repo.git.merge(branch_name, "--allow-unrelated-histories")
     except GitCommandError as e:
         if allow_conflicts and "fix conflicts and then commit the result" in e.stdout:
             #
