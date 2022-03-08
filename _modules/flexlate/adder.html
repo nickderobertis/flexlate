@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.adder &mdash; flexlate 0.9.2 documentation</title>
+  <title>flexlate.adder &mdash; flexlate 0.9.3 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.9.2
+                0.9.3
               </div>
             
           
@@ -332,8 +332,13 @@
             <span class="n">out_root</span><span class="p">,</span> <span class="n">project_root</span><span class="p">,</span> <span class="n">template</span><span class="o">.</span><span class="n">render_relative_root_in_output</span><span class="p">,</span> <span class="n">add_mode</span>
         <span class="p">)</span>
 
+        <span class="c1"># Get path it is being rendered at to display to user</span>
+        <span class="n">render_path</span> <span class="o">=</span> <span class="n">expanded_out_root</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">expanded_out_root</span><span class="o">.</span><span class="n">is_absolute</span><span class="p">():</span>
+            <span class="n">render_path</span> <span class="o">=</span> <span class="p">(</span><span class="n">project_root</span> <span class="o">/</span> <span class="n">expanded_out_root</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+
         <span class="n">print_styled</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Applying template </span><span class="si">{</span><span class="n">template</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">expanded_out_root</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;Applying template </span><span class="si">{</span><span class="n">template</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">render_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
             <span class="n">INFO_STYLE</span><span class="p">,</span>
         <span class="p">)</span>
 
@@ -399,7 +404,7 @@
             <span class="n">config_manager</span><span class="o">=</span><span class="n">config_manager</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">print_styled</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Successfully applied template </span><span class="si">{</span><span class="n">template</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">expanded_out_root</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;Successfully applied template </span><span class="si">{</span><span class="n">template</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">render_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
             <span class="n">SUCCESS_STYLE</span><span class="p">,</span>
         <span class="p">)</span></div>
 

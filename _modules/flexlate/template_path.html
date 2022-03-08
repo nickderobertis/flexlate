@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.template_path &mdash; flexlate 0.9.2 documentation</title>
+  <title>flexlate.template_path &mdash; flexlate 0.9.3 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.9.2
+                0.9.3
               </div>
             
           
@@ -209,7 +209,7 @@
 
     <span class="k">if</span> <span class="n">is_local_template</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
         <span class="n">local_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">local_path</span><span class="p">,</span> <span class="n">local_path</span><span class="o">.</span><span class="n">name</span>
+        <span class="k">return</span> <span class="n">local_path</span><span class="p">,</span> <span class="n">local_path</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">name</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">is_repo_url</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">InvalidTemplatePathException</span><span class="p">(</span>
