@@ -163,8 +163,13 @@ class Adder:
             out_root, project_root, template.render_relative_root_in_output, add_mode
         )
 
+        # Get path it is being rendered at to display to user
+        render_path = expanded_out_root
+        if not expanded_out_root.is_absolute():
+            render_path = (project_root / expanded_out_root).resolve()
+
         print_styled(
-            f"Applying template {template.name} to {expanded_out_root.resolve()}",
+            f"Applying template {template.name} to {render_path}",
             INFO_STYLE,
         )
 
@@ -230,7 +235,7 @@ class Adder:
             config_manager=config_manager,
         )
         print_styled(
-            f"Successfully applied template {template.name} to {expanded_out_root.resolve()}",
+            f"Successfully applied template {template.name} to {render_path}",
             SUCCESS_STYLE,
         )
 
