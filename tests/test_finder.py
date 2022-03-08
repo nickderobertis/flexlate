@@ -6,6 +6,9 @@ import pytest
 from flexlate.finder.multi import MultiFinder
 from flexlate.finder.specific.cookiecutter import CookiecutterFinder
 from flexlate.finder.specific.copier import CopierFinder
+from flexlate.path_ops import change_directory_to
+from flexlate.template.base import Template
+from flexlate.template.cookiecutter import CookiecutterTemplate
 from flexlate.template_path import get_local_repo_path_and_name_cloning_if_repo_url
 from tests.config import (
     COOKIECUTTER_ONE_DIR,
@@ -44,7 +47,13 @@ def test_get_copier_config():
 def test_get_cookiecutter_local_template():
     finder = CookiecutterFinder()
     template = finder.find(str(COOKIECUTTER_ONE_DIR), COOKIECUTTER_ONE_DIR)
-    assert template.path == COOKIECUTTER_ONE_DIR
+    _assert_template_matches_cookiecutter_one(template)
+
+
+def _assert_template_matches_cookiecutter_one(
+    template: Template, expect_path: Path = COOKIECUTTER_ONE_DIR
+):
+    assert template.path == expect_path
     assert template.name == COOKIECUTTER_ONE_NAME
     assert template.git_url is None
     assert template.version == COOKIECUTTER_ONE_VERSION
@@ -142,12 +151,14 @@ def test_get_copier_remote_template(version: str, expect_contents: str):
 def test_multi_finder_get_cookiecutter_local_template():
     finder = MultiFinder()
     template = finder.find(str(COOKIECUTTER_ONE_DIR))
-    assert template.path == COOKIECUTTER_ONE_DIR
-    assert template.git_url is None
-    assert template.version == COOKIECUTTER_ONE_VERSION
-    assert template.config.defaults == {"a": "b", "c": ""}
-    assert template.render_relative_root_in_output == Path("{{ cookiecutter.a }}")
-    assert template.render_relative_root_in_template == Path("{{ cookiecutter.a }}")
+    _assert_template_matches_cookiecutter_one(template)
+
+
+def test_multi_finder_get_cookiecutter_local_template_from_current_directory():
+    finder = MultiFinder()
+    with change_directory_to(COOKIECUTTER_ONE_DIR):
+        template = finder.find(str("."))
+    _assert_template_matches_cookiecutter_one(template, expect_path=Path("."))
 
 
 def test_multi_finder_get_copier_local_template():

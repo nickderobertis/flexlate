@@ -40,7 +40,7 @@ def get_local_repo_path_and_name_cloning_if_repo_url(
 
     if is_local_template(path):
         local_path = Path(path)
-        return local_path, local_path.name
+        return local_path, local_path.resolve().name
 
     if not is_repo_url(path):
         raise InvalidTemplatePathException(
