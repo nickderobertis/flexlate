@@ -13,7 +13,10 @@ from flexlate.branch_update import (
 from flexlate.cli_utils import confirm_user
 from flexlate.config_manager import ConfigManager
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
-from flexlate.exc import TriedToCommitButNoChangesException
+from flexlate.exc import (
+    TriedToCommitButNoChangesException,
+    MergeConflictsAndAbortException,
+)
 from flexlate.finder.multi import MultiFinder
 from flexlate.path_ops import (
     make_all_dirs,
@@ -207,7 +210,7 @@ class Updater:
                     merged_branch_name=merged_branch_name,
                     template_branch_name=template_branch_name,
                 )
-                return
+                raise MergeConflictsAndAbortException
 
             # Need to wait for user to resolve merge conflicts
             aborted = prompt_to_fix_conflicts_and_reset_on_abort_return_aborted(

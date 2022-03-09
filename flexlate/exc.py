@@ -146,3 +146,11 @@ class FlexlateSyncException(FlexlateException):
 
 class UnnecessarySyncException(FlexlateSyncException):
     pass
+
+
+class FlexlateUpdateException(FlexlateException):
+    pass
+
+
+class MergeConflictsAndAbortException(FlexlateException):
+    pass
