@@ -3,7 +3,7 @@ from typing import Callable, List, Final
 
 from flexlate.main import Flexlate
 from tests.config import COOKIECUTTER_REMOTE_NAME, COPIER_ONE_DIR, COPIER_ONE_NAME
-from tests.fixtures.template_source import COOKIECUTTER_REMOTE_FIXTURE
+from tests.integration.fixtures.template_source import COOKIECUTTER_REMOTE_FIXTURE
 
 
 @dataclass

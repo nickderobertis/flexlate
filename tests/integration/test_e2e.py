@@ -46,7 +46,7 @@ from tests.fixtures.cli import (
     flexlates_ignore_cli_exceptions,
 )
 from tests.fixtures.add_mode import add_mode
-from tests.fixtures.template_source import (
+from tests.integration.fixtures.template_source import (
     TemplateSourceFixture,
     template_source,
     template_source_one_remote_and_all_local_relative,
