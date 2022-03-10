@@ -5,6 +5,7 @@ import typer
 
 from flexlate.add_mode import AddMode
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
+from flexlate.exc import MergeConflictsAndAbortException
 from flexlate.main import Flexlate
 
 cli = typer.Typer()
@@ -271,12 +272,18 @@ def update_templates(
     available that still satisfy source target versions
     """
     app = Flexlate(quiet=quiet)
-    app.update(
-        names=names,
-        no_input=no_input,
-        abort_on_conflict=abort_on_conflict,
-        project_path=path,
-    )
+    try:
+        app.update(
+            names=names,
+            no_input=no_input,
+            abort_on_conflict=abort_on_conflict,
+            project_path=path,
+        )
+        return
+    except MergeConflictsAndAbortException:
+        # There is already output explaining the situation to the user prior to
+        # raising the exception, so only need to exit with the correct code
+        exit(1)
 
 
 @cli.command(name="undo")
