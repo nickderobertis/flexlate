@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.update.main &mdash; flexlate 0.9.3 documentation</title>
+  <title>flexlate.update.main &mdash; flexlate 0.10.0 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.9.3
+                0.10.0
               </div>
             
           
@@ -182,7 +182,10 @@
 <span class="kn">from</span> <span class="nn">flexlate.cli_utils</span> <span class="kn">import</span> <span class="n">confirm_user</span>
 <span class="kn">from</span> <span class="nn">flexlate.config_manager</span> <span class="kn">import</span> <span class="n">ConfigManager</span>
 <span class="kn">from</span> <span class="nn">flexlate.constants</span> <span class="kn">import</span> <span class="n">DEFAULT_MERGED_BRANCH_NAME</span><span class="p">,</span> <span class="n">DEFAULT_TEMPLATE_BRANCH_NAME</span>
-<span class="kn">from</span> <span class="nn">flexlate.exc</span> <span class="kn">import</span> <span class="n">TriedToCommitButNoChangesException</span>
+<span class="kn">from</span> <span class="nn">flexlate.exc</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">TriedToCommitButNoChangesException</span><span class="p">,</span>
+    <span class="n">MergeConflictsAndAbortException</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">flexlate.finder.multi</span> <span class="kn">import</span> <span class="n">MultiFinder</span>
 <span class="kn">from</span> <span class="nn">flexlate.path_ops</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">make_all_dirs</span><span class="p">,</span>
@@ -376,7 +379,7 @@
                     <span class="n">merged_branch_name</span><span class="o">=</span><span class="n">merged_branch_name</span><span class="p">,</span>
                     <span class="n">template_branch_name</span><span class="o">=</span><span class="n">template_branch_name</span><span class="p">,</span>
                 <span class="p">)</span>
-                <span class="k">return</span>
+                <span class="k">raise</span> <span class="n">MergeConflictsAndAbortException</span>
 
             <span class="c1"># Need to wait for user to resolve merge conflicts</span>
             <span class="n">aborted</span> <span class="o">=</span> <span class="n">prompt_to_fix_conflicts_and_reset_on_abort_return_aborted</span><span class="p">(</span>
