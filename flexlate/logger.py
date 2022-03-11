@@ -39,8 +39,6 @@ logging.basicConfig(
 
 log = logging.getLogger("flexlate")
 
-log.debug("Flexlate debug logging enabled")
-
 if __name__ == "__main__":
     log.info("info level")
     log.debug("debug level")
