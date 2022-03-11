@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Optional, List, Sequence, Dict
+from typing import Optional, List, Sequence
 
 from git import Repo
 
@@ -12,6 +12,7 @@ from flexlate.config_manager import ConfigManager
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.error_handler import simple_output_for_exceptions
 from flexlate.finder.multi import MultiFinder
+from flexlate.logger import log
 from flexlate.merger import Merger
 from flexlate.pusher import Pusher
 from flexlate.remover import Remover
@@ -23,6 +24,8 @@ from flexlate.template_data import TemplateData
 from flexlate.transactions.transaction import FlexlateTransaction, TransactionType
 from flexlate.transactions.undoer import Undoer
 from flexlate.update.main import Updater
+
+log.debug("Flexlate debug logging enabled")
 
 
 class Flexlate:
