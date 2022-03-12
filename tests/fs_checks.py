@@ -2,7 +2,8 @@ from pathlib import Path
 from typing import Optional
 
 from flexlate.add_mode import AddMode
-from flexlate.config import FlexlateConfig
+from flexlate.config import FlexlateConfig, FlexlateProjectConfig
+from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.template.base import Template
 from flexlate.template.cookiecutter import CookiecutterTemplate
 from flexlate.template.types import TemplateType
@@ -45,3 +46,15 @@ def assert_cookiecutter_one_applied_template_added_correctly(
     assert at.data == {"a": "b", "c": ""}
     assert at.root == template_root
     assert at.add_mode == add_mode
+
+
+def assert_project_config_is_correct(add_mode: AddMode = AddMode.LOCAL):
+    projects_config_path = GENERATED_REPO_DIR / "flexlate-project.json"
+    projects_config = FlexlateProjectConfig.load(projects_config_path)
+    assert len(projects_config.projects) == 1
+    project_config = projects_config.projects[0]
+    assert project_config.path == Path(".")
+    assert project_config.default_add_mode == add_mode
+    assert project_config.merged_branch_name == DEFAULT_MERGED_BRANCH_NAME
+    assert project_config.template_branch_name == DEFAULT_TEMPLATE_BRANCH_NAME
+    assert project_config.remote == "origin"
