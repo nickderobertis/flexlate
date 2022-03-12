@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.ext_git &mdash; flexlate 0.10.1 documentation</title>
+  <title>flexlate.ext_git &mdash; flexlate 0.10.2 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.10.1
+                0.10.2
               </div>
             
           
@@ -384,6 +384,9 @@
     <span class="n">remote</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;origin&quot;</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Repo</span><span class="p">:</span>
     <span class="n">use_branch_name</span> <span class="o">=</span> <span class="n">branch_name</span>
+    <span class="n">_update_local_branch_from_remote_without_checkout</span><span class="p">(</span>
+        <span class="n">repo</span><span class="p">,</span> <span class="n">branch_name</span><span class="p">,</span> <span class="n">remote</span><span class="o">=</span><span class="n">remote</span>
+    <span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">branch_exists</span><span class="p">(</span><span class="n">repo</span><span class="p">,</span> <span class="n">branch_name</span><span class="p">):</span>
         <span class="c1"># Branch doesn&#39;t exist, instead clone either the base branch or the current one</span>
         <span class="c1"># Will need to do the checkout later after adding files</span>
