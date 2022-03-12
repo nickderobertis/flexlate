@@ -391,3 +391,7 @@ def get_commits_between_two_commits(
 
 def push_to_remote(repo: Repo, branch_name: str, remote_name: str = "origin"):
     repo.git.push("-u", remote_name, f"{branch_name}:{branch_name}")
+
+
+def get_merge_conflict_diffs(repo: Repo) -> str:
+    return repo.git.diff("--diff-filter=U")

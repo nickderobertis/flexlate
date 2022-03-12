@@ -18,6 +18,7 @@ from flexlate.exc import (
     MergeConflictsAndAbortException,
 )
 from flexlate.finder.multi import MultiFinder
+from flexlate.logger import log
 from flexlate.path_ops import (
     make_all_dirs,
     location_relative_to_new_parent,
@@ -47,6 +48,7 @@ from flexlate.ext_git import (
     reset_branch_to_commit_without_checkout,
     get_branch_sha,
     restore_initial_commit_files,
+    get_merge_conflict_diffs,
 )
 from flexlate.template_data import TemplateData, merge_data
 from flexlate.transactions.transaction import (
@@ -197,6 +199,7 @@ class Updater:
         merge_branch_into_current(repo, template_branch_name)
 
         if repo_has_merge_conflicts(repo):
+            log.debug(f"Merge conflicts:\n{get_merge_conflict_diffs(repo)}")
             if abort_on_conflict:
                 print_styled(
                     "Repo has merge conflicts after update, aborting due to abort_on_conflict=True",

@@ -6,6 +6,7 @@ import typer
 from flexlate.add_mode import AddMode
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.exc import MergeConflictsAndAbortException
+from flexlate.logger import log
 from flexlate.main import Flexlate
 
 cli = typer.Typer()
@@ -279,10 +280,12 @@ def update_templates(
             abort_on_conflict=abort_on_conflict,
             project_path=path,
         )
+        log.debug("Exiting with code 0")
         return
     except MergeConflictsAndAbortException:
         # There is already output explaining the situation to the user prior to
         # raising the exception, so only need to exit with the correct code
+        log.debug("Exiting with code 1")
         exit(1)
 
 
