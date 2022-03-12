@@ -198,6 +198,10 @@ class Updater:
         checkout_template_branch(repo, merged_branch_name, base_merged_branch_name)
         merge_branch_into_current(repo, template_branch_name)
 
+        ## TEMP
+        log.debug(f"Commit graph:\n {repo.git.log('--graph', '--pretty=oneline', '--abbrev-commit')}")
+        ## END TEMP
+
         if repo_has_merge_conflicts(repo):
             log.debug(f"Merge conflicts:\n{get_merge_conflict_diffs(repo)}")
             if abort_on_conflict:
