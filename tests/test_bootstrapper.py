@@ -31,7 +31,10 @@ def test_bootstrap_cookiecutter_one(
     )
     assert_project_config_is_correct()
 
-    # Check to make sure flexlate merged branch exists and is up to date
+    _assert_flexlate_merge_branch_exists_and_is_up_to_date(repo)
+
+
+def _assert_flexlate_merge_branch_exists_and_is_up_to_date(repo: Repo):
     master = repo.active_branch
     merged_branch = repo.branches[DEFAULT_MERGED_BRANCH_NAME]  # type: ignore
     assert merged_branch.commit.hexsha == master.commit.hexsha
