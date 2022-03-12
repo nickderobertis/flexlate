@@ -15,6 +15,7 @@ from flexlate.exc import GitRepoDirtyException
 from flexlate.finder.multi import MultiFinder
 from flexlate.pusher import Pusher
 from flexlate.render.specific import cookiecutter
+from flexlate.syncer import Syncer
 from flexlate.template.base import Template
 from flexlate.template.cookiecutter import CookiecutterTemplate
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
@@ -39,7 +40,7 @@ from tests.fixtures.git import *
 from tests.fixtures.template import *
 from tests.fixtures.templated_repo import *
 from tests.fixtures.updates import *
-from tests.fixtures.transaction import update_transaction
+from tests.fixtures.transaction import update_transaction, sync_transaction
 from flexlate.ext_git import repo_has_merge_conflicts, delete_local_branch
 
 # TODO: check that config is updated after tests
@@ -209,6 +210,77 @@ def test_update_modify_template_with_feature_branches_and_main_branches_are_only
     assert (
         template_branch.commit.parents[0].hexsha == base_template_branch.commit.hexsha
     )
+
+
+def test_update_modify_template_with_feature_branches_and_feature_branches_are_only_on_remote(
+    cookiecutter_one_modified_template: CookiecutterTemplate,
+    repo_with_gitignore_and_template_branch_from_cookiecutter_one: Repo,
+    update_transaction: FlexlateTransaction,
+    sync_transaction: FlexlateTransaction,
+):
+    repo = repo_with_gitignore_and_template_branch_from_cookiecutter_one
+    updater = Updater()
+    template_updates = updater.get_updates_for_templates(
+        [cookiecutter_one_modified_template], project_root=GENERATED_REPO_DIR
+    )
+
+    feature_branch = "feature"
+    checkout_new_branch(repo, feature_branch)
+    feature_merged_branch_name = get_flexlate_branch_name_for_feature_branch(
+        feature_branch, DEFAULT_MERGED_BRANCH_NAME
+    )
+    feature_template_branch_name = get_flexlate_branch_name_for_feature_branch(
+        feature_branch, DEFAULT_TEMPLATE_BRANCH_NAME
+    )
+
+    # Create flexlate feature branches and add commits to distinguish from base flexlate branches
+    syncer = Syncer()
+    config_path = GENERATED_REPO_DIR / "b" / "flexlate.json"
+    config = FlexlateConfig.load(config_path)
+    at = config.applied_templates[0]
+    at.data = dict(a="b", c="d")
+    config.save()
+    stage_and_commit_all(repo, "Update data for applied template")
+    syncer.sync_local_changes_to_flexlate_branches(
+        repo,
+        sync_transaction,
+        template_branch_name=feature_template_branch_name,
+        merged_branch_name=feature_merged_branch_name,
+    )
+
+    # Push to remote and delete local branches, so it will have to fetch from remote to branch off
+    add_local_remote(repo)
+    pusher = Pusher()
+    pusher.push_main_flexlate_branches(repo)
+    pusher.push_feature_flexlate_branches(repo)
+
+    expect_base_merged_branch_sha = repo.branches[feature_merged_branch_name].commit.hexsha  # type: ignore
+    expect_base_template_branch_sha = repo.branches[feature_template_branch_name].commit.hexsha  # type: ignore
+
+    delete_local_branch(repo, DEFAULT_MERGED_BRANCH_NAME)
+    delete_local_branch(repo, DEFAULT_TEMPLATE_BRANCH_NAME)
+    delete_local_branch(repo, feature_merged_branch_name)
+    delete_local_branch(repo, feature_template_branch_name)
+
+    def _resolve_conflicts_then_type_yes(prompt: str) -> bool:
+        stage_and_commit_all(repo, "Resolve conflicts")
+        return True
+
+    with patch.object(branch_update, "confirm_user", _resolve_conflicts_then_type_yes):
+        updater.update(
+            repo,
+            template_updates,
+            update_transaction,
+            no_input=True,
+            merged_branch_name=feature_merged_branch_name,
+            template_branch_name=feature_template_branch_name,
+        )
+
+    # Ensure that flexlate base branches were used properly
+    template_branch: Head = repo.branches[feature_template_branch_name]  # type: ignore
+    assert template_branch.commit.parents[0].hexsha == expect_base_template_branch_sha
+    merged_branch: Head = repo.branches[feature_merged_branch_name]  # type: ignore
+    assert merged_branch.commit.parents[0].hexsha == expect_base_merged_branch_sha
 
 
 def test_update_modify_data(
