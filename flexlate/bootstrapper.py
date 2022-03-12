@@ -44,18 +44,6 @@ class Bootstrapper:
         if repo.working_dir is None:
             raise ValueError("repo working dir must not be None")
         project_root = Path(repo.working_dir)
-        full_local_config_out_root = (
-            project_root / template.render_relative_root_in_output
-        )
-        config_path = determine_config_path_from_roots_and_add_mode(
-            full_local_config_out_root, project_root, AddMode.LOCAL
-        )
-        expanded_out_root = get_expanded_out_root(
-            project_root,
-            project_root,
-            template.render_relative_root_in_output,
-            AddMode.LOCAL,
-        )
 
         print_styled(
             f"Bootstrapping {project_root} into a Flexlate project based off the template from {template.template_source_path}",
@@ -83,27 +71,22 @@ class Bootstrapper:
             remote=remote,
             config_manager=config_manager,
         )
-        # Manually add the applied template. Use config manager directly to not make the change on flexlate branches
-        config_manager.add_applied_template(
-            template,
-            config_path,
-            AddMode.LOCAL,
-            data=data,
-            project_root=project_root,
-            out_root=expanded_out_root,
-        )
-        stage_and_commit_all(repo, "Add Flexlate applied template config")
-        syncer.sync_local_changes_to_flexlate_branches(
+        adder.apply_template_and_add(
             repo,
+            template,
             transaction,
+            data=data,
+            out_root=project_root,
+            add_mode=AddMode.LOCAL,
             merged_branch_name=merged_branch_name,
             template_branch_name=template_branch_name,
             base_merged_branch_name=base_merged_branch_name,
             base_template_branch_name=base_template_branch_name,
             no_input=no_input,
+            remote=remote,
+            config_manager=config_manager,
             updater=updater,
             renderer=renderer,
-            config_manager=config_manager,
         )
 
         print_styled(
