@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.update.main &mdash; flexlate 0.10.0 documentation</title>
+  <title>flexlate.update.main &mdash; flexlate 0.10.1 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.10.0
+                0.10.1
               </div>
             
           
@@ -187,6 +187,7 @@
     <span class="n">MergeConflictsAndAbortException</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">flexlate.finder.multi</span> <span class="kn">import</span> <span class="n">MultiFinder</span>
+<span class="kn">from</span> <span class="nn">flexlate.logger</span> <span class="kn">import</span> <span class="n">log</span>
 <span class="kn">from</span> <span class="nn">flexlate.path_ops</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">make_all_dirs</span><span class="p">,</span>
     <span class="n">location_relative_to_new_parent</span><span class="p">,</span>
@@ -216,6 +217,7 @@
     <span class="n">reset_branch_to_commit_without_checkout</span><span class="p">,</span>
     <span class="n">get_branch_sha</span><span class="p">,</span>
     <span class="n">restore_initial_commit_files</span><span class="p">,</span>
+    <span class="n">get_merge_conflict_diffs</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">flexlate.template_data</span> <span class="kn">import</span> <span class="n">TemplateData</span><span class="p">,</span> <span class="n">merge_data</span>
 <span class="kn">from</span> <span class="nn">flexlate.transactions.transaction</span> <span class="kn">import</span> <span class="p">(</span>
@@ -366,6 +368,7 @@
         <span class="n">merge_branch_into_current</span><span class="p">(</span><span class="n">repo</span><span class="p">,</span> <span class="n">template_branch_name</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">repo_has_merge_conflicts</span><span class="p">(</span><span class="n">repo</span><span class="p">):</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Merge conflicts:</span><span class="se">\n</span><span class="si">{</span><span class="n">get_merge_conflict_diffs</span><span class="p">(</span><span class="n">repo</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">abort_on_conflict</span><span class="p">:</span>
                 <span class="n">print_styled</span><span class="p">(</span>
                     <span class="s2">&quot;Repo has merge conflicts after update, aborting due to abort_on_conflict=True&quot;</span><span class="p">,</span>

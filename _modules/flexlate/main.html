@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.main &mdash; flexlate 0.10.0 documentation</title>
+  <title>flexlate.main &mdash; flexlate 0.10.1 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.10.0
+                0.10.1
               </div>
             
           
@@ -168,7 +168,7 @@
             
   <h1>Source code for flexlate.main</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Dict</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Sequence</span>
 
 <span class="kn">from</span> <span class="nn">git</span> <span class="kn">import</span> <span class="n">Repo</span>
 
@@ -181,6 +181,7 @@
 <span class="kn">from</span> <span class="nn">flexlate.constants</span> <span class="kn">import</span> <span class="n">DEFAULT_MERGED_BRANCH_NAME</span><span class="p">,</span> <span class="n">DEFAULT_TEMPLATE_BRANCH_NAME</span>
 <span class="kn">from</span> <span class="nn">flexlate.error_handler</span> <span class="kn">import</span> <span class="n">simple_output_for_exceptions</span>
 <span class="kn">from</span> <span class="nn">flexlate.finder.multi</span> <span class="kn">import</span> <span class="n">MultiFinder</span>
+<span class="kn">from</span> <span class="nn">flexlate.logger</span> <span class="kn">import</span> <span class="n">log</span>
 <span class="kn">from</span> <span class="nn">flexlate.merger</span> <span class="kn">import</span> <span class="n">Merger</span>
 <span class="kn">from</span> <span class="nn">flexlate.pusher</span> <span class="kn">import</span> <span class="n">Pusher</span>
 <span class="kn">from</span> <span class="nn">flexlate.remover</span> <span class="kn">import</span> <span class="n">Remover</span>
@@ -192,6 +193,8 @@
 <span class="kn">from</span> <span class="nn">flexlate.transactions.transaction</span> <span class="kn">import</span> <span class="n">FlexlateTransaction</span><span class="p">,</span> <span class="n">TransactionType</span>
 <span class="kn">from</span> <span class="nn">flexlate.transactions.undoer</span> <span class="kn">import</span> <span class="n">Undoer</span>
 <span class="kn">from</span> <span class="nn">flexlate.update.main</span> <span class="kn">import</span> <span class="n">Updater</span>
+
+<span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Flexlate debug logging enabled&quot;</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="Flexlate"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.main.Flexlate">[docs]</a><span class="k">class</span> <span class="nc">Flexlate</span><span class="p">:</span>

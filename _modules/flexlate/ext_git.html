@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.ext_git &mdash; flexlate 0.10.0 documentation</title>
+  <title>flexlate.ext_git &mdash; flexlate 0.10.1 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.10.0
+                0.10.1
               </div>
             
           
@@ -501,7 +501,7 @@
         <span class="k">raise</span> <span class="n">GitRepoDirtyException</span><span class="p">(</span>
             <span class="s2">&quot;git working tree is not clean. Please commit, stash, or discard any changes first.&quot;</span>
         <span class="p">)</span>
-    <span class="k">if</span> <span class="n">repo</span><span class="o">.</span><span class="n">git</span><span class="o">.</span><span class="n">count_objects</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;0 objects, 0 kilobytes&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">&quot;unknown revision&quot;</span> <span class="ow">in</span> <span class="n">repo</span><span class="o">.</span><span class="n">git</span><span class="o">.</span><span class="n">rev_parse</span><span class="p">(</span><span class="s2">&quot;HEAD&quot;</span><span class="p">):</span>
         <span class="c1"># Empty repo, no commits</span>
         <span class="k">raise</span> <span class="n">GitRepoHasNoCommitsException</span><span class="p">(</span>
             <span class="s2">&quot;git repo has no commits. Please initialize it with a commit&quot;</span>
@@ -560,6 +560,10 @@
 
 <div class="viewcode-block" id="push_to_remote"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.ext_git.push_to_remote">[docs]</a><span class="k">def</span> <span class="nf">push_to_remote</span><span class="p">(</span><span class="n">repo</span><span class="p">:</span> <span class="n">Repo</span><span class="p">,</span> <span class="n">branch_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">remote_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;origin&quot;</span><span class="p">):</span>
     <span class="n">repo</span><span class="o">.</span><span class="n">git</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="s2">&quot;-u&quot;</span><span class="p">,</span> <span class="n">remote_name</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">branch_name</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">branch_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_merge_conflict_diffs"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.ext_git.get_merge_conflict_diffs">[docs]</a><span class="k">def</span> <span class="nf">get_merge_conflict_diffs</span><span class="p">(</span><span class="n">repo</span><span class="p">:</span> <span class="n">Repo</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">repo</span><span class="o">.</span><span class="n">git</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="s2">&quot;--diff-filter=U&quot;</span><span class="p">)</span></div>
 </pre></div>
 
            </div>
