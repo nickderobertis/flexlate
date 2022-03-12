@@ -332,7 +332,7 @@ def assert_repo_is_in_clean_state(repo: Repo):
         raise GitRepoDirtyException(
             "git working tree is not clean. Please commit, stash, or discard any changes first."
         )
-    if repo.git.count_objects() == "0 objects, 0 kilobytes":
+    if "unknown revision" in repo.git.rev_parse("HEAD"):
         # Empty repo, no commits
         raise GitRepoHasNoCommitsException(
             "git repo has no commits. Please initialize it with a commit"
