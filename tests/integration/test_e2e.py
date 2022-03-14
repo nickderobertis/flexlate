@@ -973,6 +973,31 @@ def test_check(
         assert_template_needs_to_be_updated()
 
 
+def test_bootstrap(
+    flexlates: FlexlateFixture,
+    repo_with_placeholder_committed: Repo,
+    template_source_with_relative: TemplateSourceFixture,
+):
+    fxt = flexlates.flexlate
+    repo = repo_with_placeholder_committed
+    template_source = template_source_with_relative
+    no_input = flexlates.type == FlexlateType.APP
+
+    with change_directory_to(GENERATED_REPO_DIR):
+        template_source.render_without_flexlate()
+        stage_and_commit_all(
+            repo, f"Render files with {template_source.template_type.value}"
+        )
+        fxt.bootstrap_flexlate_init_from_existing_template(
+            template_source.path,
+            template_version=template_source.version_1,
+            data=template_source.input_data,
+            no_input=no_input,
+        )
+
+        _assert_root_template_output_is_correct(template_source)
+
+
 @contextlib.contextmanager
 def _checkout_new_branch_that_merges_back(
     repo: Repo, fxt: Flexlate, branch_name: str, delete: bool = True

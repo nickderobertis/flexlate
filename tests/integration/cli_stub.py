@@ -3,6 +3,8 @@ from enum import Enum
 from pathlib import Path
 from typing import Union, Sequence, Optional, List, Callable, Any, cast, TYPE_CHECKING
 
+from tests.ext_subprocess import get_text_input_from_data
+
 if TYPE_CHECKING:
     from tests.fixtures.cli import FlexlateFixture
 
@@ -36,7 +38,7 @@ def fxt(
     input_data: Optional[Union[TemplateData, List[TemplateData]]] = None,
     exception_handling: ExceptionHandling = ExceptionHandling.RAISE,
 ) -> Result:
-    text_input = _get_text_input(input_data)
+    text_input = get_text_input_from_data(input_data)
     result = runner.invoke(cli, args, input=text_input)
     if exception_handling == ExceptionHandling.RAISE and result.exit_code != 0:
         output = ext_click.result_to_message(result)
@@ -81,20 +83,6 @@ def capture_output(
         stderr = capture.err
 
     return CapturedOutput(stdout=stdout, stderr=stderr)
-
-
-def _get_text_input(
-    input_data: Optional[Union[TemplateData, List[TemplateData]]]
-) -> Optional[str]:
-    if input_data is None:
-        return None
-    if isinstance(input_data, list):
-        return "\n".join(_template_data_to_text_input(data) for data in input_data)
-    return _template_data_to_text_input(input_data)
-
-
-def _template_data_to_text_input(input_data: TemplateData) -> str:
-    return "\n".join(str(value) for value in input_data.values())
 
 
 class CLIStubFlexlate(Flexlate):
@@ -332,6 +320,37 @@ class CLIStubFlexlate(Flexlate):
     def check(self, names: Optional[str] = None, project_path: Path = Path(".")):
         return self.fxt(
             ["check", *_value_if_not_none(names), "--path", str(project_path)]
+        )
+
+    def bootstrap_flexlate_init_from_existing_template(
+        self,
+        template_path: str,
+        path: Path = Path("."),
+        template_version: Optional[str] = None,
+        data: Optional[TemplateData] = None,
+        default_add_mode: AddMode = AddMode.LOCAL,
+        merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
+        template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
+        remote: str = "origin",
+        no_input: bool = False,
+    ):
+        return self.fxt(
+            [
+                "bootstrap",
+                template_path,
+                str(path),
+                *_flag_if_not_none(template_version, "version"),
+                "--add-mode",
+                default_add_mode.value,
+                "--merged-branch-name",
+                DEFAULT_MERGED_BRANCH_NAME,
+                "--template-branch-name",
+                DEFAULT_TEMPLATE_BRANCH_NAME,
+                "--remote",
+                remote,
+                *_bool_flag(no_input, "no_input"),
+            ],
+            input_data=data,
         )
 
 
