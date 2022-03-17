@@ -11,6 +11,7 @@ REMOVE_SOURCE_ID = UUID("c034ec63-d2b5-4d8c-aef1-f96e29a6f5d1")
 REMOVE_OUTPUT_ID = UUID("79715a11-a3c4-40b1-a49b-9d8388e5c28d")
 UPDATE_TRANSACTION_ID = UUID("347711b7-3bf9-484e-be52-df488f3cf598")
 SYNC_TRANSACTION_ID = UUID("4825ce35-1a03-43de-ad8a-1ecc0ed68b62")
+UPDATE_TARGET_VERSION_ID = UUID("a5632854-48b4-4f82-904b-bff81dc40b02")
 
 
 @pytest.fixture
@@ -48,3 +49,10 @@ def update_transaction() -> FlexlateTransaction:
 @pytest.fixture
 def sync_transaction() -> FlexlateTransaction:
     yield FlexlateTransaction(type=TransactionType.SYNC, id=SYNC_TRANSACTION_ID)
+
+
+@pytest.fixture
+def update_target_version_transaction() -> FlexlateTransaction:
+    yield FlexlateTransaction(
+        type=TransactionType.UPDATE_TARGET_VERSION, id=UPDATE_TARGET_VERSION_ID
+    )

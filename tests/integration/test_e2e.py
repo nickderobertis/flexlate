@@ -345,14 +345,8 @@ def test_update_project(
             assert_subdir_template_output_is_correct(after_data_update=True)
 
             # Now update the target version
-            # TODO: replace with cli command to update target version once it exists
-            config_path = GENERATED_REPO_DIR / "flexlate.json"
-            config = FlexlateConfig.load(config_path)
-            source = config.template_sources[0]
-            source.target_version = template_source.version_2
-            config.save()
-            stage_and_commit_all(
-                repo, f"Update target version for {template_source.name} to version 2"
+            fxt.update_template_source_target_version(
+                template_source.name, template_source.version_2
             )
 
             # Make changes to update local templates to new version (no-op for remote templates)
@@ -488,14 +482,8 @@ def test_update_one_template(
             )
 
             # Now update the target version
-            # TODO: replace with cli command to update target version once it exists
-            config_path = GENERATED_REPO_DIR / "flexlate.json"
-            config = FlexlateConfig.load(config_path)
-            source = config.template_sources[0]
-            source.target_version = template_source.version_2
-            config.save()
-            stage_and_commit_all(
-                repo, f"Update target version for {template_source.name} to version 2"
+            fxt.update_template_source_target_version(
+                template_source.name, template_source.version_2
             )
 
             # Make changes to update local templates to new version (no-op for remote templates)
@@ -957,20 +945,44 @@ def test_check(
         assert_no_templates_need_to_be_updated()
 
         # Now update the target version
-        # TODO: replace with cli command to update target version once it exists
-        config_path = GENERATED_REPO_DIR / "flexlate.json"
-        config = FlexlateConfig.load(config_path)
-        source = config.template_sources[0]
-        source.target_version = template_source.version_2
-        config.save()
-        stage_and_commit_all(
-            repo, f"Update target version for {template_source.name} to version 2"
+        fxt.update_template_source_target_version(
+            template_source.name, template_source.version_2
         )
 
         # Make changes to update local templates to new version (no-op for remote templates)
         template_source.version_migrate_func(template_source.url_or_absolute_path)
 
         assert_template_needs_to_be_updated()
+
+
+def test_update_target_version(
+    flexlates: FlexlateFixture,
+    repo_with_placeholder_committed: Repo,
+    template_source: TemplateSourceFixture,
+):
+    fxt = flexlates.flexlate
+    repo = repo_with_placeholder_committed
+
+    config_path = GENERATED_REPO_DIR / "flexlate.json"
+
+    def assert_target_version_is(version: Optional[str]):
+        config = FlexlateConfig.load(config_path)
+        assert len(config.template_sources) == 1
+        ts = config.template_sources[0]
+        assert ts.target_version == version
+
+    with change_directory_to(GENERATED_REPO_DIR):
+        fxt.init_project()
+        fxt.add_template_source(template_source.path)
+        assert_target_version_is(None)
+        fxt.update_template_source_target_version(
+            template_source.name, target_version=template_source.version_2
+        )
+        assert_target_version_is(template_source.version_2)
+
+    last_commit_message = f"Changed target version for template source {template_source.name} to {template_source.version_2}"
+
+    assert_main_commit_message_matches(repo.commit().message, last_commit_message)
 
 
 @contextlib.contextmanager

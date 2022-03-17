@@ -334,6 +334,27 @@ class CLIStubFlexlate(Flexlate):
             ["check", *_value_if_not_none(names), "--path", str(project_path)]
         )
 
+    def update_template_source_target_version(
+        self,
+        name: str,
+        target_version: Optional[str] = None,
+        add_mode: Optional[AddMode] = None,
+        project_path: Path = Path("."),
+    ):
+        return self.fxt(
+            [
+                "config",
+                "target",
+                name,
+                *_value_if_not_none(target_version),
+                *_flag_if_not_none(
+                    add_mode.value if add_mode is not None else None, "add-mode"
+                ),
+                "--path",
+                str(project_path),
+            ]
+        )
+
 
 def _bool_flag(value: bool, name: str) -> List[str]:
     return [f"--{name}"] if value else []
