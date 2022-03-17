@@ -112,8 +112,8 @@ class TemplateSourceFixture:
             if self.is_local_template:
                 use_path = self.path  # local templates already at v1 by default
             else:
-                use_path = f"{self.path} --vcs-ref v1"
-            return run(f"copier copy {use_path} {path}", input_data=self.input_data)
+                use_path = f"{self.path}.git --vcs-ref v1"
+            return run(f"copier {use_path} {path}", input_data=self.input_data)
         elif self.template_type == TemplateType.COOKIECUTTER:
             if self.is_local_template:
                 use_path = self.path  # local templates already at v1 by default
