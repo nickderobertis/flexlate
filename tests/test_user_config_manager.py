@@ -25,7 +25,7 @@ def test_add_local_cookiecutter_applied_template_to_repo(
 
     if add_mode == AddMode.USER:
         # Template source was already added at project root before this, so need to move config
-        shutil.move(GENERATED_REPO_DIR / "flexlate.json", GENERATED_FILES_DIR)
+        shutil.move(str(GENERATED_REPO_DIR / "flexlate.json"), str(GENERATED_FILES_DIR))
         config_dir = GENERATED_FILES_DIR
     elif add_mode in (AddMode.PROJECT, AddMode.LOCAL):
         config_dir = GENERATED_REPO_DIR
