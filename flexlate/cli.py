@@ -440,7 +440,7 @@ def update_template_source_target_version(
 ):
     """
     Updates a target version for a template source. If no version is passed,
-    it will remove the targeting so it will always update. 
+    it will remove the targeting so it will always update.
     """
     app = Flexlate(quiet=quiet)
     app.update_template_source_target_version(
