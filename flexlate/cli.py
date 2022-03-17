@@ -439,7 +439,8 @@ def update_template_source_target_version(
     quiet: bool = QUIET_OPTION,
 ):
     """
-    Pushes main flexlate branches to remote
+    Updates a target version for a template source. If no version is passed,
+    it will remove the targeting so it will always update.
     """
     app = Flexlate(quiet=quiet)
     app.update_template_source_target_version(
