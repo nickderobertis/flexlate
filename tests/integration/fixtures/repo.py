@@ -16,6 +16,7 @@ from tests.config import (
     COPIER_REMOTE_NAME,
 )
 from tests.fixtures.git import *
+from tests.fixtures.transaction import *
 
 fxt = Flexlate()
 
