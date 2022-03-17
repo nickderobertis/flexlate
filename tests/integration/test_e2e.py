@@ -973,6 +973,36 @@ def test_check(
         assert_template_needs_to_be_updated()
 
 
+def test_update_target_version(
+    flexlates: FlexlateFixture,
+    repo_with_placeholder_committed: Repo,
+    template_source: TemplateSourceFixture,
+):
+    fxt = flexlates.flexlate
+    repo = repo_with_placeholder_committed
+
+    config_path = GENERATED_REPO_DIR / "flexlate.json"
+
+    def assert_target_version_is(version: Optional[str]):
+        config = FlexlateConfig.load(config_path)
+        assert len(config.template_sources) == 1
+        ts = config.template_sources[0]
+        assert ts.target_version == version
+
+    with change_directory_to(GENERATED_REPO_DIR):
+        fxt.init_project()
+        fxt.add_template_source(template_source.path)
+        assert_target_version_is(None)
+        fxt.update_template_source_target_version(
+            template_source.name, target_version=template_source.version_2
+        )
+        assert_target_version_is(template_source.version_2)
+
+    last_commit_message = f"Changed target version for template source {template_source.name} to {template_source.version_2}"
+
+    assert_main_commit_message_matches(repo.commit().message, last_commit_message)
+
+
 @contextlib.contextmanager
 def _checkout_new_branch_that_merges_back(
     repo: Repo, fxt: Flexlate, branch_name: str, delete: bool = True
