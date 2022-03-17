@@ -7,10 +7,13 @@ from flexlate.config import FlexlateConfig
 from flexlate.ext_git import stage_and_commit_all
 from flexlate.main import Flexlate
 from flexlate.path_ops import change_directory_to
+from flexlate.transactions.transaction import FlexlateTransaction
+from flexlate.user_config_manager import UserConfigManager
 from tests.config import (
     GENERATED_REPO_DIR,
     COOKIECUTTER_REMOTE_URL,
     COOKIECUTTER_REMOTE_VERSION_1,
+    COPIER_REMOTE_NAME,
 )
 from tests.fixtures.git import *
 
@@ -40,15 +43,14 @@ def repo_with_copier_remote_version_one(
 @pytest.fixture
 def repo_with_copier_remote_version_one_and_no_target_version(
     repo_with_copier_remote_version_one: Repo,
+    update_target_version_transaction: FlexlateTransaction,
 ) -> Repo:
     repo = repo_with_copier_remote_version_one
-    # TODO: replace with cli command to update target version once it exists
-    config_path = GENERATED_REPO_DIR / "flexlate.json"
-    config = FlexlateConfig.load(config_path)
-    source = config.template_sources[0]
-    source.target_version = None
-    config.save()
-    stage_and_commit_all(repo, f"Remove target version for copier remote")
+    transaction = update_target_version_transaction
+    manager = UserConfigManager()
+    manager.update_template_source_target_version(
+        COPIER_REMOTE_NAME, None, repo, transaction, project_path=GENERATED_REPO_DIR
+    )
     yield repo
 
 
