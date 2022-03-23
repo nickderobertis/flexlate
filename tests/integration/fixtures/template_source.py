@@ -6,11 +6,13 @@ from copy import deepcopy
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
+from subprocess import CompletedProcess
 from typing import List, Final, Callable, Optional, ContextManager, Union
 
 import pytest
 
 from flexlate.add_mode import AddMode
+from flexlate.path_ops import change_directory_to
 from flexlate.template.types import TemplateType
 from flexlate.template_data import TemplateData
 from tests.config import (
@@ -33,6 +35,7 @@ from tests.config import (
     GENERATED_REPO_DIR,
     GENERATED_FILES_DIR,
 )
+from tests.ext_subprocess import run
 from tests.fixtures.template import modify_cookiecutter_one, modify_copier_one
 
 
@@ -101,6 +104,31 @@ class TemplateSourceFixture:
         if not self.has_relative_path:
             return self.path
         return os.path.relpath((orig_relative_to / self.path).resolve(), relative)
+
+    def render_without_flexlate(
+        self, path: Path = GENERATED_REPO_DIR
+    ) -> CompletedProcess:
+        if self.template_type == TemplateType.COPIER:
+            if self.is_local_template:
+                use_path = self.path  # local templates already at v1 by default
+            else:
+                use_path = f"{self.path}.git --vcs-ref v1"
+            return run(f"copier {use_path} {path}", input_data=self.input_data)
+        elif self.template_type == TemplateType.COOKIECUTTER:
+            if self.is_local_template:
+                use_path = self.path  # local templates already at v1 by default
+            else:
+                use_path = f"{self.path} --checkout v1"
+            # Need to wipe any local cache or it will ask whether to use it
+            cache_path = Path("~").expanduser() / ".cookiecutters" / self.name
+            if cache_path.exists():
+                shutil.rmtree(cache_path)
+            with change_directory_to(path):
+                return run(f"cookiecutter {use_path}", input_data=self.input_data)
+        else:
+            raise NotImplementedError(
+                f"no handling for template type {self.template_type}"
+            )
 
 
 COOKIECUTTER_REMOTE_FIXTURE: Final[TemplateSourceFixture] = TemplateSourceFixture(

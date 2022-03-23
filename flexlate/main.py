@@ -6,9 +6,8 @@ from git import Repo
 from flexlate import exc
 from flexlate.adder import Adder
 from flexlate.add_mode import AddMode
-from flexlate.branch_update import (
-    get_flexlate_branch_name,
-)
+from flexlate.bootstrapper import Bootstrapper
+from flexlate.branch_update import get_flexlate_branch_name
 from flexlate.checker import Checker, CheckResults, CheckResultsRenderable
 from flexlate.config_manager import ConfigManager
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
@@ -39,6 +38,7 @@ class Flexlate:
         self,
         quiet: bool = False,
         adder: Adder = Adder(),
+        bootstrapper: Bootstrapper = Bootstrapper(),
         checker: Checker = Checker(),
         remover: Remover = Remover(),
         config_manager: ConfigManager = ConfigManager(),
@@ -56,6 +56,7 @@ class Flexlate:
         console.quiet = quiet
 
         self.adder = adder
+        self.bootstrapper = bootstrapper
         self.checker = checker
         self.remover = remover
         self.config_manager = config_manager
@@ -437,6 +438,38 @@ class Flexlate:
         )
         console.print(CheckResultsRenderable(results=check_results.updates))
         return check_results
+
+    def bootstrap_flexlate_init_from_existing_template(
+        self,
+        template_path: str,
+        path: Path = Path("."),
+        template_version: Optional[str] = None,
+        data: Optional[TemplateData] = None,
+        default_add_mode: AddMode = AddMode.LOCAL,
+        merged_branch_name: str = DEFAULT_MERGED_BRANCH_NAME,
+        template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
+        remote: str = "origin",
+        no_input: bool = False,
+    ):
+        transaction = FlexlateTransaction(
+            type=TransactionType.BOOTSTRAP,
+            target=template_path,
+            out_root=path,
+        )
+        template = self.finder.find(template_path, version=template_version)
+        repo = Repo(path)
+        self.bootstrapper.bootstrap_flexlate_init_from_existing_template(
+            repo,
+            template,
+            transaction,
+            target_version=template_version,
+            data=data,
+            default_add_mode=default_add_mode,
+            merged_branch_name=merged_branch_name,
+            template_branch_name=template_branch_name,
+            remote=remote,
+            no_input=no_input,
+        )
 
     def update_template_source_target_version(
         self,

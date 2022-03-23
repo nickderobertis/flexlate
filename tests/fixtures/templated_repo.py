@@ -1,4 +1,5 @@
 import json
+import os
 
 import pytest
 
@@ -7,6 +8,7 @@ from flexlate.adder import Adder
 from flexlate.branch_update import get_flexlate_branch_name
 from flexlate.config import FlexlateConfig
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
+from flexlate.ext_git import delete_local_branch
 from flexlate.remover import Remover
 from flexlate.transactions.transaction import FlexlateTransaction
 from flexlate.update.main import Updater
@@ -391,4 +393,21 @@ def repo_with_applied_output_removed(
         remover.remove_applied_template_and_output(
             repo, COOKIECUTTER_ONE_NAME, remove_output_transaction
         )
+    yield repo
+
+
+@pytest.fixture
+def repo_with_cookiecutter_one_applied_but_no_flexlate(
+    repo_with_template_branch_from_cookiecutter_one: Repo,
+) -> Repo:
+    repo = repo_with_template_branch_from_cookiecutter_one
+    ts_config_path = GENERATED_REPO_DIR / "flexlate.json"
+    os.remove(ts_config_path)
+    at_config_path = GENERATED_REPO_DIR / "b" / "flexlate.json"
+    os.remove(at_config_path)
+    delete_local_branch(repo, DEFAULT_MERGED_BRANCH_NAME)
+    delete_local_branch(repo, DEFAULT_TEMPLATE_BRANCH_NAME)
+    stage_and_commit_all(
+        repo, "Remove flexlate files, converting this into only a cookiecutter template"
+    )
     yield repo

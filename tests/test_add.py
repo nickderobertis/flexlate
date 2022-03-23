@@ -25,6 +25,10 @@ from tests.fixtures.template import *
 from tests.fixtures.templated_repo import *
 from tests.fixtures.add_mode import add_mode
 from tests.fixtures.transaction import *
+from tests.fs_checks import (
+    assert_template_source_cookiecutter_one_added_correctly,
+    assert_cookiecutter_one_applied_template_added_correctly,
+)
 from tests.gitutils import (
     accept_theirs_in_merge_conflict,
     assert_main_commit_message_matches,
@@ -45,27 +49,9 @@ def test_add_template_source_to_repo(
         out_root=GENERATED_REPO_DIR,
         target_version="some version",
     )
-    _assert_template_source_cookiecutter_one_added_correctly(cookiecutter_one_template)
-
-
-def _assert_template_source_cookiecutter_one_added_correctly(
-    cookiecutter_one_template: CookiecutterTemplate,
-    num_sources: int = 1,
-    source_idx: int = 0,
-    num_applied_templates: int = 0,
-):
-    config_path = GENERATED_REPO_DIR / "flexlate.json"
-    config = FlexlateConfig.load(config_path)
-    assert len(config.applied_templates) == num_applied_templates
-    assert len(config.template_sources) == num_sources
-    source = config.template_sources[source_idx]
-    assert source.name == cookiecutter_one_template.name
-    assert source.path == str(cookiecutter_one_template.path)
-    assert source.version == cookiecutter_one_template.version
-    assert source.type == TemplateType.COOKIECUTTER
-    assert source.target_version == "some version"
-    assert source.render_relative_root_in_output == Path("{{ cookiecutter.a }}")
-    assert source.render_relative_root_in_template == Path("{{ cookiecutter.a }}")
+    assert_template_source_cookiecutter_one_added_correctly(
+        cookiecutter_one_template, target_version="some version"
+    )
 
 
 def test_add_template_source_with_existing_name_fails(
@@ -117,15 +103,9 @@ def test_add_local_cookiecutter_applied_template_to_repo(
     else:
         raise ValueError(f"unsupported add mode {add_mode}")
 
-    config_path = config_dir / "flexlate.json"
-    config = FlexlateConfig.load(config_path)
-    assert len(config.applied_templates) == 1
-    at = config.applied_templates[0]
-    assert at.name == template.name
-    assert at.version == template.version
-    assert at.data == {"a": "b", "c": ""}
-    assert at.root == template_root
-    assert at.add_mode == add_mode
+    assert_cookiecutter_one_applied_template_added_correctly(
+        template, config_dir, template_root, add_mode
+    )
 
 
 @patch.object(appdirs, "user_config_dir", lambda name: GENERATED_FILES_DIR)
@@ -494,8 +474,12 @@ def test_add_source_with_merge_conflicts_and_resolution(
             target_version="some version",
         )
 
-    _assert_template_source_cookiecutter_one_added_correctly(
-        cookiecutter_one_template, num_sources=2, source_idx=1, num_applied_templates=1
+    assert_template_source_cookiecutter_one_added_correctly(
+        cookiecutter_one_template,
+        num_sources=2,
+        source_idx=1,
+        num_applied_templates=1,
+        target_version="some version",
     )
 
 
