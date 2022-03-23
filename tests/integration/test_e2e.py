@@ -261,10 +261,15 @@ def test_update_project(
     subdir.mkdir(parents=True)
 
     def assert_root_template_output_is_correct(
-        after_version_update: bool = False, after_data_update: bool = False
+        after_version_update: bool = False,
+        after_data_update: bool = False,
+        target_version: Optional[str] = None,
     ):
         _assert_root_template_output_is_correct(
-            template_source, after_version_update, after_data_update
+            template_source,
+            after_version_update,
+            after_data_update,
+            target_version=target_version,
         )
 
     def assert_subdir_template_output_is_correct(
@@ -312,7 +317,7 @@ def test_update_project(
         fxt.apply_template_and_add(
             template_source.name, data=template_source.input_data, no_input=no_input
         )
-        assert_root_template_output_is_correct()
+        assert_root_template_output_is_correct(target_version=template_source.version_1)
 
         # Add an output of the same template source in a subdirectory
         with change_directory_to(subdir):
@@ -335,13 +340,17 @@ def test_update_project(
                     fxt.update(no_input=True)
                 assert "update did not make any new changes" in str(excinfo.value)
 
-            assert_root_template_output_is_correct()
+            assert_root_template_output_is_correct(
+                target_version=template_source.version_1
+            )
             assert_subdir_template_output_is_correct()
 
             # Now update by just passing new data, should change the output
             # even though the version has not changed
             fxt.update(data=[template_source.update_input_data] * 2, no_input=no_input)
-            assert_root_template_output_is_correct(after_data_update=True)
+            assert_root_template_output_is_correct(
+                after_data_update=True, target_version=template_source.version_1
+            )
             assert_subdir_template_output_is_correct(after_data_update=True)
 
             # Now update the target version
@@ -356,7 +365,9 @@ def test_update_project(
             fxt.update(no_input=True)
 
     assert_root_template_output_is_correct(
-        after_version_update=True, after_data_update=True
+        after_version_update=True,
+        after_data_update=True,
+        target_version=template_source.version_2,
     )
     assert_subdir_template_output_is_correct(
         after_version_update=True, after_data_update=True
@@ -370,6 +381,7 @@ def _assert_root_template_output_is_correct(
     template_source: TemplateSourceFixture,
     after_version_update: bool = False,
     after_data_update: bool = False,
+    target_version: Optional[str] = None,
     num_template_sources: int = 1,
     template_source_index: int = 0,
 ):
@@ -396,6 +408,7 @@ def _assert_root_template_output_is_correct(
         expect_applied_template_root=template_source.expect_local_applied_template_path,
         expect_data=input_data,
         version=version,
+        target_version=target_version,
         template_source_type=template_source.type,
         name=template_source.name,
         url=template_source.url,
@@ -415,21 +428,6 @@ def test_update_one_template(
     repo = repo_with_placeholder_committed
     no_input = flexlates.type == FlexlateType.APP
 
-    def assert_root_template_output_is_correct(
-        template_source: TemplateSourceFixture,
-        after_version_update: bool = False,
-        after_data_update: bool = False,
-        num_template_sources: int = 2,
-        template_source_index: int = 0,
-    ):
-        _assert_root_template_output_is_correct(
-            template_source,
-            after_version_update,
-            after_data_update,
-            num_template_sources=num_template_sources,
-            template_source_index=template_source_index,
-        )
-
     non_update_template_source: TemplateSourceFixture = COOKIECUTTER_REMOTE_FIXTURE
     with template_source_with_temp_dir_if_local_template(
         COPIER_LOCAL_FIXTURE
@@ -443,10 +441,11 @@ def test_update_one_template(
                     ts.name, data=ts.input_data, no_input=no_input
                 )
                 num_template_sources = i + 1
-                assert_root_template_output_is_correct(
+                _assert_root_template_output_is_correct(
                     ts,
                     num_template_sources=num_template_sources,
                     template_source_index=i,
+                    target_version=ts.version_1,
                 )
 
             # First update does nothing, because version is at target version
@@ -461,9 +460,16 @@ def test_update_one_template(
                     fxt.update([template_source.name], no_input=True)
                 assert "update did not make any new changes" in str(excinfo.value)
 
-            assert_root_template_output_is_correct(template_source)
-            assert_root_template_output_is_correct(
-                non_update_template_source, template_source_index=1
+            _assert_root_template_output_is_correct(
+                template_source,
+                target_version=template_source.version_1,
+                num_template_sources=2,
+            )
+            _assert_root_template_output_is_correct(
+                non_update_template_source,
+                template_source_index=1,
+                target_version=non_update_template_source.version_1,
+                num_template_sources=2,
             )
 
             # Now update by just passing new data, should change the output
@@ -473,12 +479,18 @@ def test_update_one_template(
                 data=[template_source.update_input_data],
                 no_input=no_input,
             )
-            assert_root_template_output_is_correct(
-                template_source, after_data_update=True
+            _assert_root_template_output_is_correct(
+                template_source,
+                after_data_update=True,
+                target_version=template_source.version_1,
+                num_template_sources=2,
             )
             # Other template unaffected
-            assert_root_template_output_is_correct(
-                non_update_template_source, template_source_index=1
+            _assert_root_template_output_is_correct(
+                non_update_template_source,
+                template_source_index=1,
+                target_version=non_update_template_source.version_1,
+                num_template_sources=2,
             )
 
             # Now update the target version
@@ -492,12 +504,19 @@ def test_update_one_template(
             # Now update should go to new version
             fxt.update([template_source.name], no_input=True)
 
-        assert_root_template_output_is_correct(
-            template_source, after_version_update=True, after_data_update=True
+        _assert_root_template_output_is_correct(
+            template_source,
+            after_version_update=True,
+            after_data_update=True,
+            num_template_sources=2,
+            target_version=template_source.version_2,
         )
         # Other template unaffected
-        assert_root_template_output_is_correct(
-            non_update_template_source, template_source_index=1
+        _assert_root_template_output_is_correct(
+            non_update_template_source,
+            template_source_index=1,
+            num_template_sources=2,
+            target_version=non_update_template_source.version_1,
         )
 
         project_config_path = GENERATED_REPO_DIR / "flexlate-project.json"
@@ -979,6 +998,16 @@ def test_bootstrap(
 
         _assert_root_template_output_is_correct(template_source)
 
+        # Make changes to update local templates to new version (no-op for remote templates)
+        template_source.version_migrate_func(template_source.url_or_absolute_path)
+
+        # Should be anle to directly update after bootstrap
+        fxt.update(data=[template_source.update_input_data], no_input=no_input)
+
+        _assert_root_template_output_is_correct(
+            template_source, after_version_update=True, after_data_update=True
+        )
+
 
 def test_update_target_version(
     flexlates: FlexlateFixture,
@@ -1066,6 +1095,7 @@ def _assert_project_files_do_not_exist(
 def _assert_template_sources_config_is_correct(
     config_path: Path = GENERATED_REPO_DIR / "flexlate.json",
     version: str = COOKIECUTTER_REMOTE_VERSION_2,
+    target_version: Optional[str] = None,
     name: str = COOKIECUTTER_REMOTE_NAME,
     url: str = COOKIECUTTER_REMOTE_URL,
     path: str = COOKIECUTTER_REMOTE_DEFAULT_EXPECT_PATH,
@@ -1081,6 +1111,7 @@ def _assert_template_sources_config_is_correct(
     template_source = config.template_sources[template_source_index]
     assert template_source.name == name
     assert template_source.version == version
+    assert template_source.target_version == target_version
     assert template_source.git_url == url
     assert template_source.path == path
     assert (
@@ -1136,6 +1167,7 @@ def _assert_config_is_correct(
     expect_applied_template_root: Path = Path("."),
     expect_data: Optional[CookiecutterRemoteTemplateData] = None,
     version: str = COOKIECUTTER_REMOTE_VERSION_2,
+    target_version: Optional[str] = None,
     template_source_type: TemplateSourceType = TemplateSourceType.COOKIECUTTER_REMOTE,
     name: str = COOKIECUTTER_REMOTE_NAME,
     url: str = COOKIECUTTER_REMOTE_URL,
@@ -1158,6 +1190,7 @@ def _assert_config_is_correct(
     _assert_template_sources_config_is_correct(
         ts_config_path,
         version=version,
+        target_version=target_version,
         name=name,
         url=url,
         path=path,
