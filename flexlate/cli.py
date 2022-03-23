@@ -37,6 +37,9 @@ REMOTE_DOC = "The name of the remote repository"
 PUSH_REMOTE_DOC = (
     "The name of the remote repository to push to, defaults to project config remote"
 )
+TEMPLATE_SOURCE_NAME_DOC = (
+    "The name of the template. It must match a name in template sources"
+)
 
 TEMPLATE_ROOT_OPTION = typer.Option(
     Path("."),
@@ -66,12 +69,20 @@ VERSION_OPTION = typer.Option(
     help=TARGET_VERSION_DOC,
     show_default=False,
 )
+VERSION_ARGUMENT = typer.Argument(
+    None,
+    help=TARGET_VERSION_DOC,
+)
 QUIET_OPTION = typer.Option(False, "--quiet", "-q", show_default=False)
 PROJECT_PATH_ARGUMENT = typer.Argument(Path("."), help=PROJECT_PATH_DOC)
 PROJECT_PATH_OPTION = typer.Option(Path("."), help=PROJECT_PATH_DOC)
 REMOTE_OPTION = typer.Option("origin", "--remote", "-r", help=REMOTE_DOC)
 PUSH_REMOTE_OPTION = typer.Option(
     None, "--remote", "-r", help=REMOTE_DOC, show_default=False
+)
+TEMPLATE_SOURCE_NAME_ARGUMENT = typer.Argument(
+    ...,
+    help=TEMPLATE_SOURCE_NAME_DOC,
 )
 
 
@@ -104,10 +115,7 @@ def add_source(
 
 @add_cli.command(name="output")
 def generate_applied_template(
-    name: str = typer.Argument(
-        ...,
-        help="The name of the template. It must match a name in template sources",
-    ),
+    name: str = TEMPLATE_SOURCE_NAME_ARGUMENT,
     template_root: Path = TEMPLATE_ROOT_ARGUMENT,
     add_mode: Optional[AddMode] = ADD_MODE_OPTION,
     no_input: bool = NO_INPUT_OPTION,
@@ -394,6 +402,9 @@ def push_feature(
     app.push_feature_flexlate_branches(feature_branch, remote, project_path=path)
 
 
+cli.add_typer(push_cli, name="push")
+
+
 @cli.command(name="check")
 def check(
     names: Optional[List[str]] = typer.Argument(
@@ -461,6 +472,28 @@ def bootstrap(
 
 
 cli.add_typer(push_cli, name="push")
+config_cli = typer.Typer(help="Modify Flexlate configs via CLI")
+
+
+@config_cli.command("target")
+def update_template_source_target_version(
+    name: str = TEMPLATE_SOURCE_NAME_ARGUMENT,
+    version: Optional[str] = VERSION_ARGUMENT,
+    path: Path = PROJECT_PATH_OPTION,
+    add_mode: Optional[AddMode] = ADD_MODE_OPTION,
+    quiet: bool = QUIET_OPTION,
+):
+    """
+    Updates a target version for a template source. If no version is passed,
+    it will remove the targeting so it will always update.
+    """
+    app = Flexlate(quiet=quiet)
+    app.update_template_source_target_version(
+        name, target_version=version, add_mode=add_mode, project_path=path
+    )
+
+
+cli.add_typer(config_cli, name="config")
 
 if __name__ == "__main__":
     cli()

@@ -38,6 +38,7 @@ class TransactionType(str, Enum):
     UPDATE = "update"
     SYNC = "sync"
     BOOTSTRAP = "bootstrap"
+    UPDATE_TARGET_VERSION = "update template source target version"
 
 
 class FlexlateTransaction(BaseModel):

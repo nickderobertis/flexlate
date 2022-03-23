@@ -642,12 +642,29 @@ class ConfigManager:
         names: Sequence[str],
         updater: Callable[[TemplateSource], None],
         project_root: Path = Path("."),
+        config: Optional[FlexlateConfig] = None,
     ):
-        config = self.load_config(project_root, adjust_applied_paths=False)
+        config = config or self.load_config(project_root, adjust_applied_paths=False)
         sources = self.get_template_sources(names, config=config)
         for source in sources:
             updater(source)
         self.save_config(config)
+
+    def update_template_source_version(
+        self,
+        name: str,
+        target_version: Optional[str] = None,
+        project_root: Path = Path("."),
+        config: Optional[FlexlateConfig] = None,
+    ):
+        config = config or self.load_config(project_root, adjust_applied_paths=False)
+
+        def _update_template_source_version(source: TemplateSource):
+            source.target_version = target_version
+
+        self.update_template_sources(
+            [name], _update_template_source_version, config=config
+        )
 
 
 def _get_child_config_by_path(config: FlexlateConfig, path: Path) -> FlexlateConfig:

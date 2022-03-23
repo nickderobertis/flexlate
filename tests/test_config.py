@@ -1,5 +1,6 @@
 import os.path
 from pathlib import Path
+from typing import Optional
 
 from flexlate.add_mode import AddMode
 from flexlate.config import FlexlateConfig, AppliedTemplateConfig, FlexlateProjectConfig
@@ -16,6 +17,7 @@ from tests.config import (
     PROJECT_CONFIGS_PROJECT_2_SUBDIR,
     PROJECT_CONFIGS_DIR,
     GENERATED_REPO_DIR,
+    COOKIECUTTER_ONE_NAME,
 )
 from tests.dirutils import wipe_generated_folder
 from tests.fixtures.config import generated_dir_with_configs
@@ -127,3 +129,23 @@ def test_fail_to_load_non_existent_project_config():
     manager = ConfigManager()
     with pytest.raises(FlexlateProjectConfigFileNotExistsException):
         config = manager.load_project_config(PROJECT_CONFIGS_DIR)
+
+
+def test_update_template_source_version(
+    generated_dir_with_configs: None,
+):
+    manager = ConfigManager()
+    config_path = GENERATED_FILES_DIR / "flexlate.json"
+
+    def assert_target_version_is(version: Optional[str]):
+        config = FlexlateConfig.load(config_path)
+        assert len(config.template_sources) == 1
+        ts = config.template_sources[0]
+        assert ts.target_version == version
+
+    assert_target_version_is(None)
+    target_version = COOKIECUTTER_ONE_VERSION
+    manager.update_template_source_version(
+        COOKIECUTTER_ONE_NAME, target_version, project_root=GENERATED_FILES_DIR
+    )
+    assert_target_version_is(target_version)

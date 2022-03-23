@@ -12,6 +12,7 @@ REMOVE_OUTPUT_ID = UUID("79715a11-a3c4-40b1-a49b-9d8388e5c28d")
 UPDATE_TRANSACTION_ID = UUID("347711b7-3bf9-484e-be52-df488f3cf598")
 SYNC_TRANSACTION_ID = UUID("4825ce35-1a03-43de-ad8a-1ecc0ed68b62")
 BOOTSTRAP_TRANSACTION_ID = UUID("37c61224-2b8d-4ee5-8846-49d5474a40bd")
+UPDATE_TARGET_VERSION_ID = UUID("a5632854-48b4-4f82-904b-bff81dc40b02")
 
 
 @pytest.fixture
@@ -55,4 +56,11 @@ def sync_transaction() -> FlexlateTransaction:
 def bootstrap_transaction() -> FlexlateTransaction:
     yield FlexlateTransaction(
         type=TransactionType.BOOTSTRAP, id=BOOTSTRAP_TRANSACTION_ID
+    )
+
+
+@pytest.fixture
+def update_target_version_transaction() -> FlexlateTransaction:
+    yield FlexlateTransaction(
+        type=TransactionType.UPDATE_TARGET_VERSION, id=UPDATE_TARGET_VERSION_ID
     )

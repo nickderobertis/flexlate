@@ -22,9 +22,13 @@ from flexlate.styles import console
 from flexlate.syncer import Syncer
 from flexlate.template.base import Template
 from flexlate.template_data import TemplateData
-from flexlate.transactions.transaction import FlexlateTransaction, TransactionType
+from flexlate.transactions.transaction import (
+    FlexlateTransaction,
+    TransactionType,
+)
 from flexlate.transactions.undoer import Undoer
 from flexlate.update.main import Updater
+from flexlate.user_config_manager import UserConfigManager
 
 log.debug("Flexlate debug logging enabled")
 
@@ -43,8 +47,9 @@ class Flexlate:
         pusher: Pusher = Pusher(),
         renderer: MultiRenderer = MultiRenderer(),
         syncer: Syncer = Syncer(),
-        updater: Updater = Updater(),
         undoer: Undoer = Undoer(),
+        updater: Updater = Updater(),
+        user_config_manager: UserConfigManager = UserConfigManager(),
     ):
         self.quiet = quiet
         # Let rich handle suppressing output
@@ -60,8 +65,9 @@ class Flexlate:
         self.pusher = pusher
         self.renderer = renderer
         self.syncer = syncer
-        self.updater = updater
         self.undoer = undoer
+        self.updater = updater
+        self.user_config_manager = user_config_manager
 
     @simple_output_for_exceptions(exc.GitRepoDirtyException)
     def init_project(
@@ -465,5 +471,39 @@ class Flexlate:
             no_input=no_input,
         )
 
+    def update_template_source_target_version(
+        self,
+        name: str,
+        target_version: Optional[str] = None,
+        add_mode: Optional[AddMode] = None,
+        project_path: Path = Path("."),
+    ):
+        project_config = self.config_manager.load_project_config(project_path)
+        repo = Repo(project_config.path)
+        add_mode = add_mode or project_config.default_add_mode
+        transaction = FlexlateTransaction(
+            type=TransactionType.UPDATE_TARGET_VERSION,
+            target=name,
+            data=dict(target_version=target_version),
+        )
+
+        self.user_config_manager.update_template_source_target_version(
+            name,
+            target_version,
+            repo,
+            transaction,
+            project_path=project_path,
+            add_mode=add_mode,
+            merged_branch_name=get_flexlate_branch_name(
+                repo, project_config.merged_branch_name
+            ),
+            base_merged_branch_name=project_config.merged_branch_name,
+            template_branch_name=get_flexlate_branch_name(
+                repo, project_config.template_branch_name
+            ),
+            base_template_branch_name=project_config.template_branch_name,
+            remote=project_config.remote,
+            config_manager=self.config_manager,
+        )
+
     # TODO: list template sources, list applied templates
-    # TODO: Update target versions in template sources
