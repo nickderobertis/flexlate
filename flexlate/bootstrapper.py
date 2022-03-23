@@ -3,21 +3,17 @@ from typing import Optional
 
 from git import Repo
 
-from flexlate.add_mode import AddMode, get_expanded_out_root
+from flexlate.add_mode import AddMode
 from flexlate.adder import Adder
-from flexlate.config_manager import (
-    ConfigManager,
-    determine_config_path_from_roots_and_add_mode,
-)
+from flexlate.config_manager import ConfigManager
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
-from flexlate.ext_git import stage_and_commit_all
 from flexlate.render.multi import MultiRenderer
 from flexlate.styles import print_styled, INFO_STYLE, SUCCESS_STYLE
-from flexlate.syncer import Syncer
 from flexlate.template.base import Template
 from flexlate.template_data import TemplateData
 from flexlate.transactions.transaction import FlexlateTransaction
 from flexlate.update.main import Updater
+from flexlate.user_config_manager import UserConfigManager
 
 
 class Bootstrapper:
@@ -38,8 +34,8 @@ class Bootstrapper:
         adder: Adder = Adder(),
         config_manager: ConfigManager = ConfigManager(),
         renderer: MultiRenderer = MultiRenderer(),
-        syncer: Syncer = Syncer(),
         updater: Updater = Updater(),
+        user_config_manager: UserConfigManager = UserConfigManager(),
     ):
         if repo.working_dir is None:
             raise ValueError("repo working dir must not be None")
@@ -88,6 +84,22 @@ class Bootstrapper:
             updater=updater,
             renderer=renderer,
         )
+        if target_version is not None:
+            # Remove peg to specific version if one was passed
+            user_config_manager.update_template_source_target_version(
+                template.name,
+                None,
+                repo,
+                transaction,
+                project_path=project_root,
+                add_mode=AddMode.LOCAL,
+                merged_branch_name=merged_branch_name,
+                template_branch_name=template_branch_name,
+                base_merged_branch_name=base_merged_branch_name,
+                base_template_branch_name=base_template_branch_name,
+                remote=remote,
+                config_manager=config_manager,
+            )
 
         print_styled(
             f"Successfully bootstrapped {project_root} into a Flexlate project based off the template from {template.template_source_path}",
