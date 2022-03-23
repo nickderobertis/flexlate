@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Index &mdash; flexlate 0.10.2 documentation</title>
+  <title>Index &mdash; flexlate 0.11.0 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.10.2
+                0.11.0
               </div>
             
           
@@ -293,8 +293,20 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/flexlate.template.html#flexlate.template.types.TemplateType.BASE">BASE (flexlate.template.types.TemplateType attribute)</a>
 </li>
+      <li><a href="api/flexlate.transactions.html#flexlate.transactions.transaction.TransactionType.BOOTSTRAP">BOOTSTRAP (flexlate.transactions.transaction.TransactionType attribute)</a>
+</li>
+      <li><a href="api/flexlate.html#flexlate.cli.bootstrap">bootstrap() (in module flexlate.cli)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/flexlate.html#flexlate.bootstrapper.Bootstrapper.bootstrap_flexlate_init_from_existing_template">bootstrap_flexlate_init_from_existing_template() (flexlate.bootstrapper.Bootstrapper method)</a>
+
+      <ul>
+        <li><a href="api/flexlate.html#flexlate.main.Flexlate.bootstrap_flexlate_init_from_existing_template">(flexlate.main.Flexlate method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/flexlate.html#flexlate.bootstrapper.Bootstrapper">Bootstrapper (class in flexlate.bootstrapper)</a>
+</li>
       <li><a href="api/flexlate.html#flexlate.ext_git.branch_exists">branch_exists() (in module flexlate.ext_git)</a>
 </li>
   </ul></td>
@@ -490,6 +502,13 @@
 
       <ul>
         <li><a href="api/flexlate.html#module-flexlate.adder">module</a>
+</li>
+      </ul></li>
+      <li>
+    flexlate.bootstrapper
+
+      <ul>
+        <li><a href="api/flexlate.html#module-flexlate.bootstrapper">module</a>
 </li>
       </ul></li>
       <li>
@@ -851,6 +870,13 @@
         <li><a href="api/flexlate.update.html#module-flexlate.update.template">module</a>
 </li>
       </ul></li>
+      <li>
+    flexlate.user_config_manager
+
+      <ul>
+        <li><a href="api/flexlate.html#module-flexlate.user_config_manager">module</a>
+</li>
+      </ul></li>
       <li><a href="api/flexlate.html#flexlate.config.FlexlateConfig">FlexlateConfig (class in flexlate.config)</a>
 </li>
       <li><a href="api/flexlate.html#flexlate.config.FlexlateConfig.Config">FlexlateConfig.Config (class in flexlate.config)</a>
@@ -1117,6 +1143,8 @@
 </li>
         <li><a href="api/flexlate.html#module-flexlate.adder">flexlate.adder</a>
 </li>
+        <li><a href="api/flexlate.html#module-flexlate.bootstrapper">flexlate.bootstrapper</a>
+</li>
         <li><a href="api/flexlate.html#module-flexlate.branch_update">flexlate.branch_update</a>
 </li>
         <li><a href="api/flexlate.html#module-flexlate.checker">flexlate.checker</a>
@@ -1218,6 +1246,8 @@
         <li><a href="api/flexlate.update.html#module-flexlate.update.main">flexlate.update.main</a>
 </li>
         <li><a href="api/flexlate.update.html#module-flexlate.update.template">flexlate.update.template</a>
+</li>
+        <li><a href="api/flexlate.html#module-flexlate.user_config_manager">flexlate.user_config_manager</a>
 </li>
       </ul></li>
   </ul></td>
@@ -1546,11 +1576,23 @@
         <li><a href="api/flexlate.update.html#flexlate.update.main.Updater.update">(flexlate.update.main.Updater method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/flexlate.html#flexlate.config.TemplateSource.update_location">update_location (flexlate.config.TemplateSource property)</a>
 </li>
       <li><a href="api/flexlate.update.html#flexlate.update.main.Updater.update_passed_templates_to_target_versions">update_passed_templates_to_target_versions() (flexlate.update.main.Updater method)</a>
+</li>
+      <li><a href="api/flexlate.transactions.html#flexlate.transactions.transaction.TransactionType.UPDATE_TARGET_VERSION">UPDATE_TARGET_VERSION (flexlate.transactions.transaction.TransactionType attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/flexlate.html#flexlate.main.Flexlate.update_template_source_target_version">update_template_source_target_version() (flexlate.main.Flexlate method)</a>
+
+      <ul>
+        <li><a href="api/flexlate.html#flexlate.user_config_manager.UserConfigManager.update_template_source_target_version">(flexlate.user_config_manager.UserConfigManager method)</a>
+</li>
+        <li><a href="api/flexlate.html#flexlate.cli.update_template_source_target_version">(in module flexlate.cli)</a>
+</li>
+      </ul></li>
+      <li><a href="api/flexlate.html#flexlate.config_manager.ConfigManager.update_template_source_version">update_template_source_version() (flexlate.config_manager.ConfigManager method)</a>
 </li>
       <li><a href="api/flexlate.html#flexlate.config_manager.ConfigManager.update_template_sources">update_template_sources() (flexlate.config_manager.ConfigManager method)</a>
 </li>
@@ -1571,6 +1613,8 @@
       <li><a href="api/flexlate.html#flexlate.add_mode.AddMode.USER">USER (flexlate.add_mode.AddMode attribute)</a>
 </li>
       <li><a href="api/flexlate.html#flexlate.exc.UserChangesWouldHaveBeenDeletedException">UserChangesWouldHaveBeenDeletedException</a>
+</li>
+      <li><a href="api/flexlate.html#flexlate.user_config_manager.UserConfigManager">UserConfigManager (class in flexlate.user_config_manager)</a>
 </li>
   </ul></td>
 </tr></table>

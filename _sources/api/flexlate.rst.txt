@@ -37,6 +37,14 @@ flexlate.adder module
    :undoc-members:
    :show-inheritance:
 
+flexlate.bootstrapper module
+----------------------------
+
+.. automodule:: flexlate.bootstrapper
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 flexlate.branch\_update module
 ------------------------------
 
@@ -201,6 +209,14 @@ flexlate.types module
 ---------------------
 
 .. automodule:: flexlate.types
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+flexlate.user\_config\_manager module
+-------------------------------------
+
+.. automodule:: flexlate.user_config_manager
    :members:
    :undoc-members:
    :show-inheritance:
