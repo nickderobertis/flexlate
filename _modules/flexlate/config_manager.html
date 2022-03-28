@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.config_manager &mdash; flexlate 0.11.0 documentation</title>
+  <title>flexlate.config_manager &mdash; flexlate 0.11.1 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.11.0
+                0.11.1
               </div>
             
           
@@ -171,7 +171,7 @@
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Callable</span>
 
-<span class="kn">from</span> <span class="nn">flexlate.add_mode</span> <span class="kn">import</span> <span class="n">AddMode</span>
+<span class="kn">from</span> <span class="nn">flexlate.add_mode</span> <span class="kn">import</span> <span class="n">AddMode</span><span class="p">,</span> <span class="n">get_expanded_out_root</span>
 <span class="kn">from</span> <span class="nn">flexlate.config</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">FlexlateConfig</span><span class="p">,</span>
     <span class="n">TemplateSource</span><span class="p">,</span>
@@ -397,6 +397,14 @@
             <span class="n">applied_template</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">update</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">version</span>
             <span class="n">template_source</span> <span class="o">=</span> <span class="n">_get_template_source_from_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">update</span><span class="p">)</span>
             <span class="n">template_source</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">update</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">version</span>
+            <span class="n">template_source</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">update</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">_type</span>
+            <span class="n">template_source</span><span class="o">.</span><span class="n">render_relative_root_in_output</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">update</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">render_relative_root_in_output</span>
+            <span class="p">)</span>
+            <span class="n">template_source</span><span class="o">.</span><span class="n">render_relative_root_in_template</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">update</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">render_relative_root_in_template</span>
+            <span class="p">)</span>
+
             <span class="c1"># For remote templates, always bring over the new path</span>
             <span class="c1"># For local templates, the use_template_source_path option toggles between</span>
             <span class="c1"># using the original string from the template source, and the</span>
@@ -693,6 +701,7 @@
         <span class="n">template_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">config_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
         <span class="n">new_config_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+        <span class="n">render_relative_root_in_output</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
         <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
         <span class="n">out_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
         <span class="n">orig_project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
@@ -709,6 +718,13 @@
             <span class="n">adjust_applied_paths</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">applied_template</span> <span class="o">=</span> <span class="n">child_config</span><span class="o">.</span><span class="n">applied_templates</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">template_index</span><span class="p">)</span>
+        <span class="n">expanded_out_root</span> <span class="o">=</span> <span class="n">get_expanded_out_root</span><span class="p">(</span>
+            <span class="n">out_root</span><span class="p">,</span>
+            <span class="n">project_root</span><span class="p">,</span>
+            <span class="n">render_relative_root_in_output</span><span class="p">,</span>
+            <span class="n">applied_template</span><span class="o">.</span><span class="n">add_mode</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">applied_template</span><span class="o">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">expanded_out_root</span>
         <span class="n">new_child_config</span> <span class="o">=</span> <span class="n">_get_or_create_child_config_by_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">new_config_path</span><span class="p">)</span>
         <span class="n">new_child_config</span><span class="o">.</span><span class="n">applied_templates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">applied_template</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">save_config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span></div>
@@ -771,19 +787,12 @@
                     <span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
                 <span class="p">)</span>
             <span class="n">template</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">to_template</span><span class="p">()</span>
-            <span class="k">if</span> <span class="n">template</span><span class="o">.</span><span class="n">render_relative_root_in_output</span> <span class="o">==</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">):</span>
-                <span class="c1"># Should not need to move as config will not be in a subdirectory</span>
-                <span class="k">continue</span>
             <span class="n">renderable</span> <span class="o">=</span> <span class="n">Renderable</span><span class="o">.</span><span class="n">from_applied_template_with_source</span><span class="p">(</span><span class="n">atwc</span><span class="p">)</span>
             <span class="n">new_relative_out_root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span>
                 <span class="n">renderer</span><span class="o">.</span><span class="n">render_string</span><span class="p">(</span>
                     <span class="nb">str</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">render_relative_root_in_output</span><span class="p">),</span> <span class="n">renderable</span>
                 <span class="p">)</span>
             <span class="p">)</span>
-            <span class="k">if</span> <span class="n">template</span><span class="o">.</span><span class="n">render_relative_root_in_output</span> <span class="o">==</span> <span class="n">new_relative_out_root</span><span class="p">:</span>
-                <span class="c1"># No need to move, render relative root was not a templated path</span>
-                <span class="k">continue</span>
-
             <span class="n">orig_config_path</span> <span class="o">=</span> <span class="n">atwc</span><span class="o">.</span><span class="n">applied_template</span><span class="o">.</span><span class="n">_config_file_location</span>
 
             <span class="n">render_root</span> <span class="o">=</span> <span class="p">(</span>
@@ -801,6 +810,7 @@
                 <span class="n">atwc</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
                 <span class="n">orig_config_path</span><span class="p">,</span>
                 <span class="n">new_config_path</span><span class="p">,</span>
+                <span class="n">source</span><span class="o">.</span><span class="n">render_relative_root_in_output</span><span class="p">,</span>
                 <span class="n">project_root</span><span class="o">=</span><span class="n">project_root</span><span class="p">,</span>
                 <span class="n">out_root</span><span class="o">=</span><span class="n">atwc</span><span class="o">.</span><span class="n">applied_template</span><span class="o">.</span><span class="n">_orig_root</span><span class="p">,</span>
                 <span class="n">orig_project_root</span><span class="o">=</span><span class="n">orig_project_root</span><span class="p">,</span>
