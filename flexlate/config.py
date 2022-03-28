@@ -57,14 +57,7 @@ class TemplateSource(BaseModel):
             raise InvalidTemplateTypeException(
                 "base type is not allowed for concrete templates"
             )
-        kwargs = dict()
-        version = version or self.version
-        if version is not None:
-            kwargs.update(version=version)
-        if self.git_url is not None:
-            kwargs.update(git_url=self.git_url)
-
-        template = finder.find(self.git_url or str(self.absolute_local_path), **kwargs)
+        template = finder.find(self.git_url or str(self.absolute_local_path), version=version)
         template.name = self.name
         # TODO: Can we remove target_version from templates?
         template.target_version = self.target_version
