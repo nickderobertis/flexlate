@@ -34,9 +34,14 @@ from tests.config import (
     COPIER_ONE_MODIFIED_VERSION,
     GENERATED_REPO_DIR,
     GENERATED_FILES_DIR,
+    COPIER_FROM_COOKIECUTTER_ONE_VERSION,
 )
 from tests.ext_subprocess import run
-from tests.fixtures.template import modify_cookiecutter_one, modify_copier_one
+from tests.fixtures.template import (
+    modify_cookiecutter_one,
+    modify_copier_one,
+    modify_cookiecutter_one_to_be_copier,
+)
 
 
 class TemplateSourceType(str, Enum):
@@ -130,6 +135,12 @@ class TemplateSourceFixture:
                 f"no handling for template type {self.template_type}"
             )
 
+    def copy(self, **kwargs):
+        new = deepcopy(self)
+        for key, val in kwargs.items():
+            setattr(new, key, val)
+        return new
+
 
 COOKIECUTTER_REMOTE_FIXTURE: Final[TemplateSourceFixture] = TemplateSourceFixture(
     name=COOKIECUTTER_REMOTE_NAME,
@@ -186,6 +197,13 @@ COPIER_LOCAL_FIXTURE: Final[TemplateSourceFixture] = TemplateSourceFixture(
     version_2=COPIER_ONE_MODIFIED_VERSION,
     is_local_template=True,
     version_migrate_func=modify_copier_one,
+)
+
+COOKIECUTTER_CHANGES_TO_COPIER_LOCAL_FIXTURE: Final[
+    TemplateSourceFixture
+] = cookiecutter_local_fixture.copy(
+    version_migrate_func=modify_cookiecutter_one_to_be_copier,
+    version_2=COPIER_FROM_COOKIECUTTER_ONE_VERSION,
 )
 
 

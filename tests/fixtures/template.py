@@ -26,6 +26,7 @@ from tests.config import (
     COPIER_ONE_MODIFIED_VERSION,
     COPIER_OUTPUT_SUBDIR_DIR,
     GENERATED_REPO_DIR,
+    COPIER_FROM_COOKIECUTTER_ONE_DIR,
 )
 
 
@@ -158,6 +159,11 @@ def modify_cookiecutter_one(root: Union[str, Path]):
 def modify_copier_one(root: Union[str, Path]):
     text_path = Path(root) / "{{ q1 }}.txt.jinja"
     text_path.write_text("{{ q2 }} and some footer")
+
+
+def modify_cookiecutter_one_to_be_copier(root: Union[str, Path]):
+    shutil.rmtree(root)
+    shutil.copytree(COPIER_FROM_COOKIECUTTER_ONE_DIR, root)
 
 
 @pytest.fixture
