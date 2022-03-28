@@ -3,8 +3,10 @@ from typing import Optional, List
 
 import typer
 
+from flexlate import exc
 from flexlate.add_mode import AddMode
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
+from flexlate.error_handler import simple_output_for_exceptions
 from flexlate.exc import MergeConflictsAndAbortException
 from flexlate.logger import log
 from flexlate.main import Flexlate
@@ -87,6 +89,9 @@ TEMPLATE_SOURCE_NAME_ARGUMENT = typer.Argument(
 
 
 @add_cli.command(name="source")
+@simple_output_for_exceptions(
+    exc.GitRepoDirtyException, exc.TemplateSourceWithNameAlreadyExistsException
+)
 def add_source(
     path: str = typer.Argument(
         ..., help=f"Template source. {TEMPLATE_SOURCE_EXTRA_DOC}"
@@ -114,6 +119,9 @@ def add_source(
 
 
 @add_cli.command(name="output")
+@simple_output_for_exceptions(
+    exc.GitRepoDirtyException, exc.TemplateNotRegisteredException
+)
 def generate_applied_template(
     name: str = TEMPLATE_SOURCE_NAME_ARGUMENT,
     template_root: Path = TEMPLATE_ROOT_ARGUMENT,
@@ -141,6 +149,7 @@ remove_cli = typer.Typer(
 
 
 @remove_cli.command(name="source")
+@simple_output_for_exceptions(exc.GitRepoDirtyException)
 def remove_template_source(
     template_name: str = typer.Argument(
         ..., help="The name of the template source to remove"
@@ -153,6 +162,7 @@ def remove_template_source(
 
 
 @remove_cli.command(name="output")
+@simple_output_for_exceptions(exc.GitRepoDirtyException)
 def remove_template_output(
     template_name: str = typer.Argument(
         ...,
@@ -170,6 +180,7 @@ cli.add_typer(remove_cli, name="remove")
 
 
 @cli.command(name="init")
+@simple_output_for_exceptions(exc.GitRepoDirtyException)
 def init_project(
     path: Path = PROJECT_PATH_ARGUMENT,
     default_add_mode: AddMode = typer.Option(
@@ -260,6 +271,7 @@ def init_project_from(
 
 
 @cli.command(name="update")
+@simple_output_for_exceptions(exc.GitRepoDirtyException)
 def update_templates(
     names: Optional[List[str]] = typer.Argument(
         None,
@@ -298,6 +310,7 @@ def update_templates(
 
 
 @cli.command(name="undo")
+@simple_output_for_exceptions(exc.GitRepoDirtyException)
 def undo(
     num_operations: int = typer.Argument(
         1,
@@ -317,6 +330,7 @@ def undo(
 
 
 @cli.command(name="sync")
+@simple_output_for_exceptions(exc.GitRepoDirtyException, exc.UnnecessarySyncException)
 def sync(
     path: Path = PROJECT_PATH_ARGUMENT,
     prompt: bool = typer.Option(
@@ -406,6 +420,7 @@ cli.add_typer(push_cli, name="push")
 
 
 @cli.command(name="check")
+@simple_output_for_exceptions(exc.TemplateNotRegisteredException)
 def check(
     names: Optional[List[str]] = typer.Argument(
         None,

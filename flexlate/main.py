@@ -3,7 +3,6 @@ from typing import Optional, List, Sequence
 
 from git import Repo
 
-from flexlate import exc
 from flexlate.adder import Adder
 from flexlate.add_mode import AddMode
 from flexlate.bootstrapper import Bootstrapper
@@ -11,7 +10,6 @@ from flexlate.branch_update import get_flexlate_branch_name
 from flexlate.checker import Checker, CheckResults, CheckResultsRenderable
 from flexlate.config_manager import ConfigManager
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
-from flexlate.error_handler import simple_output_for_exceptions
 from flexlate.finder.multi import MultiFinder
 from flexlate.logger import log
 from flexlate.merger import Merger
@@ -69,7 +67,6 @@ class Flexlate:
         self.updater = updater
         self.user_config_manager = user_config_manager
 
-    @simple_output_for_exceptions(exc.GitRepoDirtyException)
     def init_project(
         self,
         path: Path = Path("."),
@@ -127,9 +124,6 @@ class Flexlate:
             syncer=self.syncer,
         )
 
-    @simple_output_for_exceptions(
-        exc.GitRepoDirtyException, exc.TemplateSourceWithNameAlreadyExistsException
-    )
     def add_template_source(
         self,
         path: str,
@@ -166,7 +160,6 @@ class Flexlate:
             config_manager=self.config_manager,
         )
 
-    @simple_output_for_exceptions(exc.GitRepoDirtyException)
     def remove_template_source(
         self,
         template_name: str,
@@ -197,9 +190,6 @@ class Flexlate:
             config_manager=self.config_manager,
         )
 
-    @simple_output_for_exceptions(
-        exc.GitRepoDirtyException, exc.TemplateNotRegisteredException
-    )
     def apply_template_and_add(
         self,
         name: str,
@@ -239,7 +229,6 @@ class Flexlate:
             updater=self.updater,
         )
 
-    @simple_output_for_exceptions(exc.GitRepoDirtyException)
     def remove_applied_template_and_output(
         self,
         template_name: str,
@@ -271,7 +260,6 @@ class Flexlate:
             renderer=self.renderer,
         )
 
-    @simple_output_for_exceptions(exc.GitRepoDirtyException)
     def update(
         self,
         names: Optional[List[str]] = None,
@@ -332,7 +320,6 @@ class Flexlate:
             config_manager=self.config_manager,
         )
 
-    @simple_output_for_exceptions(exc.GitRepoDirtyException)
     def undo(self, num_operations: int = 1, project_path: Path = Path(".")):
         project_config = self.config_manager.load_project_config(project_path)
         repo = Repo(project_config.path)
@@ -349,9 +336,6 @@ class Flexlate:
             base_template_branch_name=project_config.template_branch_name,
         )
 
-    @simple_output_for_exceptions(
-        exc.GitRepoDirtyException, exc.UnnecessarySyncException
-    )
     def sync(
         self,
         prompt: bool = False,
@@ -426,7 +410,6 @@ class Flexlate:
             template_branch_name=project_config.template_branch_name,
         )
 
-    @simple_output_for_exceptions(exc.TemplateNotRegisteredException)
     def check(
         self, names: Optional[Sequence[str]] = None, project_path: Path = Path(".")
     ) -> CheckResults:
