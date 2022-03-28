@@ -11,6 +11,7 @@ from flexlate.exc import (
     InvalidTemplateTypeException,
     FlexlateProjectConfigFileNotExistsException,
 )
+from flexlate.finder.multi import MultiFinder
 from flexlate.finder.specific.base import TemplateFinder
 from flexlate.finder.specific.cookiecutter import CookiecutterFinder
 from flexlate.finder.specific.copier import CopierFinder
@@ -49,27 +50,17 @@ class TemplateSource(BaseModel):
             render_relative_root_in_template=template.render_relative_root_in_template,
         )
 
-    def to_template(self, version: Optional[str] = None) -> Template:
+    def to_template(
+        self, version: Optional[str] = None, finder: MultiFinder = MultiFinder()
+    ) -> Template:
         if self.type == TemplateType.BASE:
             raise InvalidTemplateTypeException(
                 "base type is not allowed for concrete templates"
             )
-        finder: TemplateFinder
-        if self.type == TemplateType.COOKIECUTTER:
-            finder = CookiecutterFinder()
-        elif self.type == TemplateType.COPIER:
-            finder = CopierFinder()
-        else:
-            raise InvalidTemplateTypeException(
-                f"no handling for template type {self.type} in creating template from source"
-            )
-        kwargs = dict(name=self.name)
+        kwargs = dict()
         version = version or self.version
         if version is not None:
             kwargs.update(version=version)
-        # TODO: Can we remove target_version from templates?
-        if self.target_version is not None:
-            kwargs.update(target_version=self.target_version)
         if self.git_url is not None:
             kwargs.update(git_url=self.git_url)
         local_path: Path
@@ -84,7 +75,10 @@ class TemplateSource(BaseModel):
         else:
             local_path = self.absolute_local_path
 
-        template = finder.find(self.git_url or str(local_path), local_path, **kwargs)
+        template = finder.find(self.git_url or str(local_path), **kwargs)
+        template.name = self.name
+        # TODO: Can we remove target_version from templates?
+        template.target_version = self.target_version
         # Keep original template source path (may be relative), so that later when
         # updating templates, it can update the path without forcing it to be absolute
         template.template_source_path = self.path
