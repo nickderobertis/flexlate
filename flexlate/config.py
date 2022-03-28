@@ -57,7 +57,11 @@ class TemplateSource(BaseModel):
             raise InvalidTemplateTypeException(
                 "base type is not allowed for concrete templates"
             )
-        template = finder.find(self.git_url or str(self.absolute_local_path), version=version)
+        if version is None:
+            version = self.version
+        template = finder.find(
+            self.git_url or str(self.absolute_local_path), version=version
+        )
         template.name = self.name
         # TODO: Can we remove target_version from templates?
         template.target_version = self.target_version
