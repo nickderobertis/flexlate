@@ -63,19 +63,8 @@ class TemplateSource(BaseModel):
             kwargs.update(version=version)
         if self.git_url is not None:
             kwargs.update(git_url=self.git_url)
-        local_path: Path
-        if self.git_url is not None:
-            # TODO: Avoid unnecessary git repo cloning
-            #  We already know that we have it by this point, but need to get the local path
-            #  and the logic to resolve the version that may be None is entertwined with the
-            #  cloning and local path determination
-            local_path, _ = get_local_repo_path_and_name_cloning_if_repo_url(
-                self.git_url, version=version
-            )
-        else:
-            local_path = self.absolute_local_path
 
-        template = finder.find(self.git_url or str(local_path), **kwargs)
+        template = finder.find(self.git_url or str(self.absolute_local_path), **kwargs)
         template.name = self.name
         # TODO: Can we remove target_version from templates?
         template.target_version = self.target_version
