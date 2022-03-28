@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 from typing import Sequence, List, Optional, Tuple, Set, Dict, Callable
 
-from flexlate.add_mode import AddMode
+from flexlate.add_mode import AddMode, get_expanded_out_root
 from flexlate.config import (
     FlexlateConfig,
     TemplateSource,
@@ -228,6 +228,14 @@ class ConfigManager:
             applied_template.version = update.template.version
             template_source = _get_template_source_from_config(config, update)
             template_source.version = update.template.version
+            template_source.type = update.template._type
+            template_source.render_relative_root_in_output = (
+                update.template.render_relative_root_in_output
+            )
+            template_source.render_relative_root_in_template = (
+                update.template.render_relative_root_in_template
+            )
+
             # For remote templates, always bring over the new path
             # For local templates, the use_template_source_path option toggles between
             # using the original string from the template source, and the
@@ -524,6 +532,7 @@ class ConfigManager:
         template_name: str,
         config_path: Path,
         new_config_path: Path,
+        render_relative_root_in_output: Path,
         project_root: Path = Path("."),
         out_root: Path = Path("."),
         orig_project_root: Path = Path("."),
@@ -540,6 +549,13 @@ class ConfigManager:
             adjust_applied_paths=False,
         )
         applied_template = child_config.applied_templates.pop(template_index)
+        expanded_out_root = get_expanded_out_root(
+            out_root,
+            project_root,
+            render_relative_root_in_output,
+            applied_template.add_mode,
+        )
+        applied_template.root = expanded_out_root
         new_child_config = _get_or_create_child_config_by_path(config, new_config_path)
         new_child_config.applied_templates.append(applied_template)
         self.save_config(config)
@@ -602,19 +618,12 @@ class ConfigManager:
                     ).resolve()
                 )
             template = source.to_template()
-            if template.render_relative_root_in_output == Path("."):
-                # Should not need to move as config will not be in a subdirectory
-                continue
             renderable = Renderable.from_applied_template_with_source(atwc)
             new_relative_out_root = Path(
                 renderer.render_string(
                     str(template.render_relative_root_in_output), renderable
                 )
             )
-            if template.render_relative_root_in_output == new_relative_out_root:
-                # No need to move, render relative root was not a templated path
-                continue
-
             orig_config_path = atwc.applied_template._config_file_location
 
             render_root = (
@@ -632,6 +641,7 @@ class ConfigManager:
                 atwc.source.name,
                 orig_config_path,
                 new_config_path,
+                source.render_relative_root_in_output,
                 project_root=project_root,
                 out_root=atwc.applied_template._orig_root,
                 orig_project_root=orig_project_root,

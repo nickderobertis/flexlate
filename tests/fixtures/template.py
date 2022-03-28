@@ -26,6 +26,8 @@ from tests.config import (
     COPIER_ONE_MODIFIED_VERSION,
     COPIER_OUTPUT_SUBDIR_DIR,
     GENERATED_REPO_DIR,
+    COPIER_FROM_COOKIECUTTER_ONE_DIR,
+    COPIER_FROM_COOKIECUTTER_ONE_VERSION,
 )
 
 
@@ -56,6 +58,8 @@ def get_footer_for_cookiecutter_local_template(version: str) -> str:
     if version == COOKIECUTTER_ONE_MODIFIED_VERSION:
         return " and extra"
     elif version == COOKIECUTTER_ONE_VERSION:
+        return ""
+    elif version == COPIER_FROM_COOKIECUTTER_ONE_VERSION:
         return ""
     else:
         raise ValueError(f"unknown cookiecutter local version {version}")
@@ -158,6 +162,11 @@ def modify_cookiecutter_one(root: Union[str, Path]):
 def modify_copier_one(root: Union[str, Path]):
     text_path = Path(root) / "{{ q1 }}.txt.jinja"
     text_path.write_text("{{ q2 }} and some footer")
+
+
+def modify_cookiecutter_one_to_be_copier(root: Union[str, Path]):
+    shutil.rmtree(root)
+    shutil.copytree(COPIER_FROM_COOKIECUTTER_ONE_DIR, root)
 
 
 @pytest.fixture

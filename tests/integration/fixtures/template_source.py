@@ -34,9 +34,14 @@ from tests.config import (
     COPIER_ONE_MODIFIED_VERSION,
     GENERATED_REPO_DIR,
     GENERATED_FILES_DIR,
+    COPIER_FROM_COOKIECUTTER_ONE_VERSION,
 )
 from tests.ext_subprocess import run
-from tests.fixtures.template import modify_cookiecutter_one, modify_copier_one
+from tests.fixtures.template import (
+    modify_cookiecutter_one,
+    modify_copier_one,
+    modify_cookiecutter_one_to_be_copier,
+)
 
 
 class TemplateSourceType(str, Enum):
@@ -58,6 +63,9 @@ class TemplateSourceFixture:
     version_2: str
     is_local_template: bool = False
     version_migrate_func: Callable[[str], None] = lambda path: None
+    self_migrate_func: Callable[
+        ["TemplateSourceFixture"], None
+    ] = lambda template_source: None
     render_relative_root_in_output: Path = Path(".")
     render_relative_root_in_template: Path = Path(".")
     expect_local_applied_template_path: Path = Path(".")
@@ -130,6 +138,16 @@ class TemplateSourceFixture:
                 f"no handling for template type {self.template_type}"
             )
 
+    def copy(self, **kwargs):
+        new = deepcopy(self)
+        for key, val in kwargs.items():
+            setattr(new, key, val)
+        return new
+
+    def migrate_version(self, path: str):
+        self.version_migrate_func(path)  # type: ignore
+        self.self_migrate_func(self)  # type: ignore
+
 
 COOKIECUTTER_REMOTE_FIXTURE: Final[TemplateSourceFixture] = TemplateSourceFixture(
     name=COOKIECUTTER_REMOTE_NAME,
@@ -186,6 +204,26 @@ COPIER_LOCAL_FIXTURE: Final[TemplateSourceFixture] = TemplateSourceFixture(
     version_2=COPIER_ONE_MODIFIED_VERSION,
     is_local_template=True,
     version_migrate_func=modify_copier_one,
+)
+
+
+def _update_cookiecutter_local_template_source_to_copier(
+    template_source: TemplateSourceFixture,
+):
+    template_source.evaluated_render_relative_root_in_output_creator = (
+        lambda data: Path(".")
+    )
+    template_source.render_relative_root_in_template = Path(".")
+    template_source.render_relative_root_in_output = Path(".")
+    template_source.expect_local_applied_template_path = Path(".")
+
+
+COOKIECUTTER_CHANGES_TO_COPIER_LOCAL_FIXTURE: Final[
+    TemplateSourceFixture
+] = cookiecutter_local_fixture.copy(
+    version_migrate_func=modify_cookiecutter_one_to_be_copier,
+    version_2=COPIER_FROM_COOKIECUTTER_ONE_VERSION,
+    self_migrate_func=_update_cookiecutter_local_template_source_to_copier,
 )
 
 
