@@ -5,7 +5,6 @@ from flexlate.template.types import TemplateType
 from tests.integration.fixtures.template_source import (
     COOKIECUTTER_CHANGES_TO_COPIER_LOCAL_FIXTURE,
     template_source_with_temp_dir_if_local_template,
-    TemplateSourceType,
 )
 from tests.integration.fixtures.repo import *
 from tests.integration.template_source_checks import (
@@ -42,19 +41,10 @@ def test_update_template_from_cookiecutter_to_copier(
             assert_template_type_is(TemplateType.COOKIECUTTER)
 
             # Update local template, now it is a copier template
-            template_source.version_migrate_func(template_source.url_or_absolute_path)
+            template_source.migrate_version(template_source.url_or_absolute_path)
 
             # Should be anle to directly update even though template type changes
             fxt.update(data=[template_source.update_input_data], no_input=True)
-
-            # TODO: add structure for changing attributes in template source fixtures after update
-            #  Should not need to update manually within a test
-            template_source.evaluated_render_relative_root_in_output_creator = (
-                lambda data: Path(".")
-            )
-            template_source.render_relative_root_in_template = Path(".")
-            template_source.render_relative_root_in_output = Path(".")
-            template_source.expect_local_applied_template_path = Path(".")
 
             # Check that files are correct
             assert_root_template_source_output_is_correct(

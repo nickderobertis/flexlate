@@ -341,7 +341,7 @@ def test_update_project(
             )
 
             # Make changes to update local templates to new version (no-op for remote templates)
-            template_source.version_migrate_func(template_source.url_or_absolute_path)
+            template_source.migrate_version(template_source.url_or_absolute_path)
 
             # Now update should go to new version
             fxt.update(no_input=True)
@@ -438,7 +438,7 @@ def test_update_one_template(
             )
 
             # Make changes to update local templates to new version (no-op for remote templates)
-            template_source.version_migrate_func(template_source.url_or_absolute_path)
+            template_source.migrate_version(template_source.url_or_absolute_path)
 
             # Now update should go to new version
             fxt.update([template_source.name], no_input=True)
@@ -908,7 +908,7 @@ def test_check(
         )
 
         # Make changes to update local templates to new version (no-op for remote templates)
-        template_source.version_migrate_func(template_source.url_or_absolute_path)
+        template_source.migrate_version(template_source.url_or_absolute_path)
 
         assert_template_needs_to_be_updated()
 
@@ -938,7 +938,7 @@ def test_bootstrap(
         assert_root_template_source_output_is_correct(template_source)
 
         # Make changes to update local templates to new version (no-op for remote templates)
-        template_source.version_migrate_func(template_source.url_or_absolute_path)
+        template_source.migrate_version(template_source.url_or_absolute_path)
 
         # Should be anle to directly update after bootstrap
         fxt.update(data=[template_source.update_input_data], no_input=no_input)
