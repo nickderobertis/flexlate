@@ -27,6 +27,7 @@ from tests.config import (
     COPIER_OUTPUT_SUBDIR_DIR,
     GENERATED_REPO_DIR,
     COPIER_FROM_COOKIECUTTER_ONE_DIR,
+    COPIER_FROM_COOKIECUTTER_ONE_VERSION,
 )
 
 
@@ -57,6 +58,8 @@ def get_footer_for_cookiecutter_local_template(version: str) -> str:
     if version == COOKIECUTTER_ONE_MODIFIED_VERSION:
         return " and extra"
     elif version == COOKIECUTTER_ONE_VERSION:
+        return ""
+    elif version == COPIER_FROM_COOKIECUTTER_ONE_VERSION:
         return ""
     else:
         raise ValueError(f"unknown cookiecutter local version {version}")
