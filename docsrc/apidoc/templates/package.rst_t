@@ -1,4 +1,3 @@
-
 {%- macro automodule(modname, options) -%}
 .. automodule:: {{ modname }}
 {%- for option in options %}

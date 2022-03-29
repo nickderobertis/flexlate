@@ -22,8 +22,6 @@ import pathlib
 import sys
 import datetime
 import warnings
-import sphinx_rtd_theme
-# sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__name__), '..')))
 
 sys.path.insert(0, os.path.abspath('../..'))
 import conf
@@ -51,10 +49,10 @@ extensions = [
     'sphinx.ext.intersphinx',
     'sphinx_autodoc_typehints',
     'sphinx_paramlinks',
-    'sphinx_rtd_theme',
+    'sphinx_material',
     'sphinx_gallery.gen_gallery',
     'sphinx_copybutton',
-    'sphinx_sitemap'
+    'myst_parser',
 ]
 
 # Options for sphinx_autodoc_typehints
@@ -70,9 +68,7 @@ templates_path = ['_templates']
 
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
-#
-# source_suffix = ['.rst', '.md']
-source_suffix = '.rst'
+source_suffix = ['.rst', '.md']
 
 # The master toctree document.
 master_doc = 'index'
@@ -104,7 +100,7 @@ language = None
 exclude_patterns = ['**.ipynb_checkpoints']
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'sphinx'
+pygments_style = 'default'
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
@@ -150,15 +146,24 @@ warnings.filterwarnings("ignore", category=UserWarning,
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'sphinx_rtd_theme'
+html_theme = 'sphinx_material'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-html_theme_options = {}
+html_theme_options = dict(
+    nav_title=project,
+    base_url=conf.PACKAGE_URLS['Documentation'],
+    color_primary='indigo',
+    color_accent='deep-purple',
+    logo_icon='&#xe869',
+    repo_url=conf.PACKAGE_URLS['Code'],
+    repo_name=conf.REPO_NAME,
+    globaltoc_depth=3,
+)
 if conf.GOOGLE_ANALYTICS_TRACKING_ID:
-    html_theme_options['analytics_id'] = conf.GOOGLE_ANALYTICS_TRACKING_ID
+    html_theme_options['google_analytics_account'] = conf.GOOGLE_ANALYTICS_TRACKING_ID
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -172,9 +177,7 @@ html_static_path = ['_static']
 # refs: http://alabaster.readthedocs.io/en/latest/installation.html#sidebars
 html_sidebars = {
     '**': [
-        'localtoc.html',
-        'relations.html',  # needs 'show_related': True theme option to display
-        'searchbox.html',
+        "logo-text.html", "globaltoc.html", "localtoc.html", "searchbox.html"
     ]
 }
 
@@ -261,4 +264,3 @@ def skip(app, what, name, obj, would_skip, options):
 def setup(app):
     app.connect("autodoc-skip-member", skip)
     app.add_directive('autosummarynameonly', AutoSummaryNameOnly)
-    app.add_css_file('custom.css')
