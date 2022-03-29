@@ -1,172 +1,266 @@
 
-
 <!DOCTYPE html>
-<html lang="en" >
-<head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>flexlate.config_manager &mdash; flexlate 0.11.2 documentation</title>
-  
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
 
   
-  
-  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
   
 
+  <link rel="stylesheet" href="../../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../../_static/stylesheets/application-fixes.css"/>
   
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+  <link rel="stylesheet" href="../../_static/fonts/material-icons.css"/>
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/clipboard.min.js"></script>
-        <script src="../../_static/copybutton.js"></script>
-    
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
-    
-
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../../_static/javascripts/modernizr.js"></script>
   
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/sphinx_paramlinks.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/sg_gallery.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/sg_gallery-binder.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/sg_gallery-dataframe.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/sg_gallery-rendered-html.css" type="text/css" />
+  
+  
+    <title>flexlate.config_manager &#8212; flexlate 0.11.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/material.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx_paramlinks.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <link rel="canonical" href="https://nickderobertis.github.io/flexlate/_modules/flexlate/config_manager.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" /> 
-</head>
-
-<body class="wy-body-for-nav">
-
+    <link rel="search" title="Search" href="../../search.html" />
+  
    
-  <div class="wy-grid-for-nav">
-    
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-          
 
+  </head>
+  <body dir=ltr
+        data-md-color-primary=indigo data-md-color-accent=deep-purple>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#_modules/flexlate/config_manager" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../../index.html" title="flexlate 0.11.2 documentation"
+           class="md-header-nav__button md-logo">
           
-            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> flexlate
+            <i class="md-icon">&#xe869</i>
           
-
-          
-          </a>
-
-          
-            
-            
-              <div class="version">
-                0.11.2
-              </div>
-            
-          
-
-          
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">flexlate</span>
+          <span class="md-header-nav__topic"> flexlate.config_manager </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../../search.html" method="get" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder="Search"
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
-              <p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../tutorial.html">Getting started with flexlate</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html">This is my gallery</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../api/modules.html">flexlate</a></li>
-</ul>
-
-            
-          
-        </div>
-        
       </div>
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
       
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">flexlate</a>
-        
-      </nav>
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://github.com/nickderobertis/flexlate" title="Go to repository" class="md-source" data-md-source="github">
 
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    flexlate
+  </div>
+</a>
+          </div>
+        </div>
+      
+      
+  
+  <script src="../../_static/javascripts/version_dropdown.js"></script>
+  <script>
+    var json_loc = "../../"versions.json"",
+        target_loc = "../../../",
+        text = "Versions";
+    $( document ).ready( add_version_dropdown(json_loc, target_loc, text));
+  </script>
+  
 
-      <div class="wy-nav-content">
-        
-        <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
-  <ul class="wy-breadcrumbs">
-    
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
-          <li><a href="../index.html">Module code</a> &raquo;</li>
-        
-      <li>flexlate.config_manager</li>
-    
-    
-      <li class="wy-breadcrumbs-aside">
-        
-      </li>
-    
-  </ul>
+    </div>
+  </nav>
+</header>
 
   
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+          <li class="md-tabs__item"><a href="../../index.html" class="md-tabs__link">flexlate 0.11.2 documentation</a></li>
+          <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">Module code</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../../index.html" title="flexlate 0.11.2 documentation" class="md-nav__button md-logo">
+      
+        <i class="md-icon">&#xe869</i>
+      
+    </a>
+    <a href="../../index.html"
+       title="flexlate 0.11.2 documentation">flexlate</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://github.com/nickderobertis/flexlate" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    flexlate
+  </div>
+</a>
+    </div>
+  
+  
+
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+    
+      <a href="../../tutorial.html" class="md-nav__link">Getting started with flexlate</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../../auto_examples/index.html" class="md-nav__link">This is my gallery</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../../api/modules.html" class="md-nav__link">flexlate</a>
+      
+    
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+
+<li id="searchbox" class="md-nav__item"></li>
+
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
             
-  <h1>Source code for flexlate.config_manager</h1><div class="highlight"><pre>
+  <h1 id="modules-flexlate-config-manager--page-root">Source code for flexlate.config_manager</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Callable</span>
@@ -205,7 +299,7 @@
 
 <div class="viewcode-block" id="ConfigManager"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config_manager.ConfigManager">[docs]</a><span class="k">class</span> <span class="nc">ConfigManager</span><span class="p">:</span>
 <div class="viewcode-block" id="ConfigManager.load_config"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config_manager.ConfigManager.load_config">[docs]</a>    <span class="k">def</span> <span class="nf">load_config</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span> <span class="n">adjust_applied_paths</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">),</span> <span class="n">adjust_applied_paths</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FlexlateConfig</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">FlexlateConfig</span><span class="o">.</span><span class="n">from_dir_including_nested</span><span class="p">(</span>
             <span class="n">project_root</span><span class="p">,</span> <span class="n">adjust_applied_paths</span><span class="o">=</span><span class="n">adjust_applied_paths</span>
@@ -214,23 +308,23 @@
 <div class="viewcode-block" id="ConfigManager.save_config"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config_manager.ConfigManager.save_config">[docs]</a>    <span class="k">def</span> <span class="nf">save_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">FlexlateConfig</span><span class="p">):</span>
         <span class="n">config</span><span class="o">.</span><span class="n">save</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="ConfigManager.load_specific_projects_config"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config_manager.ConfigManager.load_specific_projects_config">[docs]</a>    <span class="k">def</span> <span class="nf">load_specific_projects_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span> <span class="n">user</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="ConfigManager.load_specific_projects_config"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config_manager.ConfigManager.load_specific_projects_config">[docs]</a>    <span class="k">def</span> <span class="nf">load_specific_projects_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">),</span> <span class="n">user</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
         <span class="n">use_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">user</span><span class="p">:</span>
             <span class="n">use_path</span> <span class="o">=</span> <span class="n">path</span> <span class="o">/</span> <span class="n">FlexlateProjectConfig</span><span class="o">.</span><span class="n">_settings</span><span class="o">.</span><span class="n">config_file_name</span>
         <span class="c1"># else, let py-app-conf figure out the path for user config</span>
         <span class="k">return</span> <span class="n">FlexlateProjectConfig</span><span class="o">.</span><span class="n">load_or_create</span><span class="p">(</span><span class="n">use_path</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ConfigManager.load_projects_config"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config_manager.ConfigManager.load_projects_config">[docs]</a>    <span class="k">def</span> <span class="nf">load_projects_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="n">FlexlateProjectConfig</span><span class="p">:</span>
+<div class="viewcode-block" id="ConfigManager.load_projects_config"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config_manager.ConfigManager.load_projects_config">[docs]</a>    <span class="k">def</span> <span class="nf">load_projects_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="n">FlexlateProjectConfig</span><span class="p">:</span>
         <span class="c1"># TODO: more efficient algorithm for finding project config</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">config</span> <span class="o">=</span> <span class="n">FlexlateProjectConfig</span><span class="o">.</span><span class="n">load_recursive</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">FlexlateProjectConfigFileNotExistsException</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;could not find a projects config file in any &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;parent directory of path </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2"> or in the user directory&quot;</span>
+                <span class="sa">f</span><span class="s2">"could not find a projects config file in any "</span>
+                <span class="sa">f</span><span class="s2">"parent directory of path </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2"> or in the user directory"</span>
             <span class="p">)</span>
-        <span class="c1"># The found config might not have this project&#39;s config in it, need to check</span>
+        <span class="c1"># The found config might not have this project's config in it, need to check</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">config</span><span class="o">.</span><span class="n">get_project_for_path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">FlexlateProjectConfigFileNotExistsException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
@@ -244,7 +338,7 @@
 
         <span class="k">return</span> <span class="n">config</span></div>
 
-<div class="viewcode-block" id="ConfigManager.load_project_config"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config_manager.ConfigManager.load_project_config">[docs]</a>    <span class="k">def</span> <span class="nf">load_project_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="n">ProjectConfig</span><span class="p">:</span>
+<div class="viewcode-block" id="ConfigManager.load_project_config"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config_manager.ConfigManager.load_project_config">[docs]</a>    <span class="k">def</span> <span class="nf">load_project_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="n">ProjectConfig</span><span class="p">:</span>
         <span class="n">projects_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_projects_config</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">projects_config</span><span class="o">.</span><span class="n">get_project_for_path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></div>
 
@@ -253,15 +347,15 @@
 
 <div class="viewcode-block" id="ConfigManager.add_project"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config_manager.ConfigManager.add_project">[docs]</a>    <span class="k">def</span> <span class="nf">add_project</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
+        <span class="n">path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">),</span>
         <span class="n">default_add_mode</span><span class="p">:</span> <span class="n">AddMode</span> <span class="o">=</span> <span class="n">AddMode</span><span class="o">.</span><span class="n">LOCAL</span><span class="p">,</span>
         <span class="n">merged_branch_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_MERGED_BRANCH_NAME</span><span class="p">,</span>
         <span class="n">template_branch_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_TEMPLATE_BRANCH_NAME</span><span class="p">,</span>
         <span class="n">user</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="n">remote</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;origin&quot;</span><span class="p">,</span>
+        <span class="n">remote</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"origin"</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_specific_projects_config</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
-        <span class="n">output_path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span> <span class="k">if</span> <span class="n">user</span> <span class="k">else</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span> <span class="k">if</span> <span class="n">user</span> <span class="k">else</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">)</span>
         <span class="n">project_config</span> <span class="o">=</span> <span class="n">ProjectConfig</span><span class="p">(</span>
             <span class="n">path</span><span class="o">=</span><span class="n">output_path</span><span class="p">,</span>
             <span class="n">default_add_mode</span><span class="o">=</span><span class="n">default_add_mode</span><span class="p">,</span>
@@ -275,7 +369,7 @@
 <div class="viewcode-block" id="ConfigManager.get_applied_templates_with_sources"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config_manager.ConfigManager.get_applied_templates_with_sources">[docs]</a>    <span class="k">def</span> <span class="nf">get_applied_templates_with_sources</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">relative_to</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
+        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">),</span>
         <span class="n">config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">FlexlateConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">AppliedTemplateWithSource</span><span class="p">]:</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">config</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="n">project_root</span><span class="p">)</span>
@@ -302,7 +396,7 @@
 <div class="viewcode-block" id="ConfigManager.get_all_renderables"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config_manager.ConfigManager.get_all_renderables">[docs]</a>    <span class="k">def</span> <span class="nf">get_all_renderables</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">relative_to</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
+        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">),</span>
         <span class="n">config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">FlexlateConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Renderable</span><span class="p">]:</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">config</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="n">project_root</span><span class="p">)</span>
@@ -316,7 +410,7 @@
 <div class="viewcode-block" id="ConfigManager.get_renderables_for_updates"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config_manager.ConfigManager.get_renderables_for_updates">[docs]</a>    <span class="k">def</span> <span class="nf">get_renderables_for_updates</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">updates</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">TemplateUpdate</span><span class="p">],</span>
-        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
+        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">),</span>
         <span class="n">adjust_root</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Renderable</span><span class="p">]:</span>
         <span class="k">return</span> <span class="p">[</span>
@@ -327,7 +421,7 @@
 <div class="viewcode-block" id="ConfigManager.get_all_templates"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config_manager.ConfigManager.get_all_templates">[docs]</a>    <span class="k">def</span> <span class="nf">get_all_templates</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">relative_to</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
+        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">),</span>
         <span class="n">config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">FlexlateConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Template</span><span class="p">]:</span>
         <span class="n">renderables</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_all_renderables</span><span class="p">(</span>
@@ -343,7 +437,7 @@
 <div class="viewcode-block" id="ConfigManager.get_data_for_updates"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config_manager.ConfigManager.get_data_for_updates">[docs]</a>    <span class="k">def</span> <span class="nf">get_data_for_updates</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">updates</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">TemplateUpdate</span><span class="p">],</span>
-        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
+        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">),</span>
         <span class="n">config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">FlexlateConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">TemplateData</span><span class="p">]:</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">config</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="n">project_root</span><span class="p">)</span>
@@ -355,7 +449,7 @@
 
 <div class="viewcode-block" id="ConfigManager.get_no_op_updates"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config_manager.ConfigManager.get_no_op_updates">[docs]</a>    <span class="k">def</span> <span class="nf">get_no_op_updates</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
+        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">),</span>
         <span class="n">config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">FlexlateConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">TemplateUpdate</span><span class="p">]:</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">config</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="n">project_root</span><span class="p">)</span>
@@ -379,17 +473,17 @@
 <div class="viewcode-block" id="ConfigManager.update_templates"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config_manager.ConfigManager.update_templates">[docs]</a>    <span class="k">def</span> <span class="nf">update_templates</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">updates</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">TemplateUpdate</span><span class="p">],</span>
-        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
+        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">),</span>
         <span class="n">use_template_source_path</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="c1"># Don&#39;t adjust applied paths, as we are not doing anything with them and writing them back</span>
+        <span class="c1"># Don't adjust applied paths, as we are not doing anything with them and writing them back</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="n">project_root</span><span class="p">,</span> <span class="n">adjust_applied_paths</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">existing_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data_for_updates</span><span class="p">(</span><span class="n">updates</span><span class="p">,</span> <span class="n">project_root</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
         <span class="n">template_data</span> <span class="o">=</span> <span class="n">data_from_template_updates</span><span class="p">(</span><span class="n">updates</span><span class="p">)</span>
         <span class="n">all_data</span> <span class="o">=</span> <span class="n">merge_data</span><span class="p">(</span><span class="n">template_data</span><span class="p">,</span> <span class="n">existing_data</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">updates</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_data</span><span class="p">):</span>
             <span class="k">raise</span> <span class="n">InvalidTemplateDataException</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;length of templates and template data must match. got updates </span><span class="si">{</span><span class="n">updates</span><span class="si">}</span><span class="s2"> and data </span><span class="si">{</span><span class="n">template_data</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">"length of templates and template data must match. got updates </span><span class="si">{</span><span class="n">updates</span><span class="si">}</span><span class="s2"> and data </span><span class="si">{</span><span class="n">template_data</span><span class="si">}</span><span class="s2">"</span>
             <span class="p">)</span>
         <span class="k">for</span> <span class="n">update</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">updates</span><span class="p">,</span> <span class="n">all_data</span><span class="p">):</span>
             <span class="n">applied_template</span> <span class="o">=</span> <span class="n">_get_applied_template_from_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">update</span><span class="p">)</span>
@@ -421,7 +515,7 @@
         <span class="n">template</span><span class="p">:</span> <span class="n">Template</span><span class="p">,</span>
         <span class="n">config_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
         <span class="n">target_version</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
+        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">),</span>
     <span class="p">):</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="n">project_root</span><span class="o">=</span><span class="n">project_root</span><span class="p">,</span> <span class="n">adjust_applied_paths</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">child_config</span> <span class="o">=</span> <span class="n">_get_or_create_child_config_by_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">config_path</span><span class="p">)</span>
@@ -436,17 +530,17 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">template_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">config_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
-        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
+        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">),</span>
     <span class="p">):</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="n">project_root</span><span class="o">=</span><span class="n">project_root</span><span class="p">,</span> <span class="n">adjust_applied_paths</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_applied_template_exists_in_project</span><span class="p">(</span>
             <span class="n">template_name</span><span class="p">,</span> <span class="n">project_root</span><span class="o">=</span><span class="n">project_root</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span>
         <span class="p">):</span>
-            <span class="c1"># TODO: Improve error message for can&#39;t remove template source</span>
-            <span class="c1">#  When can&#39;t remove template source due to existing applied template, determine paths where</span>
+            <span class="c1"># TODO: Improve error message for can't remove template source</span>
+            <span class="c1">#  When can't remove template source due to existing applied template, determine paths where</span>
             <span class="c1">#  the existing applied templates are to inform the user what needs to be removed</span>
             <span class="k">raise</span> <span class="n">CannotRemoveTemplateSourceException</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Cannot remove template source </span><span class="si">{</span><span class="n">template_name</span><span class="si">}</span><span class="s2"> as it has existing outputs&quot;</span>
+                <span class="sa">f</span><span class="s2">"Cannot remove template source </span><span class="si">{</span><span class="n">template_name</span><span class="si">}</span><span class="s2"> as it has existing outputs"</span>
             <span class="p">)</span>
 
         <span class="n">child_config</span> <span class="o">=</span> <span class="n">_get_or_create_child_config_by_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">config_path</span><span class="p">)</span>
@@ -457,7 +551,7 @@
                 <span class="k">break</span>
         <span class="k">if</span> <span class="n">template_index</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">CannotRemoveTemplateSourceException</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Cannot find any template source with name </span><span class="si">{</span><span class="n">template_name</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">"Cannot find any template source with name </span><span class="si">{</span><span class="n">template_name</span><span class="si">}</span><span class="s2">"</span>
             <span class="p">)</span>
         <span class="n">child_config</span><span class="o">.</span><span class="n">template_sources</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">template_index</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">save_config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span></div>
@@ -465,7 +559,7 @@
     <span class="k">def</span> <span class="nf">_applied_template_exists_in_project</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">template_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
+        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">),</span>
         <span class="n">config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">FlexlateConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">config</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="n">project_root</span><span class="o">=</span><span class="n">project_root</span><span class="p">)</span>
@@ -481,8 +575,8 @@
         <span class="n">config_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
         <span class="n">add_mode</span><span class="p">:</span> <span class="n">AddMode</span><span class="p">,</span>
         <span class="n">data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TemplateData</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
-        <span class="n">out_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
+        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">),</span>
+        <span class="n">out_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">),</span>
     <span class="p">):</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="n">project_root</span><span class="o">=</span><span class="n">project_root</span><span class="p">,</span> <span class="n">adjust_applied_paths</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">child_config</span> <span class="o">=</span> <span class="n">_get_or_create_child_config_by_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">config_path</span><span class="p">)</span>
@@ -500,20 +594,20 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">template_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">config_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
-        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
-        <span class="n">out_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
-        <span class="n">orig_project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
+        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">),</span>
+        <span class="n">out_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">),</span>
+        <span class="n">orig_project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">),</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">"""</span>
 
 <span class="sd">        :param template_name:</span>
 <span class="sd">        :param config_path:</span>
 <span class="sd">        :param project_root: The root of the current working project (may be a temp directory)</span>
 <span class="sd">        :param out_root:</span>
-<span class="sd">        :param orig_project_root: The root of the user&#39;s project (always stays the same, even</span>
+<span class="sd">        :param orig_project_root: The root of the user's project (always stays the same, even</span>
 <span class="sd">            when working in a temp directory)</span>
 <span class="sd">        :return:</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">template_index</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_applied_template</span><span class="p">(</span>
             <span class="n">template_name</span><span class="p">,</span>
             <span class="n">config_path</span><span class="p">,</span>
@@ -531,22 +625,22 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">template_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">config_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
-        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
-        <span class="n">out_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
-        <span class="n">orig_project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
+        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">),</span>
+        <span class="n">out_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">),</span>
+        <span class="n">orig_project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">),</span>
         <span class="n">config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">FlexlateConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">adjust_applied_paths</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">AppliedTemplateConfig</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">"""</span>
 
 <span class="sd">        :param template_name:</span>
 <span class="sd">        :param config_path:</span>
 <span class="sd">        :param project_root: The root of the current working project (may be a temp directory)</span>
 <span class="sd">        :param out_root:</span>
-<span class="sd">        :param orig_project_root: The root of the user&#39;s project (always stays the same, even</span>
+<span class="sd">        :param orig_project_root: The root of the user's project (always stays the same, even</span>
 <span class="sd">            when working in a temp directory)</span>
 <span class="sd">        :return: index, applied template config tuple</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">config</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span>
             <span class="n">project_root</span><span class="o">=</span><span class="n">project_root</span><span class="p">,</span> <span class="n">adjust_applied_paths</span><span class="o">=</span><span class="n">adjust_applied_paths</span>
         <span class="p">)</span>
@@ -578,7 +672,7 @@
                 <span class="k">break</span>
         <span class="k">if</span> <span class="n">template_index</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">CannotRemoveAppliedTemplateException</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Cannot find any applied template with name </span><span class="si">{</span><span class="n">template_name</span><span class="si">}</span><span class="s2"> and root </span><span class="si">{</span><span class="n">out_root</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">"Cannot find any applied template with name </span><span class="si">{</span><span class="n">template_name</span><span class="si">}</span><span class="s2"> and root </span><span class="si">{</span><span class="n">out_root</span><span class="si">}</span><span class="s2">"</span>
             <span class="p">)</span>
         <span class="n">applied_template</span> <span class="o">=</span> <span class="n">child_config</span><span class="o">.</span><span class="n">applied_templates</span><span class="p">[</span><span class="n">template_index</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">template_index</span><span class="p">,</span> <span class="n">applied_template</span>
@@ -587,19 +681,19 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">template_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">config_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
-        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
+        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">),</span>
         <span class="n">config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">FlexlateConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">TemplateSource</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">"""</span>
 
 <span class="sd">        :param template_name:</span>
 <span class="sd">        :param config_path:</span>
 <span class="sd">        :param project_root: The root of the current working project (may be a temp directory)</span>
 <span class="sd">        :param out_root:</span>
-<span class="sd">        :param orig_project_root: The root of the user&#39;s project (always stays the same, even</span>
+<span class="sd">        :param orig_project_root: The root of the user's project (always stays the same, even</span>
 <span class="sd">            when working in a temp directory)</span>
 <span class="sd">        :return: index, applied template config tuple</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">config</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="n">project_root</span><span class="o">=</span><span class="n">project_root</span><span class="p">)</span>
         <span class="n">child_config</span> <span class="o">=</span> <span class="n">_get_or_create_child_config_by_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">config_path</span><span class="p">)</span>
         <span class="n">template_index</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
@@ -609,13 +703,13 @@
                 <span class="k">break</span>
         <span class="k">if</span> <span class="n">template_index</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">CannotRemoveAppliedTemplateException</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Cannot find any template source with name </span><span class="si">{</span><span class="n">template_name</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">"Cannot find any template source with name </span><span class="si">{</span><span class="n">template_name</span><span class="si">}</span><span class="s2">"</span>
             <span class="p">)</span>
         <span class="n">template_source</span> <span class="o">=</span> <span class="n">child_config</span><span class="o">.</span><span class="n">template_sources</span><span class="p">[</span><span class="n">template_index</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">template_index</span><span class="p">,</span> <span class="n">template_source</span>
 
 <div class="viewcode-block" id="ConfigManager.get_num_applied_templates_in_child_config"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config_manager.ConfigManager.get_num_applied_templates_in_child_config">[docs]</a>    <span class="k">def</span> <span class="nf">get_num_applied_templates_in_child_config</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">child_config_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">child_config_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">)</span>
     <span class="p">):</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="n">project_root</span><span class="p">)</span>
         <span class="n">child_config</span> <span class="o">=</span> <span class="n">_get_child_config_by_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">child_config_path</span><span class="p">)</span>
@@ -624,7 +718,7 @@
 <div class="viewcode-block" id="ConfigManager.get_template_sources"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config_manager.ConfigManager.get_template_sources">[docs]</a>    <span class="k">def</span> <span class="nf">get_template_sources</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">names</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
+        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">),</span>
         <span class="n">config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">FlexlateConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">TemplateSource</span><span class="p">]:</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">config</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="n">project_root</span><span class="p">)</span>
@@ -640,7 +734,7 @@
     <span class="k">def</span> <span class="nf">_get_template_source_by_name</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
+        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">),</span>
         <span class="n">config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">FlexlateConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TemplateSource</span><span class="p">:</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">config</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="n">project_root</span><span class="p">)</span>
@@ -648,14 +742,14 @@
             <span class="n">source</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">template_sources_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">TemplateNotRegisteredException</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;could not find template source with name </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">"could not find template source with name </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span>
             <span class="p">)</span>
         <span class="k">return</span> <span class="n">source</span>
 
 <div class="viewcode-block" id="ConfigManager.get_template_by_name"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config_manager.ConfigManager.get_template_by_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_template_by_name</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
+        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">),</span>
         <span class="n">config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">FlexlateConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Template</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_template_source_by_name</span><span class="p">(</span>
@@ -665,7 +759,7 @@
 <div class="viewcode-block" id="ConfigManager.template_source_exists"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config_manager.ConfigManager.template_source_exists">[docs]</a>    <span class="k">def</span> <span class="nf">template_source_exists</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
+        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">),</span>
         <span class="n">config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">FlexlateConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
@@ -679,7 +773,7 @@
 <div class="viewcode-block" id="ConfigManager.get_sources_with_templates"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config_manager.ConfigManager.get_sources_with_templates">[docs]</a>    <span class="k">def</span> <span class="nf">get_sources_with_templates</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">templates</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Template</span><span class="p">],</span>
-        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
+        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">),</span>
         <span class="n">config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">FlexlateConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">TemplateSourceWithTemplates</span><span class="p">]:</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">config</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="n">project_root</span><span class="p">)</span>
@@ -702,9 +796,9 @@
         <span class="n">config_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
         <span class="n">new_config_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
         <span class="n">render_relative_root_in_output</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
-        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
-        <span class="n">out_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
-        <span class="n">orig_project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
+        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">),</span>
+        <span class="n">out_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">),</span>
+        <span class="n">orig_project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">),</span>
     <span class="p">):</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="n">project_root</span><span class="o">=</span><span class="n">project_root</span><span class="p">,</span> <span class="n">adjust_applied_paths</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">child_config</span> <span class="o">=</span> <span class="n">_get_or_create_child_config_by_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">config_path</span><span class="p">)</span>
@@ -734,7 +828,7 @@
         <span class="n">template_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">config_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
         <span class="n">new_config_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
-        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
+        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">),</span>
     <span class="p">):</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="n">project_root</span><span class="o">=</span><span class="n">project_root</span><span class="p">,</span> <span class="n">adjust_applied_paths</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">child_config</span> <span class="o">=</span> <span class="n">_get_or_create_child_config_by_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">config_path</span><span class="p">)</span>
@@ -751,7 +845,7 @@
 
     <span class="k">def</span> <span class="nf">_get_applied_templates_and_sources_with_local_add_mode</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
+        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">),</span>
         <span class="n">config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">FlexlateConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">AppliedTemplateWithSource</span><span class="p">]:</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">config</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="n">project_root</span><span class="o">=</span><span class="n">project_root</span><span class="p">)</span>
@@ -766,8 +860,8 @@
 
 <div class="viewcode-block" id="ConfigManager.move_local_applied_templates_if_necessary"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config_manager.ConfigManager.move_local_applied_templates_if_necessary">[docs]</a>    <span class="k">def</span> <span class="nf">move_local_applied_templates_if_necessary</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
-        <span class="n">orig_project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
+        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">),</span>
+        <span class="n">orig_project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">),</span>
         <span class="n">renderer</span><span class="p">:</span> <span class="n">MultiRenderer</span> <span class="o">=</span> <span class="n">MultiRenderer</span><span class="p">(),</span>
     <span class="p">):</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="n">project_root</span><span class="o">=</span><span class="n">project_root</span><span class="p">)</span>
@@ -798,7 +892,7 @@
             <span class="n">render_root</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="n">orig_config_path</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="n">atwc</span><span class="o">.</span><span class="n">applied_template</span><span class="o">.</span><span class="n">_orig_root</span>
             <span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
-            <span class="n">new_config_path</span> <span class="o">=</span> <span class="n">render_root</span> <span class="o">/</span> <span class="n">new_relative_out_root</span> <span class="o">/</span> <span class="s2">&quot;flexlate.json&quot;</span>
+            <span class="n">new_config_path</span> <span class="o">=</span> <span class="n">render_root</span> <span class="o">/</span> <span class="n">new_relative_out_root</span> <span class="o">/</span> <span class="s2">"flexlate.json"</span>
             <span class="k">if</span> <span class="n">orig_config_path</span> <span class="o">==</span> <span class="n">new_config_path</span><span class="p">:</span>
                 <span class="c1"># No need to move, still in the same location</span>
                 <span class="k">continue</span>
@@ -820,7 +914,7 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">names</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
         <span class="n">updater</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">TemplateSource</span><span class="p">],</span> <span class="kc">None</span><span class="p">],</span>
-        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
+        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">),</span>
         <span class="n">config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">FlexlateConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">config</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="n">project_root</span><span class="p">,</span> <span class="n">adjust_applied_paths</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -833,7 +927,7 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">target_version</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
+        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">),</span>
         <span class="n">config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">FlexlateConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">config</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="n">project_root</span><span class="p">,</span> <span class="n">adjust_applied_paths</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -851,7 +945,7 @@
         <span class="k">if</span> <span class="n">child_config</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">config_location</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span> <span class="o">==</span> <span class="n">path</span><span class="o">.</span><span class="n">absolute</span><span class="p">():</span>
             <span class="k">return</span> <span class="n">child_config</span>
     <span class="k">raise</span> <span class="n">FlexlateConfigFileNotExistsException</span><span class="p">(</span>
-        <span class="sa">f</span><span class="s2">&quot;could not find config with path </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">"could not find config with path </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">"</span>
     <span class="p">)</span>
 
 
@@ -880,7 +974,7 @@
     <span class="n">applied_template</span> <span class="o">=</span> <span class="n">child_config</span><span class="o">.</span><span class="n">applied_templates</span><span class="p">[</span><span class="n">update</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">applied_template</span><span class="o">.</span><span class="n">name</span> <span class="o">!=</span> <span class="n">update</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">TemplateLookupException</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;for index </span><span class="si">{</span><span class="n">update</span><span class="o">.</span><span class="n">index</span><span class="si">}</span><span class="s2">, got applied template </span><span class="si">{</span><span class="n">applied_template</span><span class="si">}</span><span class="s2"> that does not match template </span><span class="si">{</span><span class="n">update</span><span class="o">.</span><span class="n">template</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">"for index </span><span class="si">{</span><span class="n">update</span><span class="o">.</span><span class="n">index</span><span class="si">}</span><span class="s2">, got applied template </span><span class="si">{</span><span class="n">applied_template</span><span class="si">}</span><span class="s2"> that does not match template </span><span class="si">{</span><span class="n">update</span><span class="o">.</span><span class="n">template</span><span class="si">}</span><span class="s2">"</span>
         <span class="p">)</span>
     <span class="k">return</span> <span class="n">applied_template</span>
 
@@ -893,63 +987,55 @@
         <span class="k">if</span> <span class="n">update</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">sources</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">sources</span><span class="p">[</span><span class="n">update</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
     <span class="k">raise</span> <span class="n">TemplateLookupException</span><span class="p">(</span>
-        <span class="sa">f</span><span class="s2">&quot;could not find source with name </span><span class="si">{</span><span class="n">update</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> in any child config&quot;</span>
+        <span class="sa">f</span><span class="s2">"could not find source with name </span><span class="si">{</span><span class="n">update</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> in any child config"</span>
     <span class="p">)</span>
 
 
 <div class="viewcode-block" id="determine_config_path_from_roots_and_add_mode"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config_manager.determine_config_path_from_roots_and_add_mode">[docs]</a><span class="k">def</span> <span class="nf">determine_config_path_from_roots_and_add_mode</span><span class="p">(</span>
-    <span class="n">out_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
-    <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
+    <span class="n">out_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">),</span>
+    <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">),</span>
     <span class="n">add_mode</span><span class="p">:</span> <span class="n">AddMode</span> <span class="o">=</span> <span class="n">AddMode</span><span class="o">.</span><span class="n">LOCAL</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
     <span class="k">if</span> <span class="n">add_mode</span> <span class="o">==</span> <span class="n">AddMode</span><span class="o">.</span><span class="n">USER</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">FlexlateConfig</span><span class="o">.</span><span class="n">_settings</span><span class="o">.</span><span class="n">config_location</span>
     <span class="k">if</span> <span class="n">add_mode</span> <span class="o">==</span> <span class="n">AddMode</span><span class="o">.</span><span class="n">PROJECT</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">project_root</span> <span class="o">/</span> <span class="s2">&quot;flexlate.json&quot;</span>
+        <span class="k">return</span> <span class="n">project_root</span> <span class="o">/</span> <span class="s2">"flexlate.json"</span>
     <span class="k">if</span> <span class="n">add_mode</span> <span class="o">==</span> <span class="n">AddMode</span><span class="o">.</span><span class="n">LOCAL</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">out_root</span> <span class="o">/</span> <span class="s2">&quot;flexlate.json&quot;</span>
-    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;unexpected add mode </span><span class="si">{</span><span class="n">add_mode</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">out_root</span> <span class="o">/</span> <span class="s2">"flexlate.json"</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"unexpected add mode </span><span class="si">{</span><span class="n">add_mode</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
 </pre></div>
 
-           </div>
-           
-          </div>
-          <footer>
-  
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>
-        
-        &copy; Copyright 2022, Nick DeRobertis
-
-    </p>
-  </div>
-    
-    
-      Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
-
-</footer>
-
+          </article>
         </div>
       </div>
-
-    </section>
-
+    </main>
   </div>
-  
-
-  <script type="text/javascript">
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script>
-
-  
-  
-    
-   
-
-</body>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2022, Nick DeRobertis.
+              
+          </div>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="../../_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
 </html>
