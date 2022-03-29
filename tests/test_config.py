@@ -18,6 +18,7 @@ from tests.config import (
     PROJECT_CONFIGS_DIR,
     GENERATED_REPO_DIR,
     COOKIECUTTER_ONE_NAME,
+    NESTED_PROJECT_DIR,
 )
 from tests.dirutils import wipe_generated_folder
 from tests.fixtures.config import generated_dir_with_configs
@@ -34,6 +35,17 @@ def test_load_multi_config():
     assert len(config.applied_templates) == 4
     roots = [str(applied.root) for applied in config.applied_templates]
     assert roots == [".", "subdir1", "subdir2", str(Path("subdir2") / "subdir2_2")]
+
+
+def test_load_project_without_loading_nested_project():
+    manager = ConfigManager()
+    config = manager.load_config(NESTED_PROJECT_DIR)
+    assert len(config.template_sources) == 1
+    ts = config.template_sources[0]
+    assert ts.name == "one"
+    assert len(config.applied_templates) == 1
+    at = config.applied_templates[0]
+    assert at.name == "one"
 
 
 def test_update_and_save_multi_config(
