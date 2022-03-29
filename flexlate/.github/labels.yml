@@ -1,0 +1,13 @@
+# Labels here will be synced to the repo
+- name: maintenance
+  description: Changes which don't directly support a feature
+  color: 4ec76e
+- name: no auto merge
+  description: Prevent CI from automerging PR from maintainer
+  color: edae40
+- name: automated issue
+  description: Issue raised by a bot
+  color: bf40ed
+- name: automated pr
+  description: PR raised by a bot
+  color: e622cf
