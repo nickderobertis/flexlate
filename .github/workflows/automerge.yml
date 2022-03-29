@@ -1,4 +1,3 @@
-
 name: automerge
 on:
   pull_request:
@@ -15,7 +14,6 @@ on:
       - submitted
 jobs:
   test:
-
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 1
