@@ -1,0 +1,12 @@
+{
+  "template_sources": [],
+  "applied_templates": [
+    {
+      "name": "copier-pypi-sphinx-flexlate",
+      "data": {},
+      "version": "02890f12e8acc7c80d3f201690981e103aacca23",
+      "add_mode": "local",
+      "root": ".."
+    }
+  ]
+}
