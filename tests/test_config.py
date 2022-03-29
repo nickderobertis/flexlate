@@ -1,4 +1,6 @@
 import os.path
+import shutil
+import tempfile
 from pathlib import Path
 from typing import Optional
 
@@ -18,6 +20,7 @@ from tests.config import (
     PROJECT_CONFIGS_DIR,
     GENERATED_REPO_DIR,
     COOKIECUTTER_ONE_NAME,
+    NESTED_PROJECT_DIR,
 )
 from tests.dirutils import wipe_generated_folder
 from tests.fixtures.config import generated_dir_with_configs
@@ -34,6 +37,17 @@ def test_load_multi_config():
     assert len(config.applied_templates) == 4
     roots = [str(applied.root) for applied in config.applied_templates]
     assert roots == [".", "subdir1", "subdir2", str(Path("subdir2") / "subdir2_2")]
+
+
+def test_load_project_without_loading_nested_project():
+    manager = ConfigManager()
+    config = manager.load_config(NESTED_PROJECT_DIR)
+    assert len(config.template_sources) == 1
+    ts = config.template_sources[0]
+    assert ts.name == "one"
+    assert len(config.applied_templates) == 1
+    at = config.applied_templates[0]
+    assert at.name == "one"
 
 
 def test_update_and_save_multi_config(
@@ -124,11 +138,13 @@ def test_load_recursive_project_config(path: Path):
 
 
 def test_fail_to_load_non_existent_project_config():
-    # TODO: Figure out how to isolate no project config test
-    #  It would currently fail if the developer happens to be using flexlate in a parent directory
     manager = ConfigManager()
-    with pytest.raises(FlexlateProjectConfigFileNotExistsException):
-        config = manager.load_project_config(PROJECT_CONFIGS_DIR)
+    with tempfile.TemporaryDirectory() as temp_dir:
+        temp_path = Path(temp_dir)
+        configs_path = temp_path / PROJECT_CONFIGS_DIR.name
+        shutil.copytree(str(PROJECT_CONFIGS_DIR), configs_path)
+        with pytest.raises(FlexlateProjectConfigFileNotExistsException):
+            config = manager.load_project_config(configs_path)
 
 
 def test_update_template_source_version(
