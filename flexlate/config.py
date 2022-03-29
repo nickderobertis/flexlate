@@ -228,6 +228,11 @@ def _load_nested_configs(
         configs.append(config)
     for folder_or_file in root.iterdir():
         if folder_or_file.is_dir():
+            # Check to see if this is a nested flexlate project. If so, don't load the config,
+            # instead that config should be associated with the nested project.
+            if (folder_or_file / "flexlate-project.json").exists():
+                continue
+
             configs.extend(
                 _load_nested_configs(
                     folder_or_file,
