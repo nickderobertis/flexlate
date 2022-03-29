@@ -1,4 +1,6 @@
 import os.path
+import shutil
+import tempfile
 from pathlib import Path
 from typing import Optional
 
@@ -136,11 +138,13 @@ def test_load_recursive_project_config(path: Path):
 
 
 def test_fail_to_load_non_existent_project_config():
-    # TODO: Figure out how to isolate no project config test
-    #  It would currently fail if the developer happens to be using flexlate in a parent directory
     manager = ConfigManager()
-    with pytest.raises(FlexlateProjectConfigFileNotExistsException):
-        config = manager.load_project_config(PROJECT_CONFIGS_DIR)
+    with tempfile.TemporaryDirectory() as temp_dir:
+        temp_path = Path(temp_dir)
+        configs_path = temp_path / PROJECT_CONFIGS_DIR.name
+        shutil.copytree(str(PROJECT_CONFIGS_DIR), configs_path)
+        with pytest.raises(FlexlateProjectConfigFileNotExistsException):
+            config = manager.load_project_config(configs_path)
 
 
 def test_update_template_source_version(
