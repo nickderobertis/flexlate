@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flexlate.config &mdash; flexlate 0.11.1 documentation</title>
+  <title>flexlate.config &mdash; flexlate 0.11.2 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.11.1
+                0.11.2
               </div>
             
           
@@ -397,6 +397,11 @@
         <span class="n">configs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">folder_or_file</span> <span class="ow">in</span> <span class="n">root</span><span class="o">.</span><span class="n">iterdir</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">folder_or_file</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
+            <span class="c1"># Check to see if this is a nested flexlate project. If so, don&#39;t load the config,</span>
+            <span class="c1"># instead that config should be associated with the nested project.</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">folder_or_file</span> <span class="o">/</span> <span class="s2">&quot;flexlate-project.json&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                <span class="k">continue</span>
+
             <span class="n">configs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
                 <span class="n">_load_nested_configs</span><span class="p">(</span>
                     <span class="n">folder_or_file</span><span class="p">,</span>
