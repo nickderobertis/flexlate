@@ -13,12 +13,38 @@ Flexlate is a composable, maintainable system for managing templates.
     resolve it with your favorite tooling
   - It keeps a history of the conflict resolution so you are not resolving 
     the same conflicts repeatedly
+  - Use pre-built Github Actions to automatically get a PR in your project after 
+    the template has been updated
 - Compose a project with multiple templates
   - Add template sources and then you can apply outputs anywhere with a simple 
     CLI command
 - Use your existing templates: both [`cookiecutter`](https://github.com/cookiecutter/cookiecutter) 
   and [`copier`](https://github.com/copier-org/copier) templates are supported
+  - Works with both local and remote templates. You can even keep a template 
+    in your project and be able to update outputs whenever it changes
 - Apply it to your existing projects with a `bootstrap` functionality
+- (planned) Use flexlate projects as templates themselves, enabling nested templates
+  and sharing data across templates
+- (planned) Allow multiple templates to coordinate on specific files in arbitrary 
+  ways, e.g. think about applying a template and it adds its required packages 
+  to `package.json` in a JS project
+
+### Use Cases
+
+- You want to create or already have projects that are generated from a `cookiecutter`
+  or `copier` template, and keep those projects up to date with changes in the template
+- You want to create a project from standard building blocks that can also be 
+  updated systematically. For example think of something like a React component 
+  with tests, a Java class and tests, or any set of files you want to generate
+
+### Locally or Remote With a Team
+
+In either case, you can use Flexlate 100% locally even on a team project 
+without anyone else knowing you are using it via the `user` mode.
+
+But Flexlate really shines when you embrace it fully and include it in
+your remote repo. This enables you use CI to automatically open PRs with 
+template updates.
 
 ### Why Flexlate?
 
@@ -31,6 +57,18 @@ other merge conflicts.
 
 Further, there is not really any ability to compose a project template from 
 smaller templates with any existing tools.
+
+### How does it Work?
+
+Flexlate is Git-native: it carries out all its operations via commits to 
+Git branches. It maintains two branches, one that contains the history of 
+the template output and the other than contains the merged output between
+your project and the template. This means that you resolve any conflicts 
+with the template changes in Git and the merge conflict resolution is stored 
+in the output branch.
+
+It enables composability by using config files to keep track of where 
+multiple templates should be rendered and with what data.
 
 ## Getting Started
 
@@ -51,6 +89,47 @@ Or, if you don't have/don't want to install `pipx`:
 
 ```
 pip install flexlate
+```
+
+### First Steps
+
+#### New Project from a Template
+
+To generate a new project from a template, use `init-from`, e.g.:
+
+```shell
+fxt init-from https://github.com/nickderobertis/copier-pypi-sphinx-flexlate
+```
+#### Existing Project from a Template
+
+To add Flexlate to your project that is already generated from a `cookiecutter`
+or `cruft` template, use `bootstrap`, e.g.:
+
+```shell
+fxt bootstrap https://github.com/nickderobertis/copier-pypi-sphinx-flexlate
+```
+
+#### Compose a Project from Multiple Templates
+
+You can add a template source and then add as many outputs from that source 
+as you want. 
+
+Before you can do this, you must initialize a Flexlate project:
+
+```shell
+fxt init
+```
+
+Then you can add the template source:
+
+```shell
+fxt add source https://github.com/nickderobertis/copier-pypi-sphinx-flexlate
+```
+
+Then you can apply the output anywhere in the project:
+
+```shell
+fxt add output copier-pypi-sphinx-flexlate
 ```
 
 ### Get Help
