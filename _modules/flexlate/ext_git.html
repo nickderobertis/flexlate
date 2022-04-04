@@ -46,7 +46,7 @@
   
   
   
-    <title>flexlate.ext_git &#8212; flexlate 0.11.2 documentation</title>
+    <title>flexlate.ext_git &#8212; flexlate 0.12.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/material.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -87,7 +87,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex navheader">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="../../index.html" title="flexlate 0.11.2 documentation"
+        <a href="../../index.html" title="flexlate 0.12.0 documentation"
            class="md-header-nav__button md-logo">
           
             <i class="md-icon">&#xe869</i>
@@ -173,7 +173,7 @@
   <nav class="md-tabs" data-md-component="tabs">
     <div class="md-tabs__inner md-grid">
       <ul class="md-tabs__list">
-          <li class="md-tabs__item"><a href="../../index.html" class="md-tabs__link">flexlate 0.11.2 documentation</a></li>
+          <li class="md-tabs__item"><a href="../../index.html" class="md-tabs__link">flexlate 0.12.0 documentation</a></li>
           <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">Module code</a></li>
       </ul>
     </div>
@@ -186,13 +186,13 @@
               <div class="md-sidebar__inner">
                 <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="../../index.html" title="flexlate 0.11.2 documentation" class="md-nav__button md-logo">
+    <a href="../../index.html" title="flexlate 0.12.0 documentation" class="md-nav__button md-logo">
       
         <i class="md-icon">&#xe869</i>
       
     </a>
     <a href="../../index.html"
-       title="flexlate 0.11.2 documentation">flexlate</a>
+       title="flexlate 0.12.0 documentation">flexlate</a>
   </label>
     <div class="md-nav__source">
       <a href="https://github.com/nickderobertis/flexlate" title="Go to repository" class="md-source" data-md-source="github">
@@ -478,7 +478,6 @@
     <span class="n">remote</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"origin"</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Repo</span><span class="p">:</span>
     <span class="n">use_branch_name</span> <span class="o">=</span> <span class="n">branch_name</span>
-    <span class="n">_update_local_branch_from_remote_without_checkout</span><span class="p">(</span><span class="n">repo</span><span class="p">,</span> <span class="n">branch_name</span><span class="p">,</span> <span class="n">remote</span><span class="o">=</span><span class="n">remote</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">branch_exists</span><span class="p">(</span><span class="n">repo</span><span class="p">,</span> <span class="n">branch_name</span><span class="p">):</span>
         <span class="c1"># Branch doesn't exist, instead clone either the base branch or the current one</span>
         <span class="c1"># Will need to do the checkout later after adding files</span>
@@ -551,6 +550,13 @@
             <span class="k">return</span>
         <span class="c1"># Unknown git error, raise it</span>
         <span class="k">raise</span> <span class="n">e</span>
+
+
+<div class="viewcode-block" id="update_local_branches_from_remote_without_checkout"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.ext_git.update_local_branches_from_remote_without_checkout">[docs]</a><span class="k">def</span> <span class="nf">update_local_branches_from_remote_without_checkout</span><span class="p">(</span>
+    <span class="n">repo</span><span class="p">:</span> <span class="n">Repo</span><span class="p">,</span> <span class="n">branch_names</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">remote</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"origin"</span>
+<span class="p">):</span>
+    <span class="k">for</span> <span class="n">branch</span> <span class="ow">in</span> <span class="n">branch_names</span><span class="p">:</span>
+        <span class="n">_update_local_branch_from_remote_without_checkout</span><span class="p">(</span><span class="n">repo</span><span class="p">,</span> <span class="n">branch</span><span class="p">,</span> <span class="n">remote</span><span class="p">)</span></div>
 
 
 <span class="k">def</span> <span class="nf">_push_branch_from_one_local_repo_to_another</span><span class="p">(</span>
