@@ -21,6 +21,7 @@ from flexlate.exc import TemplateSourceWithNameAlreadyExistsException
 from flexlate.ext_git import (
     assert_repo_is_in_clean_state,
     stage_and_commit_all,
+    update_local_branches_from_remote_without_checkout,
 )
 from flexlate.path_ops import (
     location_relative_to_new_parent,
@@ -108,6 +109,18 @@ class Adder:
                 transaction,
             )
 
+            # Ensure that all flexlate branches are up to date from remote before working on them
+            update_local_branches_from_remote_without_checkout(
+                repo,
+                [
+                    base_merged_branch_name,
+                    merged_branch_name,
+                    base_template_branch_name,
+                    template_branch_name,
+                ],
+                remote=remote,
+            )
+
             # Local or project config, add in git
             modify_files_via_branches_and_temp_repo(
                 lambda temp_path: config_manager.add_template_source(
@@ -192,6 +205,18 @@ class Adder:
                 transaction,
             )
 
+            # Ensure that all flexlate branches are up to date from remote before working on them
+            update_local_branches_from_remote_without_checkout(
+                repo,
+                [
+                    base_merged_branch_name,
+                    merged_branch_name,
+                    base_template_branch_name,
+                    template_branch_name,
+                ],
+                remote=remote,
+            )
+
             modify_files_via_branches_and_temp_repo(
                 lambda temp_path: config_manager.add_applied_template(
                     template,
@@ -231,6 +256,7 @@ class Adder:
             base_template_branch_name=base_template_branch_name,
             no_input=no_input,
             full_rerender=False,
+            remote=remote,
             renderer=renderer,
             config_manager=config_manager,
         )
@@ -332,6 +358,7 @@ class Adder:
                     template_branch_name=template_branch_name,
                     base_template_branch_name=template_branch_name,
                     no_input=True,
+                    remote=remote,
                     updater=updater,
                     renderer=renderer,
                     config_manager=config_manager,

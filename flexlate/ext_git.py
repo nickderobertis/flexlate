@@ -215,7 +215,6 @@ def _clone_single_branch_from_local_repo(
     remote: str = "origin",
 ) -> Repo:
     use_branch_name = branch_name
-    _update_local_branch_from_remote_without_checkout(repo, branch_name, remote=remote)
     if not branch_exists(repo, branch_name):
         # Branch doesn't exist, instead clone either the base branch or the current one
         # Will need to do the checkout later after adding files
@@ -288,6 +287,13 @@ def _update_local_branch_from_remote_without_checkout(
             return
         # Unknown git error, raise it
         raise e
+
+
+def update_local_branches_from_remote_without_checkout(
+    repo: Repo, branch_names: Sequence[str], remote: str = "origin"
+):
+    for branch in branch_names:
+        _update_local_branch_from_remote_without_checkout(repo, branch, remote)
 
 
 def _push_branch_from_one_local_repo_to_another(

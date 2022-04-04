@@ -19,6 +19,7 @@ class Syncer:
         template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
         base_template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
         no_input: bool = False,
+        remote: str = "origin",
         updater: Updater = Updater(),
         renderer: MultiRenderer = MultiRenderer(),
         config_manager: ConfigManager = ConfigManager(),
@@ -35,6 +36,7 @@ class Syncer:
                 base_template_branch_name=base_template_branch_name,
                 no_input=no_input,
                 full_rerender=True,
+                remote=remote,
                 renderer=renderer,
                 config_manager=config_manager,
             )

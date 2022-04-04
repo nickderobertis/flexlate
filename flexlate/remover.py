@@ -11,7 +11,10 @@ from flexlate.config_manager import (
 )
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.exc import CannotRemoveAppliedTemplateException
-from flexlate.ext_git import assert_repo_is_in_clean_state
+from flexlate.ext_git import (
+    assert_repo_is_in_clean_state,
+    update_local_branches_from_remote_without_checkout,
+)
 from flexlate.path_ops import (
     location_relative_to_new_parent,
 )
@@ -62,6 +65,18 @@ class Remover:
                     template_name, out_root, Path(repo.working_dir)
                 ),
                 transaction,
+            )
+
+            # Ensure that all flexlate branches are up to date from remote before working on them
+            update_local_branches_from_remote_without_checkout(
+                repo,
+                [
+                    base_merged_branch_name,
+                    merged_branch_name,
+                    base_template_branch_name,
+                    template_branch_name,
+                ],
+                remote=remote,
             )
 
             modify_files_via_branches_and_temp_repo(
@@ -160,6 +175,18 @@ class Remover:
                     transaction,
                 )
 
+                # Ensure that all flexlate branches are up to date from remote before working on them
+                update_local_branches_from_remote_without_checkout(
+                    repo,
+                    [
+                        base_merged_branch_name,
+                        merged_branch_name,
+                        base_template_branch_name,
+                        template_branch_name,
+                    ],
+                    remote=remote,
+                )
+
                 modify_files_via_branches_and_temp_repo(
                     lambda temp_path: config_manager.remove_applied_template(
                         template_name,
@@ -189,6 +216,7 @@ class Remover:
                 template_branch_name=template_branch_name,
                 base_template_branch_name=base_template_branch_name,
                 no_input=True,
+                remote=remote,
                 renderer=renderer,
                 config_manager=config_manager,
             )

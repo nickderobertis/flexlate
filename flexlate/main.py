@@ -316,6 +316,7 @@ class Flexlate:
                 repo, project_config.template_branch_name
             ),
             base_template_branch_name=project_config.template_branch_name,
+            remote=project_config.remote,
             renderer=self.renderer,
             config_manager=self.config_manager,
         )
@@ -358,6 +359,7 @@ class Flexlate:
             ),
             base_template_branch_name=project_config.template_branch_name,
             no_input=not prompt,
+            remote=project_config.remote,
             updater=self.updater,
             renderer=self.renderer,
             config_manager=self.config_manager,
