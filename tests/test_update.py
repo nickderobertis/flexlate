@@ -1,5 +1,6 @@
 import shutil
 import tempfile
+from enum import Enum
 from pathlib import Path
 from typing import Optional, Sequence
 from unittest.mock import patch
@@ -40,6 +41,7 @@ from tests.fixtures.git import *
 from tests.fixtures.template import *
 from tests.fixtures.templated_repo import *
 from tests.fixtures.updates import *
+from tests.fixtures.local_branch_situation import *
 from tests.fixtures.transaction import update_transaction, sync_transaction
 from flexlate.ext_git import repo_has_merge_conflicts, delete_local_branch
 
@@ -164,6 +166,8 @@ def test_update_modify_specific_template(
 
 
 def test_update_modify_template_with_feature_branches_and_main_branches_are_only_on_remote(
+    template_branch_situation: LocalBranchSituation,
+    output_branch_situation: LocalBranchSituation,
     cookiecutter_one_modified_template: CookiecutterTemplate,
     repo_with_gitignore_and_template_branch_from_cookiecutter_one: Repo,
     update_transaction: FlexlateTransaction,
@@ -187,8 +191,8 @@ def test_update_modify_template_with_feature_branches_and_main_branches_are_only
     add_local_remote(repo)
     pusher = Pusher()
     pusher.push_main_flexlate_branches(repo)
-    delete_local_branch(repo, DEFAULT_MERGED_BRANCH_NAME)
-    delete_local_branch(repo, DEFAULT_TEMPLATE_BRANCH_NAME)
+    output_branch_situation.apply(repo, DEFAULT_MERGED_BRANCH_NAME)
+    template_branch_situation.apply(repo, DEFAULT_TEMPLATE_BRANCH_NAME)
 
     updater.update(
         repo,
@@ -211,8 +215,14 @@ def test_update_modify_template_with_feature_branches_and_main_branches_are_only
         template_branch.commit.parents[0].hexsha == base_template_branch.commit.hexsha
     )
 
+    output_branch: Head = repo.branches[feature_merged_branch_name]  # type: ignore
+    base_output_branch: Head = repo.branches[DEFAULT_MERGED_BRANCH_NAME]  # type: ignore
+    assert output_branch.commit.parents[0].hexsha == base_output_branch.commit.hexsha
+
 
 def test_update_modify_template_with_feature_branches_and_feature_branches_are_only_on_remote(
+    template_branch_situation: LocalBranchSituation,
+    output_branch_situation: LocalBranchSituation,
     cookiecutter_one_modified_template: CookiecutterTemplate,
     repo_with_gitignore_and_template_branch_from_cookiecutter_one: Repo,
     update_transaction: FlexlateTransaction,
@@ -257,10 +267,10 @@ def test_update_modify_template_with_feature_branches_and_feature_branches_are_o
     expect_base_merged_branch_sha = repo.branches[feature_merged_branch_name].commit.hexsha  # type: ignore
     expect_base_template_branch_sha = repo.branches[feature_template_branch_name].commit.hexsha  # type: ignore
 
-    delete_local_branch(repo, DEFAULT_MERGED_BRANCH_NAME)
-    delete_local_branch(repo, DEFAULT_TEMPLATE_BRANCH_NAME)
-    delete_local_branch(repo, feature_merged_branch_name)
-    delete_local_branch(repo, feature_template_branch_name)
+    output_branch_situation.apply(repo, DEFAULT_MERGED_BRANCH_NAME)
+    output_branch_situation.apply(repo, feature_merged_branch_name)
+    template_branch_situation.apply(repo, DEFAULT_TEMPLATE_BRANCH_NAME)
+    template_branch_situation.apply(repo, feature_template_branch_name)
 
     def _resolve_conflicts_then_type_yes(prompt: str) -> bool:
         stage_and_commit_all(repo, "Resolve conflicts")

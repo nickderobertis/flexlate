@@ -49,6 +49,7 @@ from flexlate.ext_git import (
     get_branch_sha,
     restore_initial_commit_files,
     get_merge_conflict_diffs,
+    update_local_branches_from_remote_without_checkout,
 )
 from flexlate.template_data import TemplateData, merge_data
 from flexlate.transactions.transaction import (
@@ -74,6 +75,7 @@ class Updater:
         no_input: bool = False,
         abort_on_conflict: bool = False,
         full_rerender: bool = True,
+        remote: str = "origin",
         renderer: MultiRenderer = MultiRenderer(),
         config_manager: ConfigManager = ConfigManager(),
     ):
@@ -89,6 +91,18 @@ class Updater:
         merged_branch_sha = get_branch_sha(repo, merged_branch_name)
         template_branch_sha = get_branch_sha(repo, template_branch_name)
 
+        # Ensure that all flexlate branches are up to date from remote before working on them
+        update_local_branches_from_remote_without_checkout(
+            repo,
+            [
+                base_merged_branch_name,
+                merged_branch_name,
+                base_template_branch_name,
+                template_branch_name,
+            ],
+            remote=remote,
+        )
+
         # Prepare the template branch, this is the branch that stores only the template files
         # Create it from the initial commit if it does not exist
         cwd = Path(os.getcwd())
@@ -97,6 +111,7 @@ class Updater:
             branch_name=template_branch_name,
             base_branch_name=base_template_branch_name,
             delete_tracked_files=full_rerender,
+            remote=remote,
         ) as temp_repo:
             temp_project_root = Path(temp_repo.working_dir)  # type: ignore
             temp_updates = _move_update_config_locations_to_new_parent(

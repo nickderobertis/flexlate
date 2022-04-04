@@ -77,5 +77,19 @@ def accept_theirs_in_merge_conflict(repo: Repo):
     repo.git.checkout("--theirs", ".")
 
 
+def reset_n_commits_without_checkout(
+    repo: Repo, branch_name: str, n_commits: int = 1, ignore_merges: bool = True
+):
+    if not ignore_merges:
+        reset_to = f"HEAD~{n_commits}"
+    else:
+        reset_to = _get_last_non_merge_commit_parent_on_branch(repo, branch_name)
+    repo.git.branch("--force", branch_name, reset_to)
+
+
+def _get_last_non_merge_commit_parent_on_branch(repo: Repo, branch_name: str) -> str:
+    return repo.git.rev_list("--no-merges", "-n", "1", f"{branch_name}~1")
+
+
 def _get_main_message_from_commit_message(message: str) -> str:
     return message.split("\n")[0]
