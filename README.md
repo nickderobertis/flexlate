@@ -132,6 +132,48 @@ Then you can apply the output anywhere in the project:
 fxt add output copier-pypi-sphinx-flexlate
 ```
 
+### Updating a Template
+
+#### Re-prompt Questions
+
+Once you have updates in the template that you want to bring to your project,
+run:
+
+```shell
+fxt update
+```
+
+This will prompt for all the questions again, using your previous answers 
+as defaults. If there are new questions from the update, or if you want 
+to change any of the answers, you should follow this flow. 
+
+#### No Question Prompts
+
+If instead you 
+know that there are only changes in the outputs and not questions/answers, 
+you can pass `--no-input` or `-n` to skip the questions:
+
+```shell
+fxt update -n
+```
+
+#### Saving your Work
+
+##### Local Repo Flows
+
+If you are following a local repo flow, then you can use the `fxt merge` command 
+to merge the Flexlate feature branches into the Flexlate main branches. If 
+you are using a feature-branch flow, then you would want to run `fxt merge` just 
+before merging your feature branch into the main branch. If you are simply 
+commititng to the main branch, just run `fxt merge` after any Flexlate command.
+
+##### Remote Repo/PR Flows
+
+If you are merging PRs in your repo rather than following a local flow, then 
+you will want to `fxt push` just before/after your push your feature branch 
+and open a PR. If you use the official Flexlate Github Merge Action, 
+the Flexlate branches will be merged automatically after the PR is merged.
+
 ### Get Help
 
 You can run `--help` on the end of any command to see documentation.
