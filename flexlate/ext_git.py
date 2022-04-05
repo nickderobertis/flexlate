@@ -14,6 +14,7 @@ from flexlate.exc import (
     GitRepoHasNoCommitsException,
     CannotFindClonedTemplateException,
 )
+from flexlate.logger import log
 from flexlate.path_ops import copy_flexlate_configs, change_directory_to
 
 
@@ -160,6 +161,9 @@ def temp_repo_that_pushes_to_branch(  # type: ignore
     folder_name = Path(repo.working_dir).name
     with tempfile.TemporaryDirectory() as tmp_dir:
         tmp_path = Path(tmp_dir) / folder_name
+        log.debug(
+            f"Creating temp repo at {tmp_path} that has branch {branch_name} possibly created from {base_branch_name}"
+        )
         temp_repo = _clone_from_local_repo(
             repo,
             tmp_path,
@@ -216,6 +220,7 @@ def _clone_single_branch_from_local_repo(
 ) -> Repo:
     use_branch_name = branch_name
     if not branch_exists(repo, branch_name):
+        log.debug(f"{branch_name} does not exist, will create")
         # Branch doesn't exist, instead clone either the base branch or the current one
         # Will need to do the checkout later after adding files
         _update_local_branch_from_remote_without_checkout(
@@ -227,6 +232,7 @@ def _clone_single_branch_from_local_repo(
             use_branch_name = repo.active_branch.name
 
     # Branch exists, clone only that branch
+    log.debug(f"Creating branch {use_branch_name} in the temporary repo")
     repo.git.clone(
         repo.working_dir, "--branch", use_branch_name, "--single-branch", out_dir
     )
@@ -234,6 +240,10 @@ def _clone_single_branch_from_local_repo(
 
     if not branch_exists(temp_repo, branch_name):
         # Now create the new branch
+        log.debug(
+            f"Creating {branch_name} in the temporary repo from branch {base_branch_name}"
+        )
+        # TODO: should this be use_branch_name and not base_branch_name?
         checkout_template_branch(temp_repo, branch_name, base_branch_name)
 
     return temp_repo
@@ -276,22 +286,36 @@ def _update_local_branch_from_remote_without_checkout(
     except GitCommandError as e:
         if "couldn't find remote ref" in str(e):
             # No remote branch, so this is a no-op
+            log.debug(
+                f"Could not find any remote ref for {branch_name}, cannot update local"
+            )
             return
         if "non-fast-forward" in str(e):
             # The local branch is ahead of the remote branch,
             # so this is a no-op
+            log.debug(f"Non fast-forward for {branch_name}, cannot update local")
             return
         if "Could not read from remote repository" in str(e):
             # There is likely not a remote for this repo. If there is,
             # it has a different name than what was passed
+            log.debug(
+                f"Could not read remote repository for {branch_name}, cannot update local"
+            )
             return
         # Unknown git error, raise it
         raise e
+    else:
+        log.debug(
+            f"Successfully updated {branch_name} from remote {remote} without checkout"
+        )
 
 
 def update_local_branches_from_remote_without_checkout(
     repo: Repo, branch_names: Sequence[str], remote: str = "origin"
 ):
+    log.debug(
+        f"Updating local branches from remote {remote} without checkout: {branch_names}"
+    )
     for branch in branch_names:
         _update_local_branch_from_remote_without_checkout(repo, branch, remote)
 
