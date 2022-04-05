@@ -88,7 +88,9 @@ class Updater:
 
         # Save the status of the flexlate branches. We may need to roll back to this state
         # if the user aborts the merge
-        log.debug(f"Saving branch state before update for {merged_branch_name} and {template_branch_name}")
+        log.debug(
+            f"Saving branch state before update for {merged_branch_name} and {template_branch_name}"
+        )
         merged_branch_sha = get_branch_sha(repo, merged_branch_name)
         template_branch_sha = get_branch_sha(repo, template_branch_name)
 
@@ -115,7 +117,9 @@ class Updater:
             remote=remote,
         ) as temp_repo:
             temp_project_root = Path(temp_repo.working_dir)  # type: ignore
-            log.debug(f"Working in a temporary repo at {temp_project_root} to update template branch {template_branch_name}")
+            log.debug(
+                f"Working in a temporary repo at {temp_project_root} to update template branch {template_branch_name}"
+            )
             temp_updates = _move_update_config_locations_to_new_parent(
                 updates, project_root, temp_project_root
             )
@@ -210,7 +214,9 @@ class Updater:
         # Now prepare the merged (output) branch, by merging the current
         # branch into it and then the template branch into it.
         # Update with changes from the main repo
-        log.debug(f"Fast forwarding {merged_branch_name} based on {current_branch.name}")
+        log.debug(
+            f"Fast forwarding {merged_branch_name} based on {current_branch.name}"
+        )
         fast_forward_branch_without_checkout(
             repo, merged_branch_name, current_branch.name
         )

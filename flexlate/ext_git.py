@@ -277,7 +277,9 @@ def _update_local_branch_from_remote_without_checkout(
     except GitCommandError as e:
         if "couldn't find remote ref" in str(e):
             # No remote branch, so this is a no-op
-            log.debug(f"Could not find any remote ref for {branch_name}, cannot update local")
+            log.debug(
+                f"Could not find any remote ref for {branch_name}, cannot update local"
+            )
             return
         if "non-fast-forward" in str(e):
             # The local branch is ahead of the remote branch,
@@ -287,18 +289,24 @@ def _update_local_branch_from_remote_without_checkout(
         if "Could not read from remote repository" in str(e):
             # There is likely not a remote for this repo. If there is,
             # it has a different name than what was passed
-            log.debug(f"Could not read remote repository for {branch_name}, cannot update local")
+            log.debug(
+                f"Could not read remote repository for {branch_name}, cannot update local"
+            )
             return
         # Unknown git error, raise it
         raise e
     else:
-        log.debug(f"Successfully updated {branch_name} from remote {remote} without checkout")
+        log.debug(
+            f"Successfully updated {branch_name} from remote {remote} without checkout"
+        )
 
 
 def update_local_branches_from_remote_without_checkout(
     repo: Repo, branch_names: Sequence[str], remote: str = "origin"
 ):
-    log.debug(f"Updating local branches from remote {remote} without checkout: {branch_names}")
+    log.debug(
+        f"Updating local branches from remote {remote} without checkout: {branch_names}"
+    )
     for branch in branch_names:
         _update_local_branch_from_remote_without_checkout(repo, branch, remote)
 
