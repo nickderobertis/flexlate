@@ -8,8 +8,10 @@ from flexlate.add_mode import AddMode
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.error_handler import simple_output_for_exceptions
 from flexlate.exc import MergeConflictsAndAbortException
+from flexlate.get_version import get_flexlate_version
 from flexlate.logger import log
 from flexlate.main import Flexlate
+from flexlate.styles import print_styled, INFO_STYLE
 
 cli = typer.Typer()
 
@@ -86,6 +88,23 @@ TEMPLATE_SOURCE_NAME_ARGUMENT = typer.Argument(
     ...,
     help=TEMPLATE_SOURCE_NAME_DOC,
 )
+
+
+@cli.callback(invoke_without_command=True)
+def pre_execute(
+    version: bool = typer.Option(
+        False,
+        "--version",
+        "-v",
+        show_default=False,
+        help="Show Flexlate version and exit",
+    )
+):
+    # Support printing version and then existing with fxt --version
+    if version:
+        version_number = get_flexlate_version()
+        print_styled(version_number, INFO_STYLE)
+        exit(0)
 
 
 @add_cli.command(name="source")
