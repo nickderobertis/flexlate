@@ -4,7 +4,8 @@
 
 ## Overview
 
-Flexlate is a composable, maintainable system for managing templates.
+Flexlate is a composable, maintainable system for managing project 
+and file generator templates.
 
 ### Features
 
