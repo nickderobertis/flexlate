@@ -1,0 +1,11 @@
+{
+  "projects": [
+    {
+      "path": ".",
+      "default_add_mode": "local",
+      "merged_branch_name": "flexlate-output",
+      "template_branch_name": "flexlate-templates",
+      "remote": "origin"
+    }
+  ]
+}

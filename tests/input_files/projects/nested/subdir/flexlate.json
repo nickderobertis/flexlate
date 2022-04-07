@@ -1,0 +1,26 @@
+{
+  "template_sources": [
+    {
+      "name": "two",
+      "path": "../../input_files/templates/cookiecutters/two",
+      "type": "cookiecutter",
+      "version": null,
+      "git_url": null,
+      "target_version": null,
+      "render_relative_root_in_output": "{{ cookiecutter.a }}",
+      "render_relative_root_in_template": "{{ cookiecutter.a }}"
+    }
+  ],
+  "applied_templates": [
+    {
+      "name": "two",
+      "data": {
+        "a": "b",
+        "d": "e"
+      },
+      "version": "some version",
+      "add_mode": "local",
+      "root": "."
+    }
+  ]
+}
