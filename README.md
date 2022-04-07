@@ -1,4 +1,9 @@
 [![](https://codecov.io/gh/nickderobertis/flexlate/branch/master/graph/badge.svg)](https://codecov.io/gh/nickderobertis/flexlate)
+[![PyPI](https://img.shields.io/pypi/v/flexlate)](https://pypi.org/project/flexlate/)
+![PyPI - License](https://img.shields.io/pypi/l/flexlate)
+[![Documentation](https://img.shields.io/badge/documentation-pass-green)](https://nickderobertis.github.io/flexlate/)
+[![Github Repo](https://img.shields.io/badge/repo-github-informational)](https://github.com/nickderobertis/flexlate/)
+
 
 #  flexlate
 
