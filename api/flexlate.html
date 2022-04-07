@@ -47,7 +47,7 @@
   
   
   
-    <title>flexlate package &#8212; flexlate 0.12.1 documentation</title>
+    <title>flexlate package &#8212; flexlate 0.12.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/material.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
@@ -90,7 +90,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex navheader">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="../index.html" title="flexlate 0.12.1 documentation"
+        <a href="../index.html" title="flexlate 0.12.2 documentation"
            class="md-header-nav__button md-logo">
           
             <i class="md-icon">&#xe869</i>
@@ -176,7 +176,7 @@
   <nav class="md-tabs" data-md-component="tabs">
     <div class="md-tabs__inner md-grid">
       <ul class="md-tabs__list">
-          <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">flexlate 0.12.1 documentation</a></li>
+          <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">flexlate 0.12.2 documentation</a></li>
           <li class="md-tabs__item"><a href="modules.html" class="md-tabs__link">flexlate</a></li>
       </ul>
     </div>
@@ -189,13 +189,13 @@
               <div class="md-sidebar__inner">
                 <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="../index.html" title="flexlate 0.12.1 documentation" class="md-nav__button md-logo">
+    <a href="../index.html" title="flexlate 0.12.2 documentation" class="md-nav__button md-logo">
       
         <i class="md-icon">&#xe869</i>
       
     </a>
     <a href="../index.html"
-       title="flexlate 0.12.1 documentation">flexlate</a>
+       title="flexlate 0.12.2 documentation">flexlate</a>
   </label>
     <div class="md-nav__source">
       <a href="https://github.com/nickderobertis/flexlate" title="Go to repository" class="md-source" data-md-source="github">
@@ -278,6 +278,8 @@
         <li class="md-nav__item"><a href="#module-flexlate.exc" class="md-nav__link">flexlate.exc module</a>
         </li>
         <li class="md-nav__item"><a href="#module-flexlate.ext_git" class="md-nav__link">flexlate.ext_git module</a>
+        </li>
+        <li class="md-nav__item"><a href="#module-flexlate.get_version" class="md-nav__link">flexlate.get_version module</a>
         </li>
         <li class="md-nav__item"><a href="#module-flexlate.logger" class="md-nav__link">flexlate.logger module</a>
         </li>
@@ -419,6 +421,13 @@
     <li class="md-nav__item">
     
     
+      <a href="#module-flexlate.get_version" class="md-nav__link">flexlate.get_version module</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
       <a href="#module-flexlate.logger" class="md-nav__link">flexlate.logger module</a>
       
     
@@ -549,6 +558,8 @@
         <li class="md-nav__item"><a href="#module-flexlate.exc" class="md-nav__link">flexlate.exc module</a>
         </li>
         <li class="md-nav__item"><a href="#module-flexlate.ext_git" class="md-nav__link">flexlate.ext_git module</a>
+        </li>
+        <li class="md-nav__item"><a href="#module-flexlate.get_version" class="md-nav__link">flexlate.get_version module</a>
         </li>
         <li class="md-nav__item"><a href="#module-flexlate.logger" class="md-nav__link">flexlate.logger module</a>
         </li>
@@ -907,6 +918,10 @@ exist with code 1 when updates are available so that it is easy to use in script
 the corresponding feature branch is merged into the repo’s main branch. This
 command provides a convenient way to do so.</p>
 </dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="flexlate.cli.pre_execute">
+<span class="sig-prename descclassname"><span class="pre">flexlate.cli.</span></span><span class="sig-name descname"><span class="pre">pre_execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Option</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#flexlate.cli.pre_execute" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="flexlate.cli.push_feature">
 <span class="sig-prename descclassname"><span class="pre">flexlate.cli.</span></span><span class="sig-name descname"><span class="pre">push_feature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_branch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Argument</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remote</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Option</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#flexlate.cli.push_feature" title="Permalink to this definition">¶</a></dt>
@@ -1824,6 +1839,18 @@ when working in a temp directory)</p></li>
 <dt class="sig sig-object py" id="flexlate.ext_git.update_local_branches_from_remote_without_checkout">
 <span class="sig-prename descclassname"><span class="pre">flexlate.ext_git.</span></span><span class="sig-name descname"><span class="pre">update_local_branches_from_remote_without_checkout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">repo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">branch_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remote</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'origin'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/ext_git.html#update_local_branches_from_remote_without_checkout"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.ext_git.update_local_branches_from_remote_without_checkout" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+</section>
+<section id="module-flexlate.get_version">
+<span id="flexlate-get-version-module"></span><h2 id="module-flexlate.get_version">flexlate.get_version module<a class="headerlink" href="#module-flexlate.get_version" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="flexlate.get_version.get_flexlate_version">
+<span class="sig-prename descclassname"><span class="pre">flexlate.get_version.</span></span><span class="sig-name descname"><span class="pre">get_flexlate_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/flexlate/get_version.html#get_flexlate_version"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#flexlate.get_version.get_flexlate_version" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
 </section>
 <section id="module-flexlate.logger">
 <span id="flexlate-logger-module"></span><h2 id="module-flexlate.logger">flexlate.logger module<a class="headerlink" href="#module-flexlate.logger" title="Permalink to this headline">¶</a></h2>

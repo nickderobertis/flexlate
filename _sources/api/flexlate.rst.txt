@@ -125,6 +125,14 @@ flexlate.ext\_git module
    :undoc-members:
    :show-inheritance:
 
+flexlate.get\_version module
+----------------------------
+
+.. automodule:: flexlate.get_version
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 flexlate.logger module
 ----------------------
 
