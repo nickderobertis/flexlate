@@ -440,7 +440,7 @@ though it can also be installed with <code class="docutils literal notranslate">
 <section id="new-project-from-a-template">
 <h4 id="new-project-from-a-template">New Project from a Template<a class="headerlink" href="#new-project-from-a-template" title="Permalink to this headline">¶</a></h4>
 <p>To generate a new project from a template, use
-<a class="reference external" href="https://nickderobertis.github.io/flexlate/docs/commands.html#fxt-init-from"><code class="docutils literal notranslate"><span class="pre">init-from</span></code></a>,
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/commands.html#fxt-init-from"><code class="docutils literal notranslate"><span class="pre">init-from</span></code></a>,
 e.g.:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>fxt init-from https://github.com/nickderobertis/copier-pypi-sphinx-flexlate
 </pre></div>
@@ -450,7 +450,7 @@ e.g.:</p>
 <h4 id="existing-project-from-a-template">Existing Project from a Template<a class="headerlink" href="#existing-project-from-a-template" title="Permalink to this headline">¶</a></h4>
 <p>To add Flexlate to your project that is already generated from a <code class="docutils literal notranslate"><span class="pre">cookiecutter</span></code>
 or <code class="docutils literal notranslate"><span class="pre">cruft</span></code> template, use
-<a class="reference external" href="https://nickderobertis.github.io/flexlate/docs/commands.html#fxt-bootstrap"><code class="docutils literal notranslate"><span class="pre">bootstrap</span></code></a>,
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/commands.html#fxt-bootstrap"><code class="docutils literal notranslate"><span class="pre">bootstrap</span></code></a>,
 e.g.:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>fxt bootstrap https://github.com/nickderobertis/copier-pypi-sphinx-flexlate
 </pre></div>
@@ -459,11 +459,11 @@ e.g.:</p>
 <section id="compose-a-project-from-multiple-templates">
 <h4 id="compose-a-project-from-multiple-templates">Compose a Project from Multiple Templates<a class="headerlink" href="#compose-a-project-from-multiple-templates" title="Permalink to this headline">¶</a></h4>
 <p>You can
-<a class="reference external" href="https://nickderobertis.github.io/flexlate/docs/commands.html#fxt-add-source">add a template source</a>
-and then <a class="reference external" href="https://nickderobertis.github.io/flexlate/docs/commands.html#fxt-add-output">add as many outputs from that source</a>
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/commands.html#fxt-add-source">add a template source</a>
+and then <a class="reference external" href="https://nickderobertis.github.io/flexlate/commands.html#fxt-add-output">add as many outputs from that source</a>
 as you want.</p>
 <p>Before you can do this, you must
-<a class="reference external" href="https://nickderobertis.github.io/flexlate/docs/commands.html#fxt-init">initialize a Flexlate project</a>:</p>
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/commands.html#fxt-init">initialize a Flexlate project</a>:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>fxt init
 </pre></div>
 </div>
@@ -482,7 +482,7 @@ as you want.</p>
 <section id="re-prompt-questions">
 <h4 id="re-prompt-questions">Re-prompt Questions<a class="headerlink" href="#re-prompt-questions" title="Permalink to this headline">¶</a></h4>
 <p>Once you have updates in the template that you want to bring to your project,
-use <a class="reference external" href="https://nickderobertis.github.io/flexlate/docs/commands.html#fxt-update">the update command</a>:</p>
+use <a class="reference external" href="https://nickderobertis.github.io/flexlate/commands.html#fxt-update">the update command</a>:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>fxt update
 </pre></div>
 </div>
@@ -504,7 +504,7 @@ you can pass <code class="docutils literal notranslate"><span class="pre">--no-i
 <section id="local-repo-flows">
 <h5 id="local-repo-flows">Local Repo Flows<a class="headerlink" href="#local-repo-flows" title="Permalink to this headline">¶</a></h5>
 <p>If you are following a local repo flow, then you can use the
-<a class="reference external" href="https://nickderobertis.github.io/flexlate/docs/commands.html#fxt-merge"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">merge</span></code></a> command
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/commands.html#fxt-merge"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">merge</span></code></a> command
 to merge the Flexlate feature branches into the Flexlate main branches. If
 you are using a feature-branch flow, then you would want to run <code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">merge</span></code> just
 before merging your feature branch into the main branch. If you are simply
@@ -514,7 +514,7 @@ commititng to the main branch, just run <code class="docutils literal notranslat
 <h5 id="remote-repo-pr-flows">Remote Repo/PR Flows<a class="headerlink" href="#remote-repo-pr-flows" title="Permalink to this headline">¶</a></h5>
 <p>If you are merging PRs in your repo rather than following a local flow, then
 you will want to
-<a class="reference external" href="https://nickderobertis.github.io/flexlate/docs/commands.html#fxt-push"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">push</span></code></a>
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/commands.html#fxt-push"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">push</span></code></a>
 just before/after your push your feature branch
 and open a PR. If you use the official Flexlate Github Merge Action,
 the Flexlate branches will be merged automatically after the PR is merged.</p>
@@ -525,7 +525,7 @@ the Flexlate branches will be merged automatically after the PR is merged.</p>
 <h3 id="get-help">Get Help<a class="headerlink" href="#get-help" title="Permalink to this headline">¶</a></h3>
 <p>You can run <code class="docutils literal notranslate"><span class="pre">--help</span></code> on the end of any command to see documentation.
 You will see similar output to what is in the
-<a class="reference external" href="https://nickderobertis.github.io/flexlate/docs/commands.html">command reference</a>.</p>
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/commands.html">command reference</a>.</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ fxt --help
 Usage: fxt <span class="o">[</span>OPTIONS<span class="o">]</span> COMMAND <span class="o">[</span>ARGS<span class="o">]</span>...
 
