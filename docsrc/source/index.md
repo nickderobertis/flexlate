@@ -15,14 +15,14 @@ For more information on getting started, take a look at the tutorial and example
 ```{toctree}
 
 tutorial
-auto_examples/index
+CLI Reference <commands>
 ```
 
 ## API Documentation
 
 ```{eval-rst}
-.. toctree:: api/modules
-   :maxdepth: 3
+.. toctree:: Python API Reference <api/modules>
+   :maxdepth: 1
 ```
 
 ## Indices
