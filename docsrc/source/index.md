@@ -16,14 +16,13 @@ For more information on getting started, take a look at the tutorial and example
 
 tutorial
 CLI Reference <commands>
-auto_examples/index
 ```
 
 ## API Documentation
 
 ```{eval-rst}
-.. toctree:: api/modules
-   :maxdepth: 3
+.. toctree:: Python API Reference <api/modules>
+   :maxdepth: 1
 ```
 
 ## Indices
