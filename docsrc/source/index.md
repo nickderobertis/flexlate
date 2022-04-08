@@ -15,6 +15,7 @@ For more information on getting started, take a look at the tutorial and example
 ```{toctree}
 
 tutorial
+CLI Reference <commands>
 auto_examples/index
 ```
 
