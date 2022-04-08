@@ -102,7 +102,7 @@ pip install flexlate
 #### New Project from a Template
 
 To generate a new project from a template, use 
-[`init-from`](https://nickderobertis.github.io/flexlate/docs/commands.html#fxt-init-from), 
+[`init-from`](https://nickderobertis.github.io/flexlate/commands.html#fxt-init-from), 
 e.g.:
 
 ```shell
@@ -112,7 +112,7 @@ fxt init-from https://github.com/nickderobertis/copier-pypi-sphinx-flexlate
 
 To add Flexlate to your project that is already generated from a `cookiecutter`
 or `cruft` template, use 
-[`bootstrap`](https://nickderobertis.github.io/flexlate/docs/commands.html#fxt-bootstrap), 
+[`bootstrap`](https://nickderobertis.github.io/flexlate/commands.html#fxt-bootstrap), 
 e.g.:
 
 ```shell
@@ -122,12 +122,12 @@ fxt bootstrap https://github.com/nickderobertis/copier-pypi-sphinx-flexlate
 #### Compose a Project from Multiple Templates
 
 You can 
-[add a template source](https://nickderobertis.github.io/flexlate/docs/commands.html#fxt-add-source) 
-and then [add as many outputs from that source](https://nickderobertis.github.io/flexlate/docs/commands.html#fxt-add-output) 
+[add a template source](https://nickderobertis.github.io/flexlate/commands.html#fxt-add-source) 
+and then [add as many outputs from that source](https://nickderobertis.github.io/flexlate/commands.html#fxt-add-output) 
 as you want. 
 
 Before you can do this, you must 
-[initialize a Flexlate project](https://nickderobertis.github.io/flexlate/docs/commands.html#fxt-init):
+[initialize a Flexlate project](https://nickderobertis.github.io/flexlate/commands.html#fxt-init):
 
 ```shell
 fxt init
@@ -150,7 +150,7 @@ fxt add output copier-pypi-sphinx-flexlate
 #### Re-prompt Questions
 
 Once you have updates in the template that you want to bring to your project,
-use [the update command](https://nickderobertis.github.io/flexlate/docs/commands.html#fxt-update):
+use [the update command](https://nickderobertis.github.io/flexlate/commands.html#fxt-update):
 
 ```shell
 fxt update
@@ -175,7 +175,7 @@ fxt update -n
 ##### Local Repo Flows
 
 If you are following a local repo flow, then you can use the 
-[`fxt merge`](https://nickderobertis.github.io/flexlate/docs/commands.html#fxt-merge) command 
+[`fxt merge`](https://nickderobertis.github.io/flexlate/commands.html#fxt-merge) command 
 to merge the Flexlate feature branches into the Flexlate main branches. If 
 you are using a feature-branch flow, then you would want to run `fxt merge` just 
 before merging your feature branch into the main branch. If you are simply 
@@ -185,7 +185,7 @@ commititng to the main branch, just run `fxt merge` after any Flexlate command.
 
 If you are merging PRs in your repo rather than following a local flow, then 
 you will want to 
-[`fxt push`](https://nickderobertis.github.io/flexlate/docs/commands.html#fxt-push) 
+[`fxt push`](https://nickderobertis.github.io/flexlate/commands.html#fxt-push) 
 just before/after your push your feature branch 
 and open a PR. If you use the official Flexlate Github Merge Action, 
 the Flexlate branches will be merged automatically after the PR is merged.
@@ -194,7 +194,7 @@ the Flexlate branches will be merged automatically after the PR is merged.
 
 You can run `--help` on the end of any command to see documentation.
 You will see similar output to what is in the 
-[command reference](https://nickderobertis.github.io/flexlate/docs/commands.html). 
+[command reference](https://nickderobertis.github.io/flexlate/commands.html). 
 
 ```shell
 $ fxt --help
