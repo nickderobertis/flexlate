@@ -97,6 +97,9 @@ Or, if you don't have/don't want to install `pipx`:
 pip install flexlate
 ```
 
+Before using Flexlate, you will also need to have 
+[Git installed](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git). 
+
 ### First Steps
 
 #### New Project from a Template
