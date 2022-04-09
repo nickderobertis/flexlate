@@ -22,7 +22,7 @@ import pathlib
 import sys
 import datetime
 import warnings
-
+from typing import Final, List
 
 sys.path.insert(0, os.path.abspath('../..'))
 import conf
@@ -272,16 +272,18 @@ def skip(app, what, name, obj, would_skip, options):
         return False
     return would_skip
 
+git_init_commands: Final[List[str]] = [
+    "git init",
+    "touch woo.txt",
+    "git add .",
+    "git commit -m 'Initial commit'",
+]
 
 def setup(app):
     app.connect("autodoc-skip-member", skip)
     app.add_directive('autosummarynameonly', AutoSummaryNameOnly)
     app.add_directive("animated-terminal", AnimatedTerminalDirective)
     app.add_directive("run-terminal", RunTerminalDirective)
-    app.add_directive("run-git-terminal", create_run_terminal_directive_with_setup([
-        "git init",
-        "touch woo.txt",
-        "git add .",
-        "git commit -m 'Initial commit'",
-    ]))
+    app.add_directive("run-git-terminal", create_run_terminal_directive_with_setup(git_init_commands))
+    app.add_directive("run-fxt-terminal", create_run_terminal_directive_with_setup(git_init_commands + ["fxt init"]))
 
