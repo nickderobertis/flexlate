@@ -4,7 +4,7 @@ import subprocess
 import tempfile
 from copy import deepcopy
 from pathlib import Path
-from typing import List, Dict, Any, Sequence, Optional
+from typing import List, Dict, Any, Sequence, Optional, Type
 
 from docutils.nodes import Node
 from docutils.parsers.rst import directives
@@ -76,9 +76,22 @@ class RunTerminalDirective(SphinxDirective):
     required_arguments = 0
     option_spec = {"setup": directives.unchanged}
     has_content = True
+    always_setup_commands: List[str] = []
 
     def run(self) -> List[Node]:
         setup_command: str = self.options.get("setup", "")
-        output = _run_commands_in_temp_dir(self.content, setup_command)
+        full_setup_command: str = " && ".join(
+            [*self.always_setup_commands, setup_command]
+        )
+        output = _run_commands_in_temp_dir(self.content, full_setup_command)
         text = _commands_to_list(output)
         return [termy_block(self.env.myst_config, text)]
+
+
+def create_run_terminal_directive_with_setup(
+    setup_commands: Sequence[str],
+) -> Type[SphinxDirective]:
+    class RunTerminalDirectiveWithSetup(RunTerminalDirective):
+        always_setup_commands = list(setup_commands)
+
+    return RunTerminalDirectiveWithSetup

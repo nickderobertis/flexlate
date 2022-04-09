@@ -28,7 +28,8 @@ sys.path.insert(0, os.path.abspath('../..'))
 import conf
 import version as vs
 from docsrc.directives.auto_summary import AutoSummaryNameOnly
-from docsrc.directives.terminal import AnimatedTerminalDirective, RunTerminalDirective
+from docsrc.directives.terminal import AnimatedTerminalDirective, RunTerminalDirective, \
+    create_run_terminal_directive_with_setup
 
 # -- General configuration ------------------------------------------------
 
@@ -277,3 +278,10 @@ def setup(app):
     app.add_directive('autosummarynameonly', AutoSummaryNameOnly)
     app.add_directive("animated-terminal", AnimatedTerminalDirective)
     app.add_directive("run-terminal", RunTerminalDirective)
+    app.add_directive("run-git-terminal", create_run_terminal_directive_with_setup([
+        "git init",
+        "touch woo.txt",
+        "git add .",
+        "git commit -m 'Initial commit'",
+    ]))
+
