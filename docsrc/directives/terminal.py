@@ -6,7 +6,7 @@ import subprocess
 import tempfile
 from copy import deepcopy
 from pathlib import Path
-from typing import List, Dict, Any, Sequence, Optional, Type
+from typing import List, Dict, Any, Sequence, Optional, Type, Tuple
 
 import pexpect
 from docutils.nodes import Node
@@ -44,6 +44,7 @@ class AnimatedTerminalDirective(SphinxDirective):
 class Command(BaseModel):
     input: str
     output: str
+    cwd: Path
 
 
 def _run_commands_in_temp_dir(
@@ -55,16 +56,20 @@ def _run_commands_in_temp_dir(
     orig_dir = os.getcwd()
     with tempfile.TemporaryDirectory() as tmpdir:
         os.chdir(tmpdir)
+        last_cwd = Path(tmpdir)
         if setup_command:
             # Don't save the output of the setup command
-            _run(setup_command)
+            out_command = _run(setup_command, last_cwd)
+            last_cwd = out_command.cwd
         out_commands: List[Command] = []
         for i, command in enumerate(commands):
             try:
                 this_command_input = input[i]
             except IndexError:
                 this_command_input = None
-            out_commands.append(_run(command, this_command_input))
+            out_command = _run(command, last_cwd, input=this_command_input)
+            last_cwd = out_command.cwd
+            out_commands.append(out_command)
         os.chdir(orig_dir)
     return out_commands
 
@@ -111,26 +116,37 @@ def _get_terminal_output_with_prompt_at_end(output: str) -> str:
     return "\r\n".join([*lines[:-1], "# " + lines[-1] + "$ "])
 
 
-def _run(command: str, input: Optional[str] = None) -> Command:
-    use_input = input.split("\n") if input else None
+def _get_real_output_and_cwd_from_output(output: str) -> Tuple[str, Path]:
+    lines = output.split("\r\n")
+    # Find index of last real line
+    i = 0
+    for i, line in enumerate(reversed(lines)):
+        if line:
+            break
+    last_real_idx = -(i + 1)
+    real_output = "\r\n".join(lines[:last_real_idx])
+    cwd = Path(lines[last_real_idx])
+    return real_output, cwd
+
+
+def _run(command: str, cwd: Path, input: Optional[str] = None) -> Command:
+    use_input = input.split("\n") if input else []
     stop_for_input_chars = ["]: ", r"0m: "]
 
-    if use_input:
-        process = pexpect.spawn(f'bash -c "{command}"', encoding="utf-8")
-        all_stdout = ""
-        for inp in use_input:
-            process.expect_exact(stop_for_input_chars, timeout=10)
-            this_stdout = process.before + process.after
-            all_stdout += _get_terminal_output_with_prompt_at_end(this_stdout)
-            process.sendline(inp)
-        process.expect(pexpect.EOF)
-        all_stdout += _remove_bash_formatting_from_output(process.before)
-        return Command(input=command, output=all_stdout)
-
-    output = subprocess.run(command, shell=True, capture_output=True, input=use_input)
-    return Command(
-        input=command, output=output.stdout.decode() + "\n" + output.stderr.decode()
+    process = pexpect.spawn(
+        f"bash -c \"cd '{cwd}' && {command} && pwd\"", encoding="utf-8"
     )
+    all_stdout = ""
+    for inp in use_input:
+        process.expect_exact(stop_for_input_chars, timeout=10)
+        this_stdout = process.before + process.after
+        all_stdout += _get_terminal_output_with_prompt_at_end(this_stdout)
+        process.sendline(inp)
+    process.expect(pexpect.EOF)
+    unformatted = _remove_bash_formatting_from_output(process.before)
+    real_output, new_cwd = _get_real_output_and_cwd_from_output(unformatted)
+    all_stdout += real_output
+    return Command(input=command, output=all_stdout, cwd=new_cwd)
 
 
 def _commands_to_list(commands: Sequence[Command]) -> List[str]:
