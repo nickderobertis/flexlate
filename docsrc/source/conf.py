@@ -28,7 +28,7 @@ sys.path.insert(0, os.path.abspath('../..'))
 import conf
 import version as vs
 from docsrc.directives.auto_summary import AutoSummaryNameOnly
-from docsrc.directives.terminal import AnimatedTerminalDirective
+from docsrc.directives.terminal import AnimatedTerminalDirective, RunTerminalDirective
 
 # -- General configuration ------------------------------------------------
 
@@ -276,3 +276,4 @@ def setup(app):
     app.connect("autodoc-skip-member", skip)
     app.add_directive('autosummarynameonly', AutoSummaryNameOnly)
     app.add_directive("animated-terminal", AnimatedTerminalDirective)
+    app.add_directive("run-terminal", RunTerminalDirective)
