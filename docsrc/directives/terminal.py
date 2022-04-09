@@ -80,9 +80,11 @@ class RunTerminalDirective(SphinxDirective):
 
     def run(self) -> List[Node]:
         setup_command: str = self.options.get("setup", "")
-        full_setup_command: str = " && ".join(
-            [*self.always_setup_commands, setup_command]
-        )
+        if setup_command:
+            use_commands = self.always_setup_commands + [setup_command]
+        else:
+            use_commands = self.always_setup_commands
+        full_setup_command: str = " && ".join(use_commands)
         output = _run_commands_in_temp_dir(self.content, full_setup_command)
         text = _commands_to_list(output)
         return [termy_block(self.env.myst_config, text)]
