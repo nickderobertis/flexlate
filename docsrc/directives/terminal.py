@@ -89,10 +89,26 @@ def _remove_bash_formatting_from_output(output: str) -> str:
     return ansi_escape.sub("", output)
 
 
+def _remove_overwritten_output(output: str) -> str:
+    lines = output.split("\r\n")
+    clean_lines: List[str] = []
+    for line in lines:
+        within_lines = line.split("\r")
+        if len(within_lines) == 1:
+            clean_lines.append(line)
+        else:
+            # The terminal is trying to overwrite the existing output
+            # We don't want to display this multiple times in the output, so
+            # simply take the last one
+            clean_lines.append(within_lines[-1])
+    return "\r\n".join(clean_lines)
+
+
 def _get_terminal_output_with_prompt_at_end(output: str) -> str:
-    formatted = _remove_bash_formatting_from_output(output)
-    lines = formatted.split("\n")
-    return "\n".join([*lines[:-1], "# " + lines[-1] + "$ "])
+    formatted = _remove_overwritten_output(_remove_bash_formatting_from_output(output))
+    lines = formatted.split("\r\n")
+
+    return "\r\n".join([*lines[:-1], "# " + lines[-1] + "$ "])
 
 
 def _run(command: str, input: Optional[str] = None) -> Command:
