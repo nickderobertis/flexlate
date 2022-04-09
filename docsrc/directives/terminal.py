@@ -89,6 +89,12 @@ def _remove_bash_formatting_from_output(output: str) -> str:
     return ansi_escape.sub("", output)
 
 
+def _get_terminal_output_with_prompt_at_end(output: str) -> str:
+    formatted = _remove_bash_formatting_from_output(output)
+    lines = formatted.split("\n")
+    return "\n".join([*lines[:-1], "# " + lines[-1] + "$ "])
+
+
 def _run(command: str, input: Optional[str] = None) -> Command:
     use_input = input.split("\n") if input else None
     stop_for_input_chars = ["]: ", r"0m: "]
@@ -99,7 +105,7 @@ def _run(command: str, input: Optional[str] = None) -> Command:
         for inp in use_input:
             process.expect_exact(stop_for_input_chars, timeout=10)
             this_stdout = process.before + process.after
-            all_stdout += _remove_bash_formatting_from_output(this_stdout)
+            all_stdout += _get_terminal_output_with_prompt_at_end(this_stdout)
             process.sendline(inp)
         process.expect(pexpect.EOF)
         all_stdout += _remove_bash_formatting_from_output(process.before)
