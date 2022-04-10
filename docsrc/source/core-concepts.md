@@ -245,3 +245,12 @@ it after the fact, you can follow the
 pass the `--add-mode` flag to any of the other commands to override 
 the default add mode.
 
+## Developer Control
+
+Flexlate is designed to work for a wide variety of use cases. While it 
+may not have a 
+[command that does exactly what you want](tutorial/arbitrary-changes.md#possible-uses-for-fxt-sync)
+regarding the 
+location or configuration of template sources and applied templates, 
+you can make any manual changes you want and [sync it to the project](tutorial/arbitrary-changes.md)
+with [`fxt sync`](commands.md#fxt-sync).

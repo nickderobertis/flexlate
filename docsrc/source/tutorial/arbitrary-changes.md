@@ -1,4 +1,4 @@
-# Making Arbitrary Changes to Flexlate Configuration
+# Making Other Changes to Flexlate Templates and Configuration
 
 Flexlate provides commands that automatically manage configuration such 
 as [`fxt add source`](../commands.md#fxt-add-source) or 
