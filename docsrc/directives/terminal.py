@@ -125,7 +125,7 @@ def _get_real_output_and_cwd_from_output(output: str) -> Tuple[str, Path]:
             break
     last_real_idx = -(i + 1)
     real_output = "\r\n".join(lines[:last_real_idx])
-    cwd = Path(lines[last_real_idx])
+    cwd = Path(lines[last_real_idx].strip())
     return real_output, cwd
 
 
