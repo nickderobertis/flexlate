@@ -19,4 +19,4 @@ add-to-project
 
 ## Next Steps
 
-See how to [update your projct](../updating.md) to a newer template version.
+See how to [update your project](../updating.md) to a newer template version.

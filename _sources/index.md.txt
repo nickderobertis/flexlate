@@ -13,6 +13,9 @@ For more information on getting started, take a look at the tutorial and example
 ## Tutorial and Examples
 
 ```{toctree}
+---
+maxdepth: 2
+---
 
 core-concepts
 tutorial/index

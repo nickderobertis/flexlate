@@ -249,12 +249,12 @@
         <li class="md-nav__item"><a href="#flexlate-feature-branches" class="md-nav__link">Flexlate Feature Branches</a>
         </li>
         <li class="md-nav__item"><a href="#merging-the-flexlate-feature-branches" class="md-nav__link">Merging the Flexlate Feature Branches</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
         </li>
         <li class="md-nav__item"><a href="#ci-workflows" class="md-nav__link">CI Workflows</a>
-        </li></ul>
-            </nav>
-        </li></ul>
-            </nav>
         </li>
         <li class="md-nav__item"><a href="#flexlate-configuration-files" class="md-nav__link">Flexlate Configuration Files</a><nav class="md-nav">
               <ul class="md-nav__list">
@@ -267,6 +267,8 @@
             </nav>
         </li>
         <li class="md-nav__item"><a href="#add-mode" class="md-nav__link">Add Mode</a>
+        </li>
+        <li class="md-nav__item"><a href="#developer-control" class="md-nav__link">Developer Control</a>
         </li></ul>
             </nav>
         </li>
@@ -314,6 +316,13 @@
     <li class="md-nav__item">
     
     
+      <a href="#ci-workflows" class="md-nav__link">CI Workflows</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
       <a href="#flexlate-configuration-files" class="md-nav__link">Flexlate Configuration Files</a>
       <ul class="md-nav__list"> 
     <li class="md-nav__item">
@@ -343,6 +352,13 @@
     
     
       <a href="#add-mode" class="md-nav__link">Add Mode</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#developer-control" class="md-nav__link">Developer Control</a>
       
     
     </li></ul>
@@ -402,12 +418,12 @@
         <li class="md-nav__item"><a href="#flexlate-feature-branches" class="md-nav__link">Flexlate Feature Branches</a>
         </li>
         <li class="md-nav__item"><a href="#merging-the-flexlate-feature-branches" class="md-nav__link">Merging the Flexlate Feature Branches</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
         </li>
         <li class="md-nav__item"><a href="#ci-workflows" class="md-nav__link">CI Workflows</a>
-        </li></ul>
-            </nav>
-        </li></ul>
-            </nav>
         </li>
         <li class="md-nav__item"><a href="#flexlate-configuration-files" class="md-nav__link">Flexlate Configuration Files</a><nav class="md-nav">
               <ul class="md-nav__list">
@@ -420,6 +436,8 @@
             </nav>
         </li>
         <li class="md-nav__item"><a href="#add-mode" class="md-nav__link">Add Mode</a>
+        </li>
+        <li class="md-nav__item"><a href="#developer-control" class="md-nav__link">Developer Control</a>
         </li></ul>
             </nav>
         </li>
@@ -530,8 +548,10 @@ Flexlate feature branches rather than the main branches. Follow the
 to understand the best way to merge the feature branches
 into the main branches depending on your workflow.</p>
 </section>
+</section>
+</section>
 <section id="ci-workflows">
-<h4 id="ci-workflows">CI Workflows<a class="headerlink" href="#ci-workflows" title="Permalink to this headline">¶</a></h4>
+<h2 id="ci-workflows">CI Workflows<a class="headerlink" href="#ci-workflows" title="Permalink to this headline">¶</a></h2>
 <p>Flexlate really shines when you can automate it with Github Actions.
 It comes with official Github Actions to help you do so:</p>
 <ul class="simple">
@@ -544,8 +564,20 @@ can be used to help
 can be used to
 <a class="reference internal" href="tutorial/saving.html#merge-flexlate-branches-automatically-with-github-actions"><span class="std std-doc">automate merging the Flexlate feature branches into the Flexlate main branches</span></a>.</p></li>
 </ul>
-</section>
-</section>
+<p>When you use these actions together, you can automate the whole process
+of updating your templates, besides the one part that requires human
+intervention: resolving merge conflicts.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can see an example of
+<a class="reference external" href="https://github.com/nickderobertis/flexlate/tree/master/.github/workflows">these workflows being used togehter</a>
+in the
+<a class="reference external" href="https://github.com/nickderobertis/flexlate">Flexate project itself</a>.</p>
+<p>See example workflow runs of the
+<a class="reference external" href="https://github.com/nickderobertis/flexlate/actions/workflows/template-update.yml">Flexlate Update Action</a>
+and the
+<a class="reference external" href="https://github.com/nickderobertis/flexlate/actions/workflows/merge-flexlate.yml">merge action</a>.</p>
+</div>
 </section>
 <section id="flexlate-configuration-files">
 <h2 id="flexlate-configuration-files">Flexlate Configuration Files<a class="headerlink" href="#flexlate-configuration-files" title="Permalink to this headline">¶</a></h2>
@@ -657,6 +689,16 @@ it after the fact, you can follow the
 <a class="reference internal" href="tutorial/arbitrary-changes.html"><span class="doc std std-doc">guide for arbitrary changes</span></a>. You can also
 pass the <code class="docutils literal notranslate"><span class="pre">--add-mode</span></code> flag to any of the other commands to override
 the default add mode.</p>
+</section>
+<section id="developer-control">
+<h2 id="developer-control">Developer Control<a class="headerlink" href="#developer-control" title="Permalink to this headline">¶</a></h2>
+<p>Flexlate is designed to work for a wide variety of use cases. While it
+may not have a
+<a class="reference internal" href="tutorial/arbitrary-changes.html#possible-uses-for-fxt-sync"><span class="std std-doc">command that does exactly what you want</span></a>
+regarding the
+location or configuration of template sources and applied templates,
+you can make any manual changes you want and <a class="reference internal" href="tutorial/arbitrary-changes.html"><span class="doc std std-doc">sync it to the project</span></a>
+with <a class="reference internal" href="commands.html#fxt-sync"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">sync</span></code></span></a>.</p>
 </section>
 </section>
 

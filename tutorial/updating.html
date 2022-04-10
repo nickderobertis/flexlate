@@ -309,14 +309,14 @@
     <li class="md-nav__item">
     
     
-      <a href="arbitrary-changes.html" class="md-nav__link">Making Arbitrary Changes to Flexlate Configuration</a>
+      <a href="undoing.html" class="md-nav__link">Undo Flexlate Operations</a>
       
     
     </li>
     <li class="md-nav__item">
     
     
-      <a href="undoing.html" class="md-nav__link">Undo Flexlate Operations</a>
+      <a href="arbitrary-changes.html" class="md-nav__link">Making Other Changes to Flexlate Templates and Configuration</a>
       
     
     </li>
@@ -475,7 +475,7 @@ the target version.</p>
 <div class="termy docutils container">
 <pre class="code console highlight literal-block"><code><span class="gp">$ </span>fxt init-from https://github.com/nickderobertis/copier-simple-example --version c7e1ba1bfb141e9c577e7c21ee4a5d3ae5dde04d
 <span class="go"> Initializing flexlate project with default add mode local and user=False in 
-/tmp/tmp_5iu_7m7
+/tmp/tmpecwibvrg
 ⠙  Initializing...
 ✔ Finished initializing flexlate project
  Adding template source...
@@ -483,7 +483,7 @@ the target version.</p>
 https://github.com/nickderobertis/copier-simple-example
  Sucessfully added template source copier-simple-example
 ⠙
- Applying template copier-simple-example to /tmp/tmp_5iu_7m7
+ Applying template copier-simple-example to /tmp/tmpecwibvrg
  Updating 1 applied templates
 
 question1? Format: yaml
@@ -501,7 +501,7 @@ question2? Format: float
 
 
 ✔ Successfully updated template output
-✔ Successfully applied template copier-simple-example to /tmp/tmp_5iu_7m7
+✔ Successfully applied template copier-simple-example to /tmp/tmpecwibvrg
 </span><span class="gp"># </span>Output folder name? <span class="o">(</span>this template does not provide one<span class="o">)</span> <span class="o">(</span>project<span class="o">)</span>: $ 
 <span class="go">
 </span><span class="gp">$ </span><span class="nb">cd</span> project
@@ -576,6 +576,11 @@ check once a day for updates to the templates and create a PR for them:</p>
 before the Flexlate Update Action. <code class="docutils literal notranslate"><span class="pre">actions/checkout</span></code> must be
 run with <code class="docutils literal notranslate"><span class="pre">fetches-depth:</span> <span class="pre">0</span></code> so that all branches and history
 are fetched.</p>
+<p>If it encounters a merge conflict, it will instead create an issue
+showing the templates that need to be updated (using the output of
+<a class="reference internal" href="../commands.html#fxt-check"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">check</span></code></span></a>). It is a planned feature
+to instead allow for resolving merge conflicts with Github’s web
+editor on the PR.</p>
 </section>
 <section id="next-steps">
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permalink to this headline">¶</a></h2>

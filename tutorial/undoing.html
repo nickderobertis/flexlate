@@ -68,8 +68,8 @@
     <link rel="canonical" href="https://nickderobertis.github.io/flexlate/tutorial/undoing.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Developing your Own Templates" href="developing-templates.html" />
-    <link rel="prev" title="Making Arbitrary Changes to Flexlate Configuration" href="arbitrary-changes.html" />
+    <link rel="next" title="Making Other Changes to Flexlate Templates and Configuration" href="arbitrary-changes.html" />
+    <link rel="prev" title="Save your Flexlate Updates" href="saving.html" />
   
    
 
@@ -255,13 +255,6 @@
     <li class="md-nav__item">
     
     
-      <a href="arbitrary-changes.html" class="md-nav__link">Making Arbitrary Changes to Flexlate Configuration</a>
-      
-    
-    </li>
-    <li class="md-nav__item">
-    
-    
     <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
     <label class="md-nav__link md-nav__link--active" for="__toc"> Undo Flexlate Operations </label>
     
@@ -299,6 +292,13 @@
       
     
     </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="arbitrary-changes.html" class="md-nav__link">Making Other Changes to Flexlate Templates and Configuration</a>
+      
     
     </li>
     <li class="md-nav__item">
@@ -375,7 +375,7 @@ all its commit messages, and it will only undo commits with a marker
 or merging a commit with a marker.</p>
 <div class="termy docutils container">
 <pre class="code console highlight literal-block"><code><span class="gp">$ </span>fxt add output copier-simple-example
-<span class="go"> Applying template copier-simple-example to /tmp/tmpjuuh2mxs
+<span class="go"> Applying template copier-simple-example to /tmp/tmpxf7ianp1
  Updating 1 applied templates
 
 question1? Format: yaml
@@ -393,7 +393,7 @@ question2? Format: float
 
 
 ✔ Successfully updated template output
-✔ Successfully applied template copier-simple-example to /tmp/tmpjuuh2mxs
+✔ Successfully applied template copier-simple-example to /tmp/tmpxf7ianp1
 
 </span><span class="gp">$ </span>ls
 <span class="go"> flexlate-project.json	 flexlate.json	'my answer.txt'   woo.txt
@@ -401,11 +401,10 @@ question2? Format: float
 </span><span class="gp">$ </span>fxt undo
 <span class="go"> Undoing transaction 1
 ⠋  Undoing 1 flexlate transactions
-⠙  Undoing 1 flexlate transactions
-⠹  Undoing 1 flexlate transactions
+⠋  Undoing 1 flexlate transactions
 ✔ Successfully reversed transaction 1
-⠹  Undoing 1 flexlate transactions
-⠹  Undoing 1 flexlate transactions
+⠙  Undoing 1 flexlate transactions
+⠙  Undoing 1 flexlate transactions
 
 </span><span class="gp">$ </span>ls
 <span class="go">flexlate-project.json  flexlate.json  woo.txt</span></code></pre>
@@ -424,7 +423,7 @@ simply delete the Flexlate feature branches.</p>
 <span class="go">Switched to a new branch 'my-feature'
 
 </span><span class="gp">$ </span>fxt add output copier-simple-example
-<span class="go"> Applying template copier-simple-example to /tmp/tmp44afjsh9
+<span class="go"> Applying template copier-simple-example to /tmp/tmp3zr5zk09
  Updating 1 applied templates
 
 question1? Format: yaml
@@ -442,7 +441,7 @@ question2? Format: float
 
 
 ✔ Successfully updated template output
-✔ Successfully applied template copier-simple-example to /tmp/tmp44afjsh9
+✔ Successfully applied template copier-simple-example to /tmp/tmp3zr5zk09
 
 </span><span class="gp">$ </span>ls
 <span class="go"> flexlate-project.json	 flexlate.json	'my answer.txt'   woo.txt
@@ -451,13 +450,13 @@ question2? Format: float
 <span class="go">Switched to branch 'master'
 
 </span><span class="gp">$ </span>git branch -D my-feature
-<span class="go">Deleted branch my-feature (was 037ae8a).
+<span class="go">Deleted branch my-feature (was 8d912fc).
 
 </span><span class="gp">$ </span>git branch -D flexlate-templates-my-feature
-<span class="go">Deleted branch flexlate-templates-my-feature (was 037ae8a).
+<span class="go">Deleted branch flexlate-templates-my-feature (was 8d912fc).
 
 </span><span class="gp">$ </span>git branch -D flexlate-output-my-feature
-<span class="go">Deleted branch flexlate-output-my-feature (was 037ae8a).
+<span class="go">Deleted branch flexlate-output-my-feature (was 8d912fc).
 
 </span><span class="gp">$ </span>ls
 <span class="go">flexlate-project.json  flexlate.json  woo.txt</span></code></pre>
@@ -475,7 +474,7 @@ question2? Format: float
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
           
-            <a href="arbitrary-changes.html" title="Making Arbitrary Changes to Flexlate Configuration"
+            <a href="saving.html" title="Save your Flexlate Updates"
                class="md-flex md-footer-nav__link md-footer-nav__link--prev"
                rel="prev">
               <div class="md-flex__cell md-flex__cell--shrink">
@@ -484,17 +483,17 @@ question2? Format: float
               <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
                 <span class="md-flex__ellipsis">
                   <span
-                      class="md-footer-nav__direction"> Previous </span> Making Arbitrary Changes to Flexlate Configuration </span>
+                      class="md-footer-nav__direction"> Previous </span> Save your Flexlate Updates </span>
               </div>
             </a>
           
           
-            <a href="developing-templates.html" title="Developing your Own Templates"
+            <a href="arbitrary-changes.html" title="Making Other Changes to Flexlate Templates and Configuration"
                class="md-flex md-footer-nav__link md-footer-nav__link--next"
                rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
                 class="md-flex__ellipsis"> <span
-                class="md-footer-nav__direction"> Next </span> Developing your Own Templates </span>
+                class="md-footer-nav__direction"> Next </span> Making Other Changes to Flexlate Templates and Configuration </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink"><i
                 class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>

@@ -47,7 +47,7 @@
   
   
   
-    <title>Making Arbitrary Changes to Flexlate Configuration &#8212; flexlate 0.12.2 documentation</title>
+    <title>Making Other Changes to Flexlate Templates and Configuration &#8212; flexlate 0.12.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/material.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
@@ -68,8 +68,8 @@
     <link rel="canonical" href="https://nickderobertis.github.io/flexlate/tutorial/arbitrary-changes.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Undo Flexlate Operations" href="undoing.html" />
-    <link rel="prev" title="Save your Flexlate Updates" href="saving.html" />
+    <link rel="next" title="Developing your Own Templates" href="developing-templates.html" />
+    <link rel="prev" title="Undo Flexlate Operations" href="undoing.html" />
   
    
 
@@ -106,7 +106,7 @@
       <div class="md-flex__cell md-flex__cell--stretch">
         <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
           <span class="md-header-nav__topic">flexlate</span>
-          <span class="md-header-nav__topic"> Making Arbitrary Changes to Flexlate Configuration </span>
+          <span class="md-header-nav__topic"> Making Other Changes to Flexlate Templates and Configuration </span>
         </div>
       </div>
       <div class="md-flex__cell md-flex__cell--shrink">
@@ -255,18 +255,37 @@
     <li class="md-nav__item">
     
     
-    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-    <label class="md-nav__link md-nav__link--active" for="__toc"> Making Arbitrary Changes to Flexlate Configuration </label>
+      <a href="undoing.html" class="md-nav__link">Undo Flexlate Operations</a>
+      
     
-      <a href="#" class="md-nav__link md-nav__link--active">Making Arbitrary Changes to Flexlate Configuration</a>
+    </li>
+    <li class="md-nav__item">
+    
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <label class="md-nav__link md-nav__link--active" for="__toc"> Making Other Changes to Flexlate Templates and Configuration </label>
+    
+      <a href="#" class="md-nav__link md-nav__link--active">Making Other Changes to Flexlate Templates and Configuration</a>
       
         
 <nav class="md-nav md-nav--secondary">
     <label class="md-nav__title" for="__toc">Contents</label>
   <ul class="md-nav__list" data-md-scrollfix="">
-        <li class="md-nav__item"><a href="#tutorial-arbitrary-changes--page-root" class="md-nav__link">Making Arbitrary Changes to Flexlate Configuration</a><nav class="md-nav">
+        <li class="md-nav__item"><a href="#tutorial-arbitrary-changes--page-root" class="md-nav__link">Making Other Changes to Flexlate Templates and Configuration</a><nav class="md-nav">
               <ul class="md-nav__list">
         <li class="md-nav__item"><a href="#use-fxt-sync-to-bring-arbitrary-changes-to-flexlate-branches" class="md-nav__link">Use <code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">sync</span></code> to Bring Arbitrary Changes to Flexlate Branches</a>
+        </li>
+        <li class="md-nav__item"><a href="#possible-uses-for-fxt-sync" class="md-nav__link">Possible Uses for <code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">sync</span></code></a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#moving-an-applied-template" class="md-nav__link">Moving an Applied Template</a>
+        </li>
+        <li class="md-nav__item"><a href="#moving-a-template-source" class="md-nav__link">Moving a Template Source</a>
+        </li>
+        <li class="md-nav__item"><a href="#updating-a-single-applied-template" class="md-nav__link">Updating a Single Applied Template</a>
+        </li>
+        <li class="md-nav__item"><a href="#migrating-add-modes" class="md-nav__link">Migrating Add Modes</a>
+        </li></ul>
+            </nav>
         </li></ul>
             </nav>
         </li>
@@ -282,14 +301,14 @@
       <a href="#use-fxt-sync-to-bring-arbitrary-changes-to-flexlate-branches" class="md-nav__link">Use <code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">sync</span></code> to Bring Arbitrary Changes to Flexlate Branches</a>
       
     
-    </li></ul>
-    
     </li>
     <li class="md-nav__item">
     
     
-      <a href="undoing.html" class="md-nav__link">Undo Flexlate Operations</a>
+      <a href="#possible-uses-for-fxt-sync" class="md-nav__link">Possible Uses for <code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">sync</span></code></a>
       
+    
+    </li></ul>
     
     </li>
     <li class="md-nav__item">
@@ -329,9 +348,21 @@
 <nav class="md-nav md-nav--secondary">
     <label class="md-nav__title" for="__toc">Contents</label>
   <ul class="md-nav__list" data-md-scrollfix="">
-        <li class="md-nav__item"><a href="#tutorial-arbitrary-changes--page-root" class="md-nav__link">Making Arbitrary Changes to Flexlate Configuration</a><nav class="md-nav">
+        <li class="md-nav__item"><a href="#tutorial-arbitrary-changes--page-root" class="md-nav__link">Making Other Changes to Flexlate Templates and Configuration</a><nav class="md-nav">
               <ul class="md-nav__list">
         <li class="md-nav__item"><a href="#use-fxt-sync-to-bring-arbitrary-changes-to-flexlate-branches" class="md-nav__link">Use <code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">sync</span></code> to Bring Arbitrary Changes to Flexlate Branches</a>
+        </li>
+        <li class="md-nav__item"><a href="#possible-uses-for-fxt-sync" class="md-nav__link">Possible Uses for <code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">sync</span></code></a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#moving-an-applied-template" class="md-nav__link">Moving an Applied Template</a>
+        </li>
+        <li class="md-nav__item"><a href="#moving-a-template-source" class="md-nav__link">Moving a Template Source</a>
+        </li>
+        <li class="md-nav__item"><a href="#updating-a-single-applied-template" class="md-nav__link">Updating a Single Applied Template</a>
+        </li>
+        <li class="md-nav__item"><a href="#migrating-add-modes" class="md-nav__link">Migrating Add Modes</a>
+        </li></ul>
+            </nav>
         </li></ul>
             </nav>
         </li>
@@ -349,8 +380,8 @@
         <div class="md-content">
           <article class="md-content__inner md-typeset" role="main">
             
-  <section id="making-arbitrary-changes-to-flexlate-configuration">
-<h1 id="tutorial-arbitrary-changes--page-root">Making Arbitrary Changes to Flexlate Configuration<a class="headerlink" href="#tutorial-arbitrary-changes--page-root" title="Permalink to this headline">¶</a></h1>
+  <section id="making-other-changes-to-flexlate-templates-and-configuration">
+<h1 id="tutorial-arbitrary-changes--page-root">Making Other Changes to Flexlate Templates and Configuration<a class="headerlink" href="#tutorial-arbitrary-changes--page-root" title="Permalink to this headline">¶</a></h1>
 <p>Flexlate provides commands that automatically manage configuration such
 as <a class="reference internal" href="../commands.html#fxt-add-source"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">add</span> <span class="pre">source</span></code></span></a> or
 <a class="reference internal" href="../commands.html#fxt-config-target"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">config</span> <span class="pre">target</span></code></span></a>. But not
@@ -360,11 +391,17 @@ every change you might want to make to the config has a command.</p>
 <p>Enter <a class="reference internal" href="../commands.html#fxt-sync"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">sync</span></code></span></a> that will take the current
 state of your config and render it to the Flexlate branches before merging
 back into your working branch.</p>
+</section>
+<section id="possible-uses-for-fxt-sync">
+<h2 id="possible-uses-for-fxt-sync">Possible Uses for <code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">sync</span></code><a class="headerlink" href="#possible-uses-for-fxt-sync" title="Permalink to this headline">¶</a></h2>
+<p>Why might you want to do this? Let’s go through a few examples.</p>
+<section id="moving-an-applied-template">
+<h3 id="moving-an-applied-template">Moving an Applied Template<a class="headerlink" href="#moving-an-applied-template" title="Permalink to this headline">¶</a></h3>
 <p>For example, say you applied a template but later decide you want
 to move it.</p>
 <div class="termy docutils container">
 <pre class="code console highlight literal-block"><code><span class="gp">$ </span>fxt add output copier-simple-example some/path
-<span class="go"> Applying template copier-simple-example to /tmp/tmpydf9m42p
+<span class="go"> Applying template copier-simple-example to /tmp/tmpycsuiwoi
  Updating 1 applied templates
 
 question1? Format: yaml
@@ -382,14 +419,14 @@ question2? Format: float
 
 
 ✔ Successfully updated template output
-✔ Successfully applied template copier-simple-example to /tmp/tmpydf9m42p
+✔ Successfully applied template copier-simple-example to /tmp/tmpycsuiwoi
 
 </span><span class="gp">$ </span>mv some/path other
 <span class="go">
 </span><span class="gp">$ </span>git add -A
 <span class="go">
 </span><span class="gp">$ </span>git commit -m <span class="s1">'Move copier-simple-example from some/path to other'</span>
-<span class="go">[master 6e79d43] Move copier-simple-example from some/path to other
+<span class="go">[master 024a38b] Move copier-simple-example from some/path to other
  2 files changed, 0 insertions(+), 0 deletions(-)
  rename {some/path =&gt; other}/flexlate.json (100%)
  rename {some/path =&gt; other}/my answer.txt (100%)
@@ -409,6 +446,42 @@ question2? Format: float
 ✔ Successfully synced local changes to flexlate branches</span></code></pre>
 </div>
 </section>
+<section id="moving-a-template-source">
+<h3 id="moving-a-template-source">Moving a Template Source<a class="headerlink" href="#moving-a-template-source" title="Permalink to this headline">¶</a></h3>
+<p>There are several reasons why you might want to move a template source:</p>
+<ul class="simple">
+<li><p>You are using a local template and you want to move it.</p></li>
+<li><p>You are using a template from a remote repository and you want to
+switch it to a fork.</p></li>
+<li><p>You are using a template from a remote repository and it was renamed</p></li>
+</ul>
+<p>Just manually update the <code class="docutils literal notranslate"><span class="pre">flexlate.json</span></code> file containing your template
+source, commit the changes, then run
+<a class="reference internal" href="../commands.html#fxt-sync"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">sync</span></code></span></a>.</p>
+</section>
+<section id="updating-a-single-applied-template">
+<h3 id="updating-a-single-applied-template">Updating a Single Applied Template<a class="headerlink" href="#updating-a-single-applied-template" title="Permalink to this headline">¶</a></h3>
+<p>Flexlate has built-in functionality to update all the applied templates
+within a project for a given template source. It does not have a built-in
+command to update a single applied template, but you can do it by manually
+updating the version in the <code class="docutils literal notranslate"><span class="pre">flexlate.json</span></code> file and running
+<a class="reference internal" href="../commands.html#fxt-sync"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">sync</span></code></span></a>.</p>
+</section>
+<section id="migrating-add-modes">
+<h3 id="migrating-add-modes">Migrating Add Modes<a class="headerlink" href="#migrating-add-modes" title="Permalink to this headline">¶</a></h3>
+<p>Say you have taken the default add mode <code class="docutils literal notranslate"><span class="pre">local</span></code> setting and you are applying
+a lot of templates but you don’t like having <code class="docutils literal notranslate"><span class="pre">flexlate.json</span></code> files scattered
+throughout your project. You want to switch to <code class="docutils literal notranslate"><span class="pre">project</span></code> add mode, but
+Flexlate cannot do this automatically. You can do this manually by
+taking the contents of those <code class="docutils literal notranslate"><span class="pre">flexlate.json</span></code> files and moving them to
+one <code class="docutils literal notranslate"><span class="pre">flexlate.json</span></code> file in your project root. You will need to update the
+paths of the applied templates as well as the add mode accordingly.
+Then change the default add mode in <code class="docutils literal notranslate"><span class="pre">flexlate-project.json</span></code> to <code class="docutils literal notranslate"><span class="pre">project</span></code>
+so that all new applied templates will use <code class="docutils literal notranslate"><span class="pre">project</span></code> add mode automatically.
+Once you have it all done,
+commit your changes and run <a class="reference internal" href="../commands.html#fxt-sync"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">sync</span></code></span></a>.</p>
+</section>
+</section>
 </section>
 
 
@@ -421,7 +494,7 @@ question2? Format: float
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
           
-            <a href="saving.html" title="Save your Flexlate Updates"
+            <a href="undoing.html" title="Undo Flexlate Operations"
                class="md-flex md-footer-nav__link md-footer-nav__link--prev"
                rel="prev">
               <div class="md-flex__cell md-flex__cell--shrink">
@@ -430,17 +503,17 @@ question2? Format: float
               <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
                 <span class="md-flex__ellipsis">
                   <span
-                      class="md-footer-nav__direction"> Previous </span> Save your Flexlate Updates </span>
+                      class="md-footer-nav__direction"> Previous </span> Undo Flexlate Operations </span>
               </div>
             </a>
           
           
-            <a href="undoing.html" title="Undo Flexlate Operations"
+            <a href="developing-templates.html" title="Developing your Own Templates"
                class="md-flex md-footer-nav__link md-footer-nav__link--next"
                rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
                 class="md-flex__ellipsis"> <span
-                class="md-footer-nav__direction"> Next </span> Undo Flexlate Operations </span>
+                class="md-footer-nav__direction"> Next </span> Developing your Own Templates </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink"><i
                 class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>

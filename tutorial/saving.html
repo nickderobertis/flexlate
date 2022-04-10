@@ -68,7 +68,7 @@
     <link rel="canonical" href="https://nickderobertis.github.io/flexlate/tutorial/saving.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Making Arbitrary Changes to Flexlate Configuration" href="arbitrary-changes.html" />
+    <link rel="next" title="Undo Flexlate Operations" href="undoing.html" />
     <link rel="prev" title="Update Templates" href="updating.html" />
   
    
@@ -304,14 +304,14 @@
     <li class="md-nav__item">
     
     
-      <a href="arbitrary-changes.html" class="md-nav__link">Making Arbitrary Changes to Flexlate Configuration</a>
+      <a href="undoing.html" class="md-nav__link">Undo Flexlate Operations</a>
       
     
     </li>
     <li class="md-nav__item">
     
     
-      <a href="undoing.html" class="md-nav__link">Undo Flexlate Operations</a>
+      <a href="arbitrary-changes.html" class="md-nav__link">Making Other Changes to Flexlate Templates and Configuration</a>
       
     
     </li>
@@ -418,7 +418,7 @@ Simply call <code class="docutils literal notranslate"><span class="pre">fxt</sp
 and are satisfied with the result.</p>
 <div class="termy docutils container">
 <pre class="code console highlight literal-block"><code><span class="gp">$ </span>fxt add output copier-simple-example some/path
-<span class="go"> Applying template copier-simple-example to /tmp/tmphc5yob_5
+<span class="go"> Applying template copier-simple-example to /tmp/tmp72l5xluj
  Updating 1 applied templates
 
 question1? Format: yaml
@@ -436,7 +436,7 @@ question2? Format: float
 
 
 ✔ Successfully updated template output
-✔ Successfully applied template copier-simple-example to /tmp/tmphc5yob_5
+✔ Successfully applied template copier-simple-example to /tmp/tmp72l5xluj
 
 </span><span class="gp">$ </span>fxt merge
 <span class="go"> Merging flexlate-templates-master to flexlate-templates
@@ -456,7 +456,7 @@ to merge the changes into main, first run <code class="docutils literal notransl
 <span class="go">Switched to a new branch 'feature-branch'
 
 </span><span class="gp">$ </span>fxt add output copier-simple-example some/path
-<span class="go"> Applying template copier-simple-example to /tmp/tmpk6nbzd7t
+<span class="go"> Applying template copier-simple-example to /tmp/tmpgkc159_9
  Updating 1 applied templates
 
 question1? Format: yaml
@@ -474,7 +474,7 @@ question2? Format: float
 
 
 ✔ Successfully updated template output
-✔ Successfully applied template copier-simple-example to /tmp/tmpk6nbzd7t
+✔ Successfully applied template copier-simple-example to /tmp/tmpgkc159_9
 
 </span><span class="gp">$ </span>fxt merge
 <span class="go"> Merging flexlate-templates-feature-branch to flexlate-templates
@@ -488,7 +488,7 @@ flexlate-output-feature-branch
 <span class="go">Switched to branch 'master'
 
 </span><span class="gp">$ </span>git merge feature-branch
-<span class="go">Updating 9c53823..e212b79
+<span class="go">Updating 1807b43..4b5d93f
 Fast-forward
  some/path/flexlate.json | 15 +++++++++++++++
  some/path/my answer.txt |  2 ++
@@ -504,7 +504,7 @@ branches, you’ll want to push your changes to the remote (if you are using
 a remote) via <a class="reference internal" href="../commands.html#fxt-push-main"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">push</span> <span class="pre">main</span></code></span></a>.</p>
 <div class="termy docutils container">
 <pre class="code console highlight literal-block"><code><span class="gp">$ </span>fxt add output copier-simple-example some/path
-<span class="go"> Applying template copier-simple-example to /tmp/tmp8h5lbrjf
+<span class="go"> Applying template copier-simple-example to /tmp/tmp95ca8lsc
  Updating 1 applied templates
 
 question1? Format: yaml
@@ -522,7 +522,7 @@ question2? Format: float
 
 
 ✔ Successfully updated template output
-✔ Successfully applied template copier-simple-example to /tmp/tmp8h5lbrjf
+✔ Successfully applied template copier-simple-example to /tmp/tmp95ca8lsc
 
 </span><span class="gp">$ </span>fxt merge
 <span class="go"> Merging flexlate-templates-master to flexlate-templates
@@ -554,7 +554,7 @@ You would want to run this whenever you are pushing up the feature branch itself
 <span class="go">Switched to a new branch 'feature-branch'
 
 </span><span class="gp">$ </span>fxt add output copier-simple-example some/path
-<span class="go"> Applying template copier-simple-example to /tmp/tmpg3u5cyzi
+<span class="go"> Applying template copier-simple-example to /tmp/tmpnnwomqmp
  Updating 1 applied templates
 
 question1? Format: yaml
@@ -572,7 +572,7 @@ question2? Format: float
 
 
 ✔ Successfully updated template output
-✔ Successfully applied template copier-simple-example to /tmp/tmpg3u5cyzi
+✔ Successfully applied template copier-simple-example to /tmp/tmpnnwomqmp
 
 </span><span class="gp">$ </span>git push origin feature-branch
 <span class="go">Enumerating objects: 22, done.
@@ -639,8 +639,8 @@ Writing objects:  86% (19/22)
 Writing objects:  90% (20/22)
 Writing objects:  95% (21/22)
 Writing objects: 100% (22/22)
-Writing objects: 100% (22/22), 2.58 KiB | 1.29 MiB/s, done.
-Total 22 (delta 6), reused 0 (delta 0), pack-reused 0
+Writing objects: 100% (22/22), 2.50 KiB | 1.25 MiB/s, done.
+Total 22 (delta 7), reused 0 (delta 0), pack-reused 0
 To ../remote
  * [new branch]      feature-branch -&gt; feature-branch
 
@@ -739,12 +739,12 @@ set of Flexlate feature branches.</p>
             </a>
           
           
-            <a href="arbitrary-changes.html" title="Making Arbitrary Changes to Flexlate Configuration"
+            <a href="undoing.html" title="Undo Flexlate Operations"
                class="md-flex md-footer-nav__link md-footer-nav__link--next"
                rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
                 class="md-flex__ellipsis"> <span
-                class="md-footer-nav__direction"> Next </span> Making Arbitrary Changes to Flexlate Configuration </span>
+                class="md-footer-nav__direction"> Next </span> Undo Flexlate Operations </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink"><i
                 class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
