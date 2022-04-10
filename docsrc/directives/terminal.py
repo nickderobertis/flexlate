@@ -52,6 +52,19 @@ def _run_commands_in_temp_dir(
     setup_command: Optional[str] = None,
     input: Optional[List[str]] = None,
 ) -> List[Command]:
+    def run(command: str, last_cwd: Path, input: Optional[str] = None) -> Command:
+        try:
+            return _run(command, last_cwd, input)
+        except (pexpect.exceptions.EOF, pexpect.exceptions.TIMEOUT) as e:
+            exc = e
+            exc_parts = exc.value.split("\n")
+            output = [part for part in exc_parts if part.startswith("before (last 100 chars): ")][0]
+            output_without_prefix = output[len("before (last 100 chars): ") :]
+            raise CommandException(
+                f"Command failed: {command} with output {output_without_prefix} as "
+                f"part of running {commands=} {setup_command=} {input=}"
+            ) from e
+
     input = input or []
     orig_dir = os.getcwd()
     with tempfile.TemporaryDirectory() as tmpdir:
@@ -59,7 +72,7 @@ def _run_commands_in_temp_dir(
         last_cwd = Path(tmpdir)
         if setup_command:
             # Don't save the output of the setup command
-            out_command = _run(setup_command, last_cwd)
+            out_command = run(setup_command, last_cwd)
             last_cwd = out_command.cwd
         out_commands: List[Command] = []
         for i, command in enumerate(commands):
@@ -67,11 +80,15 @@ def _run_commands_in_temp_dir(
                 this_command_input = input[i]
             except IndexError:
                 this_command_input = None
-            out_command = _run(command, last_cwd, input=this_command_input)
+            out_command = run(command, last_cwd, input=this_command_input)
             last_cwd = out_command.cwd
             out_commands.append(out_command)
         os.chdir(orig_dir)
     return out_commands
+
+
+class CommandException(Exception):
+    pass
 
 
 ansi_escape = re.compile(
