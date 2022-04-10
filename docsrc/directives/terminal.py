@@ -55,9 +55,17 @@ def _run_commands_in_temp_dir(
     def run(command: str, last_cwd: Path, input: Optional[str] = None) -> Command:
         try:
             return _run(command, last_cwd, input)
-        except (pexpect.exceptions.EOF, pexpect.exceptions.TIMEOUT) as e:
-            exc = e
-            exc_parts = exc.value.split("\n")
+        except (
+            pexpect.exceptions.EOF,
+            pexpect.exceptions.TIMEOUT,
+            CommandException,
+        ) as e:
+            if isinstance(e, CommandException):
+                raise CommandException(
+                    f"Command failed: {command} due to {e} as "
+                    f"part of running {commands=} {setup_command=} {input=}"
+                ) from e
+            exc_parts = e.value.split("\n")
             output = [
                 part
                 for part in exc_parts
@@ -147,6 +155,8 @@ def _get_real_output_and_cwd_from_output(output: str) -> Tuple[str, Path]:
     last_real_idx = -(i + 1)
     real_output = "\r\n".join(lines[:last_real_idx])
     cwd = Path(lines[last_real_idx].strip())
+    if not cwd.exists():
+        raise CommandException(f"{cwd=} does not exist. {output=}")
     return real_output, cwd
 
 
