@@ -274,6 +274,9 @@ def init_project_from(
 ):
     """
     Generates a project from a template and sets it up as a Flexlate project.
+
+    Note that this will also create a new folder and initialize a git repository in it
+    before adding the Flexlate output.
     """
     app = Flexlate(quiet=quiet)
     app.init_project_from(

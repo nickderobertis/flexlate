@@ -76,7 +76,18 @@ in the output branch.
 It enables composability by using config files to keep track of where 
 multiple templates should be rendered and with what data.
 
+[Learn more about Flexlate core concepts here.](https://nickderobertis.github.io/flexlate/core-concepts.html)
+
 ## Getting Started
+
+### Documentation
+
+Visit the [documentation](https://nickderobertis.github.io/flexlate/) for 
+more detail on getting started. Start by learning about 
+[Flexlate core concepts](https://nickderobertis.github.io/flexlate/core-concepts.html)
+before reading the [user guide](https://nickderobertis.github.io/flexlate/tutorial/index.html),
+which contains more detailed information on 
+[getting started](https://nickderobertis.github.io/flexlate/tutorial/get-started/index.html).
 
 ### Installing
 
@@ -96,6 +107,9 @@ Or, if you don't have/don't want to install `pipx`:
 ```
 pip install flexlate
 ```
+
+Before using Flexlate, you will also need to have 
+[Git installed](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git). 
 
 ### First Steps
 
