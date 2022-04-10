@@ -52,10 +52,23 @@ them in a tabular format if there are updates available.
 
 ```{run-fxt-terminal}
 ---
-setup: "fxt init-from https://github.com/nickderobertis/copier-simple-example --no-input --version c7e1ba1bfb141e9c577e7c21ee4a5d3ae5dde04d --folder-name my-project && cd my-project && fxt config target copier-simple-example"
+setup: "fxt init-from https://github.com/nickderobertis/copier-simple-example --no-input --version c7e1ba1bfb141e9c577e7c21ee4a5d3ae5dde04d --folder-name my-project && cd my-project"
 allow-exceptions: True
 ---
 fxt check
+fxt config target copier-simple-example
+fxt check
+```
+
+For scripting purposes, it returns code `0` if there are no updates available,
+and `1` if there are:
+
+```shell
+if ! fxt check; then
+  echo "Need to update template";
+else
+  echo "No updates to template needed";
+fi;
 ```
 
 ###  Change Target Version
