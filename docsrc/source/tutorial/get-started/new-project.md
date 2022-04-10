@@ -45,3 +45,7 @@ fxt init-from --version c7e1ba1bfb141e9c577e7c21ee4a5d3ae5dde04d https://github.
 ```
 
 See the [command reference](../../commands.md#fxt-init-from) for full details.
+
+## Next Steps
+
+See how to [update your projct](../updating.md) to a newer template version.

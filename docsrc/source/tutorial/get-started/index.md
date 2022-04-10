@@ -13,5 +13,6 @@ add-to-project
 
 ```
 
+## Next Steps
 
-
+See how to [update your projct](../updating.md) to a newer template version.
