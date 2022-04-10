@@ -182,7 +182,7 @@ html_js_files = [
     'js/custom.js',
 ]
 
-myst_heading_anchors = 3
+myst_heading_anchors = 4
 
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.
