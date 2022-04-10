@@ -54,7 +54,7 @@ template updates.
 
 ### Why Flexlate?
 
-Flexlate is born out of frustration with using project templates. 
+Flexlate is born out of frustration with using project generator templates. 
 You generate your project from a template, but later update the template 
 and need to bring the changes back to your project. There are only a 
 few tools for this and they do not have a great developer experience. 
