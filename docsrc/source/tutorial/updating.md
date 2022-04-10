@@ -130,6 +130,12 @@ before the Flexlate Update Action. `actions/checkout` must be
 run with `fetches-depth: 0` so that all branches and history 
 are fetched.
 
+If it encounters a merge conflict, it will instead create an issue 
+showing the templates that need to be updated (using the output of 
+[`fxt check`](../commands.md#fxt-check)). It is a planned feature 
+to instead allow for resolving merge conflicts with Github's web
+editor on the PR.
+
 ## Next Steps
 
 In order to keep updating and not have to resolve the same merge conflicts 
