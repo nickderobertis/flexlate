@@ -51,6 +51,7 @@ def _run_commands_in_temp_dir(
     commands: Sequence[str],
     setup_command: Optional[str] = None,
     input: Optional[List[str]] = None,
+    allow_exceptions: bool = False,
 ) -> List[Command]:
     def run(command: str, last_cwd: Path, input: Optional[str] = None) -> Command:
         try:
@@ -61,9 +62,17 @@ def _run_commands_in_temp_dir(
             CommandException,
         ) as e:
             if isinstance(e, CommandException):
+                if allow_exceptions:
+                    return Command(
+                        input=command,
+                        output=e.output,
+                        cwd=e.cwd,
+                    )
                 raise CommandException(
                     f"Command failed: {command} due to {e} as "
-                    f"part of running {commands=} {setup_command=} {input=}"
+                    f"part of running {commands=} {setup_command=} {input=}",
+                    output=e.output,
+                    cwd=e.cwd,
                 ) from e
             exc_parts = e.value.split("\n")
             output = [
@@ -73,8 +82,10 @@ def _run_commands_in_temp_dir(
             ][0]
             output_without_prefix = output[len("before (last 100 chars): ") :]
             raise CommandException(
-                f"Command failed: {command} with output {output_without_prefix} as "
-                f"part of running {commands=} {setup_command=} {input=}"
+                f"Command failed: {command} as "
+                f"part of running {commands=} {setup_command=} {input=}",
+                output_without_prefix,
+                last_cwd,
             ) from e
 
     input = input or []
@@ -100,7 +111,13 @@ def _run_commands_in_temp_dir(
 
 
 class CommandException(Exception):
-    pass
+    def __init__(self, message: str, output: str, cwd: Path) -> None:
+        self.output = output
+        self.cwd = cwd
+        super().__init__(message)
+
+    def __str__(self) -> str:
+        return f"{super().__str__()}\n{self.cwd=} with output:\n{self.output}"
 
 
 ansi_escape = re.compile(
@@ -145,7 +162,9 @@ def _get_terminal_output_with_prompt_at_end(output: str) -> str:
     return "\r\n".join([*lines[:-1], "# " + lines[-1] + "$ "])
 
 
-def _get_real_output_and_cwd_from_output(output: str) -> Tuple[str, Path]:
+def _get_real_output_and_cwd_from_output(
+    output: str, last_cwd: Path
+) -> Tuple[str, Path]:
     lines = output.split("\r\n")
     # Find index of last real line
     i = 0
@@ -156,7 +175,7 @@ def _get_real_output_and_cwd_from_output(output: str) -> Tuple[str, Path]:
     real_output = "\r\n".join(lines[:last_real_idx])
     cwd = Path(lines[last_real_idx].strip())
     if not cwd.exists():
-        raise CommandException(f"{cwd=} does not exist. {output=}")
+        raise CommandException(f"{cwd=} does not exist.", output, last_cwd)
     return real_output, cwd
 
 
@@ -175,7 +194,7 @@ def _run(command: str, cwd: Path, input: Optional[str] = None) -> Command:
         process.sendline(inp)
     process.expect(pexpect.EOF)
     unformatted = _remove_bash_formatting_from_output(process.before)
-    real_output, new_cwd = _get_real_output_and_cwd_from_output(unformatted)
+    real_output, new_cwd = _get_real_output_and_cwd_from_output(unformatted, cwd)
     all_stdout += real_output
     return Command(input=command, output=all_stdout, cwd=new_cwd)
 
@@ -198,7 +217,11 @@ def _get_list(input: str) -> List[str]:
 
 class RunTerminalDirective(SphinxDirective):
     required_arguments = 0
-    option_spec = {"setup": directives.unchanged, "input": _get_list}
+    option_spec = {
+        "setup": directives.unchanged,
+        "input": _get_list,
+        "allow-exceptions": directives.flag,
+    }
     has_content = True
     always_setup_commands: List[str] = []
 
@@ -210,8 +233,12 @@ class RunTerminalDirective(SphinxDirective):
             use_commands = self.always_setup_commands
         full_setup_command: str = " && ".join(use_commands)
         input: List[str] = self.options.get("input", [])
+        allow_exceptions: bool = "allow-exceptions" in self.options
         output = _run_commands_in_temp_dir(
-            self.content, full_setup_command, input=input
+            self.content,
+            full_setup_command,
+            input=input,
+            allow_exceptions=allow_exceptions,
         )
         text = _commands_to_list(output)
         return [termy_block(self.env.myst_config, text)]
