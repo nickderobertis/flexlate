@@ -3,3 +3,4 @@ source/api
 source/binder/requirements.txt
 source/_static/images/logo.svg
 source/commands.md
+source/cache
