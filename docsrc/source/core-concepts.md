@@ -98,7 +98,7 @@ Flexlate feature branches rather than the main branches. Follow the
 to understand the best way to merge the feature branches
 into the main branches depending on your workflow.
 
-#### CI Workflows
+## CI Workflows
 
 Flexlate really shines when you can automate it with Github Actions.
 It comes with official Github Actions to help you do so:
@@ -110,6 +110,22 @@ can be used to help
 [Flexlate Merge Action](https://github.com/nickderobertis/flexlate-merge-action) 
 can be used to 
 [automate merging the Flexlate feature branches into the Flexlate main branches](tutorial/saving.md#merge-flexlate-branches-automatically-with-github-actions).
+
+When you use these actions together, you can automate the whole process
+of updating your templates, besides the one part that requires human 
+intervention: resolving merge conflicts.
+
+```{note}
+You can see an example of 
+[these workflows being used togehter](https://github.com/nickderobertis/flexlate/tree/master/.github/workflows)
+in the 
+[Flexate project itself](https://github.com/nickderobertis/flexlate).
+
+See example workflow runs of the 
+[Flexlate Update Action](https://github.com/nickderobertis/flexlate/actions/workflows/template-update.yml) 
+and the
+[merge action](https://github.com/nickderobertis/flexlate/actions/workflows/merge-flexlate.yml).
+```
 
 ## Flexlate Configuration Files
 
