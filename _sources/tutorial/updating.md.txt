@@ -24,11 +24,38 @@ cat answer1.txt
 
 By default, it will prompt for all the questions, using the saved answers
 as defaults. You can change any data that you want during the update process.
+
+### Updating without Prompts
+
 If you want to use the existing data and skip all prompts, you can 
 pass the `--no-input` flag or `-n` for short:
 
 ```shell
 fxt update -n
+```
+
+### Updating specific Templates
+
+
+You can update specific templates by passing the names of the template
+sources you want to update, for example:
+
+```shell
+fxt update copier-simple-example
+```
+
+### Checking for Updates
+
+The [`fxt check`](../commands.md#fxt-check) command 
+checks for updates to the template(s). It displays 
+them in a tabular format if there are updates available.
+
+```{run-fxt-terminal}
+---
+setup: "fxt init-from https://github.com/nickderobertis/copier-simple-example --no-input --version c7e1ba1bfb141e9c577e7c21ee4a5d3ae5dde04d --folder-name my-project && cd my-project && fxt config target copier-simple-example"
+allow-exceptions: True
+---
+fxt check
 ```
 
 ###  Change Target Version
