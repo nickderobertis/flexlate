@@ -58,7 +58,11 @@ def _run_commands_in_temp_dir(
         except (pexpect.exceptions.EOF, pexpect.exceptions.TIMEOUT) as e:
             exc = e
             exc_parts = exc.value.split("\n")
-            output = [part for part in exc_parts if part.startswith("before (last 100 chars): ")][0]
+            output = [
+                part
+                for part in exc_parts
+                if part.startswith("before (last 100 chars): ")
+            ][0]
             output_without_prefix = output[len("before (last 100 chars): ") :]
             raise CommandException(
                 f"Command failed: {command} with output {output_without_prefix} as "
@@ -151,7 +155,7 @@ def _run(command: str, cwd: Path, input: Optional[str] = None) -> Command:
     stop_for_input_chars = ["]: ", r"0m: "]
 
     process = pexpect.spawn(
-        f"bash -c \"cd '{cwd}' && {command} && pwd\"", encoding="utf-8"
+        f"bash -c \"cd '{cwd}' && {command} && printf '\\n' && pwd\"", encoding="utf-8"
     )
     all_stdout = ""
     for inp in use_input:
