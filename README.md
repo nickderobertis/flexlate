@@ -14,24 +14,24 @@ and file generator templates.
 
 ### Features
 
-- Update existing template outputs after there are changes to the template
+- **Update template outputs** after there are changes to the template
   - When there is a conflict, it creates a git merge conflict so that you can
     resolve it with your favorite tooling
   - It keeps a history of the conflict resolution so you are not resolving 
     the same conflicts repeatedly
   - Use pre-built Github Actions to automatically get a PR in your project after 
     the template has been updated
-- Compose a project with multiple templates
+- **Compose a project** with multiple templates
   - Add template sources and then you can apply outputs anywhere with a simple 
     CLI command
-- Use your existing templates: both [`cookiecutter`](https://github.com/cookiecutter/cookiecutter) 
+- **Use your existing templates**: both [`cookiecutter`](https://github.com/cookiecutter/cookiecutter) 
   and [`copier`](https://github.com/copier-org/copier) templates are supported
   - Works with both local and remote templates. You can even keep a template 
     in your project and be able to update outputs whenever it changes
-- Apply it to your existing projects with a `bootstrap` functionality
-- (planned) Use flexlate projects as templates themselves, enabling nested templates
+- **Apply it to your existing projects** with a `bootstrap` functionality
+- (planned) **Use flexlate projects as templates themselves**, enabling nested templates
   and sharing data across templates
-- (planned) Allow multiple templates to coordinate on specific files in arbitrary 
+- (planned) **Allow multiple templates to coordinate on specific files** in arbitrary 
   ways, e.g. think about applying a template and it adds its required packages 
   to `package.json` in a JS project
 

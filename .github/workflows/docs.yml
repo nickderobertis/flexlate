@@ -79,6 +79,11 @@ jobs:
         run: |
           pipenv sync
           sudo apt-get install pandoc -y
+      # Need to set Git committer to run terminal examples in docs
+      - name: Set Git Committer
+        run: |
+          git config --global user.email "flexlate-git@nickderobertis.com"
+          git config --global user.name "flexlate-git"
       - name: Build Documentation
         run: |
           cd docsrc
