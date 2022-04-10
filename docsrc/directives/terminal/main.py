@@ -6,7 +6,7 @@ import subprocess
 import tempfile
 from copy import deepcopy
 from pathlib import Path
-from typing import List, Dict, Any, Sequence, Optional, Type, Tuple
+from typing import List, Dict, Any, Sequence, Optional, Type, Tuple, TypedDict
 
 import pexpect
 from docutils.nodes import Node
@@ -19,6 +19,10 @@ from pydantic import BaseModel
 from sphinx.application import Sphinx
 from sphinx.util.docutils import SphinxDirective
 from docutils import nodes
+
+from .cache import TerminalCache
+from .command import Command
+from .options import RunTerminalOptions
 
 
 def termy_block(config: MdParserConfig, src: StringList) -> nodes.container:
@@ -41,10 +45,7 @@ class AnimatedTerminalDirective(SphinxDirective):
         return [termy_block(self.env.myst_config, self.content)]
 
 
-class Command(BaseModel):
-    input: str
-    output: str
-    cwd: Path
+cache = TerminalCache()
 
 
 def _run_commands_in_temp_dir(
@@ -226,6 +227,12 @@ class RunTerminalDirective(SphinxDirective):
     always_setup_commands: List[str] = []
 
     def run(self) -> List[Node]:
+        text = self._load_cache_or_run_commands_in_temp_dir_get_output_list()
+        return [termy_block(self.env.myst_config, text)]
+
+    def _run_commands_in_temp_dir_generate_output_list(self) -> List[str]:
+        self.options: RunTerminalOptions
+
         setup_command: str = self.options.get("setup", "")
         if setup_command:
             use_commands = self.always_setup_commands + [setup_command]
@@ -240,8 +247,17 @@ class RunTerminalDirective(SphinxDirective):
             input=input,
             allow_exceptions=allow_exceptions,
         )
-        text = _commands_to_list(output)
-        return [termy_block(self.env.myst_config, text)]
+        return _commands_to_list(output)
+
+    def _load_cache_or_run_commands_in_temp_dir_get_output_list(self) -> List[str]:
+        self.content: StringList
+        cached_result = cache.get(list(self.content), self.options)
+        if cached_result:
+            return cached_result.content
+
+        result = self._run_commands_in_temp_dir_generate_output_list()
+        cache.set(list(self.content), self.options, result)
+        return result
 
 
 def create_run_terminal_directive_with_setup(
