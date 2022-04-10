@@ -10,4 +10,5 @@ maxdepth: 2
 get-started/index
 updating
 saving
+arbitrary-changes
 ```
