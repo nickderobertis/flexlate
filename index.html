@@ -56,16 +56,19 @@
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery-dataframe.css" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="_static/css/termynal.css" />
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
+    <script src="_static/js/termynal.js"></script>
+    <script src="_static/js/custom.js"></script>
     <link rel="canonical" href="https://nickderobertis.github.io/flexlate/index.html" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Getting started with flexlate" href="tutorial.html" />
+    <link rel="next" title="Flexlate Core Concepts" href="core-concepts.html" />
   
    
 
@@ -217,7 +220,14 @@
     <li class="md-nav__item">
     
     
-      <a href="tutorial.html" class="md-nav__link">Getting started with flexlate</a>
+      <a href="core-concepts.html" class="md-nav__link">Flexlate Core Concepts</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="tutorial/index.html" class="md-nav__link">Flexlate User Guide</a>
       
     
     </li>
@@ -269,6 +279,8 @@
         </li>
         <li class="md-nav__item"><a href="#getting-started" class="md-nav__link">Getting Started</a><nav class="md-nav">
               <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#documentation" class="md-nav__link">Documentation</a>
+        </li>
         <li class="md-nav__item"><a href="#installing" class="md-nav__link">Installing</a>
         </li>
         <li class="md-nav__item"><a href="#first-steps" class="md-nav__link">First Steps</a><nav class="md-nav">
@@ -346,7 +358,7 @@ and file generator templates.</p>
 <section id="features">
 <h3 id="features">Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li><p>Update existing template outputs after there are changes to the template</p>
+<li><p><strong>Update template outputs</strong> after there are changes to the template</p>
 <ul>
 <li><p>When there is a conflict, it creates a git merge conflict so that you can
 resolve it with your favorite tooling</p></li>
@@ -356,23 +368,23 @@ the same conflicts repeatedly</p></li>
 the template has been updated</p></li>
 </ul>
 </li>
-<li><p>Compose a project with multiple templates</p>
+<li><p><strong>Compose a project</strong> with multiple templates</p>
 <ul>
 <li><p>Add template sources and then you can apply outputs anywhere with a simple
 CLI command</p></li>
 </ul>
 </li>
-<li><p>Use your existing templates: both <a class="reference external" href="https://github.com/cookiecutter/cookiecutter"><code class="docutils literal notranslate"><span class="pre">cookiecutter</span></code></a>
+<li><p><strong>Use your existing templates</strong>: both <a class="reference external" href="https://github.com/cookiecutter/cookiecutter"><code class="docutils literal notranslate"><span class="pre">cookiecutter</span></code></a>
 and <a class="reference external" href="https://github.com/copier-org/copier"><code class="docutils literal notranslate"><span class="pre">copier</span></code></a> templates are supported</p>
 <ul>
 <li><p>Works with both local and remote templates. You can even keep a template
 in your project and be able to update outputs whenever it changes</p></li>
 </ul>
 </li>
-<li><p>Apply it to your existing projects with a <code class="docutils literal notranslate"><span class="pre">bootstrap</span></code> functionality</p></li>
-<li><p>(planned) Use flexlate projects as templates themselves, enabling nested templates
+<li><p><strong>Apply it to your existing projects</strong> with a <code class="docutils literal notranslate"><span class="pre">bootstrap</span></code> functionality</p></li>
+<li><p>(planned) <strong>Use flexlate projects as templates themselves</strong>, enabling nested templates
 and sharing data across templates</p></li>
-<li><p>(planned) Allow multiple templates to coordinate on specific files in arbitrary
+<li><p>(planned) <strong>Allow multiple templates to coordinate on specific files</strong> in arbitrary
 ways, e.g. think about applying a template and it adds its required packages
 to <code class="docutils literal notranslate"><span class="pre">package.json</span></code> in a JS project</p></li>
 </ul>
@@ -416,10 +428,20 @@ with the template changes in Git and the merge conflict resolution is stored
 in the output branch.</p>
 <p>It enables composability by using config files to keep track of where
 multiple templates should be rendered and with what data.</p>
+<p><a class="reference external" href="https://nickderobertis.github.io/flexlate/core-concepts.html">Learn more about Flexlate core concepts here.</a></p>
 </section>
 </section>
 <section id="getting-started">
 <h2 id="getting-started">Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
+<section id="documentation">
+<h3 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h3>
+<p>Visit the <a class="reference external" href="https://nickderobertis.github.io/flexlate/">documentation</a> for
+more detail on getting started. Start by learning about
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/core-concepts.html">Flexlate core concepts</a>
+before reading the <a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/index.html">user guide</a>,
+which contains more detailed information on
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/get-started/index.html">getting started</a>.</p>
+</section>
 <section id="installing">
 <h3 id="installing">Installing<a class="headerlink" href="#installing" title="Permalink to this headline">¶</a></h3>
 <p>Flexlate is a Python package that includes the <code class="docutils literal notranslate"><span class="pre">fxt</span></code> command line utility.
@@ -434,6 +456,8 @@ though it can also be installed with <code class="docutils literal notranslate">
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">flexlate</span>
 </pre></div>
 </div>
+<p>Before using Flexlate, you will also need to have
+<a class="reference external" href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git">Git installed</a>.</p>
 </section>
 <section id="first-steps">
 <h3 id="first-steps">First Steps<a class="headerlink" href="#first-steps" title="Permalink to this headline">¶</a></h3>
@@ -577,9 +601,90 @@ upgrades will often have breaking changes.</p>
 <h2 id="tutorial-and-examples">Tutorial and Examples<a class="headerlink" href="#tutorial-and-examples" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Getting started with flexlate</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="tutorial.html#install">Install</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorial.html#usage">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="core-concepts.html">Flexlate Core Concepts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="core-concepts.html#template-sources-and-outputs">Template Sources and Outputs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="core-concepts.html#flexlate-is-not-a-template-engine">Flexlate is Not a Template Engine</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="core-concepts.html#git-native">Git-Native</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="core-concepts.html#real-merge-conflicts">Real Merge Conflicts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="core-concepts.html#branches-for-flexlate-operations">Branches for Flexlate Operations</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="core-concepts.html#flexlate-main-branches">Flexlate Main Branches</a></li>
+<li class="toctree-l4"><a class="reference internal" href="core-concepts.html#flexlate-feature-branches">Flexlate Feature Branches</a></li>
+<li class="toctree-l4"><a class="reference internal" href="core-concepts.html#merging-the-flexlate-feature-branches">Merging the Flexlate Feature Branches</a></li>
+<li class="toctree-l4"><a class="reference internal" href="core-concepts.html#ci-workflows">CI Workflows</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="core-concepts.html#flexlate-configuration-files">Flexlate Configuration Files</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="core-concepts.html#project-and-user-configuration">Project and User Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="core-concepts.html#flexlate-json"><code class="docutils literal notranslate"><span class="pre">flexlate.json</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core-concepts.html#flexlate-project-json"><code class="docutils literal notranslate"><span class="pre">flexlate-project.json</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="core-concepts.html#add-mode">Add Mode</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/index.html">Flexlate User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/get-started/index.html">Getting started with flexlate</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/get-started/installing.html">Installing Flexlate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/get-started/new-project.html">Create a New Project with Flexlate</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="tutorial/get-started/new-project.html#fxt-init-from"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">init-from</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="tutorial/get-started/new-project.html#next-steps">Next Steps</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/get-started/existing-project.html">Add Flexlate to a Project Already Generated from a Template</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="tutorial/get-started/existing-project.html#fxt-bootstrap"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">bootstrap</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="tutorial/get-started/existing-project.html#next-steps">Next Steps</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/get-started/add-to-project.html">Add New Templates within An Existing Project</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="tutorial/get-started/add-to-project.html#initialize-the-flexlate-project">Initialize the Flexlate Project</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tutorial/get-started/add-to-project.html#add-the-template-source">Add the Template Source</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tutorial/get-started/add-to-project.html#add-template-output-s">Add Template Output(s)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tutorial/get-started/add-to-project.html#next-steps">Next Steps</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/get-started/index.html#next-steps">Next Steps</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/updating.html">Update Templates</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/updating.html#updating-templates">Updating Templates</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="tutorial/updating.html#change-target-version">Change Target Version</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/updating.html#get-automated-prs-with-template-updates">Get Automated PRs with Template Updates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/updating.html#next-steps">Next Steps</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/saving.html">Save your Flexlate Updates</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/saving.html#local-workflows">Local Workflows</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="tutorial/saving.html#committing-on-the-main-branch">Committing on the Main Branch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tutorial/saving.html#locally-merging-branches">Locally Merging Branches</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tutorial/saving.html#push-your-changes">Push your Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/saving.html#pr-workflows">PR Workflows</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="tutorial/saving.html#id1">Push your Changes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tutorial/saving.html#merge-flexlate-branches-automatically-with-github-actions">Merge Flexlate Branches Automatically with Github Actions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/arbitrary-changes.html">Making Arbitrary Changes to Flexlate Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/arbitrary-changes.html#use-fxt-sync-to-bring-arbitrary-changes-to-flexlate-branches">Use <code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">sync</span></code> to Bring Arbitrary Changes to Flexlate Branches</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/undoing.html">Undo Flexlate Operations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/undoing.html#undo-operations-with-fxt-undo">Undo Operations with <code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">undo</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/undoing.html#undo-operations-by-deleting-feature-branches">Undo Operations by Deleting Feature Branches</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/developing-templates.html">Developing your Own Templates</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/developing-templates.html#flexlate-development-tools">Flexlate Development Tools</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="commands.html">CLI Reference</a><ul>
@@ -644,12 +749,12 @@ upgrades will often have breaking changes.</p>
       <nav class="md-footer-nav__inner md-grid">
           
           
-            <a href="tutorial.html" title="Getting started with flexlate"
+            <a href="core-concepts.html" title="Flexlate Core Concepts"
                class="md-flex md-footer-nav__link md-footer-nav__link--next"
                rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
                 class="md-flex__ellipsis"> <span
-                class="md-footer-nav__direction"> Next </span> Getting started with flexlate </span>
+                class="md-footer-nav__direction"> Next </span> Flexlate Core Concepts </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink"><i
                 class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>

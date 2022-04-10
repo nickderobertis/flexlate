@@ -1,0 +1,721 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="_static/javascripts/modernizr.js"></script>
+  
+  
+  
+    <title>Flexlate Core Concepts &#8212; flexlate 0.12.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/material.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx_paramlinks.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="_static/css/termynal.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/js/termynal.js"></script>
+    <script src="_static/js/custom.js"></script>
+    <link rel="canonical" href="https://nickderobertis.github.io/flexlate/core-concepts.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Flexlate User Guide" href="tutorial/index.html" />
+    <link rel="prev" title="Welcome to Flexlate documentation!" href="index.html" />
+  
+   
+
+  </head>
+  <body dir=ltr
+        data-md-color-primary=indigo data-md-color-accent=deep-purple>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#core-concepts" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="index.html" title="flexlate 0.12.2 documentation"
+           class="md-header-nav__button md-logo">
+          
+            <i class="md-icon">&#xe869</i>
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">flexlate</span>
+          <span class="md-header-nav__topic"> Flexlate Core Concepts </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="search.html" method="get" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder="Search"
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://github.com/nickderobertis/flexlate" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    flexlate
+  </div>
+</a>
+          </div>
+        </div>
+      
+      
+  
+  <script src="_static/javascripts/version_dropdown.js"></script>
+  <script>
+    var json_loc = ""versions.json"",
+        target_loc = "../",
+        text = "Versions";
+    $( document ).ready( add_version_dropdown(json_loc, target_loc, text));
+  </script>
+  
+
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+          <li class="md-tabs__item"><a href="index.html" class="md-tabs__link">flexlate 0.12.2 documentation</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="index.html" title="flexlate 0.12.2 documentation" class="md-nav__button md-logo">
+      
+        <i class="md-icon">&#xe869</i>
+      
+    </a>
+    <a href="index.html"
+       title="flexlate 0.12.2 documentation">flexlate</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://github.com/nickderobertis/flexlate" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    flexlate
+  </div>
+</a>
+    </div>
+  
+  
+
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <label class="md-nav__link md-nav__link--active" for="__toc"> Flexlate Core Concepts </label>
+    
+      <a href="#" class="md-nav__link md-nav__link--active">Flexlate Core Concepts</a>
+      
+        
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#core-concepts--page-root" class="md-nav__link">Flexlate Core Concepts</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#template-sources-and-outputs" class="md-nav__link">Template Sources and Outputs</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#flexlate-is-not-a-template-engine" class="md-nav__link">Flexlate is Not a Template Engine</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#git-native" class="md-nav__link">Git-Native</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#real-merge-conflicts" class="md-nav__link">Real Merge Conflicts</a>
+        </li>
+        <li class="md-nav__item"><a href="#branches-for-flexlate-operations" class="md-nav__link">Branches for Flexlate Operations</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#flexlate-main-branches" class="md-nav__link">Flexlate Main Branches</a>
+        </li>
+        <li class="md-nav__item"><a href="#flexlate-feature-branches" class="md-nav__link">Flexlate Feature Branches</a>
+        </li>
+        <li class="md-nav__item"><a href="#merging-the-flexlate-feature-branches" class="md-nav__link">Merging the Flexlate Feature Branches</a>
+        </li>
+        <li class="md-nav__item"><a href="#ci-workflows" class="md-nav__link">CI Workflows</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#flexlate-configuration-files" class="md-nav__link">Flexlate Configuration Files</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#project-and-user-configuration" class="md-nav__link">Project and User Configuration</a>
+        </li>
+        <li class="md-nav__item"><a href="#flexlate-json" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">flexlate.json</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#flexlate-project-json" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">flexlate-project.json</span></code></a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#add-mode" class="md-nav__link">Add Mode</a>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="_sources/core-concepts.md.txt">Show Source</a> </li>
+
+  </ul>
+</nav>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="#template-sources-and-outputs" class="md-nav__link">Template Sources and Outputs</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="#flexlate-is-not-a-template-engine" class="md-nav__link">Flexlate is Not a Template Engine</a>
+      
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#git-native" class="md-nav__link">Git-Native</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="#real-merge-conflicts" class="md-nav__link">Real Merge Conflicts</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#branches-for-flexlate-operations" class="md-nav__link">Branches for Flexlate Operations</a>
+      
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#flexlate-configuration-files" class="md-nav__link">Flexlate Configuration Files</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="#project-and-user-configuration" class="md-nav__link">Project and User Configuration</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#flexlate-json" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">flexlate.json</span></code></a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#flexlate-project-json" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">flexlate-project.json</span></code></a>
+      
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#add-mode" class="md-nav__link">Add Mode</a>
+      
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="tutorial/index.html" class="md-nav__link">Flexlate User Guide</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="commands.html" class="md-nav__link">CLI Reference</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="api/modules.html" class="md-nav__link">Python API Reference</a>
+      
+    
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#core-concepts--page-root" class="md-nav__link">Flexlate Core Concepts</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#template-sources-and-outputs" class="md-nav__link">Template Sources and Outputs</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#flexlate-is-not-a-template-engine" class="md-nav__link">Flexlate is Not a Template Engine</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#git-native" class="md-nav__link">Git-Native</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#real-merge-conflicts" class="md-nav__link">Real Merge Conflicts</a>
+        </li>
+        <li class="md-nav__item"><a href="#branches-for-flexlate-operations" class="md-nav__link">Branches for Flexlate Operations</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#flexlate-main-branches" class="md-nav__link">Flexlate Main Branches</a>
+        </li>
+        <li class="md-nav__item"><a href="#flexlate-feature-branches" class="md-nav__link">Flexlate Feature Branches</a>
+        </li>
+        <li class="md-nav__item"><a href="#merging-the-flexlate-feature-branches" class="md-nav__link">Merging the Flexlate Feature Branches</a>
+        </li>
+        <li class="md-nav__item"><a href="#ci-workflows" class="md-nav__link">CI Workflows</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#flexlate-configuration-files" class="md-nav__link">Flexlate Configuration Files</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#project-and-user-configuration" class="md-nav__link">Project and User Configuration</a>
+        </li>
+        <li class="md-nav__item"><a href="#flexlate-json" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">flexlate.json</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#flexlate-project-json" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">flexlate-project.json</span></code></a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#add-mode" class="md-nav__link">Add Mode</a>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="_sources/core-concepts.md.txt">Show Source</a> </li>
+
+<li id="searchbox" class="md-nav__item"></li>
+
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
+            
+  <section id="flexlate-core-concepts">
+<h1 id="core-concepts--page-root">Flexlate Core Concepts<a class="headerlink" href="#core-concepts--page-root" title="Permalink to this headline">¶</a></h1>
+<p>This guide introduces the core concepts of Flexlate. Read it to understand
+how Flexlate works.</p>
+<section id="template-sources-and-outputs">
+<h2 id="template-sources-and-outputs">Template Sources and Outputs<a class="headerlink" href="#template-sources-and-outputs" title="Permalink to this headline">¶</a></h2>
+<p>Flexlate has a concept of <strong>template sources</strong> and <strong>applied templates</strong>.
+In order to apply a template, it must be first added as a template source.
+Some commands will add the source at the same time as the applied output
+(<a class="reference internal" href="commands.html#fxt-init-from"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">init-from</span></code></span></a> and
+<a class="reference internal" href="commands.html#fxt-bootstrap"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">bootstrap</span></code></span></a>), but otherwise you must
+first <a class="reference internal" href="tutorial/get-started/add-to-project.html#add-the-template-source"><span class="std std-doc">add the template source</span></a>
+and then
+<span class="xref myst">add the applied template</span>.</p>
+<p>Flexlate was designed with this two-stage process so to support the use
+case of applying the same template source to multiple outputs with ease.
+Once you register your template source with
+<a class="reference internal" href="commands.html#fxt-add-source"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">add</span> <span class="pre">source</span></code></span></a>, you can then refer to it
+only by its name rather than the full URL. You can also set a custom name
+in case you’d like something shorter.</p>
+<p>Template sources can be both local and remote. You could pass a path to
+a template within your current project, or use a Git url anywhere.</p>
+<section id="flexlate-is-not-a-template-engine">
+<h3 id="flexlate-is-not-a-template-engine">Flexlate is Not a Template Engine<a class="headerlink" href="#flexlate-is-not-a-template-engine" title="Permalink to this headline">¶</a></h3>
+<p>Flexlate itself does not render files. It wraps external project template
+engines to do the work. Currently, <a class="reference external" href="https://github.com/cookiecutter/cookiecutter"><code class="docutils literal notranslate"><span class="pre">cookiecutter</span></code></a>
+and <a class="reference external" href="https://github.com/copier-org/copier"><code class="docutils literal notranslate"><span class="pre">copier</span></code></a> are supported. There
+are future plans for additional template engines as well as an easier way
+to bring your own template engine to Flexlate.</p>
+</section>
+</section>
+<section id="git-native">
+<h2 id="git-native">Git-Native<a class="headerlink" href="#git-native" title="Permalink to this headline">¶</a></h2>
+<p>Flexlate is built upon <a class="reference external" href="https://git-scm.com/">Git</a>. Your project must be
+a Git repository for it to work, though the
+<a class="reference internal" href="commands.html#fxt-init-from"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">init-from</span></code></span></a>
+command will create a new Git repository for you.</p>
+<p>Why build Flexlate on Git? By using Git, while
+<a class="reference internal" href="tutorial/updating.html"><span class="doc std std-doc">updating your templates</span></a>, if you encounter conflicts
+they will be <strong>real Git merge conflicts</strong> that you can resolve with your
+favorite merge tool. You will also not need to resolve the same conflicts
+again because Flexlate saves the state of your project in Git branches.</p>
+<section id="real-merge-conflicts">
+<h3 id="real-merge-conflicts">Real Merge Conflicts<a class="headerlink" href="#real-merge-conflicts" title="Permalink to this headline">¶</a></h3>
+<p>When you <a class="reference internal" href="tutorial/updating.html"><span class="doc std std-doc">update your templates</span></a>, if you have changed
+lines in the project that are also changed in the template source, you will
+encounter merge conflicts. These are real Git merge conflicts that can
+be resolved with your favorite merge tool, such as
+<a class="reference external" href="https://code.visualstudio.com/docs/editor/versioncontrol#_merge-conflicts">VS Code</a>
+or <a class="reference external" href="https://www.gitkraken.com/blog/merge-conflict-tool">GitKraken</a>.</p>
+<p>When you encounter merge conflicts during a Flexlate operation,
+it will prompt you to resolve the conflicts, with an option to abort the
+operation. Once you have resolved the conflicts, answer <code class="docutils literal notranslate"><span class="pre">y</span></code> to continue
+and it will finish the Flexlate operation.</p>
+</section>
+<section id="branches-for-flexlate-operations">
+<h3 id="branches-for-flexlate-operations">Branches for Flexlate Operations<a class="headerlink" href="#branches-for-flexlate-operations" title="Permalink to this headline">¶</a></h3>
+<p>Flexlate stores the history of merge conflict resolutions in Git branches,
+so that you won’t have to resolve the same conflicts again. While Flexlate
+tries to manage these branches for you as much as possible, you should be
+aware of their existence and will need to <a class="reference internal" href="tutorial/saving.html"><span class="doc std std-doc">run some simple commands to
+manage them</span></a>.</p>
+<section id="flexlate-main-branches">
+<h4 id="flexlate-main-branches">Flexlate Main Branches<a class="headerlink" href="#flexlate-main-branches" title="Permalink to this headline">¶</a></h4>
+<p>Flexlate has two main branches that it uses to store the history of
+your merge conflict resolutions: the <code class="docutils literal notranslate"><span class="pre">flexlate-templates</span></code> and
+<code class="docutils literal notranslate"><span class="pre">flexlate-output</span></code> branches. The <code class="docutils literal notranslate"><span class="pre">flexlate-templates</span></code> branch stores
+only the output from your templates, not any of your other project files.
+The <code class="docutils literal notranslate"><span class="pre">flexlate-output</span></code> branch takes your current project and merges the
+<code class="docutils literal notranslate"><span class="pre">flexlate-templates</span></code> branch into it to keep it up to date with the templates,
+before merging back into your feature or main branch.</p>
+</section>
+<section id="flexlate-feature-branches">
+<h4 id="flexlate-feature-branches">Flexlate Feature Branches<a class="headerlink" href="#flexlate-feature-branches" title="Permalink to this headline">¶</a></h4>
+<p>To enable multiple people using Flexlate on the same project and
+to help <a class="reference internal" href="tutorial/undoing.html"><span class="doc std std-doc">undo mistakes</span></a>, Flexlate creates feature
+versions of its branches corresponding to your currently checked out branch.
+For example if you are on a branch <code class="docutils literal notranslate"><span class="pre">my-feature</span></code>, when you do Flexlate operations
+on the branch <code class="docutils literal notranslate"><span class="pre">my-feature</span></code>, it will create the branches <code class="docutils literal notranslate"><span class="pre">flexlate-templates-my-feature</span></code>
+and <code class="docutils literal notranslate"><span class="pre">flexlate-output-my-feature</span></code> that are branched off the <code class="docutils literal notranslate"><span class="pre">flexlate-templates</span></code>
+and <code class="docutils literal notranslate"><span class="pre">flexlate-output</span></code> branches, respectively. It will also automatically
+pull <code class="docutils literal notranslate"><span class="pre">flexlate-templates</span></code> and <code class="docutils literal notranslate"><span class="pre">flexlate-output</span></code> before doing so in case your
+local branches are out of date.</p>
+</section>
+<section id="merging-the-flexlate-feature-branches">
+<h4 id="merging-the-flexlate-feature-branches">Merging the Flexlate Feature Branches<a class="headerlink" href="#merging-the-flexlate-feature-branches" title="Permalink to this headline">¶</a></h4>
+<p>Once you’ve finished with your Flexlate operations such as
+<a class="reference internal" href="tutorial/updating.html"><span class="doc std std-doc">updating</span></a>, the new changes will be stored in the
+Flexlate feature branches rather than the main branches. Follow the
+<a class="reference internal" href="tutorial/saving.html"><span class="doc std std-doc">guide on saving</span></a>
+to understand the best way to merge the feature branches
+into the main branches depending on your workflow.</p>
+</section>
+<section id="ci-workflows">
+<h4 id="ci-workflows">CI Workflows<a class="headerlink" href="#ci-workflows" title="Permalink to this headline">¶</a></h4>
+<p>Flexlate really shines when you can automate it with Github Actions.
+It comes with official Github Actions to help you do so:</p>
+<ul class="simple">
+<li><p>The
+<a class="reference external" href="https://github.com/nickderobertis/flexlate-update-action">Flexlate Update Action</a>
+can be used to help
+<a class="reference internal" href="tutorial/updating.html#get-automated-prs-with-template-updates"><span class="std std-doc">automatically get PRs for template updates</span></a>.</p></li>
+<li><p>The
+<a class="reference external" href="https://github.com/nickderobertis/flexlate-merge-action">Flexlate Merge Action</a>
+can be used to
+<a class="reference internal" href="tutorial/saving.html#merge-flexlate-branches-automatically-with-github-actions"><span class="std std-doc">automate merging the Flexlate feature branches into the Flexlate main branches</span></a>.</p></li>
+</ul>
+</section>
+</section>
+</section>
+<section id="flexlate-configuration-files">
+<h2 id="flexlate-configuration-files">Flexlate Configuration Files<a class="headerlink" href="#flexlate-configuration-files" title="Permalink to this headline">¶</a></h2>
+<section id="project-and-user-configuration">
+<h3 id="project-and-user-configuration">Project and User Configuration<a class="headerlink" href="#project-and-user-configuration" title="Permalink to this headline">¶</a></h3>
+<p>Flexlate is configured on a project-by-project basis. The project configuration
+can either live within the project, or within the user directory. It is
+useful to keep the project configuration in the user directory if it is
+a team project and the team has not bought into Flexlate yet. That way you
+can still personally use Flexlate with the repo.</p>
+<p>To store configuration in the user directory, you can use the <code class="docutils literal notranslate"><span class="pre">--user</span></code> flag
+for <a class="reference internal" href="commands.html#fxt-init"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">init</span></code></span></a> and use the user add mode for
+adding template sources and applied templates.</p>
+</section>
+<section id="flexlate-json">
+<h3 id="flexlate-json"><code class="docutils literal notranslate"><span class="pre">flexlate.json</span></code><a class="headerlink" href="#flexlate-json" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">flexlate.json</span></code> files are plain JSON files that contain the configuration
+of template sources and applied templates. The location of the <code class="docutils literal notranslate"><span class="pre">flexlate.json</span></code>
+file will depend on the add mode. Here’s an example of a <code class="docutils literal notranslate"><span class="pre">flexlate.json</span></code> file:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">"template_sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"one"</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nt">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"../input_files/templates/cookiecutters/one"</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cookiecutter"</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"d512c7e14e83cb4bc8d4e5ae06bb357e"</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nt">"git_url"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nt">"target_version"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nt">"render_relative_root_in_output"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ cookiecutter.a }}"</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nt">"render_relative_root_in_template"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ cookiecutter.a }}"</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="p">],</span><span class="w"></span>
+<span class="w">  </span><span class="nt">"applied_templates"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"one"</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="nt">"a"</span><span class="p">:</span><span class="w"> </span><span class="s2">"b"</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="nt">"c"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="w"></span>
+<span class="w">      </span><span class="p">},</span><span class="w"></span>
+<span class="w">      </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"d512c7e14e83cb4bc8d4e5ae06bb357e"</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nt">"add_mode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"local"</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nt">"root"</span><span class="p">:</span><span class="w"> </span><span class="s2">"."</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="p">]</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+<p>You can see it stores both details of the template source such as the current
+version and the source path, but also the details of the applied templates,
+such as the location of the output and the data that was passed to the template.</p>
+<p>Generally these files are generated and modified by Flexlate and you don’t
+need to worry about them. If you want to make a manual config
+to a configuration file, you can follow the
+<a class="reference internal" href="tutorial/arbitrary-changes.html"><span class="doc std std-doc">guide for arbitrary changes</span></a>.</p>
+</section>
+<section id="flexlate-project-json">
+<h3 id="flexlate-project-json"><code class="docutils literal notranslate"><span class="pre">flexlate-project.json</span></code><a class="headerlink" href="#flexlate-project-json" title="Permalink to this headline">¶</a></h3>
+<p>Flexlate also has a single configuration file for the project itself.
+It stores the root of the project as well as options that should be
+used for all Flexlate commands in the project.
+Here’s an example of <code class="docutils literal notranslate"><span class="pre">flexlate-project.json</span></code>:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">"projects"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nt">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"."</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nt">"default_add_mode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"local"</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nt">"merged_branch_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"flexlate-output"</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nt">"template_branch_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"flexlate-templates"</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="nt">"remote"</span><span class="p">:</span><span class="w"> </span><span class="s2">"origin"</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="p">]</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+<p>You can see that it stores the name of the remote and Flexlate branches,
+as well as the default add mode. It has this structure to support multiple
+projects in the user config.</p>
+<p>This configuration file is automatically
+created with <a class="reference internal" href="commands.html#fxt-init"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">init</span></code></span></a>,
+<a class="reference internal" href="commands.html#fxt-init-from"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">init-from</span></code></span></a>, and
+<a class="reference internal" href="commands.html#fxt-bootstrap"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">bootstrap</span></code></span></a>, but if you want to modify
+it after the fact, you can follow the
+<a class="reference internal" href="tutorial/arbitrary-changes.html"><span class="doc std std-doc">guide for arbitrary changes</span></a>.</p>
+</section>
+</section>
+<section id="add-mode">
+<h2 id="add-mode">Add Mode<a class="headerlink" href="#add-mode" title="Permalink to this headline">¶</a></h2>
+<p>Flexlate has a concept of an <strong>add mode</strong>, that represents where the
+<code class="docutils literal notranslate"><span class="pre">flexlate.json</span></code> configuration file should be created.</p>
+<p>Flexlate supports three add modes:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">local</span></code>: The template source or applied template <code class="docutils literal notranslate"><span class="pre">flexlate.json</span></code> is added at the root of the output.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">project</span></code>: The template source or applied template <code class="docutils literal notranslate"><span class="pre">flexlate.json</span></code> is added at the project root.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">user</span></code>: The template source or applied template <code class="docutils literal notranslate"><span class="pre">flexlate.json</span></code> is added to the user configuration file.</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">local</span></code> is the default add mode. It is recommended because it becomes easy to
+see whether files in a project are connected to Flexlate, because there
+will be a <code class="docutils literal notranslate"><span class="pre">flexlate.json</span></code> file in the folder with the applied template.
+The <code class="docutils literal notranslate"><span class="pre">project</span></code> add mode is useful if you want to have all your Flexlate
+configuration in a single file instead. The <code class="docutils literal notranslate"><span class="pre">user</span></code> add mode is useful for
+when you are using Flexlate on a team project but your team has not
+bought into the tool yet, allowing you to apply and update templates in
+the project without anyone knowing you are using Flexlate.</p>
+<p>When initializing the project with <a class="reference internal" href="commands.html#fxt-init"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">init</span></code></span></a>,
+<a class="reference internal" href="commands.html#fxt-init-from"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">init-from</span></code></span></a>, and
+<a class="reference internal" href="commands.html#fxt-bootstrap"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">bootstrap</span></code></span></a>, you can pass the <code class="docutils literal notranslate"><span class="pre">--add-mode</span></code> flag to specify
+the default add mode. If you want to modify
+it after the fact, you can follow the
+<a class="reference internal" href="tutorial/arbitrary-changes.html"><span class="doc std std-doc">guide for arbitrary changes</span></a>. You can also
+pass the <code class="docutils literal notranslate"><span class="pre">--add-mode</span></code> flag to any of the other commands to override
+the default add mode.</p>
+</section>
+</section>
+
+
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+            <a href="index.html" title="Welcome to Flexlate documentation!"
+               class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+               rel="prev">
+              <div class="md-flex__cell md-flex__cell--shrink">
+                <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+              </div>
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                <span class="md-flex__ellipsis">
+                  <span
+                      class="md-footer-nav__direction"> Previous </span> Welcome to Flexlate documentation! </span>
+              </div>
+            </a>
+          
+          
+            <a href="tutorial/index.html" title="Flexlate User Guide"
+               class="md-flex md-footer-nav__link md-footer-nav__link--next"
+               rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                class="md-flex__ellipsis"> <span
+                class="md-footer-nav__direction"> Next </span> Flexlate User Guide </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink"><i
+                class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2022, Nick DeRobertis.
+              
+          </div>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
+</html>

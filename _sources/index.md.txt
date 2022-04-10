@@ -14,7 +14,8 @@ For more information on getting started, take a look at the tutorial and example
 
 ```{toctree}
 
-tutorial
+core-concepts
+tutorial/index
 CLI Reference <commands>
 ```
 
