@@ -471,7 +471,7 @@ def merge(
 
 
 PUSH_DOC = """
-Push Flexlate branches to remote repositories
+Push Flexlate branches to remote repositories.
 
 See the user guide on
 [saving Flexlate updates](

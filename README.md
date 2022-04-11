@@ -12,23 +12,31 @@
 Flexlate is a composable, maintainable system for managing project 
 and file generator templates.
 
+Update your projects generated from [`cookiecutter`](https://github.com/cookiecutter/cookiecutter) 
+  and [`copier`](https://github.com/copier-org/copier) and compose projects 
+from multiple templates.
+
 ### Features
 
-- **Update template outputs** after there are changes to the template
-  - When there is a conflict, it creates a git merge conflict so that you can
-    resolve it with your favorite tooling
+- [**Update template outputs**](https://nickderobertis.github.io/flexlate/tutorial/updating.html) 
+  after there are changes to the template
+  - When there is a conflict, it creates a 
+    [Git merge conflict](https://nickderobertis.github.io/flexlate/core-concepts.html#real-merge-conflicts) 
+    so that you can resolve it with your favorite tooling
   - It keeps a history of the conflict resolution so you are not resolving 
     the same conflicts repeatedly
-  - Use pre-built Github Actions to automatically get a PR in your project after 
+  - Use [pre-built Github Actions](https://nickderobertis.github.io/flexlate/core-concepts.html#ci-workflows) 
+    to automatically get a PR in your project after 
     the template has been updated
 - **Compose a project** with multiple templates
-  - Add template sources and then you can apply outputs anywhere with a simple 
+  - [Add template sources and then you can apply outputs](https://nickderobertis.github.io/flexlate/tutorial/get-started/add-to-project.html)
+    anywhere with a simple 
     CLI command
 - **Use your existing templates**: both [`cookiecutter`](https://github.com/cookiecutter/cookiecutter) 
   and [`copier`](https://github.com/copier-org/copier) templates are supported
   - Works with both local and remote templates. You can even keep a template 
     in your project and be able to update outputs whenever it changes
-- **Apply it to your existing projects** with a `bootstrap` functionality
+- **Apply it to your existing projects** with [a `bootstrap` functionality](https://nickderobertis.github.io/flexlate/tutorial/get-started/existing-project.html)
 - (planned) **Use flexlate projects as templates themselves**, enabling nested templates
   and sharing data across templates
 - (planned) **Allow multiple templates to coordinate on specific files** in arbitrary 
@@ -46,11 +54,13 @@ and file generator templates.
 ### Locally or Remote With a Team
 
 In either case, you can use Flexlate 100% locally even on a team project 
-without anyone else knowing you are using it via the `user` mode.
+without anyone else knowing you are using it via 
+[the `user` mode](https://nickderobertis.github.io/flexlate/core-concepts.html#project-and-user-configuration).
 
 But Flexlate really shines when you embrace it fully and include it in
-your remote repo. This enables you use CI to automatically open PRs with 
-template updates.
+your remote repo. This enables you [use CI](https://nickderobertis.github.io/flexlate/core-concepts.html#ci-workflows) 
+to automatically open PRs with 
+template updates and merge Flexlate branches.
 
 ### Why Flexlate?
 
@@ -58,7 +68,8 @@ Flexlate is born out of frustration with using project generator templates.
 You generate your project from a template, but later update the template 
 and need to bring the changes back to your project. There are only a 
 few tools for this and they do not have a great developer experience. 
-Flexlate is Git-native, so you resolve template conflicts in Git as you would any 
+Flexlate is [Git-native](https://nickderobertis.github.io/flexlate/core-concepts.html#git-native), 
+so you resolve template conflicts in Git as you would any 
 other merge conflicts. 
 
 Further, there is not really any ability to compose a project template from 
@@ -66,14 +77,17 @@ smaller templates with any existing tools.
 
 ### How does it Work?
 
-Flexlate is Git-native: it carries out all its operations via commits to 
-Git branches. It maintains two branches, one that contains the history of 
+Flexlate is [Git-native](https://nickderobertis.github.io/flexlate/core-concepts.html#git-native): 
+it carries out all its operations via commits to 
+[Git branches](https://nickderobertis.github.io/flexlate/core-concepts.html#branches-for-flexlate-operations). 
+It maintains two branches, one that contains the history of 
 the template output and the other than contains the merged output between
 your project and the template. This means that you resolve any conflicts 
 with the template changes in Git and the merge conflict resolution is stored 
 in the output branch.
 
-It enables composability by using config files to keep track of where 
+It enables composability by using [config files](https://nickderobertis.github.io/flexlate/core-concepts.html#flexlate-json) 
+to keep track of where 
 multiple templates should be rendered and with what data.
 
 [Learn more about Flexlate core concepts here.](https://nickderobertis.github.io/flexlate/core-concepts.html)
@@ -88,6 +102,9 @@ more detail on getting started. Start by learning about
 before reading the [user guide](https://nickderobertis.github.io/flexlate/tutorial/index.html),
 which contains more detailed information on 
 [getting started](https://nickderobertis.github.io/flexlate/tutorial/get-started/index.html).
+
+Or, you can keep reading this high-level overview for abbreviated 
+getting started steps.
 
 ### Installing
 
@@ -111,7 +128,14 @@ pip install flexlate
 Before using Flexlate, you will also need to have 
 [Git installed](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git). 
 
+See the [install guide](https://nickderobertis.github.io/flexlate/tutorial/get-started/installing.html) 
+for more information.
+
 ### First Steps
+
+Your first steps will depend on what you are trying to accomplish. 
+See the ["Next Steps" section of the installing guide](https://nickderobertis.github.io/flexlate/tutorial/get-started/installing.html#next-steps) 
+for more information.
 
 #### New Project from a Template
 
@@ -122,6 +146,10 @@ e.g.:
 ```shell
 fxt init-from https://github.com/nickderobertis/copier-pypi-sphinx-flexlate
 ```
+
+See the user guide on [creating a new project](https://nickderobertis.github.io/flexlate/tutorial/get-started/new-project.html)
+for more information.
+
 #### Existing Project from a Template
 
 To add Flexlate to your project that is already generated from a `cookiecutter`
@@ -132,6 +160,9 @@ e.g.:
 ```shell
 fxt bootstrap https://github.com/nickderobertis/copier-pypi-sphinx-flexlate
 ```
+
+See the user guide on [adding Flexlate to an existing project from a template](https://nickderobertis.github.io/flexlate/tutorial/get-started/existing-project.html)
+for more information.
 
 #### Compose a Project from Multiple Templates
 
@@ -159,7 +190,13 @@ Then you can apply the output anywhere in the project:
 fxt add output copier-pypi-sphinx-flexlate
 ```
 
+See the user guide on [adding templates within an existing project](https://nickderobertis.github.io/flexlate/tutorial/get-started/add-to-project.html)
+for more information.
+
 ### Updating a Template
+
+See the user guide on [updating a template](https://nickderobertis.github.io/flexlate/tutorial/updating.html)
+for more information, but here's some quick info.
 
 #### Re-prompt Questions
 
@@ -186,6 +223,9 @@ fxt update -n
 
 #### Saving your Work
 
+See the user guide on [saving Flexlate updates](https://nickderobertis.github.io/flexlate/tutorial/saving.html)
+for more information, but here's some quick info.
+
 ##### Local Repo Flows
 
 If you are following a local repo flow, then you can use the 
@@ -199,7 +239,7 @@ commititng to the main branch, just run `fxt merge` after any Flexlate command.
 
 If you are merging PRs in your repo rather than following a local flow, then 
 you will want to 
-[`fxt push`](https://nickderobertis.github.io/flexlate/commands.html#fxt-push) 
+[`fxt push feature`](https://nickderobertis.github.io/flexlate/commands.html#fxt-push-feature) 
 just before/after your push your feature branch 
 and open a PR. If you use the official Flexlate Github Merge Action, 
 the Flexlate branches will be merged automatically after the PR is merged.
@@ -214,35 +254,40 @@ You will see similar output to what is in the
 $ fxt --help
 Usage: fxt [OPTIONS] COMMAND [ARGS]...
 
+  fxt is a CLI tool to manage project and file generator templates.
+
+  [See the Flexlate documentation](
+  https://nickderobertis.github.io/flexlate/ ) for more information.
+
 Options:
-  --install-completion [bash|zsh|fish|powershell|pwsh]
-                                  Install completion for the specified shell.
-  --show-completion [bash|zsh|fish|powershell|pwsh]
-                                  Show completion for the specified shell, to
-                                  copy it or customize the installation.
-  --help                          Show this message and exit.
+  -v, --version         Show Flexlate version and exit
+  --install-completion  Install completion for the current shell.
+  --show-completion     Show completion for the current shell, to copy it or
+                        customize the installation.
+
+  --help                Show this message and exit.
 
 Commands:
-  add        Add template sources and generate new projects and files...
-  bootstrap  Takes an existing project that was already generated by...
-  check      Checks whether there are any updates available for the...
+  add        Add template sources and generate new projects and files from...
+  bootstrap  Sets up a Flexlate project from an existing project that was...
+  check      Checks whether there are any updates available for the current...
   config     Modify Flexlate configs via CLI
   init       Initializes a flexlate project.
   init-from  Generates a project from a template and sets it up as a...
   merge      Merges feature flexlate branches into the main flexlate...
-  push       Push flexlate branches to remote repositories
+  push       Push Flexlate branches to remote repositories.
   remove     Remove template sources and previously generated outputs
   sync       Syncs manual changes to the flexlate branches, and updates...
   undo       Undoes the last flexlate operation, like ctrl/cmd + z for...
-  update     Updates applied templates in the project to the newest...
-
+  update     Updates applied templates in the project to the newest
+             versions...
 ```
 
 Please raise an issue if anything is confusing or does not work properly.
 
 See a
 [more in-depth tutorial here.](
-https://nickderobertis.github.io/flexlate/tutorial.html
+https://nickderobertis.github.io/flexlate/tutorial/
 )
 
 ## Development Status
