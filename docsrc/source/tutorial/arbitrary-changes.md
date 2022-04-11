@@ -11,6 +11,12 @@ Enter [`fxt sync`](../commands.md#fxt-sync) that will take the current
 state of your config and render it to the Flexlate branches before merging
 back into your working branch. 
 
+```{note}
+Be sure to commit your changes before running 
+[`fxt sync`](../commands.md#fxt-sync). In general, Flexlate always 
+wants you to commit your changes before running operations.
+```
+
 ## Possible Uses for `fxt sync`
 
 Why might you want to do this? Let's go through a few examples.
