@@ -57,8 +57,8 @@ class TerminalCache:
             print(f"Cache miss for terminal directive: {inputs}")
             return None
 
-        out_content = path.read_text()
-        return CacheOutput(content=out_content.splitlines(), input=inputs)
+        out_content = path.read_bytes().decode().split("\n")
+        return CacheOutput(content=out_content, input=inputs)
 
     def set(
         self,
@@ -69,5 +69,5 @@ class TerminalCache:
         inputs = CacheInputs(content=directive_content, options=options)
         output = CacheOutput(content=list(output_content), input=inputs)
         path = self.cache_dir / output.file_name
-        path.write_text("\n".join(output.content))
+        path.write_bytes("\n".join(output.content).encode())
         return output
