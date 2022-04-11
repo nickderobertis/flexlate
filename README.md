@@ -9,8 +9,8 @@
 
 ## Overview
 
-Flexlate is a composable, maintainable system for managing project 
-and file generator templates.
+Flexlate is a composable, maintainable system for managing [project 
+and file generator templates](https://nickderobertis.github.io/flexlate/faqs.html#what-is-a-project-or-file-generator).
 
 Update your projects generated from [`cookiecutter`](https://github.com/cookiecutter/cookiecutter) 
   and [`copier`](https://github.com/copier-org/copier) and compose projects 
