@@ -13,12 +13,26 @@ from flexlate.logger import log
 from flexlate.main import Flexlate
 from flexlate.styles import print_styled, INFO_STYLE
 
-cli = typer.Typer()
+MAIN_DOC = """
+fxt is a CLI tool to manage project and file generator templates.
 
-add_cli = typer.Typer(
-    help="Add template sources and generate new projects and "
-    "files from existing template sources"
-)
+[See the Flexlate documentation](
+https://nickderobertis.github.io/flexlate/
+) for more information.
+""".strip()
+
+cli = typer.Typer(help=MAIN_DOC)
+
+ADD_CLI_DOC = """
+Add template sources and generate new projects and files from existing template sources
+
+See the
+[user guide on adding new templates within an existing project](
+https://nickderobertis.github.io/flexlate/tutorial/get-started/add-to-project.html
+) for more details.
+""".strip()
+
+add_cli = typer.Typer(help=ADD_CLI_DOC)
 
 TEMPLATE_ROOT_DOC = (
     "The root directory the template should be rendered from, defaults to current"
@@ -27,7 +41,7 @@ ADD_MODE_DOC = (
     "Local adds the config to the template root, project adds it to the project "
     "config (which may also be template root), and user adds it to the user config"
 )
-NO_INPUT_DOC = "Whether to proceed without any input from the user (useful for automation, e.g. CI systems)"
+NO_INPUT_DOC = "Whether to proceed without any input from the user (skip all prompts)"
 PROJECT_PATH_DOC = "The location of the project"
 MERGED_BRANCH_DOC = "The name of the branch that flexlate creates to store the merges between template updates and the project"
 TEMPLATE_BRANCH_DOC = (
@@ -65,7 +79,9 @@ ADD_MODE_OPTION = typer.Option(
     case_sensitive=False,
     show_choices=True,
 )
-NO_INPUT_OPTION = typer.Option(False, "--no-input", "-n", show_default=False)
+NO_INPUT_OPTION = typer.Option(
+    False, "--no-input", "-n", show_default=False, help=NO_INPUT_DOC
+)
 VERSION_OPTION = typer.Option(
     None,
     "--version",
@@ -77,7 +93,7 @@ VERSION_ARGUMENT = typer.Argument(
     None,
     help=TARGET_VERSION_DOC,
 )
-QUIET_OPTION = typer.Option(False, "--quiet", "-q", show_default=False)
+QUIET_OPTION = typer.Option(False, "--quiet", "-q", show_default=False, help=QUIET_DOC)
 PROJECT_PATH_ARGUMENT = typer.Argument(Path("."), help=PROJECT_PATH_DOC)
 PROJECT_PATH_OPTION = typer.Option(Path("."), help=PROJECT_PATH_DOC)
 REMOTE_OPTION = typer.Option("origin", "--remote", "-r", help=REMOTE_DOC)
@@ -125,7 +141,12 @@ def add_source(
     quiet: bool = QUIET_OPTION,
 ):
     """
-    Adds a new template source, so that files can be generated from it
+    Adds a new template source, so that files can be generated from it.
+
+    See the
+    [user guide on adding new templates within an existing project](
+    https://nickderobertis.github.io/flexlate/tutorial/get-started/add-to-project.html
+    ) for more details.
     """
     app = Flexlate(quiet=quiet)
     app.add_template_source(
@@ -150,6 +171,11 @@ def generate_applied_template(
 ):
     """
     Applies a template to a given location, and stores it in config so it can be updated
+
+    See the
+    [user guide on adding new templates within an existing project](
+    https://nickderobertis.github.io/flexlate/tutorial/get-started/add-to-project.html
+    ) for more details.
     """
     app = Flexlate(quiet=quiet)
     app.apply_template_and_add(
@@ -176,6 +202,9 @@ def remove_template_source(
     template_root: Path = TEMPLATE_ROOT_OPTION,
     quiet: bool = QUIET_OPTION,
 ):
+    """
+    Removes a template source, so that files can no longer be generated from it.
+    """
     app = Flexlate(quiet=quiet)
     app.remove_template_source(template_name, template_root=template_root)
 
@@ -191,6 +220,9 @@ def remove_template_output(
     template_root: Path = TEMPLATE_ROOT_ARGUMENT,
     quiet: bool = QUIET_OPTION,
 ):
+    """
+    Removes an applied template output
+    """
     app = Flexlate(quiet=quiet)
     app.remove_applied_template_and_output(template_name, out_root=template_root)
 
@@ -227,6 +259,11 @@ def init_project(
 ):
     """
     Initializes a flexlate project. This must be run before other commands
+
+    See the user guide on
+    [adding templates within an existing project](
+    https://nickderobertis.github.io/flexlate/tutorial/get-started/add-to-project.html
+    ) for more details.
     """
     app = Flexlate(quiet=quiet)
     app.init_project(
@@ -277,6 +314,11 @@ def init_project_from(
 
     Note that this will also create a new folder and initialize a git repository in it
     before adding the Flexlate output.
+
+    See the user guide on
+    [creating a new project with Flexlate](
+    https://nickderobertis.github.io/flexlate/tutorial/get-started/new-project.html
+    ) for more information.
     """
     app = Flexlate(quiet=quiet)
     app.init_project_from(
@@ -313,6 +355,11 @@ def update_templates(
     """
     Updates applied templates in the project to the newest versions
     available that still satisfy source target versions
+
+    See the user guide on
+    [updating templates](
+    https://nickderobertis.github.io/flexlate/tutorial/updating.html
+    ) for more information.
     """
     app = Flexlate(quiet=quiet)
     try:
@@ -346,6 +393,11 @@ def undo(
     Note that this modifies the git history, discarding the last commits.
     It has protections against deleting user commits but you should only
     use this on a feature branch.
+
+    See the user guide on
+    [undoing Flexlate operations](
+    https://nickderobertis.github.io/flexlate/tutorial/undoing.html
+    ) for more information.
     """
     app = Flexlate(quiet=quiet)
     app.undo(num_operations=num_operations, project_path=path)
@@ -366,12 +418,17 @@ def sync(
 ):
     """
     Syncs manual changes to the flexlate branches, and updates templates
-    accordingly. This is useful if you want to move or modify flexlate configs
+    accordingly.
+
+    This is useful if you want to move or modify flexlate configs
     after they are created, but there is no command in the CLI for it.
-    This is currently the way to update template versions until there is a
-    specific command for it: manually change the version and run sync.
 
     Note: Be sure to commit your changes before running sync
+
+    See the user guide on
+    [making arbitrary changes](
+    https://nickderobertis.github.io/flexlate/tutorial/arbitrary-changes.html
+    ) for more information.
     """
     app = Flexlate(quiet=quiet)
     app.sync(prompt=prompt, project_path=path)
@@ -400,12 +457,29 @@ def merge(
     Feature flexlate branches should be merged into main flexlate branches when
     the corresponding feature branch is merged into the repo's main branch. This
     command provides a convenient way to do so.
+
+    See the user guide on
+    [saving Flexlate updates](
+    https://nickderobertis.github.io/flexlate/tutorial/saving.html
+    ), especially
+    [the section about locally merging branches](
+    https://nickderobertis.github.io/flexlate/tutorial/saving.html#locally-merging-branches
+    ), for more information.
     """
     app = Flexlate(quiet=quiet)
     app.merge_flexlate_branches(branch_name, delete=delete, project_path=path)
 
 
-push_cli = typer.Typer(help="Push flexlate branches to remote repositories")
+PUSH_DOC = """
+Push Flexlate branches to remote repositories
+
+See the user guide on
+[saving Flexlate updates](
+https://nickderobertis.github.io/flexlate/tutorial/saving.html
+) for more information.
+""".strip()
+
+push_cli = typer.Typer(help=PUSH_DOC)
 
 
 @push_cli.command("main")
@@ -415,7 +489,15 @@ def push_main(
     quiet: bool = QUIET_OPTION,
 ):
     """
-    Pushes main flexlate branches to remote
+    Pushes main Flexlate branches to remote
+
+    See the user guide on
+    [saving Flexlate updates](
+    https://nickderobertis.github.io/flexlate/tutorial/saving.html
+    ), especially
+    [the section about pushing with a local workflow](
+    https://nickderobertis.github.io/flexlate/tutorial/saving.html#push-your-flexlate-main-branch-changes
+    ), for more information.
     """
     app = Flexlate(quiet=quiet)
     app.push_main_flexlate_branches(remote, project_path=path)
@@ -432,7 +514,15 @@ def push_feature(
     quiet: bool = QUIET_OPTION,
 ):
     """
-    Pushes main flexlate branches to remote
+    Pushes feature Flexlate branches to remote
+
+    See the user guide on
+    [saving Flexlate updates](
+    https://nickderobertis.github.io/flexlate/tutorial/saving.html
+    ), especially
+    [the section about pushing changes with a PR workflow](
+    https://nickderobertis.github.io/flexlate/tutorial/saving.html#push-your-flexlate-feature-branch-changes
+    ), for more information.
     """
     app = Flexlate(quiet=quiet)
     app.push_feature_flexlate_branches(feature_branch, remote, project_path=path)
@@ -457,6 +547,14 @@ def check(
 
     Displays a tabular output of the templates that need to be updated. It will also
     exist with code 1 when updates are available so that it is easy to use in scripting.
+
+    See the user guide on
+    [updating templates](
+    https://nickderobertis.github.io/flexlate/tutorial/updating.html
+    ), especially
+    [the section about checking for updates](
+    https://nickderobertis.github.io/flexlate/tutorial/updating.html#checking-for-updates
+    ), for more information.
     """
     app = Flexlate(quiet=quiet)
     check_result = app.check(names=names, project_path=path)
@@ -492,8 +590,13 @@ def bootstrap(
     ),
 ):
     """
-    Takes an existing project that was already generated by another tool such as Cookiecutter or
-    Copier and sets it up as a Flexlate project.
+    Sets up a Flexlate project from an existing project that was already generated by
+    another tool such as Cookiecutter or Copier.
+
+    See the user guide on
+    [adding Flexlate to a project already generated from a template](
+    https://nickderobertis.github.io/flexlate/tutorial/get-started/existing-project.html
+    ) for more information.
     """
     app = Flexlate(quiet=quiet)
     app.bootstrap_flexlate_init_from_existing_template(
@@ -521,8 +624,17 @@ def update_template_source_target_version(
     quiet: bool = QUIET_OPTION,
 ):
     """
-    Updates a target version for a template source. If no version is passed,
-    it will remove the targeting so it will always update.
+    Updates a target version for a template source.
+
+    If no version is passed, it will remove the targeting so it will always update.
+
+    See the user guide on
+    [updating templates](
+    https://nickderobertis.github.io/flexlate/tutorial/updating.html
+    ), especially
+    [the section about changing target version](
+    https://nickderobertis.github.io/flexlate/tutorial/updating.html#change-target-version
+    ), for more information.
     """
     app = Flexlate(quiet=quiet)
     app.update_template_source_target_version(
