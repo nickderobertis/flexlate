@@ -3,7 +3,7 @@
 Flexlate [saves the history of your merge conflict resolutions](../core-concepts.md#branches-for-flexlate-operations) 
 so that you don't need to resolve them multiple times. Flexlate mostly manages 
 this history for you, but you do get to choose when you want to 
-"save" the history by merging the [Flexlate feature branches](../core-concepts.md#flexlate-feature-branches)  
+"save" the history by merging the [Flexlate feature branches](../core-concepts.md#flexlate-feature-branches) 
 into the 
 [Flexlate main branches](../core-concepts.md#flexlate-main-branches). 
 
