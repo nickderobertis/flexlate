@@ -47,7 +47,7 @@
   
   
   
-    <title>Welcome to Flexlate documentation! &#8212; flexlate 0.12.2 documentation</title>
+    <title>Welcome to Flexlate documentation! &#8212; flexlate 0.12.3 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/material.css" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
@@ -92,7 +92,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex navheader">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="#" title="flexlate 0.12.2 documentation"
+        <a href="#" title="flexlate 0.12.3 documentation"
            class="md-header-nav__button md-logo">
           
             <i class="md-icon">&#xe869</i>
@@ -178,7 +178,7 @@
   <nav class="md-tabs" data-md-component="tabs">
     <div class="md-tabs__inner md-grid">
       <ul class="md-tabs__list">
-          <li class="md-tabs__item"><a href="#" class="md-tabs__link">flexlate 0.12.2 documentation</a></li>
+          <li class="md-tabs__item"><a href="#" class="md-tabs__link">flexlate 0.12.3 documentation</a></li>
       </ul>
     </div>
   </nav>
@@ -190,13 +190,13 @@
               <div class="md-sidebar__inner">
                 <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="#" title="flexlate 0.12.2 documentation" class="md-nav__button md-logo">
+    <a href="#" title="flexlate 0.12.3 documentation" class="md-nav__button md-logo">
       
         <i class="md-icon">&#xe869</i>
       
     </a>
     <a href="#"
-       title="flexlate 0.12.2 documentation">flexlate</a>
+       title="flexlate 0.12.3 documentation">flexlate</a>
   </label>
     <div class="md-nav__source">
       <a href="https://github.com/nickderobertis/flexlate" title="Go to repository" class="md-source" data-md-source="github">
@@ -355,22 +355,29 @@
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
 <p>Flexlate is a composable, maintainable system for managing project
 and file generator templates.</p>
+<p>Update your projects generated from <a class="reference external" href="https://github.com/cookiecutter/cookiecutter"><code class="docutils literal notranslate"><span class="pre">cookiecutter</span></code></a>
+and <a class="reference external" href="https://github.com/copier-org/copier"><code class="docutils literal notranslate"><span class="pre">copier</span></code></a> and compose projects
+from multiple templates.</p>
 <section id="features">
 <h3 id="features">Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li><p><strong>Update template outputs</strong> after there are changes to the template</p>
+<li><p><a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/updating.html"><strong>Update template outputs</strong></a>
+after there are changes to the template</p>
 <ul>
-<li><p>When there is a conflict, it creates a git merge conflict so that you can
-resolve it with your favorite tooling</p></li>
+<li><p>When there is a conflict, it creates a
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/core-concepts.html#real-merge-conflicts">Git merge conflict</a>
+so that you can resolve it with your favorite tooling</p></li>
 <li><p>It keeps a history of the conflict resolution so you are not resolving
 the same conflicts repeatedly</p></li>
-<li><p>Use pre-built Github Actions to automatically get a PR in your project after
+<li><p>Use <a class="reference external" href="https://nickderobertis.github.io/flexlate/core-concepts.html#ci-workflows">pre-built Github Actions</a>
+to automatically get a PR in your project after
 the template has been updated</p></li>
 </ul>
 </li>
 <li><p><strong>Compose a project</strong> with multiple templates</p>
 <ul>
-<li><p>Add template sources and then you can apply outputs anywhere with a simple
+<li><p><a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/get-started/add-to-project.html">Add template sources and then you can apply outputs</a>
+anywhere with a simple
 CLI command</p></li>
 </ul>
 </li>
@@ -381,7 +388,7 @@ and <a class="reference external" href="https://github.com/copier-org/copier"><c
 in your project and be able to update outputs whenever it changes</p></li>
 </ul>
 </li>
-<li><p><strong>Apply it to your existing projects</strong> with a <code class="docutils literal notranslate"><span class="pre">bootstrap</span></code> functionality</p></li>
+<li><p><strong>Apply it to your existing projects</strong> with <a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/get-started/existing-project.html">a <code class="docutils literal notranslate"><span class="pre">bootstrap</span></code> functionality</a></p></li>
 <li><p>(planned) <strong>Use flexlate projects as templates themselves</strong>, enabling nested templates
 and sharing data across templates</p></li>
 <li><p>(planned) <strong>Allow multiple templates to coordinate on specific files</strong> in arbitrary
@@ -402,10 +409,12 @@ with tests, a Java class and tests, or any set of files you want to generate</p>
 <section id="locally-or-remote-with-a-team">
 <h3 id="locally-or-remote-with-a-team">Locally or Remote With a Team<a class="headerlink" href="#locally-or-remote-with-a-team" title="Permalink to this headline">¶</a></h3>
 <p>In either case, you can use Flexlate 100% locally even on a team project
-without anyone else knowing you are using it via the <code class="docutils literal notranslate"><span class="pre">user</span></code> mode.</p>
+without anyone else knowing you are using it via
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/core-concepts.html#project-and-user-configuration">the <code class="docutils literal notranslate"><span class="pre">user</span></code> mode</a>.</p>
 <p>But Flexlate really shines when you embrace it fully and include it in
-your remote repo. This enables you use CI to automatically open PRs with
-template updates.</p>
+your remote repo. This enables you <a class="reference external" href="https://nickderobertis.github.io/flexlate/core-concepts.html#ci-workflows">use CI</a>
+to automatically open PRs with
+template updates and merge Flexlate branches.</p>
 </section>
 <section id="why-flexlate">
 <h3 id="why-flexlate">Why Flexlate?<a class="headerlink" href="#why-flexlate" title="Permalink to this headline">¶</a></h3>
@@ -413,20 +422,24 @@ template updates.</p>
 You generate your project from a template, but later update the template
 and need to bring the changes back to your project. There are only a
 few tools for this and they do not have a great developer experience.
-Flexlate is Git-native, so you resolve template conflicts in Git as you would any
+Flexlate is <a class="reference external" href="https://nickderobertis.github.io/flexlate/core-concepts.html#git-native">Git-native</a>,
+so you resolve template conflicts in Git as you would any
 other merge conflicts.</p>
 <p>Further, there is not really any ability to compose a project template from
 smaller templates with any existing tools.</p>
 </section>
 <section id="how-does-it-work">
 <h3 id="how-does-it-work">How does it Work?<a class="headerlink" href="#how-does-it-work" title="Permalink to this headline">¶</a></h3>
-<p>Flexlate is Git-native: it carries out all its operations via commits to
-Git branches. It maintains two branches, one that contains the history of
+<p>Flexlate is <a class="reference external" href="https://nickderobertis.github.io/flexlate/core-concepts.html#git-native">Git-native</a>:
+it carries out all its operations via commits to
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/core-concepts.html#branches-for-flexlate-operations">Git branches</a>.
+It maintains two branches, one that contains the history of
 the template output and the other than contains the merged output between
 your project and the template. This means that you resolve any conflicts
 with the template changes in Git and the merge conflict resolution is stored
 in the output branch.</p>
-<p>It enables composability by using config files to keep track of where
+<p>It enables composability by using <a class="reference external" href="https://nickderobertis.github.io/flexlate/core-concepts.html#flexlate-json">config files</a>
+to keep track of where
 multiple templates should be rendered and with what data.</p>
 <p><a class="reference external" href="https://nickderobertis.github.io/flexlate/core-concepts.html">Learn more about Flexlate core concepts here.</a></p>
 </section>
@@ -441,6 +454,8 @@ more detail on getting started. Start by learning about
 before reading the <a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/index.html">user guide</a>,
 which contains more detailed information on
 <a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/get-started/index.html">getting started</a>.</p>
+<p>Or, you can keep reading this high-level overview for abbreviated
+getting started steps.</p>
 </section>
 <section id="installing">
 <h3 id="installing">Installing<a class="headerlink" href="#installing" title="Permalink to this headline">¶</a></h3>
@@ -458,9 +473,14 @@ though it can also be installed with <code class="docutils literal notranslate">
 </div>
 <p>Before using Flexlate, you will also need to have
 <a class="reference external" href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git">Git installed</a>.</p>
+<p>See the <a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/get-started/installing.html">install guide</a>
+for more information.</p>
 </section>
 <section id="first-steps">
 <h3 id="first-steps">First Steps<a class="headerlink" href="#first-steps" title="Permalink to this headline">¶</a></h3>
+<p>Your first steps will depend on what you are trying to accomplish.
+See the <a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/get-started/installing.html#next-steps">“Next Steps” section of the installing guide</a>
+for more information.</p>
 <section id="new-project-from-a-template">
 <h4 id="new-project-from-a-template">New Project from a Template<a class="headerlink" href="#new-project-from-a-template" title="Permalink to this headline">¶</a></h4>
 <p>To generate a new project from a template, use
@@ -469,6 +489,8 @@ e.g.:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>fxt init-from https://github.com/nickderobertis/copier-pypi-sphinx-flexlate
 </pre></div>
 </div>
+<p>See the user guide on <a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/get-started/new-project.html">creating a new project</a>
+for more information.</p>
 </section>
 <section id="existing-project-from-a-template">
 <h4 id="existing-project-from-a-template">Existing Project from a Template<a class="headerlink" href="#existing-project-from-a-template" title="Permalink to this headline">¶</a></h4>
@@ -479,6 +501,8 @@ e.g.:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>fxt bootstrap https://github.com/nickderobertis/copier-pypi-sphinx-flexlate
 </pre></div>
 </div>
+<p>See the user guide on <a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/get-started/existing-project.html">adding Flexlate to an existing project from a template</a>
+for more information.</p>
 </section>
 <section id="compose-a-project-from-multiple-templates">
 <h4 id="compose-a-project-from-multiple-templates">Compose a Project from Multiple Templates<a class="headerlink" href="#compose-a-project-from-multiple-templates" title="Permalink to this headline">¶</a></h4>
@@ -499,10 +523,14 @@ as you want.</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>fxt add output copier-pypi-sphinx-flexlate
 </pre></div>
 </div>
+<p>See the user guide on <a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/get-started/add-to-project.html">adding templates within an existing project</a>
+for more information.</p>
 </section>
 </section>
 <section id="updating-a-template">
 <h3 id="updating-a-template">Updating a Template<a class="headerlink" href="#updating-a-template" title="Permalink to this headline">¶</a></h3>
+<p>See the user guide on <a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/updating.html">updating a template</a>
+for more information, but here’s some quick info.</p>
 <section id="re-prompt-questions">
 <h4 id="re-prompt-questions">Re-prompt Questions<a class="headerlink" href="#re-prompt-questions" title="Permalink to this headline">¶</a></h4>
 <p>Once you have updates in the template that you want to bring to your project,
@@ -525,6 +553,8 @@ you can pass <code class="docutils literal notranslate"><span class="pre">--no-i
 </section>
 <section id="saving-your-work">
 <h4 id="saving-your-work">Saving your Work<a class="headerlink" href="#saving-your-work" title="Permalink to this headline">¶</a></h4>
+<p>See the user guide on <a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/saving.html">saving Flexlate updates</a>
+for more information, but here’s some quick info.</p>
 <section id="local-repo-flows">
 <h5 id="local-repo-flows">Local Repo Flows<a class="headerlink" href="#local-repo-flows" title="Permalink to this headline">¶</a></h5>
 <p>If you are following a local repo flow, then you can use the
@@ -538,7 +568,7 @@ commititng to the main branch, just run <code class="docutils literal notranslat
 <h5 id="remote-repo-pr-flows">Remote Repo/PR Flows<a class="headerlink" href="#remote-repo-pr-flows" title="Permalink to this headline">¶</a></h5>
 <p>If you are merging PRs in your repo rather than following a local flow, then
 you will want to
-<a class="reference external" href="https://nickderobertis.github.io/flexlate/commands.html#fxt-push"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">push</span></code></a>
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/commands.html#fxt-push-feature"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">push</span> <span class="pre">feature</span></code></a>
 just before/after your push your feature branch
 and open a PR. If you use the official Flexlate Github Merge Action,
 the Flexlate branches will be merged automatically after the PR is merged.</p>
@@ -553,32 +583,38 @@ You will see similar output to what is in the
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ fxt --help
 Usage: fxt <span class="o">[</span>OPTIONS<span class="o">]</span> COMMAND <span class="o">[</span>ARGS<span class="o">]</span>...
 
+  fxt is a CLI tool to manage project and file generator templates.
+
+  <span class="o">[</span>See the Flexlate documentation<span class="o">](</span>
+  https://nickderobertis.github.io/flexlate/ <span class="o">)</span> <span class="k">for</span> more information.
+
 Options:
-  --install-completion <span class="o">[</span>bash<span class="p">|</span>zsh<span class="p">|</span>fish<span class="p">|</span>powershell<span class="p">|</span>pwsh<span class="o">]</span>
-                                  Install completion <span class="k">for</span> the specified shell.
-  --show-completion <span class="o">[</span>bash<span class="p">|</span>zsh<span class="p">|</span>fish<span class="p">|</span>powershell<span class="p">|</span>pwsh<span class="o">]</span>
-                                  Show completion <span class="k">for</span> the specified shell, to
-                                  copy it or customize the installation.
-  --help                          Show this message and exit.
+  -v, --version         Show Flexlate version and <span class="nb">exit</span>
+  --install-completion  Install completion <span class="k">for</span> the current shell.
+  --show-completion     Show completion <span class="k">for</span> the current shell, to copy it or
+                        customize the installation.
+
+  --help                Show this message and exit.
 
 Commands:
-  add        Add template sources and generate new projects and files...
-  bootstrap  Takes an existing project that was already generated by...
-  check      Checks whether there are any updates available <span class="k">for</span> the...
+  add        Add template sources and generate new projects and files from...
+  bootstrap  Sets up a Flexlate project from an existing project that was...
+  check      Checks whether there are any updates available <span class="k">for</span> the current...
   config     Modify Flexlate configs via CLI
   init       Initializes a flexlate project.
   init-from  Generates a project from a template and sets it up as a...
   merge      Merges feature flexlate branches into the main flexlate...
-  push       Push flexlate branches to remote repositories
+  push       Push Flexlate branches to remote repositories.
   remove     Remove template sources and previously generated outputs
   sync       Syncs manual changes to the flexlate branches, and updates...
   undo       Undoes the last flexlate operation, like ctrl/cmd + z <span class="k">for</span>...
-  update     Updates applied templates <span class="k">in</span> the project to the newest...
+  update     Updates applied templates <span class="k">in</span> the project to the newest
+             versions...
 </pre></div>
 </div>
 <p>Please raise an issue if anything is confusing or does not work properly.</p>
 <p>See a
-<a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial.html">more in-depth tutorial here.</a></p>
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/">more in-depth tutorial here.</a></p>
 </section>
 </section>
 <section id="development-status">

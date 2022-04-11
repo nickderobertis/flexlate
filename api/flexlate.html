@@ -47,7 +47,7 @@
   
   
   
-    <title>flexlate package &#8212; flexlate 0.12.2 documentation</title>
+    <title>flexlate package &#8212; flexlate 0.12.3 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/material.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
@@ -93,7 +93,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex navheader">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="../index.html" title="flexlate 0.12.2 documentation"
+        <a href="../index.html" title="flexlate 0.12.3 documentation"
            class="md-header-nav__button md-logo">
           
             <i class="md-icon">&#xe869</i>
@@ -179,7 +179,7 @@
   <nav class="md-tabs" data-md-component="tabs">
     <div class="md-tabs__inner md-grid">
       <ul class="md-tabs__list">
-          <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">flexlate 0.12.2 documentation</a></li>
+          <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">flexlate 0.12.3 documentation</a></li>
           <li class="md-tabs__item"><a href="modules.html" class="md-tabs__link">flexlate</a></li>
       </ul>
     </div>
@@ -192,13 +192,13 @@
               <div class="md-sidebar__inner">
                 <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="../index.html" title="flexlate 0.12.2 documentation" class="md-nav__button md-logo">
+    <a href="../index.html" title="flexlate 0.12.3 documentation" class="md-nav__button md-logo">
       
         <i class="md-icon">&#xe869</i>
       
     </a>
     <a href="../index.html"
-       title="flexlate 0.12.2 documentation">flexlate</a>
+       title="flexlate 0.12.3 documentation">flexlate</a>
   </label>
     <div class="md-nav__source">
       <a href="https://github.com/nickderobertis/flexlate" title="Go to repository" class="md-source" data-md-source="github">
@@ -890,13 +890,21 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="flexlate.cli.add_source">
 <span class="sig-prename descclassname"><span class="pre">flexlate.cli.</span></span><span class="sig-name descname"><span class="pre">add_source</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Argument</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Argument</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template_root</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Option</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#flexlate.cli.add_source" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds a new template source, so that files can be generated from it</p>
+<dd><p>Adds a new template source, so that files can be generated from it.</p>
+<p>See the
+[user guide on adding new templates within an existing project](
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/get-started/add-to-project.html">https://nickderobertis.github.io/flexlate/tutorial/get-started/add-to-project.html</a>
+) for more details.</p>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="flexlate.cli.bootstrap">
 <span class="sig-prename descclassname"><span class="pre">flexlate.cli.</span></span><span class="sig-name descname"><span class="pre">bootstrap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Argument</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Argument</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_add_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remote</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">merged_branch_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template_branch_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Option</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#flexlate.cli.bootstrap" title="Permalink to this definition">¶</a></dt>
-<dd><p>Takes an existing project that was already generated by another tool such as Cookiecutter or
-Copier and sets it up as a Flexlate project.</p>
+<dd><p>Sets up a Flexlate project from an existing project that was already generated by
+another tool such as Cookiecutter or Copier.</p>
+<p>See the user guide on
+[adding Flexlate to a project already generated from a template](
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/get-started/existing-project.html">https://nickderobertis.github.io/flexlate/tutorial/get-started/existing-project.html</a>
+) for more information.</p>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="flexlate.cli.check">
@@ -904,16 +912,31 @@ Copier and sets it up as a Flexlate project.</p>
 <dd><p>Checks whether there are any updates available for the current template sources</p>
 <p>Displays a tabular output of the templates that need to be updated. It will also
 exist with code 1 when updates are available so that it is easy to use in scripting.</p>
+<p>See the user guide on
+[updating templates](
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/updating.html">https://nickderobertis.github.io/flexlate/tutorial/updating.html</a>
+), especially
+[the section about checking for updates](
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/updating.html#checking-for-updates">https://nickderobertis.github.io/flexlate/tutorial/updating.html#checking-for-updates</a>
+), for more information.</p>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="flexlate.cli.generate_applied_template">
 <span class="sig-prename descclassname"><span class="pre">flexlate.cli.</span></span><span class="sig-name descname"><span class="pre">generate_applied_template</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Argument</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template_root</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Argument</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Option</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#flexlate.cli.generate_applied_template" title="Permalink to this definition">¶</a></dt>
 <dd><p>Applies a template to a given location, and stores it in config so it can be updated</p>
+<p>See the
+[user guide on adding new templates within an existing project](
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/get-started/add-to-project.html">https://nickderobertis.github.io/flexlate/tutorial/get-started/add-to-project.html</a>
+) for more details.</p>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="flexlate.cli.init_project">
 <span class="sig-prename descclassname"><span class="pre">flexlate.cli.</span></span><span class="sig-name descname"><span class="pre">init_project</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Argument</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_add_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">merged_branch_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template_branch_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remote</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Option</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#flexlate.cli.init_project" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initializes a flexlate project. This must be run before other commands</p>
+<p>See the user guide on
+[adding templates within an existing project](
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/get-started/add-to-project.html">https://nickderobertis.github.io/flexlate/tutorial/get-started/add-to-project.html</a>
+) for more details.</p>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="flexlate.cli.init_project_from">
@@ -921,6 +944,10 @@ exist with code 1 when updates are available so that it is easy to use in script
 <dd><p>Generates a project from a template and sets it up as a Flexlate project.</p>
 <p>Note that this will also create a new folder and initialize a git repository in it
 before adding the Flexlate output.</p>
+<p>See the user guide on
+[creating a new project with Flexlate](
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/get-started/new-project.html">https://nickderobertis.github.io/flexlate/tutorial/get-started/new-project.html</a>
+) for more information.</p>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="flexlate.cli.merge">
@@ -929,6 +956,13 @@ before adding the Flexlate output.</p>
 <p>Feature flexlate branches should be merged into main flexlate branches when
 the corresponding feature branch is merged into the repo’s main branch. This
 command provides a convenient way to do so.</p>
+<p>See the user guide on
+[saving Flexlate updates](
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/saving.html">https://nickderobertis.github.io/flexlate/tutorial/saving.html</a>
+), especially
+[the section about locally merging branches](
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/saving.html#locally-merging-branches">https://nickderobertis.github.io/flexlate/tutorial/saving.html#locally-merging-branches</a>
+), for more information.</p>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="flexlate.cli.pre_execute">
@@ -937,30 +971,49 @@ command provides a convenient way to do so.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="flexlate.cli.push_feature">
 <span class="sig-prename descclassname"><span class="pre">flexlate.cli.</span></span><span class="sig-name descname"><span class="pre">push_feature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_branch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Argument</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remote</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Option</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#flexlate.cli.push_feature" title="Permalink to this definition">¶</a></dt>
-<dd><p>Pushes main flexlate branches to remote</p>
+<dd><p>Pushes feature Flexlate branches to remote</p>
+<p>See the user guide on
+[saving Flexlate updates](
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/saving.html">https://nickderobertis.github.io/flexlate/tutorial/saving.html</a>
+), especially
+[the section about pushing changes with a PR workflow](
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/saving.html#push-your-flexlate-feature-branch-changes">https://nickderobertis.github.io/flexlate/tutorial/saving.html#push-your-flexlate-feature-branch-changes</a>
+), for more information.</p>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="flexlate.cli.push_main">
 <span class="sig-prename descclassname"><span class="pre">flexlate.cli.</span></span><span class="sig-name descname"><span class="pre">push_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">remote</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Option</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#flexlate.cli.push_main" title="Permalink to this definition">¶</a></dt>
-<dd><p>Pushes main flexlate branches to remote</p>
+<dd><p>Pushes main Flexlate branches to remote</p>
+<p>See the user guide on
+[saving Flexlate updates](
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/saving.html">https://nickderobertis.github.io/flexlate/tutorial/saving.html</a>
+), especially
+[the section about pushing with a local workflow](
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/saving.html#push-your-flexlate-main-branch-changes">https://nickderobertis.github.io/flexlate/tutorial/saving.html#push-your-flexlate-main-branch-changes</a>
+), for more information.</p>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="flexlate.cli.remove_template_output">
 <span class="sig-prename descclassname"><span class="pre">flexlate.cli.</span></span><span class="sig-name descname"><span class="pre">remove_template_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Argument</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template_root</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Argument</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Option</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#flexlate.cli.remove_template_output" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Removes an applied template output</p>
+</dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="flexlate.cli.remove_template_source">
 <span class="sig-prename descclassname"><span class="pre">flexlate.cli.</span></span><span class="sig-name descname"><span class="pre">remove_template_source</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Argument</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template_root</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Option</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#flexlate.cli.remove_template_source" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Removes a template source, so that files can no longer be generated from it.</p>
+</dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="flexlate.cli.sync">
 <span class="sig-prename descclassname"><span class="pre">flexlate.cli.</span></span><span class="sig-name descname"><span class="pre">sync</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Argument</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prompt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Option</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#flexlate.cli.sync" title="Permalink to this definition">¶</a></dt>
 <dd><p>Syncs manual changes to the flexlate branches, and updates templates
-accordingly. This is useful if you want to move or modify flexlate configs
-after they are created, but there is no command in the CLI for it.
-This is currently the way to update template versions until there is a
-specific command for it: manually change the version and run sync.</p>
+accordingly.</p>
+<p>This is useful if you want to move or modify flexlate configs
+after they are created, but there is no command in the CLI for it.</p>
 <p>Note: Be sure to commit your changes before running sync</p>
+<p>See the user guide on
+[making arbitrary changes](
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/arbitrary-changes.html">https://nickderobertis.github.io/flexlate/tutorial/arbitrary-changes.html</a>
+) for more information.</p>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="flexlate.cli.undo">
@@ -969,18 +1022,33 @@ specific command for it: manually change the version and run sync.</p>
 Note that this modifies the git history, discarding the last commits.
 It has protections against deleting user commits but you should only
 use this on a feature branch.</p>
+<p>See the user guide on
+[undoing Flexlate operations](
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/undoing.html">https://nickderobertis.github.io/flexlate/tutorial/undoing.html</a>
+) for more information.</p>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="flexlate.cli.update_template_source_target_version">
 <span class="sig-prename descclassname"><span class="pre">flexlate.cli.</span></span><span class="sig-name descname"><span class="pre">update_template_source_target_version</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Argument</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Argument</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Option</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#flexlate.cli.update_template_source_target_version" title="Permalink to this definition">¶</a></dt>
-<dd><p>Updates a target version for a template source. If no version is passed,
-it will remove the targeting so it will always update.</p>
+<dd><p>Updates a target version for a template source.</p>
+<p>If no version is passed, it will remove the targeting so it will always update.</p>
+<p>See the user guide on
+[updating templates](
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/updating.html">https://nickderobertis.github.io/flexlate/tutorial/updating.html</a>
+), especially
+[the section about changing target version](
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/updating.html#change-target-version">https://nickderobertis.github.io/flexlate/tutorial/updating.html#change-target-version</a>
+), for more information.</p>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="flexlate.cli.update_templates">
 <span class="sig-prename descclassname"><span class="pre">flexlate.cli.</span></span><span class="sig-name descname"><span class="pre">update_templates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Argument</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">abort_on_conflict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typer.Option</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#flexlate.cli.update_templates" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates applied templates in the project to the newest versions
 available that still satisfy source target versions</p>
+<p>See the user guide on
+[updating templates](
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/updating.html">https://nickderobertis.github.io/flexlate/tutorial/updating.html</a>
+) for more information.</p>
 </dd></dl>
 </section>
 <section id="module-flexlate.cli_utils">

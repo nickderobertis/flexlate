@@ -47,7 +47,7 @@
   
   
   
-    <title>fxt &#8212; flexlate 0.12.2 documentation</title>
+    <title>fxt &#8212; flexlate 0.12.3 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/material.css" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
@@ -93,7 +93,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex navheader">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="index.html" title="flexlate 0.12.2 documentation"
+        <a href="index.html" title="flexlate 0.12.3 documentation"
            class="md-header-nav__button md-logo">
           
             <i class="md-icon">&#xe869</i>
@@ -179,7 +179,7 @@
   <nav class="md-tabs" data-md-component="tabs">
     <div class="md-tabs__inner md-grid">
       <ul class="md-tabs__list">
-          <li class="md-tabs__item"><a href="index.html" class="md-tabs__link">flexlate 0.12.2 documentation</a></li>
+          <li class="md-tabs__item"><a href="index.html" class="md-tabs__link">flexlate 0.12.3 documentation</a></li>
       </ul>
     </div>
   </nav>
@@ -191,13 +191,13 @@
               <div class="md-sidebar__inner">
                 <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="index.html" title="flexlate 0.12.2 documentation" class="md-nav__button md-logo">
+    <a href="index.html" title="flexlate 0.12.3 documentation" class="md-nav__button md-logo">
       
         <i class="md-icon">&#xe869</i>
       
     </a>
     <a href="index.html"
-       title="flexlate 0.12.2 documentation">flexlate</a>
+       title="flexlate 0.12.3 documentation">flexlate</a>
   </label>
     <div class="md-nav__source">
       <a href="https://github.com/nickderobertis/flexlate" title="Go to repository" class="md-source" data-md-source="github">
@@ -522,6 +522,8 @@
             
   <section id="fxt">
 <h1 id="commands--page-root"><code class="docutils literal notranslate"><span class="pre">fxt</span></code><a class="headerlink" href="#commands--page-root" title="Permalink to this headline">¶</a></h1>
+<p>fxt is a CLI tool to manage project and file generator templates.</p>
+<p><a class="reference external" href="https://nickderobertis.github.io/flexlate/">See the Flexlate documentation</a> for more information.</p>
 <p><strong>Usage</strong>:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>fxt <span class="o">[</span>OPTIONS<span class="o">]</span> COMMAND <span class="o">[</span>ARGS<span class="o">]</span>...
 </pre></div>
@@ -536,13 +538,13 @@
 <p><strong>Commands</strong>:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">add</span></code>: Add template sources and generate new…</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">bootstrap</span></code>: Takes an existing project that was already…</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">bootstrap</span></code>: Sets up a Flexlate project from an existing…</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">check</span></code>: Checks whether there are any updates…</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">config</span></code>: Modify Flexlate configs via CLI</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">init</span></code>: Initializes a flexlate project.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">init-from</span></code>: Generates a project from a template and sets…</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">merge</span></code>: Merges feature flexlate branches into the…</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">push</span></code>: Push flexlate branches to remote repositories</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">push</span></code>: Push Flexlate branches to remote…</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">remove</span></code>: Remove template sources and previously…</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">sync</span></code>: Syncs manual changes to the flexlate…</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">undo</span></code>: Undoes the last flexlate operation, like…</p></li>
@@ -551,6 +553,8 @@
 <section id="fxt-add">
 <h2 id="fxt-add"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">add</span></code><a class="headerlink" href="#fxt-add" title="Permalink to this headline">¶</a></h2>
 <p>Add template sources and generate new projects and files from existing template sources</p>
+<p>See the
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/get-started/add-to-project.html">user guide on adding new templates within an existing project</a> for more details.</p>
 <p><strong>Usage</strong>:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>fxt add <span class="o">[</span>OPTIONS<span class="o">]</span> COMMAND <span class="o">[</span>ARGS<span class="o">]</span>...
 </pre></div>
@@ -567,6 +571,8 @@
 <section id="fxt-add-output">
 <h3 id="fxt-add-output"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">add</span> <span class="pre">output</span></code><a class="headerlink" href="#fxt-add-output" title="Permalink to this headline">¶</a></h3>
 <p>Applies a template to a given location, and stores it in config so it can be updated</p>
+<p>See the
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/get-started/add-to-project.html">user guide on adding new templates within an existing project</a> for more details.</p>
 <p><strong>Usage</strong>:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>fxt add output <span class="o">[</span>OPTIONS<span class="o">]</span> NAME <span class="o">[</span>TEMPLATE_ROOT<span class="o">]</span>
 </pre></div>
@@ -579,14 +585,16 @@
 <p><strong>Options</strong>:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">-a,</span> <span class="pre">--add-mode</span> <span class="pre">[local|project|user]</span></code>: Local adds the config to the template root, project adds it to the project config (which may also be template root), and user adds it to the user config</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-n,</span> <span class="pre">--no-input</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-q,</span> <span class="pre">--quiet</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-n,</span> <span class="pre">--no-input</span></code>: Whether to proceed without any input from the user (skip all prompts)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-q,</span> <span class="pre">--quiet</span></code>: Suppress CLI output except for prompts</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--help</span></code>: Show this message and exit.</p></li>
 </ul>
 </section>
 <section id="fxt-add-source">
 <h3 id="fxt-add-source"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">add</span> <span class="pre">source</span></code><a class="headerlink" href="#fxt-add-source" title="Permalink to this headline">¶</a></h3>
-<p>Adds a new template source, so that files can be generated from it</p>
+<p>Adds a new template source, so that files can be generated from it.</p>
+<p>See the
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/get-started/add-to-project.html">user guide on adding new templates within an existing project</a> for more details.</p>
 <p><strong>Usage</strong>:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>fxt add <span class="nb">source</span> <span class="o">[</span>OPTIONS<span class="o">]</span> PATH <span class="o">[</span>NAME<span class="o">]</span>
 </pre></div>
@@ -601,15 +609,17 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">-v,</span> <span class="pre">--version</span> <span class="pre">TEXT</span></code>: A specific version to target. Only useful for git repos, pass a branch name or commit SHA</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-r,</span> <span class="pre">--root</span> <span class="pre">PATH</span></code>: The root directory the template should be rendered from, defaults to current</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-a,</span> <span class="pre">--add-mode</span> <span class="pre">[local|project|user]</span></code>: Local adds the config to the template root, project adds it to the project config (which may also be template root), and user adds it to the user config</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-q,</span> <span class="pre">--quiet</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-q,</span> <span class="pre">--quiet</span></code>: Suppress CLI output except for prompts</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--help</span></code>: Show this message and exit.</p></li>
 </ul>
 </section>
 </section>
 <section id="fxt-bootstrap">
 <h2 id="fxt-bootstrap"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">bootstrap</span></code><a class="headerlink" href="#fxt-bootstrap" title="Permalink to this headline">¶</a></h2>
-<p>Takes an existing project that was already generated by another tool such as Cookiecutter or
-Copier and sets it up as a Flexlate project.</p>
+<p>Sets up a Flexlate project from an existing project that was already generated by
+another tool such as Cookiecutter or Copier.</p>
+<p>See the user guide on
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/get-started/existing-project.html">adding Flexlate to a project already generated from a template</a> for more information.</p>
 <p><strong>Usage</strong>:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>fxt bootstrap <span class="o">[</span>OPTIONS<span class="o">]</span> TEMPLATE_PATH <span class="o">[</span>PATH<span class="o">]</span>
 </pre></div>
@@ -622,8 +632,8 @@ Copier and sets it up as a Flexlate project.</p>
 <p><strong>Options</strong>:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">-v,</span> <span class="pre">--version</span> <span class="pre">TEXT</span></code>: A specific version to target. Only useful for git repos, pass a branch name or commit SHA</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-n,</span> <span class="pre">--no-input</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-q,</span> <span class="pre">--quiet</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-n,</span> <span class="pre">--no-input</span></code>: Whether to proceed without any input from the user (skip all prompts)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-q,</span> <span class="pre">--quiet</span></code>: Suppress CLI output except for prompts</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-a,</span> <span class="pre">--add-mode</span> <span class="pre">[local|project|user]</span></code>: Local adds the config to the template root, project adds it to the project config (which may also be template root), and user adds it to the user config  [default: local]</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-r,</span> <span class="pre">--remote</span> <span class="pre">TEXT</span></code>: The name of the remote repository  [default: origin]</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--merged-branch-name</span> <span class="pre">TEXT</span></code>: The name of the branch that flexlate creates to store the merges between template updates and the project  [default: flexlate-output]</p></li>
@@ -636,6 +646,9 @@ Copier and sets it up as a Flexlate project.</p>
 <p>Checks whether there are any updates available for the current template sources</p>
 <p>Displays a tabular output of the templates that need to be updated. It will also
 exist with code 1 when updates are available so that it is easy to use in scripting.</p>
+<p>See the user guide on
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/updating.html">updating templates</a>, especially
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/updating.html#checking-for-updates">the section about checking for updates</a>, for more information.</p>
 <p><strong>Usage</strong>:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>fxt check <span class="o">[</span>OPTIONS<span class="o">]</span> <span class="o">[</span>NAMES<span class="o">]</span>...
 </pre></div>
@@ -647,7 +660,7 @@ exist with code 1 when updates are available so that it is easy to use in script
 <p><strong>Options</strong>:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">--path</span> <span class="pre">PATH</span></code>: The location of the project  [default: .]</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-q,</span> <span class="pre">--quiet</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-q,</span> <span class="pre">--quiet</span></code>: Suppress CLI output except for prompts</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--help</span></code>: Show this message and exit.</p></li>
 </ul>
 </section>
@@ -668,8 +681,11 @@ exist with code 1 when updates are available so that it is easy to use in script
 </ul>
 <section id="fxt-config-target">
 <h3 id="fxt-config-target"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">config</span> <span class="pre">target</span></code><a class="headerlink" href="#fxt-config-target" title="Permalink to this headline">¶</a></h3>
-<p>Updates a target version for a template source. If no version is passed,
-it will remove the targeting so it will always update.</p>
+<p>Updates a target version for a template source.</p>
+<p>If no version is passed, it will remove the targeting so it will always update.</p>
+<p>See the user guide on
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/updating.html">updating templates</a>, especially
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/updating.html#change-target-version">the section about changing target version</a>, for more information.</p>
 <p><strong>Usage</strong>:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>fxt config target <span class="o">[</span>OPTIONS<span class="o">]</span> NAME <span class="o">[</span>VERSION<span class="o">]</span>
 </pre></div>
@@ -683,7 +699,7 @@ it will remove the targeting so it will always update.</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">--path</span> <span class="pre">PATH</span></code>: The location of the project  [default: .]</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-a,</span> <span class="pre">--add-mode</span> <span class="pre">[local|project|user]</span></code>: Local adds the config to the template root, project adds it to the project config (which may also be template root), and user adds it to the user config</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-q,</span> <span class="pre">--quiet</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-q,</span> <span class="pre">--quiet</span></code>: Suppress CLI output except for prompts</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--help</span></code>: Show this message and exit.</p></li>
 </ul>
 </section>
@@ -691,6 +707,8 @@ it will remove the targeting so it will always update.</p>
 <section id="fxt-init">
 <h2 id="fxt-init"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">init</span></code><a class="headerlink" href="#fxt-init" title="Permalink to this headline">¶</a></h2>
 <p>Initializes a flexlate project. This must be run before other commands</p>
+<p>See the user guide on
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/get-started/add-to-project.html">adding templates within an existing project</a> for more details.</p>
 <p><strong>Usage</strong>:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>fxt init <span class="o">[</span>OPTIONS<span class="o">]</span> <span class="o">[</span>PATH<span class="o">]</span>
 </pre></div>
@@ -706,7 +724,7 @@ it will remove the targeting so it will always update.</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">--template-branch-name</span> <span class="pre">TEXT</span></code>: The name of the branch that flexlate creates that stores only the template output  [default: flexlate-templates]</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--user</span></code>: Store the flexlate project configuration in the user directory rather than in the project  [default: False]</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-r,</span> <span class="pre">--remote</span> <span class="pre">TEXT</span></code>: The name of the remote repository  [default: origin]</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-q,</span> <span class="pre">--quiet</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-q,</span> <span class="pre">--quiet</span></code>: Suppress CLI output except for prompts</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--help</span></code>: Show this message and exit.</p></li>
 </ul>
 </section>
@@ -715,6 +733,8 @@ it will remove the targeting so it will always update.</p>
 <p>Generates a project from a template and sets it up as a Flexlate project.</p>
 <p>Note that this will also create a new folder and initialize a git repository in it
 before adding the Flexlate output.</p>
+<p>See the user guide on
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/get-started/new-project.html">creating a new project with Flexlate</a> for more information.</p>
 <p><strong>Usage</strong>:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>fxt init-from <span class="o">[</span>OPTIONS<span class="o">]</span> TEMPLATE_PATH <span class="o">[</span>PATH<span class="o">]</span>
 </pre></div>
@@ -728,8 +748,8 @@ before adding the Flexlate output.</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">-v,</span> <span class="pre">--version</span> <span class="pre">TEXT</span></code>: A specific version to target. Only useful for git repos, pass a branch name or commit SHA</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-f,</span> <span class="pre">--folder-name</span> <span class="pre">TEXT</span></code>: The name of the outputted folder. This only applies on templates that don’t set the name of the folder (Copier)  [default: project]</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-n,</span> <span class="pre">--no-input</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-q,</span> <span class="pre">--quiet</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-n,</span> <span class="pre">--no-input</span></code>: Whether to proceed without any input from the user (skip all prompts)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-q,</span> <span class="pre">--quiet</span></code>: Suppress CLI output except for prompts</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-a,</span> <span class="pre">--add-mode</span> <span class="pre">[local|project|user]</span></code>: Local adds the config to the template root, project adds it to the project config (which may also be template root), and user adds it to the user config  [default: local]</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-r,</span> <span class="pre">--remote</span> <span class="pre">TEXT</span></code>: The name of the remote repository  [default: origin]</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--merged-branch-name</span> <span class="pre">TEXT</span></code>: The name of the branch that flexlate creates to store the merges between template updates and the project  [default: flexlate-output]</p></li>
@@ -743,6 +763,9 @@ before adding the Flexlate output.</p>
 <p>Feature flexlate branches should be merged into main flexlate branches when
 the corresponding feature branch is merged into the repo’s main branch. This
 command provides a convenient way to do so.</p>
+<p>See the user guide on
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/saving.html">saving Flexlate updates</a>, especially
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/saving.html#locally-merging-branches">the section about locally merging branches</a>, for more information.</p>
 <p><strong>Usage</strong>:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>fxt merge <span class="o">[</span>OPTIONS<span class="o">]</span> <span class="o">[</span>BRANCH_NAME<span class="o">]</span>
 </pre></div>
@@ -755,13 +778,15 @@ command provides a convenient way to do so.</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">-n,</span> <span class="pre">--no-delete</span></code>: Pass to prevent deleting feature flexlate branches after merge</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--path</span> <span class="pre">PATH</span></code>: The location of the project  [default: .]</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-q,</span> <span class="pre">--quiet</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-q,</span> <span class="pre">--quiet</span></code>: Suppress CLI output except for prompts</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--help</span></code>: Show this message and exit.</p></li>
 </ul>
 </section>
 <section id="fxt-push">
 <h2 id="fxt-push"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">push</span></code><a class="headerlink" href="#fxt-push" title="Permalink to this headline">¶</a></h2>
-<p>Push flexlate branches to remote repositories</p>
+<p>Push Flexlate branches to remote repositories.</p>
+<p>See the user guide on
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/saving.html">saving Flexlate updates</a> for more information.</p>
 <p><strong>Usage</strong>:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>fxt push <span class="o">[</span>OPTIONS<span class="o">]</span> COMMAND <span class="o">[</span>ARGS<span class="o">]</span>...
 </pre></div>
@@ -772,12 +797,15 @@ command provides a convenient way to do so.</p>
 </ul>
 <p><strong>Commands</strong>:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">feature</span></code>: Pushes main flexlate branches to remote</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">main</span></code>: Pushes main flexlate branches to remote</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">feature</span></code>: Pushes feature Flexlate branches to remote…</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">main</span></code>: Pushes main Flexlate branches to remote See…</p></li>
 </ul>
 <section id="fxt-push-feature">
 <h3 id="fxt-push-feature"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">push</span> <span class="pre">feature</span></code><a class="headerlink" href="#fxt-push-feature" title="Permalink to this headline">¶</a></h3>
-<p>Pushes main flexlate branches to remote</p>
+<p>Pushes feature Flexlate branches to remote</p>
+<p>See the user guide on
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/saving.html">saving Flexlate updates</a>, especially
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/saving.html#push-your-flexlate-feature-branch-changes">the section about pushing changes with a PR workflow</a>, for more information.</p>
 <p><strong>Usage</strong>:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>fxt push feature <span class="o">[</span>OPTIONS<span class="o">]</span> <span class="o">[</span>FEATURE_BRANCH<span class="o">]</span>
 </pre></div>
@@ -790,13 +818,16 @@ command provides a convenient way to do so.</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">-r,</span> <span class="pre">--remote</span> <span class="pre">TEXT</span></code>: The name of the remote repository  [default: origin]</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--path</span> <span class="pre">PATH</span></code>: The location of the project  [default: .]</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-q,</span> <span class="pre">--quiet</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-q,</span> <span class="pre">--quiet</span></code>: Suppress CLI output except for prompts</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--help</span></code>: Show this message and exit.</p></li>
 </ul>
 </section>
 <section id="fxt-push-main">
 <h3 id="fxt-push-main"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">push</span> <span class="pre">main</span></code><a class="headerlink" href="#fxt-push-main" title="Permalink to this headline">¶</a></h3>
-<p>Pushes main flexlate branches to remote</p>
+<p>Pushes main Flexlate branches to remote</p>
+<p>See the user guide on
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/saving.html">saving Flexlate updates</a>, especially
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/saving.html#push-your-flexlate-main-branch-changes">the section about pushing with a local workflow</a>, for more information.</p>
 <p><strong>Usage</strong>:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>fxt push main <span class="o">[</span>OPTIONS<span class="o">]</span>
 </pre></div>
@@ -805,7 +836,7 @@ command provides a convenient way to do so.</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">-r,</span> <span class="pre">--remote</span> <span class="pre">TEXT</span></code>: The name of the remote repository</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--path</span> <span class="pre">PATH</span></code>: The location of the project  [default: .]</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-q,</span> <span class="pre">--quiet</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-q,</span> <span class="pre">--quiet</span></code>: Suppress CLI output except for prompts</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--help</span></code>: Show this message and exit.</p></li>
 </ul>
 </section>
@@ -823,11 +854,12 @@ command provides a convenient way to do so.</p>
 </ul>
 <p><strong>Commands</strong>:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">output</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">source</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">output</span></code>: Removes an applied template output</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">source</span></code>: Removes a template source, so that files can…</p></li>
 </ul>
 <section id="fxt-remove-output">
 <h3 id="fxt-remove-output"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">remove</span> <span class="pre">output</span></code><a class="headerlink" href="#fxt-remove-output" title="Permalink to this headline">¶</a></h3>
+<p>Removes an applied template output</p>
 <p><strong>Usage</strong>:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>fxt remove output <span class="o">[</span>OPTIONS<span class="o">]</span> TEMPLATE_NAME <span class="o">[</span>TEMPLATE_ROOT<span class="o">]</span>
 </pre></div>
@@ -839,12 +871,13 @@ command provides a convenient way to do so.</p>
 </ul>
 <p><strong>Options</strong>:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">-q,</span> <span class="pre">--quiet</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-q,</span> <span class="pre">--quiet</span></code>: Suppress CLI output except for prompts</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--help</span></code>: Show this message and exit.</p></li>
 </ul>
 </section>
 <section id="fxt-remove-source">
 <h3 id="fxt-remove-source"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">remove</span> <span class="pre">source</span></code><a class="headerlink" href="#fxt-remove-source" title="Permalink to this headline">¶</a></h3>
+<p>Removes a template source, so that files can no longer be generated from it.</p>
 <p><strong>Usage</strong>:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>fxt remove <span class="nb">source</span> <span class="o">[</span>OPTIONS<span class="o">]</span> TEMPLATE_NAME
 </pre></div>
@@ -856,7 +889,7 @@ command provides a convenient way to do so.</p>
 <p><strong>Options</strong>:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">-r,</span> <span class="pre">--root</span> <span class="pre">PATH</span></code>: The root directory the template should be rendered from, defaults to current</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-q,</span> <span class="pre">--quiet</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-q,</span> <span class="pre">--quiet</span></code>: Suppress CLI output except for prompts</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--help</span></code>: Show this message and exit.</p></li>
 </ul>
 </section>
@@ -864,11 +897,12 @@ command provides a convenient way to do so.</p>
 <section id="fxt-sync">
 <h2 id="fxt-sync"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">sync</span></code><a class="headerlink" href="#fxt-sync" title="Permalink to this headline">¶</a></h2>
 <p>Syncs manual changes to the flexlate branches, and updates templates
-accordingly. This is useful if you want to move or modify flexlate configs
-after they are created, but there is no command in the CLI for it.
-This is currently the way to update template versions until there is a
-specific command for it: manually change the version and run sync.</p>
+accordingly.</p>
+<p>This is useful if you want to move or modify flexlate configs
+after they are created, but there is no command in the CLI for it.</p>
 <p>Note: Be sure to commit your changes before running sync</p>
+<p>See the user guide on
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/arbitrary-changes.html">making arbitrary changes</a> for more information.</p>
 <p><strong>Usage</strong>:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>fxt sync <span class="o">[</span>OPTIONS<span class="o">]</span> <span class="o">[</span>PATH<span class="o">]</span>
 </pre></div>
@@ -880,7 +914,7 @@ specific command for it: manually change the version and run sync.</p>
 <p><strong>Options</strong>:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">-p,</span> <span class="pre">--prompt</span></code>: Pass to enable answering template prompts</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-q,</span> <span class="pre">--quiet</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-q,</span> <span class="pre">--quiet</span></code>: Suppress CLI output except for prompts</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--help</span></code>: Show this message and exit.</p></li>
 </ul>
 </section>
@@ -890,6 +924,8 @@ specific command for it: manually change the version and run sync.</p>
 Note that this modifies the git history, discarding the last commits.
 It has protections against deleting user commits but you should only
 use this on a feature branch.</p>
+<p>See the user guide on
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/undoing.html">undoing Flexlate operations</a> for more information.</p>
 <p><strong>Usage</strong>:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>fxt undo <span class="o">[</span>OPTIONS<span class="o">]</span> <span class="o">[</span>NUM_OPERATIONS<span class="o">]</span>
 </pre></div>
@@ -901,7 +937,7 @@ use this on a feature branch.</p>
 <p><strong>Options</strong>:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">--path</span> <span class="pre">PATH</span></code>: The location of the project  [default: .]</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-q,</span> <span class="pre">--quiet</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-q,</span> <span class="pre">--quiet</span></code>: Suppress CLI output except for prompts</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--help</span></code>: Show this message and exit.</p></li>
 </ul>
 </section>
@@ -909,6 +945,8 @@ use this on a feature branch.</p>
 <h2 id="fxt-update"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">update</span></code><a class="headerlink" href="#fxt-update" title="Permalink to this headline">¶</a></h2>
 <p>Updates applied templates in the project to the newest versions
 available that still satisfy source target versions</p>
+<p>See the user guide on
+<a class="reference external" href="https://nickderobertis.github.io/flexlate/tutorial/updating.html">updating templates</a> for more information.</p>
 <p><strong>Usage</strong>:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>fxt update <span class="o">[</span>OPTIONS<span class="o">]</span> <span class="o">[</span>NAMES<span class="o">]</span>...
 </pre></div>
@@ -919,9 +957,9 @@ available that still satisfy source target versions</p>
 </ul>
 <p><strong>Options</strong>:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">-n,</span> <span class="pre">--no-input</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-n,</span> <span class="pre">--no-input</span></code>: Whether to proceed without any input from the user (skip all prompts)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-a,</span> <span class="pre">--abort</span></code>: Automatically abort the update if a merge conflict is encountered. Useful in combination with –no-input for CI systems  [default: False]</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-q,</span> <span class="pre">--quiet</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-q,</span> <span class="pre">--quiet</span></code>: Suppress CLI output except for prompts</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--path</span> <span class="pre">PATH</span></code>: The location of the project  [default: .]</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--help</span></code>: Show this message and exit.</p></li>
 </ul>
