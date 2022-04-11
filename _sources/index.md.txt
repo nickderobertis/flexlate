@@ -19,6 +19,7 @@ maxdepth: 2
 
 core-concepts
 tutorial/index
+FAQs <faqs.md>
 CLI Reference <commands>
 ```
 

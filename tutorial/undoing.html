@@ -313,6 +313,13 @@
     <li class="md-nav__item">
     
     
+      <a href="../faqs.html" class="md-nav__link">FAQs</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
       <a href="../commands.html" class="md-nav__link">CLI Reference</a>
       
     
@@ -381,7 +388,7 @@ only use this command if you are following a feature branch workflow.</p>
 </div>
 <div class="termy docutils container">
 <pre class="code console highlight literal-block"><code><span class="gp">$ </span>fxt add output copier-simple-example
-<span class="go"> Applying template copier-simple-example to /tmp/tmpgktxm1vn
+<span class="go"> Applying template copier-simple-example to /tmp/tmpvfy2ph2g
  Updating 1 applied templates
 
 question1? Format: yaml
@@ -399,7 +406,7 @@ question2? Format: float
 
 
 ✔ Successfully updated template output
-✔ Successfully applied template copier-simple-example to /tmp/tmpgktxm1vn
+✔ Successfully applied template copier-simple-example to /tmp/tmpvfy2ph2g
 
 </span><span class="gp">$ </span>ls
 <span class="go"> flexlate-project.json	 flexlate.json	'my answer.txt'   woo.txt
@@ -429,7 +436,7 @@ simply delete the Flexlate feature branches.</p>
 <span class="go">Switched to a new branch 'my-feature'
 
 </span><span class="gp">$ </span>fxt add output copier-simple-example
-<span class="go"> Applying template copier-simple-example to /tmp/tmpjgitd0dn
+<span class="go"> Applying template copier-simple-example to /tmp/tmpphdo2vrs
  Updating 1 applied templates
 
 question1? Format: yaml
@@ -447,7 +454,7 @@ question2? Format: float
 
 
 ✔ Successfully updated template output
-✔ Successfully applied template copier-simple-example to /tmp/tmpjgitd0dn
+✔ Successfully applied template copier-simple-example to /tmp/tmpphdo2vrs
 
 </span><span class="gp">$ </span>ls
 <span class="go"> flexlate-project.json	 flexlate.json	'my answer.txt'   woo.txt
@@ -456,13 +463,13 @@ question2? Format: float
 <span class="go">Switched to branch 'master'
 
 </span><span class="gp">$ </span>git branch -D my-feature
-<span class="go">Deleted branch my-feature (was 5d4e612).
+<span class="go">Deleted branch my-feature (was aeca86b).
 
 </span><span class="gp">$ </span>git branch -D flexlate-templates-my-feature
-<span class="go">Deleted branch flexlate-templates-my-feature (was 5d4e612).
+<span class="go">Deleted branch flexlate-templates-my-feature (was aeca86b).
 
 </span><span class="gp">$ </span>git branch -D flexlate-output-my-feature
-<span class="go">Deleted branch flexlate-output-my-feature (was 5d4e612).
+<span class="go">Deleted branch flexlate-output-my-feature (was aeca86b).
 
 </span><span class="gp">$ </span>ls
 <span class="go">flexlate-project.json  flexlate.json  woo.txt</span></code></pre>
