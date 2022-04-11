@@ -12,7 +12,7 @@ Some commands will add the source at the same time as the applied output
 [`fxt bootstrap`](commands.md#fxt-bootstrap)), but otherwise you must 
 first [add the template source](tutorial/get-started/add-to-project.md#add-the-template-source) 
 and then 
-[add the applied template](tutorial/get-started/add-to-project.md#add-template-output-s).
+[add the applied template](tutorial/get-started/add-to-project.md#add-template-outputs).
 
 Flexlate was designed with this two-stage process so to support the use 
 case of applying the same template source to multiple outputs with ease.
