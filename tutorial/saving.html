@@ -265,13 +265,13 @@
         </li>
         <li class="md-nav__item"><a href="#locally-merging-branches" class="md-nav__link">Locally Merging Branches</a>
         </li>
-        <li class="md-nav__item"><a href="#push-your-changes" class="md-nav__link">Push your Changes</a>
+        <li class="md-nav__item"><a href="#push-your-flexlate-main-branch-changes" class="md-nav__link">Push your Flexlate Main Branch Changes</a>
         </li></ul>
             </nav>
         </li>
         <li class="md-nav__item"><a href="#pr-workflows" class="md-nav__link">PR Workflows</a><nav class="md-nav">
               <ul class="md-nav__list">
-        <li class="md-nav__item"><a href="#id1" class="md-nav__link">Push your Changes</a>
+        <li class="md-nav__item"><a href="#push-your-flexlate-feature-branch-changes" class="md-nav__link">Push your Flexlate Feature Branch Changes</a>
         </li>
         <li class="md-nav__item"><a href="#merge-flexlate-branches-automatically-with-github-actions" class="md-nav__link">Merge Flexlate Branches Automatically with Github Actions</a>
         </li></ul>
@@ -360,13 +360,13 @@
         </li>
         <li class="md-nav__item"><a href="#locally-merging-branches" class="md-nav__link">Locally Merging Branches</a>
         </li>
-        <li class="md-nav__item"><a href="#push-your-changes" class="md-nav__link">Push your Changes</a>
+        <li class="md-nav__item"><a href="#push-your-flexlate-main-branch-changes" class="md-nav__link">Push your Flexlate Main Branch Changes</a>
         </li></ul>
             </nav>
         </li>
         <li class="md-nav__item"><a href="#pr-workflows" class="md-nav__link">PR Workflows</a><nav class="md-nav">
               <ul class="md-nav__list">
-        <li class="md-nav__item"><a href="#id1" class="md-nav__link">Push your Changes</a>
+        <li class="md-nav__item"><a href="#push-your-flexlate-feature-branch-changes" class="md-nav__link">Push your Flexlate Feature Branch Changes</a>
         </li>
         <li class="md-nav__item"><a href="#merge-flexlate-branches-automatically-with-github-actions" class="md-nav__link">Merge Flexlate Branches Automatically with Github Actions</a>
         </li></ul>
@@ -418,7 +418,7 @@ Simply call <code class="docutils literal notranslate"><span class="pre">fxt</sp
 and are satisfied with the result.</p>
 <div class="termy docutils container">
 <pre class="code console highlight literal-block"><code><span class="gp">$ </span>fxt add output copier-simple-example some/path
-<span class="go"> Applying template copier-simple-example to /tmp/tmpvba9jcw0
+<span class="go"> Applying template copier-simple-example to /tmp/tmp_h_8qtzh
  Updating 1 applied templates
 
 question1? Format: yaml
@@ -436,7 +436,7 @@ question2? Format: float
 
 
 ✔ Successfully updated template output
-✔ Successfully applied template copier-simple-example to /tmp/tmpvba9jcw0
+✔ Successfully applied template copier-simple-example to /tmp/tmp_h_8qtzh
 
 </span><span class="gp">$ </span>fxt merge
 <span class="go"> Merging flexlate-templates-master to flexlate-templates
@@ -456,7 +456,7 @@ to merge the changes into main, first run <code class="docutils literal notransl
 <span class="go">Switched to a new branch 'feature-branch'
 
 </span><span class="gp">$ </span>fxt add output copier-simple-example some/path
-<span class="go"> Applying template copier-simple-example to /tmp/tmp8bb65uuj
+<span class="go"> Applying template copier-simple-example to /tmp/tmp0epoa5_y
  Updating 1 applied templates
 
 question1? Format: yaml
@@ -474,7 +474,7 @@ question2? Format: float
 
 
 ✔ Successfully updated template output
-✔ Successfully applied template copier-simple-example to /tmp/tmp8bb65uuj
+✔ Successfully applied template copier-simple-example to /tmp/tmp0epoa5_y
 
 </span><span class="gp">$ </span>fxt merge
 <span class="go"> Merging flexlate-templates-feature-branch to flexlate-templates
@@ -488,7 +488,7 @@ flexlate-output-feature-branch
 <span class="go">Switched to branch 'master'
 
 </span><span class="gp">$ </span>git merge feature-branch
-<span class="go">Updating f64e43f..4ffa89a
+<span class="go">Updating d255d5e..2e9fb1b
 Fast-forward
  some/path/flexlate.json | 15 +++++++++++++++
  some/path/my answer.txt |  2 ++
@@ -497,14 +497,14 @@ Fast-forward
  create mode 100644 some/path/my answer.txt</span></code></pre>
 </div>
 </section>
-<section id="push-your-changes">
-<h3 id="push-your-changes">Push your Changes<a class="headerlink" href="#push-your-changes" title="Permalink to this headline">¶</a></h3>
+<section id="push-your-flexlate-main-branch-changes">
+<h3 id="push-your-flexlate-main-branch-changes">Push your Flexlate Main Branch Changes<a class="headerlink" href="#push-your-flexlate-main-branch-changes" title="Permalink to this headline">¶</a></h3>
 <p>After you’ve merged the Flexlate feature branches into the Flexlate main
 branches, you’ll want to push your changes to the remote (if you are using
 a remote) via <a class="reference internal" href="../commands.html#fxt-push-main"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">push</span> <span class="pre">main</span></code></span></a>.</p>
 <div class="termy docutils container">
 <pre class="code console highlight literal-block"><code><span class="gp">$ </span>fxt add output copier-simple-example some/path
-<span class="go"> Applying template copier-simple-example to /tmp/tmpsvpy0wss
+<span class="go"> Applying template copier-simple-example to /tmp/tmpp6dy5flh
  Updating 1 applied templates
 
 question1? Format: yaml
@@ -522,7 +522,7 @@ question2? Format: float
 
 
 ✔ Successfully updated template output
-✔ Successfully applied template copier-simple-example to /tmp/tmpsvpy0wss
+✔ Successfully applied template copier-simple-example to /tmp/tmpp6dy5flh
 
 </span><span class="gp">$ </span>fxt merge
 <span class="go"> Merging flexlate-templates-master to flexlate-templates
@@ -544,8 +544,8 @@ flexlate-output-master
 then instead of merging locally, you will want to push the Flexlate
 feature branches with <a class="reference internal" href="../commands.html#fxt-push-feature"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">push</span> <span class="pre">feature</span></code></span></a>
 so that they can be merged in on the remote.</p>
-<section id="id1">
-<h3 id="id1">Push your Changes<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<section id="push-your-flexlate-feature-branch-changes">
+<h3 id="push-your-flexlate-feature-branch-changes">Push your Flexlate Feature Branch Changes<a class="headerlink" href="#push-your-flexlate-feature-branch-changes" title="Permalink to this headline">¶</a></h3>
 <p>Use the <a class="reference internal" href="../commands.html#fxt-push-feature"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">push</span> <span class="pre">feature</span></code></span></a> command to push
 the Flexlate feature branches after you’ve finished work on your feature branch.
 You would want to run this whenever you are pushing up the feature branch itself.</p>
@@ -554,7 +554,7 @@ You would want to run this whenever you are pushing up the feature branch itself
 <span class="go">Switched to a new branch 'feature-branch'
 
 </span><span class="gp">$ </span>fxt add output copier-simple-example some/path
-<span class="go"> Applying template copier-simple-example to /tmp/tmpcp2xbs79
+<span class="go"> Applying template copier-simple-example to /tmp/tmpwwsba9wm
  Updating 1 applied templates
 
 question1? Format: yaml
@@ -572,7 +572,7 @@ question2? Format: float
 
 
 ✔ Successfully updated template output
-✔ Successfully applied template copier-simple-example to /tmp/tmpcp2xbs79
+✔ Successfully applied template copier-simple-example to /tmp/tmpwwsba9wm
 
 </span><span class="gp">$ </span>git push origin feature-branch
 <span class="go">Enumerating objects: 22, done.
@@ -639,7 +639,7 @@ Writing objects:  86% (19/22)
 Writing objects:  90% (20/22)
 Writing objects:  95% (21/22)
 Writing objects: 100% (22/22)
-Writing objects: 100% (22/22), 2.56 KiB | 1.28 MiB/s, done.
+Writing objects: 100% (22/22), 2.59 KiB | 1.30 MiB/s, done.
 Total 22 (delta 6), reused 0 (delta 0), pack-reused 0
 To ../remote
  * [new branch]      feature-branch -&gt; feature-branch

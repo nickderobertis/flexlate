@@ -373,9 +373,15 @@ feature branches.</p>
 history to undo the last transaction. Flexlate puts transaction markers in
 all its commit messages, and it will only undo commits with a marker
 or merging a commit with a marker.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Flexlate has multiple protections in place to avoid deleting your
+changes, but it still <strong>deletes Git history</strong>. It is recommended to
+only use this command if you are following a feature branch workflow.</p>
+</div>
 <div class="termy docutils container">
 <pre class="code console highlight literal-block"><code><span class="gp">$ </span>fxt add output copier-simple-example
-<span class="go"> Applying template copier-simple-example to /tmp/tmpzhlh7spk
+<span class="go"> Applying template copier-simple-example to /tmp/tmpnl3kt7og
  Updating 1 applied templates
 
 question1? Format: yaml
@@ -393,7 +399,7 @@ question2? Format: float
 
 
 ✔ Successfully updated template output
-✔ Successfully applied template copier-simple-example to /tmp/tmpzhlh7spk
+✔ Successfully applied template copier-simple-example to /tmp/tmpnl3kt7og
 
 </span><span class="gp">$ </span>ls
 <span class="go"> flexlate-project.json	 flexlate.json	'my answer.txt'   woo.txt
@@ -423,7 +429,7 @@ simply delete the Flexlate feature branches.</p>
 <span class="go">Switched to a new branch 'my-feature'
 
 </span><span class="gp">$ </span>fxt add output copier-simple-example
-<span class="go"> Applying template copier-simple-example to /tmp/tmpqquvdm8s
+<span class="go"> Applying template copier-simple-example to /tmp/tmp38z8t0l1
  Updating 1 applied templates
 
 question1? Format: yaml
@@ -441,7 +447,7 @@ question2? Format: float
 
 
 ✔ Successfully updated template output
-✔ Successfully applied template copier-simple-example to /tmp/tmpqquvdm8s
+✔ Successfully applied template copier-simple-example to /tmp/tmp38z8t0l1
 
 </span><span class="gp">$ </span>ls
 <span class="go"> flexlate-project.json	 flexlate.json	'my answer.txt'   woo.txt
@@ -450,13 +456,13 @@ question2? Format: float
 <span class="go">Switched to branch 'master'
 
 </span><span class="gp">$ </span>git branch -D my-feature
-<span class="go">Deleted branch my-feature (was 11296cb).
+<span class="go">Deleted branch my-feature (was 3f1a97d).
 
 </span><span class="gp">$ </span>git branch -D flexlate-templates-my-feature
-<span class="go">Deleted branch flexlate-templates-my-feature (was 11296cb).
+<span class="go">Deleted branch flexlate-templates-my-feature (was 3f1a97d).
 
 </span><span class="gp">$ </span>git branch -D flexlate-output-my-feature
-<span class="go">Deleted branch flexlate-output-my-feature (was 11296cb).
+<span class="go">Deleted branch flexlate-output-my-feature (was 3f1a97d).
 
 </span><span class="gp">$ </span>ls
 <span class="go">flexlate-project.json  flexlate.json  woo.txt</span></code></pre>

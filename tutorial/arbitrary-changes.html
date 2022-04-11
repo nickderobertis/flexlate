@@ -391,6 +391,12 @@ every change you might want to make to the config has a command.</p>
 <p>Enter <a class="reference internal" href="../commands.html#fxt-sync"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">sync</span></code></span></a> that will take the current
 state of your config and render it to the Flexlate branches before merging
 back into your working branch.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Be sure to commit your changes before running
+<a class="reference internal" href="../commands.html#fxt-sync"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">sync</span></code></span></a>. In general, Flexlate always
+wants you to commit your changes before running operations.</p>
+</div>
 </section>
 <section id="possible-uses-for-fxt-sync">
 <h2 id="possible-uses-for-fxt-sync">Possible Uses for <code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">sync</span></code><a class="headerlink" href="#possible-uses-for-fxt-sync" title="Permalink to this headline">¶</a></h2>
@@ -401,7 +407,7 @@ back into your working branch.</p>
 to move it.</p>
 <div class="termy docutils container">
 <pre class="code console highlight literal-block"><code><span class="gp">$ </span>fxt add output copier-simple-example some/path
-<span class="go"> Applying template copier-simple-example to /tmp/tmp7x5rrkek
+<span class="go"> Applying template copier-simple-example to /tmp/tmp2cayi50h
  Updating 1 applied templates
 
 question1? Format: yaml
@@ -419,14 +425,14 @@ question2? Format: float
 
 
 ✔ Successfully updated template output
-✔ Successfully applied template copier-simple-example to /tmp/tmp7x5rrkek
+✔ Successfully applied template copier-simple-example to /tmp/tmp2cayi50h
 
 </span><span class="gp">$ </span>mv some/path other
 <span class="go">
 </span><span class="gp">$ </span>git add -A
 <span class="go">
 </span><span class="gp">$ </span>git commit -m <span class="s1">'Move copier-simple-example from some/path to other'</span>
-<span class="go">[master 960ede3] Move copier-simple-example from some/path to other
+<span class="go">[master 81cea58] Move copier-simple-example from some/path to other
  2 files changed, 0 insertions(+), 0 deletions(-)
  rename {some/path =&gt; other}/flexlate.json (100%)
  rename {some/path =&gt; other}/my answer.txt (100%)

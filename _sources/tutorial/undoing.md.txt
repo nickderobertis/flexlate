@@ -14,6 +14,12 @@ history to undo the last transaction. Flexlate puts transaction markers in
 all its commit messages, and it will only undo commits with a marker 
 or merging a commit with a marker.
 
+```{warning}
+Flexlate has multiple protections in place to avoid deleting your 
+changes, but it still **deletes Git history**. It is recommended to 
+only use this command if you are following a feature branch workflow.
+```
+
 ```{run-fxt-terminal}
 ---
 setup: "fxt add source https://github.com/nickderobertis/copier-simple-example"

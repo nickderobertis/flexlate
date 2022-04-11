@@ -56,7 +56,7 @@ git checkout master
 git merge feature-branch
 ```
 
-### Push your Changes
+### Push your Flexlate Main Branch Changes
 
 After you've merged the Flexlate feature branches into the Flexlate main 
 branches, you'll want to push your changes to the remote (if you are using
@@ -79,7 +79,7 @@ then instead of merging locally, you will want to push the Flexlate
 feature branches with [`fxt push feature`](../commands.md#fxt-push-feature)
 so that they can be merged in on the remote.
 
-### Push your Changes
+### Push your Flexlate Feature Branch Changes
 
 Use the [`fxt push feature`](../commands.md#fxt-push-feature) command to push
 the Flexlate feature branches after you've finished work on your feature branch.
