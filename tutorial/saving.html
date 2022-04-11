@@ -393,7 +393,7 @@
 <p>Flexlate <a class="reference internal" href="../core-concepts.html#branches-for-flexlate-operations"><span class="std std-doc">saves the history of your merge conflict resolutions</span></a>
 so that you don’t need to resolve them multiple times. Flexlate mostly manages
 this history for you, but you do get to choose when you want to
-“save” the history by merging the <a class="reference internal" href="../core-concepts.html#flexlate-feature-branches"><span class="std std-doc">Flexlate feature branches</span></a><br/>
+“save” the history by merging the <a class="reference internal" href="../core-concepts.html#flexlate-feature-branches"><span class="std std-doc">Flexlate feature branches</span></a>
 into the
 <a class="reference internal" href="../core-concepts.html#flexlate-main-branches"><span class="std std-doc">Flexlate main branches</span></a>.</p>
 <p>After doing a Flexlate operation such as
@@ -418,7 +418,7 @@ Simply call <code class="docutils literal notranslate"><span class="pre">fxt</sp
 and are satisfied with the result.</p>
 <div class="termy docutils container">
 <pre class="code console highlight literal-block"><code><span class="gp">$ </span>fxt add output copier-simple-example some/path
-<span class="go"> Applying template copier-simple-example to /tmp/tmpufq63hr_
+<span class="go"> Applying template copier-simple-example to /tmp/tmpes7boeut
  Updating 1 applied templates
 
 question1? Format: yaml
@@ -436,7 +436,7 @@ question2? Format: float
 
 
 ✔ Successfully updated template output
-✔ Successfully applied template copier-simple-example to /tmp/tmpufq63hr_
+✔ Successfully applied template copier-simple-example to /tmp/tmpes7boeut
 
 </span><span class="gp">$ </span>fxt merge
 <span class="go"> Merging flexlate-templates-master to flexlate-templates
@@ -456,7 +456,7 @@ to merge the changes into main, first run <code class="docutils literal notransl
 <span class="go">Switched to a new branch 'feature-branch'
 
 </span><span class="gp">$ </span>fxt add output copier-simple-example some/path
-<span class="go"> Applying template copier-simple-example to /tmp/tmpe_w6q4ag
+<span class="go"> Applying template copier-simple-example to /tmp/tmpl2jlfeoo
  Updating 1 applied templates
 
 question1? Format: yaml
@@ -474,7 +474,7 @@ question2? Format: float
 
 
 ✔ Successfully updated template output
-✔ Successfully applied template copier-simple-example to /tmp/tmpe_w6q4ag
+✔ Successfully applied template copier-simple-example to /tmp/tmpl2jlfeoo
 
 </span><span class="gp">$ </span>fxt merge
 <span class="go"> Merging flexlate-templates-feature-branch to flexlate-templates
@@ -488,7 +488,7 @@ flexlate-output-feature-branch
 <span class="go">Switched to branch 'master'
 
 </span><span class="gp">$ </span>git merge feature-branch
-<span class="go">Updating 541033c..c69831e
+<span class="go">Updating fd1f318..3cd411d
 Fast-forward
  some/path/flexlate.json | 15 +++++++++++++++
  some/path/my answer.txt |  2 ++
@@ -504,7 +504,7 @@ branches, you’ll want to push your changes to the remote (if you are using
 a remote) via <a class="reference internal" href="../commands.html#fxt-push-main"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">push</span> <span class="pre">main</span></code></span></a>.</p>
 <div class="termy docutils container">
 <pre class="code console highlight literal-block"><code><span class="gp">$ </span>fxt add output copier-simple-example some/path
-<span class="go"> Applying template copier-simple-example to /tmp/tmpaenltqdu
+<span class="go"> Applying template copier-simple-example to /tmp/tmp8spwhfdf
  Updating 1 applied templates
 
 question1? Format: yaml
@@ -522,7 +522,7 @@ question2? Format: float
 
 
 ✔ Successfully updated template output
-✔ Successfully applied template copier-simple-example to /tmp/tmpaenltqdu
+✔ Successfully applied template copier-simple-example to /tmp/tmp8spwhfdf
 
 </span><span class="gp">$ </span>fxt merge
 <span class="go"> Merging flexlate-templates-master to flexlate-templates
@@ -554,7 +554,7 @@ You would want to run this whenever you are pushing up the feature branch itself
 <span class="go">Switched to a new branch 'feature-branch'
 
 </span><span class="gp">$ </span>fxt add output copier-simple-example some/path
-<span class="go"> Applying template copier-simple-example to /tmp/tmp9_jxiv51
+<span class="go"> Applying template copier-simple-example to /tmp/tmp44bww0rw
  Updating 1 applied templates
 
 question1? Format: yaml
@@ -572,7 +572,7 @@ question2? Format: float
 
 
 ✔ Successfully updated template output
-✔ Successfully applied template copier-simple-example to /tmp/tmp9_jxiv51
+✔ Successfully applied template copier-simple-example to /tmp/tmp44bww0rw
 
 </span><span class="gp">$ </span>git push origin feature-branch
 <span class="go">Enumerating objects: 22, done.
