@@ -93,8 +93,8 @@ project would stop me or encourage me to not release it on PyPI.
 As I scaled up my use of 
 [project generators](#what-is-a-project-or-file-generator), 
 I quickly realized that
-there were improvements I wanted to make to the project template, but once 
-I did so only the new projects I generate would have the improvements, 
+there were improvements I wanted to make to the project template. Once 
+I did so, only the new projects I generate would have the improvements, 
 not the old projects I've already generated and am still maintaining. It 
 was a manual process to bring those updates back into the old projects.
 
