@@ -388,7 +388,7 @@ only use this command if you are following a feature branch workflow.</p>
 </div>
 <div class="termy docutils container">
 <pre class="code console highlight literal-block"><code><span class="gp">$ </span>fxt add output copier-simple-example
-<span class="go"> Applying template copier-simple-example to /tmp/tmpdcw23ao8
+<span class="go"> Applying template copier-simple-example to /tmp/tmpjfa45k9i
  Updating 1 applied templates
 
 question1? Format: yaml
@@ -406,7 +406,7 @@ question2? Format: float
 
 
 ✔ Successfully updated template output
-✔ Successfully applied template copier-simple-example to /tmp/tmpdcw23ao8
+✔ Successfully applied template copier-simple-example to /tmp/tmpjfa45k9i
 
 </span><span class="gp">$ </span>ls
 <span class="go"> flexlate-project.json	 flexlate.json	'my answer.txt'   woo.txt
@@ -415,10 +415,9 @@ question2? Format: float
 <span class="go"> Undoing transaction 1
 ⠋  Undoing 1 flexlate transactions
 ⠋  Undoing 1 flexlate transactions
-⠹  Undoing 1 flexlate transactions
 ✔ Successfully reversed transaction 1
-⠹  Undoing 1 flexlate transactions
-⠹  Undoing 1 flexlate transactions
+⠙  Undoing 1 flexlate transactions
+⠙  Undoing 1 flexlate transactions
 
 </span><span class="gp">$ </span>ls
 <span class="go">flexlate-project.json  flexlate.json  woo.txt</span></code></pre>
@@ -437,7 +436,7 @@ simply delete the Flexlate feature branches.</p>
 <span class="go">Switched to a new branch 'my-feature'
 
 </span><span class="gp">$ </span>fxt add output copier-simple-example
-<span class="go"> Applying template copier-simple-example to /tmp/tmp4schjik0
+<span class="go"> Applying template copier-simple-example to /tmp/tmpv9d77erk
  Updating 1 applied templates
 
 question1? Format: yaml
@@ -455,7 +454,7 @@ question2? Format: float
 
 
 ✔ Successfully updated template output
-✔ Successfully applied template copier-simple-example to /tmp/tmp4schjik0
+✔ Successfully applied template copier-simple-example to /tmp/tmpv9d77erk
 
 </span><span class="gp">$ </span>ls
 <span class="go"> flexlate-project.json	 flexlate.json	'my answer.txt'   woo.txt
@@ -464,13 +463,13 @@ question2? Format: float
 <span class="go">Switched to branch 'master'
 
 </span><span class="gp">$ </span>git branch -D my-feature
-<span class="go">Deleted branch my-feature (was 5dbaac7).
+<span class="go">Deleted branch my-feature (was 82c2534).
 
 </span><span class="gp">$ </span>git branch -D flexlate-templates-my-feature
-<span class="go">Deleted branch flexlate-templates-my-feature (was 5dbaac7).
+<span class="go">Deleted branch flexlate-templates-my-feature (was 82c2534).
 
 </span><span class="gp">$ </span>git branch -D flexlate-output-my-feature
-<span class="go">Deleted branch flexlate-output-my-feature (was 5dbaac7).
+<span class="go">Deleted branch flexlate-output-my-feature (was 82c2534).
 
 </span><span class="gp">$ </span>ls
 <span class="go">flexlate-project.json  flexlate.json  woo.txt</span></code></pre>
