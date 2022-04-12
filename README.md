@@ -75,6 +75,10 @@ other merge conflicts.
 Further, there is not really any ability to compose a project template from 
 smaller templates with any existing tools.
 
+Check out a [much more detailed explanation and story](https://nickderobertis.github.io/flexlate/faqs.html#why-create-flexlate) 
+as well as a 
+[comparison to other tools](https://nickderobertis.github.io/flexlate/faqs.html#existing-tools-to-update-applied-templates). 
+
 ### How does it Work?
 
 Flexlate is [Git-native](https://nickderobertis.github.io/flexlate/core-concepts.html#git-native): 
