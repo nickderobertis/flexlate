@@ -28,6 +28,8 @@ from tests.config import (
     GENERATED_REPO_DIR,
     COPIER_FROM_COOKIECUTTER_ONE_DIR,
     COPIER_FROM_COOKIECUTTER_ONE_VERSION,
+    COOKIECUTTER_WITH_HOOKS_DIR,
+    COPIER_WITH_TASKS_DIR,
 )
 
 
@@ -96,6 +98,18 @@ def cookiecutter_one_template_in_repo() -> CookiecutterTemplate:
 
 
 @pytest.fixture
+def cookiecutter_two_template() -> CookiecutterTemplate:
+    finder = CookiecutterFinder()
+    yield finder.find(str(COOKIECUTTER_TWO_DIR), COOKIECUTTER_TWO_DIR)
+
+
+@pytest.fixture
+def cookiecutter_with_hooks_template() -> CookiecutterTemplate:
+    finder = CookiecutterFinder()
+    yield finder.find(str(COOKIECUTTER_WITH_HOOKS_DIR), COOKIECUTTER_WITH_HOOKS_DIR)
+
+
+@pytest.fixture
 def copier_one_template() -> CookiecutterTemplate:
     finder = CopierFinder()
     yield finder.find(str(COPIER_ONE_DIR), COPIER_ONE_DIR)
@@ -108,9 +122,9 @@ def copier_output_subdir_template() -> CookiecutterTemplate:
 
 
 @pytest.fixture
-def cookiecutter_two_template() -> CookiecutterTemplate:
-    finder = CookiecutterFinder()
-    yield finder.find(str(COOKIECUTTER_TWO_DIR), COOKIECUTTER_TWO_DIR)
+def copier_with_tasks_template() -> CookiecutterTemplate:
+    finder = CopierFinder()
+    yield finder.find(str(COPIER_WITH_TASKS_DIR), COPIER_WITH_TASKS_DIR)
 
 
 @pytest.fixture()
@@ -162,6 +176,11 @@ def modify_cookiecutter_one(root: Union[str, Path]):
 def modify_copier_one(root: Union[str, Path]):
     text_path = Path(root) / "{{ q1 }}.txt.jinja"
     text_path.write_text("{{ q2 }} and some footer")
+
+
+def modify_copier_with_tasks(root: Union[str, Path]):
+    text_path = Path(root) / "{{ q1 }}.txt.jinja"
+    text_path.write_text("{{ q1 }} and some footer")
 
 
 def modify_cookiecutter_one_to_be_copier(root: Union[str, Path]):

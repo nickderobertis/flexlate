@@ -35,12 +35,21 @@ from tests.config import (
     GENERATED_REPO_DIR,
     GENERATED_FILES_DIR,
     COPIER_FROM_COOKIECUTTER_ONE_VERSION,
+    COOKIECUTTER_WITH_HOOKS_DIR,
+    COOKIECUTTER_WITH_HOOKS_NAME,
+    COOKIECUTTER_WITH_HOOKS_VERSION,
+    COOKIECUTTER_WITH_HOOKS_MODIFIED_VERSION,
+    COPIER_WITH_TASKS_MODIFIED_VERSION,
+    COPIER_WITH_TASKS_VERSION,
+    COPIER_WITH_TASKS_DIR,
+    COPIER_WITH_TASKS_NAME,
 )
 from tests.ext_subprocess import run
 from tests.fixtures.template import (
     modify_cookiecutter_one,
     modify_copier_one,
     modify_cookiecutter_one_to_be_copier,
+    modify_copier_with_tasks,
 )
 
 
@@ -206,6 +215,38 @@ COPIER_LOCAL_FIXTURE: Final[TemplateSourceFixture] = TemplateSourceFixture(
     version_migrate_func=modify_copier_one,
 )
 
+cookiecutter_with_hooks_local_fixture: Final[
+    TemplateSourceFixture
+] = TemplateSourceFixture(
+    name=COOKIECUTTER_WITH_HOOKS_NAME,
+    path=str(COOKIECUTTER_WITH_HOOKS_DIR),
+    type=TemplateSourceType.COOKIECUTTER_LOCAL,
+    template_type=TemplateType.COOKIECUTTER,
+    input_data=dict(a="z", c="f"),
+    update_input_data=dict(a="n", c="q"),
+    version_1=COOKIECUTTER_WITH_HOOKS_VERSION,
+    version_2=COOKIECUTTER_WITH_HOOKS_MODIFIED_VERSION,
+    is_local_template=True,
+    version_migrate_func=modify_cookiecutter_one,
+    render_relative_root_in_output=Path("{{ cookiecutter.a }}"),
+    render_relative_root_in_template=Path("{{ cookiecutter.a }}"),
+    evaluated_render_relative_root_in_output_creator=lambda data: Path(data["a"]),
+    expect_local_applied_template_path=Path(".."),
+)
+
+copier_with_tasks_local_fixture: Final[TemplateSourceFixture] = TemplateSourceFixture(
+    name=COPIER_WITH_TASKS_NAME,
+    path=str(COPIER_WITH_TASKS_DIR),
+    type=TemplateSourceType.COPIER_LOCAL,
+    template_type=TemplateType.COPIER,
+    input_data=dict(q1="abc"),
+    update_input_data=dict(q1="qwe"),
+    version_1=COPIER_WITH_TASKS_VERSION,
+    version_2=COPIER_WITH_TASKS_MODIFIED_VERSION,
+    is_local_template=True,
+    version_migrate_func=modify_copier_with_tasks,
+)
+
 
 def _update_cookiecutter_local_template_source_to_copier(
     template_source: TemplateSourceFixture,
@@ -230,6 +271,8 @@ COOKIECUTTER_CHANGES_TO_COPIER_LOCAL_FIXTURE: Final[
 local_absolute_path_fixtures: Final[List[TemplateSourceFixture]] = [
     cookiecutter_local_fixture,
     COPIER_LOCAL_FIXTURE,
+    cookiecutter_with_hooks_local_fixture,
+    copier_with_tasks_local_fixture,
 ]
 
 remote_fixtures: Final[List[TemplateSourceFixture]] = [
