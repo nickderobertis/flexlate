@@ -235,6 +235,10 @@
         <li class="md-nav__item"><a href="#template-sources-and-outputs" class="md-nav__link">Template Sources and Outputs</a><nav class="md-nav">
               <ul class="md-nav__list">
         <li class="md-nav__item"><a href="#flexlate-is-not-a-template-engine" class="md-nav__link">Flexlate is Not a Template Engine</a>
+        </li>
+        <li class="md-nav__item"><a href="#local-and-remote-template-sources" class="md-nav__link">Local and Remote Template Sources</a>
+        </li>
+        <li class="md-nav__item"><a href="#mix-and-match-template-sources" class="md-nav__link">Mix-and-Match Template Sources</a>
         </li></ul>
             </nav>
         </li>
@@ -287,6 +291,20 @@
     
     
       <a href="#flexlate-is-not-a-template-engine" class="md-nav__link">Flexlate is Not a Template Engine</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#local-and-remote-template-sources" class="md-nav__link">Local and Remote Template Sources</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#mix-and-match-template-sources" class="md-nav__link">Mix-and-Match Template Sources</a>
       
     
     </li></ul>
@@ -411,6 +429,10 @@
         <li class="md-nav__item"><a href="#template-sources-and-outputs" class="md-nav__link">Template Sources and Outputs</a><nav class="md-nav">
               <ul class="md-nav__list">
         <li class="md-nav__item"><a href="#flexlate-is-not-a-template-engine" class="md-nav__link">Flexlate is Not a Template Engine</a>
+        </li>
+        <li class="md-nav__item"><a href="#local-and-remote-template-sources" class="md-nav__link">Local and Remote Template Sources</a>
+        </li>
+        <li class="md-nav__item"><a href="#mix-and-match-template-sources" class="md-nav__link">Mix-and-Match Template Sources</a>
         </li></ul>
             </nav>
         </li>
@@ -491,6 +513,25 @@ engines to do the work. Currently, <a class="reference external" href="https://g
 and <a class="reference external" href="https://github.com/copier-org/copier"><code class="docutils literal notranslate"><span class="pre">copier</span></code></a> are supported. There
 are future plans for additional template engines as well as an easier way
 to bring your own template engine to Flexlate.</p>
+</section>
+<section id="local-and-remote-template-sources">
+<h3 id="local-and-remote-template-sources">Local and Remote Template Sources<a class="headerlink" href="#local-and-remote-template-sources" title="Permalink to this headline">¶</a></h3>
+<p>Flexlate is able to version and update local template sources in addition
+to remote template sources that are already versioned with Git. As Flexlate
+has its own versioning system for local templates, you could keep local
+templates within the same project where you are using them and update
+them separately. A local template source does not have to be a Git repository,
+it can be any folder that conforms to the structure of a
+<a class="reference internal" href="faqs.html#what-templates-can-i-use-what-projects-can-i-generate-with-flexlate"><span class="std std-doc">supported template engine</span></a>.</p>
+</section>
+<section id="mix-and-match-template-sources">
+<h3 id="mix-and-match-template-sources">Mix-and-Match Template Sources<a class="headerlink" href="#mix-and-match-template-sources" title="Permalink to this headline">¶</a></h3>
+<p>With Flexlate you can <a class="reference internal" href="tutorial/get-started/add-to-project.html"><span class="doc std std-doc">build up a project from multiple template sources</span></a>.
+When you do this, you can feel free to mix and match the template sources
+between multiple <a class="reference internal" href="faqs.html#what-templates-can-i-use-what-projects-can-i-generate-with-flexlate"><span class="std std-doc">supported template engines</span></a>.
+You don’t need to do anything different or even know what template engine
+is being used: Flexlate is able to determine the template type and
+render it with the correct engine by examining the structure of the template.</p>
 </section>
 </section>
 <section id="git-native">

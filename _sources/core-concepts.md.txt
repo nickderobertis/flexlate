@@ -32,6 +32,25 @@ and [`copier`](https://github.com/copier-org/copier) are supported. There
 are future plans for additional template engines as well as an easier way 
 to bring your own template engine to Flexlate.
 
+### Local and Remote Template Sources
+
+Flexlate is able to version and update local template sources in addition
+to remote template sources that are already versioned with Git. As Flexlate
+has its own versioning system for local templates, you could keep local 
+templates within the same project where you are using them and update 
+them separately. A local template source does not have to be a Git repository,
+it can be any folder that conforms to the structure of a 
+[supported template engine](faqs.md#what-templates-can-i-usewhat-projects-can-i-generate-with-flexlate).
+
+### Mix-and-Match Template Sources
+
+With Flexlate you can [build up a project from multiple template sources](tutorial/get-started/add-to-project.md).
+When you do this, you can feel free to mix and match the template sources 
+between multiple [supported template engines](faqs.md#what-templates-can-i-usewhat-projects-can-i-generate-with-flexlate).
+You don't need to do anything different or even know what template engine 
+is being used: Flexlate is able to determine the template type and 
+render it with the correct engine by examining the structure of the template.
+
 ## Git-Native
 
 Flexlate is built upon [Git](https://git-scm.com/). Your project must be 

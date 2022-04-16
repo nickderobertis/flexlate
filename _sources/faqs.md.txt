@@ -88,7 +88,8 @@ The following are links to see open-source templates on Github:
 
 You may use any of those linked templates, your own local template, 
 your own template on Github, or 
-even a combination thereof to create your project. 
+even [a combination thereof](core-concepts.md#mix-and-match-template-sources) 
+to create your project. 
 
 ## Why Create Flexlate?
 
