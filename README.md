@@ -32,7 +32,8 @@ from multiple templates.
   - [Add template sources and then you can apply outputs](https://nickderobertis.github.io/flexlate/tutorial/get-started/add-to-project.html)
     anywhere with a simple 
     CLI command
-- **Use your existing templates**: both [`cookiecutter`](https://github.com/cookiecutter/cookiecutter) 
+- **[Use your existing templates](https://nickderobertis.github.io/flexlate/faqs.html#what-templates-can-i-use-what-projects-can-i-generate-with-flexlate)**: 
+  both [`cookiecutter`](https://github.com/cookiecutter/cookiecutter) 
   and [`copier`](https://github.com/copier-org/copier) templates are supported
   - Works with both local and remote templates. You can even keep a template 
     in your project and be able to update outputs whenever it changes
