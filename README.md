@@ -35,7 +35,8 @@ from multiple templates.
 - **[Use your existing templates](https://nickderobertis.github.io/flexlate/faqs.html#what-templates-can-i-use-what-projects-can-i-generate-with-flexlate)**: 
   both [`cookiecutter`](https://github.com/cookiecutter/cookiecutter) 
   and [`copier`](https://github.com/copier-org/copier) templates are supported
-  - Works with both local and remote templates. You can even keep a template 
+  - [Works with both local and remote templates](https://nickderobertis.github.io/flexlate/core-concepts.html#local-and-remote-template-sources). 
+    You can even keep a template 
     in your project and be able to update outputs whenever it changes
 - **Apply it to your existing projects** with [a `bootstrap` functionality](https://nickderobertis.github.io/flexlate/tutorial/get-started/existing-project.html)
 - (planned) **Use flexlate projects as templates themselves**, enabling nested templates
