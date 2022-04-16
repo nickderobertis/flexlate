@@ -576,8 +576,19 @@ class ConfigManager:
             config=config,
         )
         template_source = child_config.template_sources.pop(template_index)
+        if (
+            template_source.is_local_template
+            and not Path(template_source.path).is_absolute()
+        ):
+            abs_path = (config_path.parent / template_source.path).resolve()
+            new_template_source_path = os.path.relpath(abs_path, new_config_path.parent)
+        else:
+            new_template_source_path = template_source.path
+        new_template_source = template_source.copy(
+            update=dict(path=new_template_source_path)
+        )
         new_child_config = _get_or_create_child_config_by_path(config, new_config_path)
-        new_child_config.template_sources.append(template_source)
+        new_child_config.template_sources.append(new_template_source)
         self.save_config(config)
 
     def _get_applied_templates_and_sources_with_local_add_mode(

@@ -33,36 +33,32 @@ def test_add_template_source_from_current_path(
 
 
 def test_init_from_current_path(
-    repo_with_placeholder_committed: Repo,
     cookiecutter_one_template: CookiecutterTemplate,
 ):
     template = cookiecutter_one_template
-    project_dir = GENERATED_FILES_DIR / "project"
+    project_dir = GENERATED_FILES_DIR / "b"
 
     with change_directory_to(template.path):
         fxt.init_project_from(".", path=GENERATED_FILES_DIR, no_input=True)
 
-    content_path = project_dir / "a1.txt"
+    content_path = project_dir / "text.txt"
     content = content_path.read_text()
-    assert content == "1"
-
-    readme_path = project_dir / "README.md"
-    assert readme_path.read_text() == "some existing content"
+    assert content == "b"
 
     config_path = project_dir / "flexlate.json"
     config = FlexlateConfig.load(config_path)
     assert len(config.template_sources) == 1
     source = config.template_sources[0]
     assert source.name == template.name
-    assert source.path == str(template.path)
+    assert source.path == "../../input_files/templates/cookiecutters/one"
     assert source.version == template.version
-    assert source.type == TemplateType.COPIER
-    assert source.render_relative_root_in_output == Path(".")
-    assert source.render_relative_root_in_template == Path(".")
+    assert source.type == TemplateType.COOKIECUTTER
+    assert source.render_relative_root_in_output == Path("{{ cookiecutter.a }}")
+    assert source.render_relative_root_in_template == Path("{{ cookiecutter.a }}")
     assert len(config.applied_templates) == 1
     at = config.applied_templates[0]
     assert at.name == template.name
     assert at.version == template.version
-    assert at.data == {"q1": "a1", "q2": 1, "q3": None}
-    assert at.root == Path(".")
+    assert at.data == {"a": "b", "c": ""}
+    assert at.root == Path("..")
     assert at.add_mode == AddMode.LOCAL
