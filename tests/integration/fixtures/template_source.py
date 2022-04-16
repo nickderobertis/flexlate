@@ -58,6 +58,7 @@ class TemplateSourceType(str, Enum):
     COPIER_REMOTE = "copier_remote"
     COOKIECUTTER_LOCAL = "cookiecutter_local"
     COPIER_LOCAL = "copier_local"
+    COPIER_WITH_TASKS = "copier_with_tasks"
 
 
 @dataclass
@@ -237,7 +238,7 @@ cookiecutter_with_hooks_local_fixture: Final[
 copier_with_tasks_local_fixture: Final[TemplateSourceFixture] = TemplateSourceFixture(
     name=COPIER_WITH_TASKS_NAME,
     path=str(COPIER_WITH_TASKS_DIR),
-    type=TemplateSourceType.COPIER_LOCAL,
+    type=TemplateSourceType.COPIER_WITH_TASKS,
     template_type=TemplateType.COPIER,
     input_data=dict(q1="abc"),
     update_input_data=dict(q1="qwe"),

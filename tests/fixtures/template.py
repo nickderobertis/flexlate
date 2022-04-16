@@ -30,6 +30,10 @@ from tests.config import (
     COPIER_FROM_COOKIECUTTER_ONE_VERSION,
     COOKIECUTTER_WITH_HOOKS_DIR,
     COPIER_WITH_TASKS_DIR,
+    COOKIECUTTER_WITH_HOOKS_VERSION,
+    COOKIECUTTER_WITH_HOOKS_MODIFIED_VERSION,
+    COPIER_WITH_TASKS_VERSION,
+    COPIER_WITH_TASKS_MODIFIED_VERSION,
 )
 
 
@@ -57,20 +61,25 @@ def get_footer_for_copier_remote_template(version: str) -> str:
 
 
 def get_footer_for_cookiecutter_local_template(version: str) -> str:
-    if version == COOKIECUTTER_ONE_MODIFIED_VERSION:
+    if version in (
+        COOKIECUTTER_ONE_MODIFIED_VERSION,
+        COOKIECUTTER_WITH_HOOKS_MODIFIED_VERSION,
+    ):
         return " and extra"
-    elif version == COOKIECUTTER_ONE_VERSION:
-        return ""
-    elif version == COPIER_FROM_COOKIECUTTER_ONE_VERSION:
+    elif version in (
+        COOKIECUTTER_ONE_VERSION,
+        COOKIECUTTER_WITH_HOOKS_VERSION,
+        COPIER_FROM_COOKIECUTTER_ONE_VERSION,
+    ):
         return ""
     else:
         raise ValueError(f"unknown cookiecutter local version {version}")
 
 
 def get_footer_for_copier_local_template(version: str) -> str:
-    if version == COPIER_ONE_MODIFIED_VERSION:
+    if version in (COPIER_ONE_MODIFIED_VERSION, COPIER_WITH_TASKS_MODIFIED_VERSION):
         return " and some footer"
-    elif version == COPIER_ONE_VERSION:
+    elif version in (COPIER_ONE_VERSION, COPIER_WITH_TASKS_VERSION):
         return ""
     else:
         raise ValueError(f"unknown copier local version {version}")

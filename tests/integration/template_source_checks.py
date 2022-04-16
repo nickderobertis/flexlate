@@ -50,6 +50,10 @@ def assert_project_files_are_correct(
         out_path = root / f"{data['q1']}.txt"
         footer = get_footer_for_copier_local_template(version)
         expect_content = f"{data['q2']}{footer}"
+    elif template_source_type == TemplateSourceType.COPIER_WITH_TASKS:
+        out_path = root / f"{data['q1']}.txt"
+        footer = get_footer_for_copier_local_template(version)
+        expect_content = f"{data['q1']}{footer}"
     else:
         raise ValueError(f"unexpected template source type {template_source_type}")
 
@@ -205,6 +209,8 @@ def _get_default_data(template_source_type: TemplateSourceType) -> TemplateData:
         return dict(a="b", c="")
     elif template_source_type == TemplateSourceType.COPIER_LOCAL:
         return dict(q1="a1", q2=1, q3=None)
+    elif template_source_type == TemplateSourceType.COPIER_WITH_TASKS:
+        return dict(q1="a1")
     else:
         raise ValueError(f"unexpected template source type {template_source_type}")
 
