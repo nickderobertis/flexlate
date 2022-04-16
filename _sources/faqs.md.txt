@@ -77,6 +77,19 @@ an [issue on Github](https://github.com/nickderobertis/flexlate/issues)
 if you'd like to see support for a particular template engine.
 ```
 
+## What Templates Can I Use/What Projects Can I Generate with Flexlate?
+
+Flexlate integrates with existing [project generators](#what-is-a-project-or-file-generator), 
+so that you can use 
+the full ecosystem of templates for any supported project generator.
+The following are links to see open-source templates on Github: 
+- [Cookiecutter](https://github.com/topics/cookiecutter-template) 
+- [Copier](https://github.com/topics/copier-template)
+
+You may use any of those linked templates, your own local template, 
+your own template on Github, or 
+even a combination thereof to create your project. 
+
 ## Why Create Flexlate?
 
 ### Project Generator Pain
