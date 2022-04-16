@@ -4,6 +4,7 @@ from collections import ChainMap
 from pathlib import Path
 from typing import Sequence, Final, Any, Dict
 
+import yaml
 from copier import copy_local
 from copier.config.factory import verify_minimum_version, filter_config
 from copier.config.objects import ConfigData, EnvOps
@@ -45,12 +46,12 @@ class CopierRenderer(SpecificTemplateRenderer[CopierTemplate]):
         template = renderable.template
 
         with tempfile.TemporaryDirectory() as temp_template_dir:
-            copier_path_1 = Path(template.path) / "copier.yml"
-            copier_path_2 = Path(template.path) / "copier.yaml"
-            if copier_path_1.exists():
-                shutil.copy(copier_path_1, temp_template_dir)
-            if copier_path_2.exists():
-                shutil.copy(copier_path_2, temp_template_dir)
+            copier_config_path = _find_copier_yaml_path(template.path)
+            with open(copier_config_path, "r") as f:
+                copier_config = yaml.safe_load(f)
+            _modify_copier_config_yaml_to_remove_tasks(copier_config)
+            config_out_path = Path(temp_template_dir) / copier_config_path.name
+            config_out_path.write_text(yaml.dump(copier_config))
             temp_template_file_path = (
                 Path(temp_template_dir)
                 / template.render_relative_root_in_template
@@ -71,6 +72,25 @@ class CopierRenderer(SpecificTemplateRenderer[CopierTemplate]):
                 temp_output_file_path = Path(temp_output_dir) / "temp.txt"
                 output = temp_output_file_path.read_text()
         return output
+
+
+def _modify_copier_config_yaml_to_remove_tasks(
+    copier_config: Dict[str, Any]
+) -> Dict[str, Any]:
+    if "_tasks" in copier_config:
+        del copier_config["_tasks"]
+    return copier_config
+
+
+def _find_copier_yaml_path(template_root: Path) -> Path:
+    copier_yaml_path = template_root / "copier.yml"
+    if not copier_yaml_path.exists():
+        copier_yaml_path = template_root / "copier.yaml"
+    if not copier_yaml_path.exists():
+        raise FileNotFoundError(
+            f"Could not find copier.yml or copier.yaml in {template_root}"
+        )
+    return copier_yaml_path
 
 
 def _extract_template_data_from_copier_config(config: ConfigData) -> TemplateData:

@@ -95,7 +95,7 @@ def _get_first_question_and_answer_from_context(context: dict) -> Tuple[str, str
     cookiecutter_context = context["cookiecutter"]
     for question, answer in cookiecutter_context.items():
         return question, answer
-    raise ValueError("no questions in copier context, this is not expected")
+    raise ValueError("no questions in cookiecutter context, this is not expected")
 
 
 def _cookiecutter_before_and_after_render_string_temp_folder(
