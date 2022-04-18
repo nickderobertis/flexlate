@@ -12,7 +12,7 @@ from git import Repo, Head
 from flexlate import branch_update
 from flexlate.branch_update import get_flexlate_branch_name_for_feature_branch
 from flexlate.config import FlexlateConfig, TemplateSource, TemplateSourceWithTemplates
-from flexlate.exc import GitRepoDirtyException
+from flexlate.exc import GitRepoDirtyException, MergeConflictsAndAbortException
 from flexlate.finder.multi import MultiFinder
 from flexlate.pusher import Pusher
 from flexlate.render.specific import cookiecutter
@@ -486,6 +486,57 @@ def test_update_modify_template_conflict_with_reject_on_feature_branches(
     for branch_name in [feature_template_branch_name, feature_merged_branch_name]:
         with pytest.raises(IndexError):
             branch = repo.branches[branch_name]  # type: ignore
+
+
+def test_update_modify_template_conflict_with_abort_resets_state(
+    cookiecutter_one_modified_template: CookiecutterTemplate,
+    repo_from_cookiecutter_one_with_modifications: Repo,
+    update_transaction: FlexlateTransaction,
+):
+    repo = repo_from_cookiecutter_one_with_modifications
+    updater = Updater()
+    template_updates = updater.get_updates_for_templates(
+        [cookiecutter_one_modified_template], project_root=GENERATED_FILES_DIR
+    )
+
+    with pytest.raises(MergeConflictsAndAbortException):
+        updater.update(
+            repo,
+            template_updates,
+            update_transaction,
+            no_input=True,
+            abort_on_conflict=True,
+        )
+
+    # Check that repo is in original state
+    assert repo.commit().message == "Prepend cookiecutter text with hello\n"
+    assert not repo_has_merge_conflicts(repo)
+
+
+def test_update_modify_template_conflict_with_abort_and_no_cleanup_leaves_git_merge_conflict(
+    cookiecutter_one_modified_template: CookiecutterTemplate,
+    repo_from_cookiecutter_one_with_modifications: Repo,
+    update_transaction: FlexlateTransaction,
+):
+    repo = repo_from_cookiecutter_one_with_modifications
+    updater = Updater()
+    template_updates = updater.get_updates_for_templates(
+        [cookiecutter_one_modified_template], project_root=GENERATED_FILES_DIR
+    )
+
+    with pytest.raises(MergeConflictsAndAbortException):
+        updater.update(
+            repo,
+            template_updates,
+            update_transaction,
+            no_input=True,
+            abort_on_conflict=True,
+            cleanup=False,
+        )
+
+    # Check that repo is in state from merge conflict
+    assert repo_has_merge_conflicts(repo)
+    assert repo.commit().message == "Prepend cookiecutter text with hello\n"
 
 
 @pytest.mark.parametrize(
