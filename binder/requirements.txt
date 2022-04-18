@@ -1,9 +1,9 @@
-cookiecutter
-flexlate
-rich
-copier
-click<8.1
-markupsafe<2.1
-py-app-conf
 gitpython
+flexlate
+cookiecutter
+click<8.1
+py-app-conf
+rich
 typer
+copier
+markupsafe<2.1
