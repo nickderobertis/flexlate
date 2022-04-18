@@ -543,6 +543,7 @@ $ fxt update [OPTIONS] [NAMES]...
 
 * `-n, --no-input`: Whether to proceed without any input from the user (skip all prompts)
 * `-a, --abort`: Automatically abort the update if a merge conflict is encountered. Useful in combination with --no-input for CI systems  [default: False]
+* `-c, --no-cleanup`: Do not abort the merge or reset branch state upon abort. Note that this flag is ignored if --abort is not passed  [default: False]
 * `-q, --quiet`: Suppress CLI output except for prompts
 * `--path PATH`: The location of the project  [default: .]
 * `--help`: Show this message and exit.
