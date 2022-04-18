@@ -388,6 +388,9 @@ class Adder:
                 remote=remote,
                 config_manager=config_manager,
             )
+            template = config_manager.get_template_by_name(
+                template.name, project_root=temp_path
+            )
             self.apply_template_and_add(
                 repo,
                 template,
@@ -414,6 +417,7 @@ class Adder:
                 if not len(temp_file.read_text()):
                     os.remove(temp_file)
                     stage_and_commit_all(repo, "Remove temporary file")
+                final_temp_config_path = temp_path / "flexlate.json"
             else:
                 # Output renders in a subdirectory. Find that directory
                 renderables = config_manager.get_all_renderables(project_root=temp_path)
@@ -432,11 +436,13 @@ class Adder:
 
                 # Move template source and project config into output directory
                 orig_config_path = temp_path / "flexlate.json"
-                new_config_path = temp_path / new_relative_out_root / "flexlate.json"
+                final_temp_config_path = (
+                    temp_path / new_relative_out_root / "flexlate.json"
+                )
                 config_manager.move_template_source(
                     template.name,
                     orig_config_path,
-                    new_config_path,
+                    final_temp_config_path,
                     project_root=temp_path,
                 )
 
@@ -463,15 +469,19 @@ class Adder:
             repo = Repo(final_out_path)
 
             # Now update template source path that was previously relative to temp directory
-            if template.git_url is None and not Path(template.path).is_absolute():
-                cwd = Path(os.getcwd())
+            if (
+                template.git_url is None
+                and not Path(template.template_source_path).is_absolute()
+            ):
 
                 def move_source_path_to_be_relative_to_destination(
                     source: TemplateSource,
                 ):
                     source.path = str(
                         os.path.relpath(
-                            (cwd / Path(template.template_source_path)).resolve(),
+                            (
+                                final_temp_config_path.parent / Path(source.path)
+                            ).resolve(),
                             final_out_path,
                         )
                     )

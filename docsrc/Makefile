@@ -24,12 +24,14 @@ cleandoc:
 	@rm -rf ./source/auto_examples
 	@rm -rf ../_examples
 	@rm -rf ./source/binder/requirements.txt
+	@rm -rf ./source/commands.md
 
 github:
 	@make cleandoc
 	@./binder_requirements.sh
 	@./nb-examples.sh
 	@./download-logo.sh
+	@./generate-cli-command-reference.sh
 	@make doctest
 	@make autodoc
 	@make html
