@@ -74,6 +74,7 @@ class Updater:
         base_template_branch_name: str = DEFAULT_TEMPLATE_BRANCH_NAME,
         no_input: bool = False,
         abort_on_conflict: bool = False,
+        cleanup: bool = True,
         full_rerender: bool = True,
         remote: str = "origin",
         renderer: MultiRenderer = MultiRenderer(),
@@ -232,14 +233,15 @@ class Updater:
                     "Repo has merge conflicts after update, aborting due to abort_on_conflict=True",
                     ALERT_STYLE,
                 )
-                abort_merge_and_reset_flexlate_branches(
-                    repo,
-                    current_branch,
-                    merged_branch_sha=merged_branch_sha,
-                    template_branch_sha=template_branch_sha,
-                    merged_branch_name=merged_branch_name,
-                    template_branch_name=template_branch_name,
-                )
+                if cleanup:
+                    abort_merge_and_reset_flexlate_branches(
+                        repo,
+                        current_branch,
+                        merged_branch_sha=merged_branch_sha,
+                        template_branch_sha=template_branch_sha,
+                        merged_branch_name=merged_branch_name,
+                        template_branch_name=template_branch_name,
+                    )
                 raise MergeConflictsAndAbortException
 
             # Need to wait for user to resolve merge conflicts

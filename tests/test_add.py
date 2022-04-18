@@ -483,7 +483,7 @@ def test_add_source_with_merge_conflicts_and_resolution(
     )
 
 
-def test_add_source_with_merge_conflicts_and_abort(
+def test_add_source_with_merge_conflicts_and_reject(
     repo_with_cookiecutter_remote_version_one_template_source_and_output_that_will_have_merge_conflict_on_flexlate_operation,
     cookiecutter_one_template: CookiecutterTemplate,
     add_source_transaction: FlexlateTransaction,

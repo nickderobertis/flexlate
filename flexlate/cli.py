@@ -349,6 +349,12 @@ def update_templates(
         "-a",
         help="Automatically abort the update if a merge conflict is encountered. Useful in combination with --no-input for CI systems",
     ),
+    no_cleanup: bool = typer.Option(
+        False,
+        "--no-cleanup",
+        "-c",
+        help="Do not abort the merge or reset branch state upon abort. Note that this flag is ignored if --abort is not passed",
+    ),
     quiet: bool = QUIET_OPTION,
     path: Path = PROJECT_PATH_OPTION,
 ):
@@ -367,6 +373,7 @@ def update_templates(
             names=names,
             no_input=no_input,
             abort_on_conflict=abort_on_conflict,
+            no_cleanup=no_cleanup,
             project_path=path,
         )
         log.debug("Exiting with code 0")
