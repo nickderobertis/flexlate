@@ -76,8 +76,9 @@ class ConfigManager:
         return config
 
     def load_project_config(self, path: Path = Path(".")) -> ProjectConfig:
-        projects_config = self.load_projects_config(path=path)
-        return projects_config.get_project_for_path(path)
+        use_path = path.resolve()
+        projects_config = self.load_projects_config(path=use_path)
+        return projects_config.get_project_for_path(use_path)
 
     def save_projects_config(self, config: FlexlateProjectConfig):
         config.save()
