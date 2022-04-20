@@ -46,7 +46,7 @@
   
   
   
-    <title>flexlate.config_manager &#8212; flexlate 0.13.0 documentation</title>
+    <title>flexlate.config_manager &#8212; flexlate 0.13.1 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/material.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -90,7 +90,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex navheader">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="../../index.html" title="flexlate 0.13.0 documentation"
+        <a href="../../index.html" title="flexlate 0.13.1 documentation"
            class="md-header-nav__button md-logo">
           
             <i class="md-icon">&#xe869</i>
@@ -176,7 +176,7 @@
   <nav class="md-tabs" data-md-component="tabs">
     <div class="md-tabs__inner md-grid">
       <ul class="md-tabs__list">
-          <li class="md-tabs__item"><a href="../../index.html" class="md-tabs__link">flexlate 0.13.0 documentation</a></li>
+          <li class="md-tabs__item"><a href="../../index.html" class="md-tabs__link">flexlate 0.13.1 documentation</a></li>
           <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">Module code</a></li>
       </ul>
     </div>
@@ -189,13 +189,13 @@
               <div class="md-sidebar__inner">
                 <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="../../index.html" title="flexlate 0.13.0 documentation" class="md-nav__button md-logo">
+    <a href="../../index.html" title="flexlate 0.13.1 documentation" class="md-nav__button md-logo">
       
         <i class="md-icon">&#xe869</i>
       
     </a>
     <a href="../../index.html"
-       title="flexlate 0.13.0 documentation">flexlate</a>
+       title="flexlate 0.13.1 documentation">flexlate</a>
   </label>
     <div class="md-nav__source">
       <a href="https://github.com/nickderobertis/flexlate" title="Go to repository" class="md-source" data-md-source="github">
@@ -356,8 +356,9 @@
         <span class="k">return</span> <span class="n">config</span></div>
 
 <div class="viewcode-block" id="ConfigManager.load_project_config"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config_manager.ConfigManager.load_project_config">[docs]</a>    <span class="k">def</span> <span class="nf">load_project_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="n">ProjectConfig</span><span class="p">:</span>
-        <span class="n">projects_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_projects_config</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">projects_config</span><span class="o">.</span><span class="n">get_project_for_path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></div>
+        <span class="n">use_path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+        <span class="n">projects_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_projects_config</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">use_path</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">projects_config</span><span class="o">.</span><span class="n">get_project_for_path</span><span class="p">(</span><span class="n">use_path</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ConfigManager.save_projects_config"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config_manager.ConfigManager.save_projects_config">[docs]</a>    <span class="k">def</span> <span class="nf">save_projects_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">FlexlateProjectConfig</span><span class="p">):</span>
         <span class="n">config</span><span class="o">.</span><span class="n">save</span><span class="p">()</span></div>
