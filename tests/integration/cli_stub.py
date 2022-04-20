@@ -240,6 +240,7 @@ class CLIStubFlexlate(Flexlate):
         data: Optional[Sequence[TemplateData]] = None,
         no_input: bool = False,
         abort_on_conflict: bool = False,
+        no_cleanup: bool = False,
         quiet: bool = False,
         project_path: Path = Path("."),
     ):
@@ -252,6 +253,7 @@ class CLIStubFlexlate(Flexlate):
                 *_bool_flag(no_input, "no-input"),
                 *_bool_flag(quiet, "quiet"),
                 *_bool_flag(abort_on_conflict, "abort"),
+                *_bool_flag(no_cleanup, "no-cleanup"),
             ],
             input_data=data,
         )

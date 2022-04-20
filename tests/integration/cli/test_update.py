@@ -20,3 +20,11 @@ def test_update_returns_code_1_for_template_conflict_with_abort(
     with change_directory_to(GENERATED_REPO_DIR):
         result = fxt(["update", "--no-input", "--abort"])
     assert result.exit_code == 1
+
+
+def test_update_returns_code_1_for_template_conflict_with_abort_and_no_cleanup(
+    repo_with_copier_remote_version_one_no_target_version_and_will_have_a_conflict_on_update: Repo,
+):
+    with change_directory_to(GENERATED_REPO_DIR):
+        result = fxt(["update", "--no-input", "--abort", "--no-cleanup"])
+    assert result.exit_code == 1
