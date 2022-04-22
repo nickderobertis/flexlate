@@ -424,7 +424,8 @@ def test_update_modify_template_conflict_with_reject(
         [cookiecutter_one_modified_template], project_root=GENERATED_FILES_DIR
     )
     with patch.object(branch_update, "confirm_user", _reject_update):
-        updater.update(repo, template_updates, update_transaction)
+        with pytest.raises(MergeConflictsAndAbortException):
+            updater.update(repo, template_updates, update_transaction)
 
     assert repo.commit().message == "Prepend cookiecutter text with hello\n"
 
@@ -464,13 +465,14 @@ def test_update_modify_template_conflict_with_reject_on_feature_branches(
         [cookiecutter_one_modified_template], project_root=GENERATED_FILES_DIR
     )
     with patch.object(branch_update, "confirm_user", _reject_update):
-        updater.update(
-            repo,
-            template_updates,
-            update_transaction,
-            merged_branch_name=feature_merged_branch_name,
-            template_branch_name=feature_template_branch_name,
-        )
+        with pytest.raises(MergeConflictsAndAbortException):
+            updater.update(
+                repo,
+                template_updates,
+                update_transaction,
+                merged_branch_name=feature_merged_branch_name,
+                template_branch_name=feature_template_branch_name,
+            )
 
     assert repo.commit().message == "Prepend cookiecutter text with hello\n"
 
