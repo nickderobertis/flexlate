@@ -152,5 +152,5 @@ class FlexlateUpdateException(FlexlateException):
     pass
 
 
-class MergeConflictsAndAbortException(FlexlateException):
+class MergeConflictsAndAbortException(FlexlateUpdateException):
     pass

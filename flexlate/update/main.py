@@ -254,7 +254,7 @@ class Updater:
                 template_branch_name,
             )
             if aborted:
-                return
+                raise MergeConflictsAndAbortException
 
         # No conflicts, merge back into current branch
         current_branch.checkout()
