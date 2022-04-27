@@ -432,7 +432,7 @@ Simply call <code class="docutils literal notranslate"><span class="pre">fxt</sp
 and are satisfied with the result.</p>
 <div class="termy docutils container">
 <pre class="code console highlight literal-block"><code><span class="gp">$ </span>fxt add output copier-simple-example some/path
-<span class="go"> Applying template copier-simple-example to /tmp/tmp98r750g2
+<span class="go"> Applying template copier-simple-example to /tmp/tmpk4kg5wnk
  Updating 1 applied templates
 
 question1? Format: yaml
@@ -450,7 +450,7 @@ question2? Format: float
 
 
 ✔ Successfully updated template output
-✔ Successfully applied template copier-simple-example to /tmp/tmp98r750g2
+✔ Successfully applied template copier-simple-example to /tmp/tmpk4kg5wnk
 
 </span><span class="gp">$ </span>fxt merge
 <span class="go"> Merging flexlate-templates-master to flexlate-templates
@@ -470,7 +470,7 @@ to merge the changes into main, first run <code class="docutils literal notransl
 <span class="go">Switched to a new branch 'feature-branch'
 
 </span><span class="gp">$ </span>fxt add output copier-simple-example some/path
-<span class="go"> Applying template copier-simple-example to /tmp/tmpofnr7kdi
+<span class="go"> Applying template copier-simple-example to /tmp/tmpq82xhf7_
  Updating 1 applied templates
 
 question1? Format: yaml
@@ -488,7 +488,7 @@ question2? Format: float
 
 
 ✔ Successfully updated template output
-✔ Successfully applied template copier-simple-example to /tmp/tmpofnr7kdi
+✔ Successfully applied template copier-simple-example to /tmp/tmpq82xhf7_
 
 </span><span class="gp">$ </span>fxt merge
 <span class="go"> Merging flexlate-templates-feature-branch to flexlate-templates
@@ -502,7 +502,7 @@ flexlate-output-feature-branch
 <span class="go">Switched to branch 'master'
 
 </span><span class="gp">$ </span>git merge feature-branch
-<span class="go">Updating d48bb23..3f94a90
+<span class="go">Updating 063bea5..40af9a1
 Fast-forward
  some/path/flexlate.json | 15 +++++++++++++++
  some/path/my answer.txt |  2 ++
@@ -518,7 +518,7 @@ branches, you’ll want to push your changes to the remote (if you are using
 a remote) via <a class="reference internal" href="../commands.html#fxt-push-main"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">push</span> <span class="pre">main</span></code></span></a>.</p>
 <div class="termy docutils container">
 <pre class="code console highlight literal-block"><code><span class="gp">$ </span>fxt add output copier-simple-example some/path
-<span class="go"> Applying template copier-simple-example to /tmp/tmpy91ip3ew
+<span class="go"> Applying template copier-simple-example to /tmp/tmpigv1p3xd
  Updating 1 applied templates
 
 question1? Format: yaml
@@ -536,7 +536,7 @@ question2? Format: float
 
 
 ✔ Successfully updated template output
-✔ Successfully applied template copier-simple-example to /tmp/tmpy91ip3ew
+✔ Successfully applied template copier-simple-example to /tmp/tmpigv1p3xd
 
 </span><span class="gp">$ </span>fxt merge
 <span class="go"> Merging flexlate-templates-master to flexlate-templates
@@ -568,7 +568,7 @@ You would want to run this whenever you are pushing up the feature branch itself
 <span class="go">Switched to a new branch 'feature-branch'
 
 </span><span class="gp">$ </span>fxt add output copier-simple-example some/path
-<span class="go"> Applying template copier-simple-example to /tmp/tmpag4o_0ec
+<span class="go"> Applying template copier-simple-example to /tmp/tmpjlin1sbl
  Updating 1 applied templates
 
 question1? Format: yaml
@@ -586,7 +586,7 @@ question2? Format: float
 
 
 ✔ Successfully updated template output
-✔ Successfully applied template copier-simple-example to /tmp/tmpag4o_0ec
+✔ Successfully applied template copier-simple-example to /tmp/tmpjlin1sbl
 
 </span><span class="gp">$ </span>git push origin feature-branch
 <span class="go">Enumerating objects: 22, done.
@@ -653,8 +653,8 @@ Writing objects:  86% (19/22)
 Writing objects:  90% (20/22)
 Writing objects:  95% (21/22)
 Writing objects: 100% (22/22)
-Writing objects: 100% (22/22), 2.63 KiB | 1.31 MiB/s, done.
-Total 22 (delta 5), reused 0 (delta 0), pack-reused 0
+Writing objects: 100% (22/22), 2.57 KiB | 2.57 MiB/s, done.
+Total 22 (delta 6), reused 0 (delta 0), pack-reused 0
 To ../remote
  * [new branch]      feature-branch -&gt; feature-branch
 
