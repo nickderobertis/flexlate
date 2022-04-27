@@ -136,7 +136,9 @@ intervention: resolving merge conflicts. But Flexlate makes this as easy
 as possible: you can resolve the conflicts right in Github's web editor
 without ever touching the files locally.
 
-See the [user guide section on CI](tutorial/ci-automation.md) 
+There is a Copier template available to quickly set this up in your 
+project and enable getting future updates to the workflows. See the 
+[user guide section on CI](tutorial/ci-automation.md) 
 more details on setting this up. 
 
 ```{note}
