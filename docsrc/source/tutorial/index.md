@@ -16,5 +16,6 @@ updating
 saving
 undoing
 arbitrary-changes
+ci-automation
 developing-templates
 ```

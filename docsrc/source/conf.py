@@ -56,6 +56,7 @@ extensions = [
     'sphinx_gallery.gen_gallery',
     'sphinx_copybutton',
     'myst_parser',
+    "sphinxext.remoteliteralinclude",
 ]
 
 # Options for sphinx_autodoc_typehints
