@@ -1,0 +1,34 @@
+name: Flexlate After-Merge
+on:
+  pull_request:
+    branches:
+      - master
+      - flexlate-output-**
+    types: [closed]
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: "The name of the base branch that the Flexlate branches were created on"
+        required: false
+        type: string
+        default: template-patches
+
+jobs:
+  merge_flexlate_branches:
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 1
+      matrix:
+        python-version: [3.8]
+
+    if: (github.event.pull_request.merged == true || github.event.inputs.branch )
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: master
+          fetch-depth: 0
+      - uses: nickderobertis/flexlate-merge-action@v1
+        with:
+          branch_name: ${{ inputs.branch }}
+          gh_token: ${{ secrets.GH_TOKEN }}
+          main_branch: master
