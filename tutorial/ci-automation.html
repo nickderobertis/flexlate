@@ -1,0 +1,708 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="../_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../_static/javascripts/modernizr.js"></script>
+  
+  
+  
+    <title>Automating Flexlate Workflows using CI &#8212; flexlate 0.14.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/material.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx_paramlinks.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/termynal.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/js/termynal.js"></script>
+    <script src="../_static/js/custom.js"></script>
+    <link rel="canonical" href="https://nickderobertis.github.io/flexlate/tutorial/ci-automation.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Developing your Own Templates" href="developing-templates.html" />
+    <link rel="prev" title="Making Other Changes to Flexlate Templates and Configuration" href="arbitrary-changes.html" />
+  
+   
+
+  </head>
+  <body dir=ltr
+        data-md-color-primary=indigo data-md-color-accent=deep-purple>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#tutorial/ci-automation" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../index.html" title="flexlate 0.14.0 documentation"
+           class="md-header-nav__button md-logo">
+          
+            <i class="md-icon">&#xe869</i>
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">flexlate</span>
+          <span class="md-header-nav__topic"> Automating Flexlate Workflows using CI </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../search.html" method="get" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder="Search"
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://github.com/nickderobertis/flexlate" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    flexlate
+  </div>
+</a>
+          </div>
+        </div>
+      
+      
+  
+  <script src="../_static/javascripts/version_dropdown.js"></script>
+  <script>
+    var json_loc = "../"versions.json"",
+        target_loc = "../../",
+        text = "Versions";
+    $( document ).ready( add_version_dropdown(json_loc, target_loc, text));
+  </script>
+  
+
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+          <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">flexlate 0.14.0 documentation</a></li>
+          <li class="md-tabs__item"><a href="index.html" class="md-tabs__link">Flexlate User Guide</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../index.html" title="flexlate 0.14.0 documentation" class="md-nav__button md-logo">
+      
+        <i class="md-icon">&#xe869</i>
+      
+    </a>
+    <a href="../index.html"
+       title="flexlate 0.14.0 documentation">flexlate</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://github.com/nickderobertis/flexlate" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    flexlate
+  </div>
+</a>
+    </div>
+  
+  
+
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+    
+      <a href="../core-concepts.html" class="md-nav__link">Flexlate Core Concepts</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="index.html" class="md-nav__link">Flexlate User Guide</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="get-started/index.html" class="md-nav__link">Getting started with flexlate</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="updating.html" class="md-nav__link">Update Templates</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="saving.html" class="md-nav__link">Save your Flexlate Updates</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="undoing.html" class="md-nav__link">Undo Flexlate Operations</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="arbitrary-changes.html" class="md-nav__link">Making Other Changes to Flexlate Templates and Configuration</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <label class="md-nav__link md-nav__link--active" for="__toc"> Automating Flexlate Workflows using CI </label>
+    
+      <a href="#" class="md-nav__link md-nav__link--active">Automating Flexlate Workflows using CI</a>
+      
+        
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#tutorial-ci-automation--page-root" class="md-nav__link">Automating Flexlate Workflows using CI</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#setting-up-the-github-actions-workflows" class="md-nav__link">Setting Up the Github Actions Workflows</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#option-1-use-the-official-copier-template" class="md-nav__link">Option 1: Use the Official Copier Template</a>
+        </li>
+        <li class="md-nav__item"><a href="#option-2-manually-add-the-workflows" class="md-nav__link">Option 2: Manually add the Workflows</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#flexlate-update-workflow" class="md-nav__link">Flexlate Update Workflow</a>
+        </li>
+        <li class="md-nav__item"><a href="#flexlate-after-merge-workflow" class="md-nav__link">Flexlate After-Merge Workflow</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#the-workflows-explained" class="md-nav__link">The Workflows, Explained</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id1" class="md-nav__link">Flexlate Update Workflow</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#update-without-conflicts" class="md-nav__link">Update without Conflicts</a>
+        </li>
+        <li class="md-nav__item"><a href="#update-with-merge-conflicts" class="md-nav__link">Update with Merge Conflicts</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id2" class="md-nav__link">Flexlate After-Merge Workflow</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#merging-flexlate-feature-branches" class="md-nav__link">Merging Flexlate Feature Branches</a>
+        </li>
+        <li class="md-nav__item"><a href="#opening-a-pr-with-template-updates-after-conflict-resolution" class="md-nav__link">Opening a PR with Template Updates After Conflict Resolution</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../_sources/tutorial/ci-automation.md.txt">Show Source</a> </li>
+
+  </ul>
+</nav>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="#setting-up-the-github-actions-workflows" class="md-nav__link">Setting Up the Github Actions Workflows</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#the-workflows-explained" class="md-nav__link">The Workflows, Explained</a>
+      
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="developing-templates.html" class="md-nav__link">Developing your Own Templates</a>
+      
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../faqs.html" class="md-nav__link">FAQs</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../commands.html" class="md-nav__link">CLI Reference</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../api/modules.html" class="md-nav__link">Python API Reference</a>
+      
+    
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#tutorial-ci-automation--page-root" class="md-nav__link">Automating Flexlate Workflows using CI</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#setting-up-the-github-actions-workflows" class="md-nav__link">Setting Up the Github Actions Workflows</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#option-1-use-the-official-copier-template" class="md-nav__link">Option 1: Use the Official Copier Template</a>
+        </li>
+        <li class="md-nav__item"><a href="#option-2-manually-add-the-workflows" class="md-nav__link">Option 2: Manually add the Workflows</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#flexlate-update-workflow" class="md-nav__link">Flexlate Update Workflow</a>
+        </li>
+        <li class="md-nav__item"><a href="#flexlate-after-merge-workflow" class="md-nav__link">Flexlate After-Merge Workflow</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#the-workflows-explained" class="md-nav__link">The Workflows, Explained</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id1" class="md-nav__link">Flexlate Update Workflow</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#update-without-conflicts" class="md-nav__link">Update without Conflicts</a>
+        </li>
+        <li class="md-nav__item"><a href="#update-with-merge-conflicts" class="md-nav__link">Update with Merge Conflicts</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id2" class="md-nav__link">Flexlate After-Merge Workflow</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#merging-flexlate-feature-branches" class="md-nav__link">Merging Flexlate Feature Branches</a>
+        </li>
+        <li class="md-nav__item"><a href="#opening-a-pr-with-template-updates-after-conflict-resolution" class="md-nav__link">Opening a PR with Template Updates After Conflict Resolution</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../_sources/tutorial/ci-automation.md.txt">Show Source</a> </li>
+
+<li id="searchbox" class="md-nav__item"></li>
+
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
+            
+  <section id="automating-flexlate-workflows-using-ci">
+<h1 id="tutorial-ci-automation--page-root">Automating Flexlate Workflows using CI<a class="headerlink" href="#tutorial-ci-automation--page-root" title="Permalink to this headline">¶</a></h1>
+<p>Flexlate comes with official Github Actions and workflows to automate
+template updates using CI. This tutorial will walk you through the
+process of setting up the workflows to update the templates and
+keep the <a class="reference internal" href="../core-concepts.html#branches-for-flexlate-operations"><span class="std std-doc">Flexlate branches</span></a>
+up to date.</p>
+<p>By the end of this tutorial, template updates will be fully automated
+in your project, besides approving PRs and resolving merge conflicts.</p>
+<section id="setting-up-the-github-actions-workflows">
+<h2 id="setting-up-the-github-actions-workflows">Setting Up the Github Actions Workflows<a class="headerlink" href="#setting-up-the-github-actions-workflows" title="Permalink to this headline">¶</a></h2>
+<section id="option-1-use-the-official-copier-template">
+<h3 id="option-1-use-the-official-copier-template">Option 1: Use the Official Copier Template<a class="headerlink" href="#option-1-use-the-official-copier-template" title="Permalink to this headline">¶</a></h3>
+<p>There is an <a class="reference external" href="https://github.com/nickderobertis/copier-flexlate-github-actions">official Copier template</a>
+that contains the necessary workflows
+to update the templates and keep the branches up to date. You can
+simply add it to your project and it should work as-is.</p>
+<div class="termy docutils container">
+<pre class="code console highlight literal-block"><code><span class="gp">$ </span>fxt add <span class="nb">source</span> https://github.com/nickderobertis/copier-flexlate-github-actions
+<span class="go"> Adding template source...
+ Adding template source copier-flexlate-github-actions from 
+https://github.com/nickderobertis/copier-flexlate-github-actions
+⠋
+⠙
+ Sucessfully added template source copier-flexlate-github-actions
+⠙
+⠙
+
+</span><span class="gp">$ </span>fxt add output copier-flexlate-github-actions
+<span class="go"> Applying template copier-flexlate-github-actions to /tmp/tmpyk_ad30v
+ Updating 1 applied templates
+
+Name of the main branch
+main_branch_name? Format: str
+</span><span class="gp"># </span>🎤 <span class="o">[</span>main<span class="o">]</span>: $ main
+<span class="go">
+    create  .github/
+    create  .github/workflows/
+    create  .github/workflows/flexlate-after-merge.yml
+    create  .github/workflows/flexlate-update.yml
+
+
+
+    create  temp.txt
+
+
+✔ Successfully updated template output
+✔ Successfully applied template copier-flexlate-github-actions to 
+/tmp/tmpyk_ad30v
+
+</span><span class="gp">$ </span>ls -l .github/workflows
+<span class="go">total 8
+-rw-r--r-- 1 runner docker 855 Apr 27 14:25 flexlate-after-merge.yml
+-rw-r--r-- 1 runner docker 728 Apr 27 14:25 flexlate-update.yml</span></code></pre>
+</div>
+</section>
+<section id="option-2-manually-add-the-workflows">
+<h3 id="option-2-manually-add-the-workflows">Option 2: Manually add the Workflows<a class="headerlink" href="#option-2-manually-add-the-workflows" title="Permalink to this headline">¶</a></h3>
+<p>You can also just manually create the necessary workflow files in your
+project. The workflow files should be created in the <code class="docutils literal notranslate"><span class="pre">.github/workflows</span></code> directory.</p>
+<section id="flexlate-update-workflow">
+<h4 id="flexlate-update-workflow">Flexlate Update Workflow<a class="headerlink" href="#flexlate-update-workflow" title="Permalink to this headline">¶</a></h4>
+<p>Set up the <a class="reference external" href="https://github.com/nickderobertis/flexlate-update-action">Flexlate Update action</a>
+to run on a schedule, or with
+a manual trigger:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Update Template using Flexlate</span><span class="w"></span>
+
+<span class="nt">on</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">schedule</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">cron</span><span class="p">:</span><span class="w"> </span><span class="s">"0</span><span class="nv"> </span><span class="s">3</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*"</span><span class="w"> </span><span class="c1"># every day at 3:00 AM</span><span class="w"></span>
+<span class="w">  </span><span class="nt">workflow_dispatch</span><span class="p">:</span><span class="w"></span>
+
+<span class="nt">jobs</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">templateUpdate</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span><span class="w"></span>
+<span class="w">    </span><span class="nt">strategy</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">max-parallel</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
+<span class="w">      </span><span class="nt">matrix</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">3.8</span><span class="p p-Indicator">]</span><span class="w"></span>
+
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v3</span><span class="w"></span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span><span class="w"></span>
+<span class="w">          </span><span class="nt">ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ github.ref_name }}</span><span class="w"></span>
+<span class="w">          </span><span class="nt">fetch-depth</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w"></span>
+<span class="w">          </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.gh_token }}</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Set up Python ${{ matrix.python-version }}</span><span class="w"></span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v3</span><span class="w"></span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span><span class="w"></span>
+<span class="w">          </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ matrix.python-version }}</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nickderobertis/flexlate-update-action@v1</span><span class="w"></span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span><span class="w"></span>
+<span class="w">          </span><span class="nt">gh_token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.gh_token }}</span><span class="w"></span>
+<span class="w">          </span><span class="nt">main_branch_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">main</span><span class="w"></span>
+</pre></div>
+</div>
+<p>Both <code class="docutils literal notranslate"><span class="pre">actions/checkout</span></code> and <code class="docutils literal notranslate"><span class="pre">actions/setup-python</span></code> must be run
+before the Flexlate Update Action. <code class="docutils literal notranslate"><span class="pre">actions/checkout</span></code> must be
+run with <code class="docutils literal notranslate"><span class="pre">fetch-depth:</span> <span class="pre">0</span></code> so that all branches and history
+are fetched.</p>
+</section>
+<section id="flexlate-after-merge-workflow">
+<h4 id="flexlate-after-merge-workflow">Flexlate After-Merge Workflow<a class="headerlink" href="#flexlate-after-merge-workflow" title="Permalink to this headline">¶</a></h4>
+<p>Set up the <a class="reference external" href="https://github.com/nickderobertis/flexlate-merge-action">Flexlate After-Merge action</a>
+to run after the main branch
+or a flexlate-output branch is merged:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Flexlate After-Merge</span><span class="w"></span>
+<span class="nt">on</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">pull_request</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">branches</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">main</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">flexlate-output-**</span><span class="w"></span>
+<span class="w">    </span><span class="nt">types</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">closed</span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">  </span><span class="nt">workflow_dispatch</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">inputs</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">branch</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">"The</span><span class="nv"> </span><span class="s">name</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">base</span><span class="nv"> </span><span class="s">branch</span><span class="nv"> </span><span class="s">that</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">Flexlate</span><span class="nv"> </span><span class="s">branches</span><span class="nv"> </span><span class="s">were</span><span class="nv"> </span><span class="s">created</span><span class="nv"> </span><span class="s">on"</span><span class="w"></span>
+<span class="w">        </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"></span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span><span class="w"></span>
+<span class="w">        </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">template-patches</span><span class="w"></span>
+
+<span class="nt">jobs</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">merge_flexlate_branches</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span><span class="w"></span>
+<span class="w">    </span><span class="nt">strategy</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">max-parallel</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
+<span class="w">      </span><span class="nt">matrix</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">3.8</span><span class="p p-Indicator">]</span><span class="w"></span>
+
+<span class="w">    </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(github.event.pull_request.merged == true || github.event.inputs.branch )</span><span class="w"></span>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v3</span><span class="w"></span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span><span class="w"></span>
+<span class="w">          </span><span class="nt">ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">master</span><span class="w"></span>
+<span class="w">          </span><span class="nt">fetch-depth</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nickderobertis/flexlate-merge-action@v1</span><span class="w"></span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span><span class="w"></span>
+<span class="w">          </span><span class="nt">branch_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ inputs.branch }}</span><span class="w"></span>
+<span class="w">          </span><span class="nt">gh_token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.GH_TOKEN }}</span><span class="w"></span>
+<span class="w">          </span><span class="nt">main_branch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">main</span><span class="w"></span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">actions/checkout</span></code> must be run
+before the Flexlate Update Action with <code class="docutils literal notranslate"><span class="pre">fetch-depth:</span> <span class="pre">0</span></code>
+so that all branches and history are fetched. The remaining
+logic allows running the workflow manually targeting a specific
+set of Flexlate feature branches.</p>
+</section>
+</section>
+</section>
+<section id="the-workflows-explained">
+<h2 id="the-workflows-explained">The Workflows, Explained<a class="headerlink" href="#the-workflows-explained" title="Permalink to this headline">¶</a></h2>
+<section id="id1">
+<h3 id="id1">Flexlate Update Workflow<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>This workflow uses the Flexlate Update Action to create PRs with template
+updates. The workflow will run on a schedule or by manual trigger:</p>
+<img alt="Flexlate Update Workflow Run" src="../_images/flexlate-update-workflow-run.png"/>
+<p>If there are no template updates, it will exit successfully.</p>
+<section id="update-without-conflicts">
+<h4 id="update-without-conflicts">Update without Conflicts<a class="headerlink" href="#update-without-conflicts" title="Permalink to this headline">¶</a></h4>
+<p>If there
+are updates, then it will open a PR:</p>
+<img alt="Flexlate PR Was Opened" src="../_images/flexlate-pr-opened.png"/>
+<p>You will see the new changes from the template as well as the version
+in <code class="docutils literal notranslate"><span class="pre">flexlate.json</span></code> being updated.</p>
+<img alt="Diff of the Flexlate Update PR" src="../_images/flexlate-pr-diff.png"/>
+<p>After you merge this PR, the Flexlate After-Merge workflow
+will be triggered.</p>
+</section>
+<section id="update-with-merge-conflicts">
+<h4 id="update-with-merge-conflicts">Update with Merge Conflicts<a class="headerlink" href="#update-with-merge-conflicts" title="Permalink to this headline">¶</a></h4>
+<p>If there are merge conflicts, it will instead open a merge conflict
+resolution PR instead.</p>
+<img alt="Flexlate Merge Conflict Resolution PR Was Opened" src="../_images/flexlate-conflict-pr-opened.png"/>
+<p>You can resolve these conflicts right in Github’s web editor:</p>
+<img alt="The button within the Github PR to resolve merge conflicts" src="../_images/flexlate-conflict-pr-highlight-web-editor.png"/>
+<p>Clicking that button will take you into the web editor:</p>
+<img alt="The Github UI to resolve merge conflicts" src="../_images/github-web-editor.png"/>
+<p>After you’ve resolved the conflicts, you should merge immediately.
+The merge to the main branch will
+be in another step triggered by the Flexlate After-Merge workflow.</p>
+</section>
+</section>
+<section id="id2">
+<h3 id="id2">Flexlate After-Merge Workflow<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p>The after-merge workflow serves two functions: to merge Flexlate
+feature branches into Flexlate main branches, and to open a PR
+with template updates after resolving merge conflicts in the web
+editor.</p>
+<section id="merging-flexlate-feature-branches">
+<h4 id="merging-flexlate-feature-branches">Merging Flexlate Feature Branches<a class="headerlink" href="#merging-flexlate-feature-branches" title="Permalink to this headline">¶</a></h4>
+<p>After you’ve merged a feature branch that has corresponding Flexlate
+feature branches into the main branch, the after-merge workflow will
+automatically merge those Flexlate feature branches into the Flexlate
+main branches.</p>
+<img alt="Flexlate After-Merge Workflow Run" src="../_images/flexlate-after-merge-workflow-run.png"/>
+<img alt="The state of the Git history after merging Flexlate feature branches into Flexlate main branches" src="../_images/git-tree-after-merge-flexlate-branches.png"/>
+</section>
+<section id="opening-a-pr-with-template-updates-after-conflict-resolution">
+<h4 id="opening-a-pr-with-template-updates-after-conflict-resolution">Opening a PR with Template Updates After Conflict Resolution<a class="headerlink" href="#opening-a-pr-with-template-updates-after-conflict-resolution" title="Permalink to this headline">¶</a></h4>
+<p>After you’ve resolved merge conflicts in the web editor, the after-merge
+workflow will run. It will see that a <code class="docutils literal notranslate"><span class="pre">flexlate-templates-*-for-conflicts</span></code>
+branch was updated and automatically merge that branch into the original
+<code class="docutils literal notranslate"><span class="pre">flexlate-templates-</span></code> feature branch, then merge that branch into the
+feature branch. Then a PR will be opened with that feature branch.
+At the end of this process, it is just like a PR was opened in the
+first place without conflicts.</p>
+<img alt="The state of the Git history after resolving conflicts and opening a new PR" src="../_images/git-tree-after-conflict-resolution.png"/>
+</section>
+</section>
+</section>
+</section>
+
+
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+            <a href="arbitrary-changes.html" title="Making Other Changes to Flexlate Templates and Configuration"
+               class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+               rel="prev">
+              <div class="md-flex__cell md-flex__cell--shrink">
+                <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+              </div>
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                <span class="md-flex__ellipsis">
+                  <span
+                      class="md-footer-nav__direction"> Previous </span> Making Other Changes to Flexlate Templates and Configuration </span>
+              </div>
+            </a>
+          
+          
+            <a href="developing-templates.html" title="Developing your Own Templates"
+               class="md-flex md-footer-nav__link md-footer-nav__link--next"
+               rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                class="md-flex__ellipsis"> <span
+                class="md-footer-nav__direction"> Next </span> Developing your Own Templates </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink"><i
+                class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2022, Nick DeRobertis.
+              
+          </div>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="../_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
+</html>

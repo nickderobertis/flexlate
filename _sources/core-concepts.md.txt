@@ -123,20 +123,25 @@ Flexlate really shines when you can automate it with Github Actions.
 It comes with official Github Actions to help you do so:
 - The 
 [Flexlate Update Action](https://github.com/nickderobertis/flexlate-update-action) 
-can be used to help 
-[automatically get PRs for template updates](tutorial/updating.md#get-automated-prs-with-template-updates).
+can be used to help automatically get PRs for template updates.
 - The
 [Flexlate Merge Action](https://github.com/nickderobertis/flexlate-merge-action) 
 can be used to 
-[automate merging the Flexlate feature branches into the Flexlate main branches](tutorial/saving.md#merge-flexlate-branches-automatically-with-github-actions).
+automate merging the Flexlate feature branches into the Flexlate main branches, and automate
+the handling of merge conflict resolution PRs.
 
 When you use these actions together, you can automate the whole process
 of updating your templates, besides the one part that requires human 
-intervention: resolving merge conflicts.
+intervention: resolving merge conflicts. But Flexlate makes this as easy 
+as possible: you can resolve the conflicts right in Github's web editor
+without ever touching the files locally.
+
+See the [user guide section on CI](tutorial/ci-automation.md) 
+more details on setting this up. 
 
 ```{note}
 You can see an example of 
-[these workflows being used togehter](https://github.com/nickderobertis/flexlate/tree/master/.github/workflows)
+[these workflows being used together](https://github.com/nickderobertis/flexlate/tree/master/.github/workflows)
 in the 
 [Flexate project itself](https://github.com/nickderobertis/flexlate).
 

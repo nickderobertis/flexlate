@@ -103,51 +103,15 @@ Flexlate has
 [official companion Github Actions](../core-concepts.md#ci-workflows)
 that can automate using Flexlate. The 
 [Flexlate Update Action](https://github.com/nickderobertis/flexlate-update-action) 
-can be used to help automatically get PRs for template updates. Here's an 
-example Github Actions workflow that uses the Flexlate Update Action to 
-check once a day for updates to the templates and create a PR for them:
+can be used to help automatically get PRs for template updates. 
 
-```yaml
-name: Update Template using Flexlate
+If there is a merge conflict in the changes, it will open a separate 
+PR to resolve the conflicts, allowing you to resolve them in Github's
+web editor.
 
-on:
-  schedule:
-    - cron: "0 3 * * *" # every day at 3:00 AM
-  workflow_dispatch:
-
-jobs:
-  templateUpdate:
-    runs-on: ubuntu-latest
-    strategy:
-      max-parallel: 1
-      matrix:
-        python-version: [3.8]
-
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          ref: ${{ github.ref_name }}
-          fetch-depth: 0
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v1
-        with:
-          python-version: ${{ matrix.python-version }}
-      - uses: nickderobertis/flexlate-update-action@main
-        with:
-          gh_token: ${{ secrets.gh_token }}
-
-```
-
-Both `actions/checkout` and `actions/setup-python` must be run
-before the Flexlate Update Action. `actions/checkout` must be 
-run with `fetches-depth: 0` so that all branches and history 
-are fetched.
-
-If it encounters a merge conflict, it will instead create an issue 
-showing the templates that need to be updated (using the output of 
-[`fxt check`](../commands.md#fxt-check)). It is a planned feature 
-to instead allow for resolving merge conflicts with Github's web
-editor on the PR.
+Follow the [user guide on CI automation](ci-automation.md) 
+to hook up this workflow and 
+other supporting workflows.
 
 ## Next Steps
 

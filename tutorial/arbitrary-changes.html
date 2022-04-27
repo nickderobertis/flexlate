@@ -68,7 +68,7 @@
     <link rel="canonical" href="https://nickderobertis.github.io/flexlate/tutorial/arbitrary-changes.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Developing your Own Templates" href="developing-templates.html" />
+    <link rel="next" title="Automating Flexlate Workflows using CI" href="ci-automation.html" />
     <link rel="prev" title="Undo Flexlate Operations" href="undoing.html" />
   
    
@@ -314,6 +314,13 @@
     <li class="md-nav__item">
     
     
+      <a href="ci-automation.html" class="md-nav__link">Automating Flexlate Workflows using CI</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
       <a href="developing-templates.html" class="md-nav__link">Developing your Own Templates</a>
       
     
@@ -414,7 +421,7 @@ wants you to commit your changes before running operations.</p>
 to move it.</p>
 <div class="termy docutils container">
 <pre class="code console highlight literal-block"><code><span class="gp">$ </span>fxt add output copier-simple-example some/path
-<span class="go"> Applying template copier-simple-example to /tmp/tmp5mn7rs_d
+<span class="go"> Applying template copier-simple-example to /tmp/tmpxvzx8wv8
  Updating 1 applied templates
 
 question1? Format: yaml
@@ -432,14 +439,14 @@ question2? Format: float
 
 
 ✔ Successfully updated template output
-✔ Successfully applied template copier-simple-example to /tmp/tmp5mn7rs_d
+✔ Successfully applied template copier-simple-example to /tmp/tmpxvzx8wv8
 
 </span><span class="gp">$ </span>mv some/path other
 <span class="go">
 </span><span class="gp">$ </span>git add -A
 <span class="go">
 </span><span class="gp">$ </span>git commit -m <span class="s1">'Move copier-simple-example from some/path to other'</span>
-<span class="go">[master 151ea24] Move copier-simple-example from some/path to other
+<span class="go">[master 66c109d] Move copier-simple-example from some/path to other
  2 files changed, 0 insertions(+), 0 deletions(-)
  rename {some/path =&gt; other}/flexlate.json (100%)
  rename {some/path =&gt; other}/my answer.txt (100%)
@@ -521,12 +528,12 @@ commit your changes and run <a class="reference internal" href="../commands.html
             </a>
           
           
-            <a href="developing-templates.html" title="Developing your Own Templates"
+            <a href="ci-automation.html" title="Automating Flexlate Workflows using CI"
                class="md-flex md-footer-nav__link md-footer-nav__link--next"
                rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
                 class="md-flex__ellipsis"> <span
-                class="md-footer-nav__direction"> Next </span> Developing your Own Templates </span>
+                class="md-footer-nav__direction"> Next </span> Automating Flexlate Workflows using CI </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink"><i
                 class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>

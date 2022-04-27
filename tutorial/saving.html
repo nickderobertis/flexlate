@@ -318,6 +318,13 @@
     <li class="md-nav__item">
     
     
+      <a href="ci-automation.html" class="md-nav__link">Automating Flexlate Workflows using CI</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
       <a href="developing-templates.html" class="md-nav__link">Developing your Own Templates</a>
       
     
@@ -425,7 +432,7 @@ Simply call <code class="docutils literal notranslate"><span class="pre">fxt</sp
 and are satisfied with the result.</p>
 <div class="termy docutils container">
 <pre class="code console highlight literal-block"><code><span class="gp">$ </span>fxt add output copier-simple-example some/path
-<span class="go"> Applying template copier-simple-example to /tmp/tmpsjbx12lx
+<span class="go"> Applying template copier-simple-example to /tmp/tmp3zss9_ky
  Updating 1 applied templates
 
 question1? Format: yaml
@@ -443,7 +450,7 @@ question2? Format: float
 
 
 ✔ Successfully updated template output
-✔ Successfully applied template copier-simple-example to /tmp/tmpsjbx12lx
+✔ Successfully applied template copier-simple-example to /tmp/tmp3zss9_ky
 
 </span><span class="gp">$ </span>fxt merge
 <span class="go"> Merging flexlate-templates-master to flexlate-templates
@@ -463,7 +470,7 @@ to merge the changes into main, first run <code class="docutils literal notransl
 <span class="go">Switched to a new branch 'feature-branch'
 
 </span><span class="gp">$ </span>fxt add output copier-simple-example some/path
-<span class="go"> Applying template copier-simple-example to /tmp/tmps8sjm4rn
+<span class="go"> Applying template copier-simple-example to /tmp/tmpiis9dthn
  Updating 1 applied templates
 
 question1? Format: yaml
@@ -481,7 +488,7 @@ question2? Format: float
 
 
 ✔ Successfully updated template output
-✔ Successfully applied template copier-simple-example to /tmp/tmps8sjm4rn
+✔ Successfully applied template copier-simple-example to /tmp/tmpiis9dthn
 
 </span><span class="gp">$ </span>fxt merge
 <span class="go"> Merging flexlate-templates-feature-branch to flexlate-templates
@@ -495,7 +502,7 @@ flexlate-output-feature-branch
 <span class="go">Switched to branch 'master'
 
 </span><span class="gp">$ </span>git merge feature-branch
-<span class="go">Updating 33885f4..00f5dd8
+<span class="go">Updating 051b5cc..eb0489a
 Fast-forward
  some/path/flexlate.json | 15 +++++++++++++++
  some/path/my answer.txt |  2 ++
@@ -511,7 +518,7 @@ branches, you’ll want to push your changes to the remote (if you are using
 a remote) via <a class="reference internal" href="../commands.html#fxt-push-main"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">push</span> <span class="pre">main</span></code></span></a>.</p>
 <div class="termy docutils container">
 <pre class="code console highlight literal-block"><code><span class="gp">$ </span>fxt add output copier-simple-example some/path
-<span class="go"> Applying template copier-simple-example to /tmp/tmp_fdz7ry_
+<span class="go"> Applying template copier-simple-example to /tmp/tmplnmcdkvf
  Updating 1 applied templates
 
 question1? Format: yaml
@@ -529,7 +536,7 @@ question2? Format: float
 
 
 ✔ Successfully updated template output
-✔ Successfully applied template copier-simple-example to /tmp/tmp_fdz7ry_
+✔ Successfully applied template copier-simple-example to /tmp/tmplnmcdkvf
 
 </span><span class="gp">$ </span>fxt merge
 <span class="go"> Merging flexlate-templates-master to flexlate-templates
@@ -561,7 +568,7 @@ You would want to run this whenever you are pushing up the feature branch itself
 <span class="go">Switched to a new branch 'feature-branch'
 
 </span><span class="gp">$ </span>fxt add output copier-simple-example some/path
-<span class="go"> Applying template copier-simple-example to /tmp/tmp4m9npqvo
+<span class="go"> Applying template copier-simple-example to /tmp/tmpllf8xv2z
  Updating 1 applied templates
 
 question1? Format: yaml
@@ -579,7 +586,7 @@ question2? Format: float
 
 
 ✔ Successfully updated template output
-✔ Successfully applied template copier-simple-example to /tmp/tmp4m9npqvo
+✔ Successfully applied template copier-simple-example to /tmp/tmpllf8xv2z
 
 </span><span class="gp">$ </span>git push origin feature-branch
 <span class="go">Enumerating objects: 22, done.
@@ -646,7 +653,7 @@ Writing objects:  86% (19/22)
 Writing objects:  90% (20/22)
 Writing objects:  95% (21/22)
 Writing objects: 100% (22/22)
-Writing objects: 100% (22/22), 2.58 KiB | 1.29 MiB/s, done.
+Writing objects: 100% (22/22), 2.60 KiB | 1.30 MiB/s, done.
 Total 22 (delta 6), reused 0 (delta 0), pack-reused 0
 To ../remote
  * [new branch]      feature-branch -&gt; feature-branch
@@ -665,59 +672,9 @@ that can automate using Flexlate. The
 <a class="reference external" href="https://github.com/nickderobertis/flexlate-merge-action">Flexlate Merge Action</a>
 can be used to automate merging the Flexlate feature branches into the
 Flexlate main branches.</p>
-<p>Here’s an example Github Actions workflow that uses the Flexlate Merge Action
-to merge the Flexlate branches whenever the feature PR is merged:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Merge Flexlate Branches</span><span class="w"></span>
-<span class="nt">on</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">pull_request</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">branches</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">master</span><span class="w"></span>
-<span class="w">    </span><span class="nt">types</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">closed</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="w">  </span><span class="nt">workflow_dispatch</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">inputs</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="nt">branch</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">"The</span><span class="nv"> </span><span class="s">name</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">base</span><span class="nv"> </span><span class="s">branch</span><span class="nv"> </span><span class="s">that</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">Flexlate</span><span class="nv"> </span><span class="s">branches</span><span class="nv"> </span><span class="s">were</span><span class="nv"> </span><span class="s">created</span><span class="nv"> </span><span class="s">on"</span><span class="w"></span>
-<span class="w">        </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"></span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span><span class="w"></span>
-<span class="w">        </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">template-patches</span><span class="w"></span>
-
-<span class="nt">jobs</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">merge_flexlate_branches</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span><span class="w"></span>
-<span class="w">    </span><span class="nt">strategy</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="nt">max-parallel</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="w">      </span><span class="nt">matrix</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">3.8</span><span class="p p-Indicator">]</span><span class="w"></span>
-
-<span class="w">    </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(github.event.pull_request.merged == true || github.event.inputs.branch )</span><span class="w"></span>
-<span class="w">    </span><span class="nt">steps</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v3</span><span class="w"></span>
-<span class="w">        </span><span class="nt">with</span><span class="p">:</span><span class="w"></span>
-<span class="w">          </span><span class="nt">ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">master</span><span class="w"></span>
-<span class="w">          </span><span class="nt">fetch-depth</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Get branch name</span><span class="w"></span>
-<span class="w">        </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">get_branch_name</span><span class="w"></span>
-<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span><span class="w"></span>
-<span class="w">          </span><span class="no">if [ -z "$PASSED_BRANCH_NAME" ]; then</span><span class="w"></span>
-<span class="w">            </span><span class="no">base_branch="$MERGED_BRANCH_NAME"</span><span class="w"></span>
-<span class="w">          </span><span class="no">else</span><span class="w"></span>
-<span class="w">            </span><span class="no">base_branch="$PASSED_BRANCH_NAME"</span><span class="w"></span>
-<span class="w">          </span><span class="no">fi;</span><span class="w"></span>
-<span class="w">          </span><span class="no">USE_BRANCH="$base_branch"</span><span class="w"></span>
-<span class="w">          </span><span class="no">echo ::set-output name=use_branch::$USE_BRANCH;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">env</span><span class="p">:</span><span class="w"></span>
-<span class="w">          </span><span class="nt">MERGED_BRANCH_NAME</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ github.event.pull_request.head.ref }}</span><span class="w"></span>
-<span class="w">          </span><span class="nt">PASSED_BRANCH_NAME</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ github.event.inputs.branch }}</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nickderobertis/flexlate-merge-action@main</span><span class="w"></span>
-<span class="w">        </span><span class="nt">with</span><span class="p">:</span><span class="w"></span>
-<span class="w">          </span><span class="nt">branch-name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ steps.get_branch_name.outputs.use_branch }}</span><span class="w"></span>
-</pre></div>
-</div>
-<p><code class="docutils literal notranslate"><span class="pre">actions/checkout</span></code> must be run
-before the Flexlate Update Action with <code class="docutils literal notranslate"><span class="pre">fetches-depth:</span> <span class="pre">0</span></code>
-so that all branches and history are fetched. The remaining
-logic allows running the workflow manually targeting a specific
-set of Flexlate feature branches.</p>
+<p>Follow the <a class="reference internal" href="ci-automation.html"><span class="doc std std-doc">user guide on CI automation</span></a>
+to hook up this workflow and
+other supporting workflows.</p>
 </section>
 </section>
 </section>
