@@ -105,59 +105,6 @@ that can automate using Flexlate. The
 can be used to automate merging the Flexlate feature branches into the 
 Flexlate main branches.
 
-Here's an example Github Actions workflow that uses the Flexlate Merge Action
-to merge the Flexlate branches whenever the feature PR is merged:
-
-```yaml
-name: Merge Flexlate Branches
-on:
-  pull_request:
-    branches:
-      - master
-    types: [closed]
-  workflow_dispatch:
-    inputs:
-      branch:
-        description: "The name of the base branch that the Flexlate branches were created on"
-        required: false
-        type: string
-        default: template-patches
-
-jobs:
-  merge_flexlate_branches:
-    runs-on: ubuntu-latest
-    strategy:
-      max-parallel: 1
-      matrix:
-        python-version: [3.8]
-
-    if: (github.event.pull_request.merged == true || github.event.inputs.branch )
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          ref: master
-          fetch-depth: 0
-      - name: Get branch name
-        id: get_branch_name
-        run: |
-          if [ -z "$PASSED_BRANCH_NAME" ]; then
-            base_branch="$MERGED_BRANCH_NAME"
-          else
-            base_branch="$PASSED_BRANCH_NAME"
-          fi;
-          USE_BRANCH="$base_branch"
-          echo ::set-output name=use_branch::$USE_BRANCH;
-        env:
-          MERGED_BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
-          PASSED_BRANCH_NAME: ${{ github.event.inputs.branch }}
-      - uses: nickderobertis/flexlate-merge-action@main
-        with:
-          branch-name: ${{ steps.get_branch_name.outputs.use_branch }}
-
-```
-
-`actions/checkout` must be run
-before the Flexlate Update Action with `fetches-depth: 0` 
-so that all branches and history are fetched. The remaining 
-logic allows running the workflow manually targeting a specific 
-set of Flexlate feature branches. 
+Follow the [user guide on CI automation](ci-automation.md) 
+to hook up this workflow and 
+other supporting workflows.

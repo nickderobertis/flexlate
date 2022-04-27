@@ -39,6 +39,7 @@ from multiple templates.
     You can even keep a template 
     in your project and be able to update outputs whenever it changes
 - **Apply it to your existing projects** with [a `bootstrap` functionality](https://nickderobertis.github.io/flexlate/tutorial/get-started/existing-project.html)
+- **Update your projects automatically on CI** with [official Github Actions](https://nickderobertis.github.io/flexlate/core-concepts.html#ci-workflows)
 - (planned) **Use flexlate projects as templates themselves**, enabling nested templates
   and sharing data across templates
 - (planned) **Allow multiple templates to coordinate on specific files** in arbitrary 
