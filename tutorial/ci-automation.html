@@ -286,9 +286,9 @@
         </li>
         <li class="md-nav__item"><a href="#option-2-manually-add-the-workflows" class="md-nav__link">Option 2: Manually add the Workflows</a><nav class="md-nav">
               <ul class="md-nav__list">
-        <li class="md-nav__item"><a href="#flexlate-update-workflow" class="md-nav__link">Flexlate Update Workflow</a>
+        <li class="md-nav__item"><a href="#set-up-the-flexlate-update-workflow" class="md-nav__link">Set up the Flexlate Update Workflow</a>
         </li>
-        <li class="md-nav__item"><a href="#flexlate-after-merge-workflow" class="md-nav__link">Flexlate After-Merge Workflow</a>
+        <li class="md-nav__item"><a href="#set-up-the-flexlate-after-merge-workflow" class="md-nav__link">Set up the Flexlate After-Merge Workflow</a>
         </li></ul>
             </nav>
         </li></ul>
@@ -296,7 +296,7 @@
         </li>
         <li class="md-nav__item"><a href="#the-workflows-explained" class="md-nav__link">The Workflows, Explained</a><nav class="md-nav">
               <ul class="md-nav__list">
-        <li class="md-nav__item"><a href="#id1" class="md-nav__link">Flexlate Update Workflow</a><nav class="md-nav">
+        <li class="md-nav__item"><a href="#flexlate-update-workflow" class="md-nav__link">Flexlate Update Workflow</a><nav class="md-nav">
               <ul class="md-nav__list">
         <li class="md-nav__item"><a href="#update-without-conflicts" class="md-nav__link">Update without Conflicts</a>
         </li>
@@ -304,7 +304,7 @@
         </li></ul>
             </nav>
         </li>
-        <li class="md-nav__item"><a href="#id2" class="md-nav__link">Flexlate After-Merge Workflow</a><nav class="md-nav">
+        <li class="md-nav__item"><a href="#flexlate-after-merge-workflow" class="md-nav__link">Flexlate After-Merge Workflow</a><nav class="md-nav">
               <ul class="md-nav__list">
         <li class="md-nav__item"><a href="#merging-flexlate-feature-branches" class="md-nav__link">Merging Flexlate Feature Branches</a>
         </li>
@@ -390,9 +390,9 @@
         </li>
         <li class="md-nav__item"><a href="#option-2-manually-add-the-workflows" class="md-nav__link">Option 2: Manually add the Workflows</a><nav class="md-nav">
               <ul class="md-nav__list">
-        <li class="md-nav__item"><a href="#flexlate-update-workflow" class="md-nav__link">Flexlate Update Workflow</a>
+        <li class="md-nav__item"><a href="#set-up-the-flexlate-update-workflow" class="md-nav__link">Set up the Flexlate Update Workflow</a>
         </li>
-        <li class="md-nav__item"><a href="#flexlate-after-merge-workflow" class="md-nav__link">Flexlate After-Merge Workflow</a>
+        <li class="md-nav__item"><a href="#set-up-the-flexlate-after-merge-workflow" class="md-nav__link">Set up the Flexlate After-Merge Workflow</a>
         </li></ul>
             </nav>
         </li></ul>
@@ -400,7 +400,7 @@
         </li>
         <li class="md-nav__item"><a href="#the-workflows-explained" class="md-nav__link">The Workflows, Explained</a><nav class="md-nav">
               <ul class="md-nav__list">
-        <li class="md-nav__item"><a href="#id1" class="md-nav__link">Flexlate Update Workflow</a><nav class="md-nav">
+        <li class="md-nav__item"><a href="#flexlate-update-workflow" class="md-nav__link">Flexlate Update Workflow</a><nav class="md-nav">
               <ul class="md-nav__list">
         <li class="md-nav__item"><a href="#update-without-conflicts" class="md-nav__link">Update without Conflicts</a>
         </li>
@@ -408,7 +408,7 @@
         </li></ul>
             </nav>
         </li>
-        <li class="md-nav__item"><a href="#id2" class="md-nav__link">Flexlate After-Merge Workflow</a><nav class="md-nav">
+        <li class="md-nav__item"><a href="#flexlate-after-merge-workflow" class="md-nav__link">Flexlate After-Merge Workflow</a><nav class="md-nav">
               <ul class="md-nav__list">
         <li class="md-nav__item"><a href="#merging-flexlate-feature-branches" class="md-nav__link">Merging Flexlate Feature Branches</a>
         </li>
@@ -463,7 +463,7 @@ https://github.com/nickderobertis/copier-flexlate-github-actions
 ⠙
 
 </span><span class="gp">$ </span>fxt add output copier-flexlate-github-actions
-<span class="go"> Applying template copier-flexlate-github-actions to /tmp/tmp4dq93g_3
+<span class="go"> Applying template copier-flexlate-github-actions to /tmp/tmpvk2qhddu
  Updating 1 applied templates
 
 Name of the main branch
@@ -482,20 +482,20 @@ main_branch_name? Format: str
 
 ✔ Successfully updated template output
 ✔ Successfully applied template copier-flexlate-github-actions to 
-/tmp/tmp4dq93g_3
+/tmp/tmpvk2qhddu
 
 </span><span class="gp">$ </span>ls -l .github/workflows
 <span class="go">total 8
--rw-r--r-- 1 runner docker 855 Apr 27 14:35 flexlate-after-merge.yml
--rw-r--r-- 1 runner docker 728 Apr 27 14:35 flexlate-update.yml</span></code></pre>
+-rw-r--r-- 1 runner docker 855 Apr 27 15:38 flexlate-after-merge.yml
+-rw-r--r-- 1 runner docker 728 Apr 27 15:38 flexlate-update.yml</span></code></pre>
 </div>
 </section>
 <section id="option-2-manually-add-the-workflows">
 <h3 id="option-2-manually-add-the-workflows">Option 2: Manually add the Workflows<a class="headerlink" href="#option-2-manually-add-the-workflows" title="Permalink to this headline">¶</a></h3>
 <p>You can also just manually create the necessary workflow files in your
 project. The workflow files should be created in the <code class="docutils literal notranslate"><span class="pre">.github/workflows</span></code> directory.</p>
-<section id="flexlate-update-workflow">
-<h4 id="flexlate-update-workflow">Flexlate Update Workflow<a class="headerlink" href="#flexlate-update-workflow" title="Permalink to this headline">¶</a></h4>
+<section id="set-up-the-flexlate-update-workflow">
+<h4 id="set-up-the-flexlate-update-workflow">Set up the Flexlate Update Workflow<a class="headerlink" href="#set-up-the-flexlate-update-workflow" title="Permalink to this headline">¶</a></h4>
 <p>Set up the <a class="reference external" href="https://github.com/nickderobertis/flexlate-update-action">Flexlate Update action</a>
 to run on a schedule, or with
 a manual trigger:</p>
@@ -535,8 +535,8 @@ before the Flexlate Update Action. <code class="docutils literal notranslate"><s
 run with <code class="docutils literal notranslate"><span class="pre">fetch-depth:</span> <span class="pre">0</span></code> so that all branches and history
 are fetched.</p>
 </section>
-<section id="flexlate-after-merge-workflow">
-<h4 id="flexlate-after-merge-workflow">Flexlate After-Merge Workflow<a class="headerlink" href="#flexlate-after-merge-workflow" title="Permalink to this headline">¶</a></h4>
+<section id="set-up-the-flexlate-after-merge-workflow">
+<h4 id="set-up-the-flexlate-after-merge-workflow">Set up the Flexlate After-Merge Workflow<a class="headerlink" href="#set-up-the-flexlate-after-merge-workflow" title="Permalink to this headline">¶</a></h4>
 <p>Set up the <a class="reference external" href="https://github.com/nickderobertis/flexlate-merge-action">Flexlate After-Merge action</a>
 to run after the main branch
 or a flexlate-output branch is merged:</p>
@@ -586,8 +586,8 @@ set of Flexlate feature branches.</p>
 </section>
 <section id="the-workflows-explained">
 <h2 id="the-workflows-explained">The Workflows, Explained<a class="headerlink" href="#the-workflows-explained" title="Permalink to this headline">¶</a></h2>
-<section id="id1">
-<h3 id="id1">Flexlate Update Workflow<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<section id="flexlate-update-workflow">
+<h3 id="flexlate-update-workflow">Flexlate Update Workflow<a class="headerlink" href="#flexlate-update-workflow" title="Permalink to this headline">¶</a></h3>
 <p>This workflow uses the Flexlate Update Action to create PRs with template
 updates. The workflow will run on a schedule or by manual trigger:</p>
 <img alt="Flexlate Update Workflow Run" src="../_images/flexlate-update-workflow-run.png"/>
@@ -617,8 +617,8 @@ The merge to the main branch will
 be in another step triggered by the Flexlate After-Merge workflow.</p>
 </section>
 </section>
-<section id="id2">
-<h3 id="id2">Flexlate After-Merge Workflow<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<section id="flexlate-after-merge-workflow">
+<h3 id="flexlate-after-merge-workflow">Flexlate After-Merge Workflow<a class="headerlink" href="#flexlate-after-merge-workflow" title="Permalink to this headline">¶</a></h3>
 <p>The after-merge workflow serves two functions: to merge Flexlate
 feature branches into Flexlate main branches, and to open a PR
 with template updates after resolving merge conflicts in the web
