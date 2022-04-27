@@ -32,7 +32,7 @@ ls -l .github/workflows
 You can also just manually create the necessary workflow files in your 
 project. The workflow files should be created in the `.github/workflows` directory.
 
-#### Flexlate Update Workflow
+#### Set up the Flexlate Update Workflow
 
 Set up the [Flexlate Update action](https://github.com/nickderobertis/flexlate-update-action) 
 to run on a schedule, or with 
@@ -49,7 +49,7 @@ before the Flexlate Update Action. `actions/checkout` must be
 run with `fetch-depth: 0` so that all branches and history 
 are fetched.
 
-#### Flexlate After-Merge Workflow
+#### Set up the Flexlate After-Merge Workflow
 
 Set up the [Flexlate After-Merge action](https://github.com/nickderobertis/flexlate-merge-action) 
 to run after the main branch 
