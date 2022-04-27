@@ -1,0 +1,29 @@
+name: Update Template using Flexlate
+
+on:
+  schedule:
+    - cron: "0 3 * * *" # every day at 3:00 AM
+  workflow_dispatch:
+
+jobs:
+  templateUpdate:
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 1
+      matrix:
+        python-version: [3.8]
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+          token: ${{ secrets.gh_token }}
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+      - uses: nickderobertis/flexlate-update-action@v1
+        with:
+          gh_token: ${{ secrets.gh_token }}
+          main_branch_name: master
