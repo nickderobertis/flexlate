@@ -14,7 +14,7 @@
       "name": "copier-flexlate-github-actions",
       "path": "https://github.com/nickderobertis/copier-flexlate-github-actions",
       "type": "copier",
-      "version": "e45c96646c198d3903faa5df0586ea6872d0e529",
+      "version": "9743929a6beca33d162bdb936a6f462b6ed417d0",
       "git_url": "https://github.com/nickderobertis/copier-flexlate-github-actions",
       "target_version": null,
       "render_relative_root_in_output": ".",
@@ -46,7 +46,7 @@
       "data": {
         "main_branch_name": "master"
       },
-      "version": "e45c96646c198d3903faa5df0586ea6872d0e529",
+      "version": "9743929a6beca33d162bdb936a6f462b6ed417d0",
       "add_mode": "local",
       "root": "."
     }
