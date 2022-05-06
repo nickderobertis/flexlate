@@ -10,3 +10,8 @@ Flexlate does have a [corresponding development tool](https://nickderobertis.git
 Install it and run `dfxt serve` to start a development server in your template 
 project, that will render the project with Flexlate in a temporary directory
 and auto-update it as you make changes in the template.
+
+It also has a `dfxt publish` command that will render your template and 
+create a new project with it. This is useful along with a 
+CI pipeline to automatically create and sync example repositories with 
+output from your template.

@@ -51,20 +51,19 @@
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/material.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/ansi2html.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx_paramlinks.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/css/termynal.css" />
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/clipboard.min.js"></script>
     <script src="../../_static/copybutton.js"></script>
-    <script src="../../_static/js/termynal.js"></script>
-    <script src="../../_static/js/custom.js"></script>
+    <script src="../../_static/@terminhtml-bootstrap.umd.js"></script>
     <link rel="canonical" href="https://nickderobertis.github.io/flexlate/tutorial/get-started/add-to-project.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -419,50 +418,50 @@ the <a class="reference internal" href="new-project.html"><span class="doc std s
 <p>The <a class="reference internal" href="../../commands.html#fxt-bootstrap"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">init</span></code></span></a> command is used
 to initialize a new Flexlate project. You must have a Flexlate project
 before you can add any template sources or outputs.</p>
-<div class="termy docutils container">
-<pre class="code console highlight literal-block"><code><span class="gp">$ </span>fxt init
-<span class="go"> Initializing flexlate project with default add mode local and user=False in 
-/tmp/tmpc13zh2r0
-⠋  Initializing...
-⠋  Initializing...
-⠙  Initializing...
-
-✔ Finished initializing flexlate project</span></code></pre>
-</div>
-</section>
+<pre class="terminhtml">
+    <span data-ty="" data-ty-delay="571">$ fxt init</span>
+<span data-ty="" data-ty-delay="0">[?25l Initializing flexlate project with default add mode local and <span class="ansi33">user</span>=<span class="ansi3 ansi91">False</span> in </span>
+<span data-ty="" data-ty-delay="76"><span class="ansi35">/tmp/</span><span class="ansi95">tmpqlshwfz2</span></span>
+<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="13"><span class="ansi32">⠋</span>  Initializing...</span>
+<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="0"><span class="ansi32">⠋</span>  Initializing...</span>
+<span data-ty="" data-ty-delay="0"><span class="ansi32">⠙</span>  Initializing...</span>
+<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="1">[?25h</span>
+<span data-ty="" data-ty-delay="51"><span class="ansi32">✔ Finished initializing flexlate project</span></span>
+<span data-ty="" data-ty-delay="0"></span>
+</pre></section>
 <section id="add-the-template-source">
 <h2 id="add-the-template-source">Add the Template Source<a class="headerlink" href="#add-the-template-source" title="Permalink to this headline">¶</a></h2>
 <p>The <a class="reference internal" href="../../commands.html#fxt-add-source"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">add</span> <span class="pre">source</span></code></span></a> command registers
 a template source in the Flexlate configuration file.</p>
-<div class="termy docutils container">
-<pre class="code console highlight literal-block"><code><span class="gp">$ </span>fxt add <span class="nb">source</span> https://github.com/nickderobertis/copier-simple-example
-<span class="go"> Adding template source...
- Adding template source copier-simple-example from 
-https://github.com/nickderobertis/copier-simple-example
-⠋
-⠙
- Sucessfully added template source copier-simple-example
-⠙
-⠙
-
-</span><span class="gp">$ </span>cat flexlate.json
-<span class="go">{
-  "template_sources": [
-    {
-      "name": "copier-simple-example",
-      "path": "https://github.com/nickderobertis/copier-simple-example",
-      "type": "copier",
-      "version": "f3fa2c9526c12b3011e0a26108ce141373539bca",
-      "git_url": "https://github.com/nickderobertis/copier-simple-example",
-      "target_version": null,
-      "render_relative_root_in_output": ".",
-      "render_relative_root_in_template": "output"
-    }
-  ],
-  "applied_templates": []
-}</span></code></pre>
-</div>
-<p>You can also specify the <code class="docutils literal notranslate"><span class="pre">--version</span></code> option to specify which version of
+<pre class="terminhtml">
+    <span data-ty="" data-ty-delay="770">$ fxt add source https://github.com/nickderobertis/copier-simple-example</span>
+<span data-ty="" data-ty-delay="4"> Adding template source<span class="ansi33">...</span></span>
+<span data-ty="" data-ty-delay="0">[?25l Adding template source copier-simple-example from </span>
+<span data-ty="" data-ty-delay="82"><span class="ansi4 ansi94">https://github.com/nickderobertis/copier-simple-example</span></span>
+<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="28"><span class="ansi32">⠋</span></span>
+<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="0"><span class="ansi32">⠙</span></span>
+<span data-ty="" data-ty-delay="0"> Sucessfully added template source copier-simple-example</span>
+<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="0"><span class="ansi32">⠙</span></span>
+<span data-ty="" data-ty-delay="0"><span class="ansi32">⠙</span></span>
+<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="55">[?25h</span>
+<span data-ty="" data-ty-delay="0"></span>
+<span data-ty="" data-ty-delay="41">$ cat flexlate.json</span>
+<span data-ty="" data-ty-delay="0">{</span>
+<span data-ty="" data-ty-delay="0">  "template_sources": [</span>
+<span data-ty="" data-ty-delay="0">    {</span>
+<span data-ty="" data-ty-delay="0">      "name": "copier-simple-example",</span>
+<span data-ty="" data-ty-delay="0">      "path": "https://github.com/nickderobertis/copier-simple-example",</span>
+<span data-ty="" data-ty-delay="0">      "type": "copier",</span>
+<span data-ty="" data-ty-delay="0">      "version": "f3fa2c9526c12b3011e0a26108ce141373539bca",</span>
+<span data-ty="" data-ty-delay="0">      "git_url": "https://github.com/nickderobertis/copier-simple-example",</span>
+<span data-ty="" data-ty-delay="0">      "target_version": null,</span>
+<span data-ty="" data-ty-delay="0">      "render_relative_root_in_output": ".",</span>
+<span data-ty="" data-ty-delay="0">      "render_relative_root_in_template": "output"</span>
+<span data-ty="" data-ty-delay="0">    }</span>
+<span data-ty="" data-ty-delay="0">  ],</span>
+<span data-ty="" data-ty-delay="0">  "applied_templates": []</span>
+<span data-ty="" data-ty-delay="0">}</span>
+</pre><p>You can also specify the <code class="docutils literal notranslate"><span class="pre">--version</span></code> option to specify which version of
 the template you would like to be able to output.</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>fxt add <span class="nb">source</span> https://github.com/nickderobertis/copier-simple-example --version c7e1ba1bfb141e9c577e7c21ee4a5d3ae5dde04d
 </pre></div>
@@ -472,32 +471,32 @@ the template you would like to be able to output.</p>
 <h2 id="add-template-output-s">Add Template Output(s)<a class="headerlink" href="#add-template-output-s" title="Permalink to this headline">¶</a></h2>
 <p>The <a class="reference internal" href="../../commands.html#fxt-add-output"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">add</span> <span class="pre">output</span></code></span></a> command renders the
 template at the specified location.</p>
-<div class="termy docutils container">
-<pre class="code console highlight literal-block"><code><span class="gp">$ </span>fxt add output copier-simple-example some/path
-<span class="go"> Applying template copier-simple-example to /tmp/tmp9e9ryk80
- Updating 1 applied templates
-
-question1? Format: yaml
-</span><span class="gp"># </span>🎤 <span class="o">[</span>answer1<span class="o">]</span>: $ my answer
-<span class="go">
-The second question
-question2? Format: float
-</span><span class="gp"># </span>🎤 <span class="o">[</span><span class="m">2</span>.7<span class="o">]</span>: $ <span class="m">10</span>
-<span class="go">
-    create  my answer.txt
-
-
-
-    create  temp.txt
-
-
-✔ Successfully updated template output
-✔ Successfully applied template copier-simple-example to /tmp/tmp9e9ryk80
-
-</span><span class="gp">$ </span>ls some/path
-<span class="go"> flexlate.json	'my answer.txt'</span></code></pre>
-</div>
-<p>If you don’t specify a path to render the template to, the template will be
+<pre class="terminhtml">
+    <span data-ty="" data-ty-delay="785">$ fxt add output copier-simple-example some/path</span>
+<span data-ty="" data-ty-delay="166"> Applying template copier-simple-example to <span class="ansi35">/tmp/</span><span class="ansi95">tmpa4kcuvsp</span></span>
+<span data-ty="" data-ty-delay="6"> Updating <span class="ansi1 ansi36">1</span> applied templates</span>
+<span data-ty="" data-ty-delay="0"></span>
+<span data-ty="" data-ty-delay="50"><span class="ansi1">question1</span>? Format: yaml</span>
+<span data-ty="input" data-ty-delay="1" data-ty-prompt="🎤 [answer1]: ">my answer</span>
+<span data-ty="" data-ty-delay="0"></span>
+<span data-ty="" data-ty-delay="0"><span class="ansi3 ansi34">The second question</span></span>
+<span data-ty="" data-ty-delay="50"><span class="ansi1">question2</span>? Format: float</span>
+<span data-ty="input" data-ty-delay="3" data-ty-prompt="🎤 [2.7]: ">10</span>
+<span data-ty="" data-ty-delay="2"></span>
+<span data-ty="" data-ty-delay="0"><span class="ansi32"></span><span class="ansi1 ansi32">    create</span><span class="ansi1"></span>  my answer.txt</span>
+<span data-ty="" data-ty-delay="0"></span>
+<span data-ty="" data-ty-delay="508"></span>
+<span data-ty="" data-ty-delay="0"></span>
+<span data-ty="" data-ty-delay="0"><span class="ansi32"></span><span class="ansi1 ansi32">    create</span><span class="ansi1"></span>  temp.txt</span>
+<span data-ty="" data-ty-delay="0"></span>
+<span data-ty="" data-ty-delay="64"></span>
+<span data-ty="" data-ty-delay="0"><span class="ansi32">✔ Successfully updated template output</span></span>
+<span data-ty="" data-ty-delay="56"><span class="ansi32">✔ Successfully applied template copier-simple-example to </span><span class="ansi32">/tmp/</span><span class="ansi32">tmpa4kcuvsp</span></span>
+<span data-ty="" data-ty-delay="0"></span>
+<span data-ty="" data-ty-delay="42">$ ls some/path</span>
+<span data-ty="" data-ty-delay="0"> flexlate.json	'my answer.txt'</span>
+<span data-ty="" data-ty-delay="0"></span>
+</pre><p>If you don’t specify a path to render the template to, the template will be
 rendered in the current working directory.</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>fxt add output copier-simple-example
 </pre></div>

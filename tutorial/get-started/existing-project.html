@@ -51,20 +51,19 @@
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/material.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/ansi2html.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx_paramlinks.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/css/termynal.css" />
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/clipboard.min.js"></script>
     <script src="../../_static/copybutton.js"></script>
-    <script src="../../_static/js/termynal.js"></script>
-    <script src="../../_static/js/custom.js"></script>
+    <script src="../../_static/@terminhtml-bootstrap.umd.js"></script>
     <link rel="canonical" href="https://nickderobertis.github.io/flexlate/tutorial/get-started/existing-project.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -411,48 +410,55 @@ should follow the <a class="reference internal" href="add-to-project.html"><span
 <p>The <a class="reference internal" href="../../commands.html#fxt-bootstrap"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">bootstrap</span></code></span></a> command is used
 to bootstrap a project that was previously generated from a template
 so that it can be used with Flexlate.</p>
-<div class="termy docutils container">
-<pre class="code console highlight literal-block"><code><span class="gp">$ </span>ls
-<span class="go">'my answer.txt'   woo.txt
-
-</span><span class="gp">$ </span>fxt bootstrap https://github.com/nickderobertis/copier-simple-example
-<span class="go"> Bootstrapping /tmp/tmpvktzf5le into a Flexlate project based off the template 
-from https://github.com/nickderobertis/copier-simple-example
- Initializing flexlate project with default add mode local and user=False in 
-/tmp/tmpvktzf5le
-⠙  Initializing...
-✔ Finished initializing flexlate project
- Adding template source...
- Adding template source copier-simple-example from 
-https://github.com/nickderobertis/copier-simple-example
- Sucessfully added template source copier-simple-example
-⠙
- Applying template copier-simple-example to /tmp/tmpvktzf5le
- Updating 1 applied templates
-
-question1? Format: yaml
-</span><span class="gp"># </span>🎤 <span class="o">[</span>answer1<span class="o">]</span>: $ my answer
-<span class="go">
-The second question
-question2? Format: float
-</span><span class="gp"># </span>🎤 <span class="o">[</span><span class="m">2</span>.7<span class="o">]</span>: $ <span class="m">10</span>
-<span class="go">
-    create  my answer.txt
-
-
-
-    create  temp.txt
-
-
-✔ Successfully updated template output
-✔ Successfully applied template copier-simple-example to /tmp/tmpvktzf5le
-✔ Successfully bootstrapped /tmp/tmpvktzf5le into a Flexlate project based off 
-the template from https://github.com/nickderobertis/copier-simple-example
-
-</span><span class="gp">$ </span>ls
-<span class="go"> flexlate-project.json	 flexlate.json	'my answer.txt'   woo.txt</span></code></pre>
-</div>
-<p>We can see that it prompts based on the questions in the template, be
+<pre class="terminhtml">
+    <span data-ty="" data-ty-delay="42">$ ls</span>
+<span data-ty="" data-ty-delay="0">'my answer.txt'   woo.txt</span>
+<span data-ty="" data-ty-delay="0"></span>
+<span data-ty="" data-ty-delay="755">$ fxt bootstrap https://github.com/nickderobertis/copier-simple-example</span>
+<span data-ty="" data-ty-delay="0"> Bootstrapping <span class="ansi35">/tmp/</span><span class="ansi95">tmp1dd6afka</span> into a Flexlate project based off the template </span>
+<span data-ty="" data-ty-delay="19">from <span class="ansi4 ansi94">https://github.com/nickderobertis/copier-simple-example</span></span>
+<span data-ty="" data-ty-delay="0">[?25l Initializing flexlate project with default add mode local and <span class="ansi33">user</span>=<span class="ansi3 ansi91">False</span> in </span>
+<span data-ty="" data-ty-delay="79"><span class="ansi35">/tmp/</span><span class="ansi95">tmp1dd6afka</span></span>
+<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="12"><span class="ansi32">⠋</span>  Initializing...</span>
+<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="0"><span class="ansi32">⠋</span>  Initializing...</span>
+<span data-ty="" data-ty-delay="0"><span class="ansi32">⠙</span>  Initializing...</span>
+<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="0">[?25h</span>
+<span data-ty="" data-ty-delay="17"><span class="ansi32">✔ Finished initializing flexlate project</span></span>
+<span data-ty="" data-ty-delay="0"> Adding template source<span class="ansi33">...</span></span>
+<span data-ty="" data-ty-delay="0">[?25l Adding template source copier-simple-example from </span>
+<span data-ty="" data-ty-delay="83"><span class="ansi4 ansi94">https://github.com/nickderobertis/copier-simple-example</span></span>
+<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="18"><span class="ansi32">⠋</span></span>
+<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="0"><span class="ansi32">⠙</span></span>
+<span data-ty="" data-ty-delay="0"> Sucessfully added template source copier-simple-example</span>
+<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="0"><span class="ansi32">⠙</span></span>
+<span data-ty="" data-ty-delay="0"><span class="ansi32">⠙</span></span>
+<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="15">[?25h</span>
+<span data-ty="" data-ty-delay="157"> Applying template copier-simple-example to <span class="ansi35">/tmp/</span><span class="ansi95">tmp1dd6afka</span></span>
+<span data-ty="" data-ty-delay="6"> Updating <span class="ansi1 ansi36">1</span> applied templates</span>
+<span data-ty="" data-ty-delay="0"></span>
+<span data-ty="" data-ty-delay="50"><span class="ansi1">question1</span>? Format: yaml</span>
+<span data-ty="input" data-ty-delay="1" data-ty-prompt="🎤 [answer1]: ">my answer</span>
+<span data-ty="" data-ty-delay="0"></span>
+<span data-ty="" data-ty-delay="0"><span class="ansi3 ansi34">The second question</span></span>
+<span data-ty="" data-ty-delay="50"><span class="ansi1">question2</span>? Format: float</span>
+<span data-ty="input" data-ty-delay="3" data-ty-prompt="🎤 [2.7]: ">10</span>
+<span data-ty="" data-ty-delay="2"></span>
+<span data-ty="" data-ty-delay="0"><span class="ansi32"></span><span class="ansi1 ansi32">    create</span><span class="ansi1"></span>  my answer.txt</span>
+<span data-ty="" data-ty-delay="0"></span>
+<span data-ty="" data-ty-delay="439"></span>
+<span data-ty="" data-ty-delay="0"></span>
+<span data-ty="" data-ty-delay="0"><span class="ansi32"></span><span class="ansi1 ansi32">    create</span><span class="ansi1"></span>  temp.txt</span>
+<span data-ty="" data-ty-delay="0"></span>
+<span data-ty="" data-ty-delay="61"></span>
+<span data-ty="" data-ty-delay="0"><span class="ansi32">✔ Successfully updated template output</span></span>
+<span data-ty="" data-ty-delay="0"><span class="ansi32">✔ Successfully applied template copier-simple-example to </span><span class="ansi32">/tmp/</span><span class="ansi32">tmp1dd6afka</span></span>
+<span data-ty="" data-ty-delay="0"><span class="ansi32">✔ Successfully bootstrapped </span><span class="ansi32">/tmp/</span><span class="ansi32">tmp1dd6afka</span><span class="ansi32"> into a Flexlate project based off </span></span>
+<span data-ty="" data-ty-delay="53"><span class="ansi32">the template from </span><span class="ansi4 ansi32">https://github.com/nickderobertis/copier-simple-example</span></span>
+<span data-ty="" data-ty-delay="0"></span>
+<span data-ty="" data-ty-delay="41">$ ls</span>
+<span data-ty="" data-ty-delay="0"> flexlate-project.json	 flexlate.json	'my answer.txt'   woo.txt</span>
+<span data-ty="" data-ty-delay="0"></span>
+</pre><p>We can see that it prompts based on the questions in the template, be
 sure to enter these exactly as they are in your project to avoid
 unnecessary merge conflicts.</p>
 <p>If your project is not already at the newest version of the template,

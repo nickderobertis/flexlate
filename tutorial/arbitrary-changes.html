@@ -51,20 +51,19 @@
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/material.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/ansi2html.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx_paramlinks.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/css/termynal.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/clipboard.min.js"></script>
     <script src="../_static/copybutton.js"></script>
-    <script src="../_static/js/termynal.js"></script>
-    <script src="../_static/js/custom.js"></script>
+    <script src="../_static/@terminhtml-bootstrap.umd.js"></script>
     <link rel="canonical" href="https://nickderobertis.github.io/flexlate/tutorial/arbitrary-changes.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -419,53 +418,53 @@ wants you to commit your changes before running operations.</p>
 <h3 id="moving-an-applied-template">Moving an Applied Template<a class="headerlink" href="#moving-an-applied-template" title="Permalink to this headline">¶</a></h3>
 <p>For example, say you applied a template but later decide you want
 to move it.</p>
-<div class="termy docutils container">
-<pre class="code console highlight literal-block"><code><span class="gp">$ </span>fxt add output copier-simple-example some/path
-<span class="go"> Applying template copier-simple-example to /tmp/tmph21fc9f8
- Updating 1 applied templates
-
-question1? Format: yaml
-</span><span class="gp"># </span>🎤 <span class="o">[</span>answer1<span class="o">]</span>: $ my answer
-<span class="go">
-The second question
-question2? Format: float
-</span><span class="gp"># </span>🎤 <span class="o">[</span><span class="m">2</span>.7<span class="o">]</span>: $ <span class="m">10</span>
-<span class="go">
-    create  my answer.txt
-
-
-
-    create  temp.txt
-
-
-✔ Successfully updated template output
-✔ Successfully applied template copier-simple-example to /tmp/tmph21fc9f8
-
-</span><span class="gp">$ </span>mv some/path other
-<span class="go">
-</span><span class="gp">$ </span>git add -A
-<span class="go">
-</span><span class="gp">$ </span>git commit -m <span class="s1">'Move copier-simple-example from some/path to other'</span>
-<span class="go">[master 4c9572b] Move copier-simple-example from some/path to other
- 2 files changed, 0 insertions(+), 0 deletions(-)
- rename {some/path =&gt; other}/flexlate.json (100%)
- rename {some/path =&gt; other}/my answer.txt (100%)
-
-</span><span class="gp">$ </span>fxt sync
-<span class="go"> Syncing local changes to flexlate branches
- Syncing changes in flexlate configs to output
-
-    create  my answer.txt
-
-
-
-    create  temp.txt
-
-
-✔ Successfully updated template output
-✔ Successfully synced local changes to flexlate branches</span></code></pre>
-</div>
-</section>
+<pre class="terminhtml">
+    <span data-ty="" data-ty-delay="921">$ fxt add output copier-simple-example some/path</span>
+<span data-ty="" data-ty-delay="164"> Applying template copier-simple-example to <span class="ansi35">/tmp/</span><span class="ansi95">tmp0it6gdao</span></span>
+<span data-ty="" data-ty-delay="6"> Updating <span class="ansi1 ansi36">1</span> applied templates</span>
+<span data-ty="" data-ty-delay="0"></span>
+<span data-ty="" data-ty-delay="50"><span class="ansi1">question1</span>? Format: yaml</span>
+<span data-ty="input" data-ty-delay="1" data-ty-prompt="🎤 [answer1]: ">my answer</span>
+<span data-ty="" data-ty-delay="0"></span>
+<span data-ty="" data-ty-delay="0"><span class="ansi3 ansi34">The second question</span></span>
+<span data-ty="" data-ty-delay="50"><span class="ansi1">question2</span>? Format: float</span>
+<span data-ty="input" data-ty-delay="3" data-ty-prompt="🎤 [2.7]: ">10</span>
+<span data-ty="" data-ty-delay="2"></span>
+<span data-ty="" data-ty-delay="0"><span class="ansi32"></span><span class="ansi1 ansi32">    create</span><span class="ansi1"></span>  my answer.txt</span>
+<span data-ty="" data-ty-delay="0"></span>
+<span data-ty="" data-ty-delay="443"></span>
+<span data-ty="" data-ty-delay="0"></span>
+<span data-ty="" data-ty-delay="0"><span class="ansi32"></span><span class="ansi1 ansi32">    create</span><span class="ansi1"></span>  temp.txt</span>
+<span data-ty="" data-ty-delay="0"></span>
+<span data-ty="" data-ty-delay="65"></span>
+<span data-ty="" data-ty-delay="0"><span class="ansi32">✔ Successfully updated template output</span></span>
+<span data-ty="" data-ty-delay="56"><span class="ansi32">✔ Successfully applied template copier-simple-example to </span><span class="ansi32">/tmp/</span><span class="ansi32">tmp0it6gdao</span></span>
+<span data-ty="" data-ty-delay="0"></span>
+<span data-ty="" data-ty-delay="42">$ mv some/path other</span>
+<span data-ty="" data-ty-delay="0"></span>
+<span data-ty="" data-ty-delay="43">$ git add -A</span>
+<span data-ty="" data-ty-delay="0"></span>
+<span data-ty="" data-ty-delay="45">$ git commit -m 'Move copier-simple-example from some/path to other'</span>
+<span data-ty="" data-ty-delay="0">[main f76a346] Move copier-simple-example from some/path to other</span>
+<span data-ty="" data-ty-delay="0"> 2 files changed, 0 insertions(+), 0 deletions(-)</span>
+<span data-ty="" data-ty-delay="0"> rename {some/path =&gt; other}/flexlate.json (100%)</span>
+<span data-ty="" data-ty-delay="0"> rename {some/path =&gt; other}/my answer.txt (100%)</span>
+<span data-ty="" data-ty-delay="0"></span>
+<span data-ty="" data-ty-delay="565">$ fxt sync</span>
+<span data-ty="" data-ty-delay="285"> Syncing local changes to flexlate branches</span>
+<span data-ty="" data-ty-delay="9"> Syncing changes in flexlate configs to output</span>
+<span data-ty="" data-ty-delay="1"></span>
+<span data-ty="" data-ty-delay="0"><span class="ansi32"></span><span class="ansi1 ansi32">    create</span><span class="ansi1"></span>  my answer.txt</span>
+<span data-ty="" data-ty-delay="0"></span>
+<span data-ty="" data-ty-delay="430"></span>
+<span data-ty="" data-ty-delay="0"></span>
+<span data-ty="" data-ty-delay="0"><span class="ansi32"></span><span class="ansi1 ansi32">    create</span><span class="ansi1"></span>  temp.txt</span>
+<span data-ty="" data-ty-delay="0"></span>
+<span data-ty="" data-ty-delay="71"></span>
+<span data-ty="" data-ty-delay="1"><span class="ansi32">✔ Successfully updated template output</span></span>
+<span data-ty="" data-ty-delay="55"><span class="ansi32">✔ Successfully synced local changes to flexlate branches</span></span>
+<span data-ty="" data-ty-delay="0"></span>
+</pre></section>
 <section id="moving-a-template-source">
 <h3 id="moving-a-template-source">Moving a Template Source<a class="headerlink" href="#moving-a-template-source" title="Permalink to this headline">¶</a></h3>
 <p>There are several reasons why you might want to move a template source:</p>

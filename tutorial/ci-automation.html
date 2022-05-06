@@ -51,20 +51,19 @@
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/material.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/ansi2html.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx_paramlinks.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/css/termynal.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/clipboard.min.js"></script>
     <script src="../_static/copybutton.js"></script>
-    <script src="../_static/js/termynal.js"></script>
-    <script src="../_static/js/custom.js"></script>
+    <script src="../_static/@terminhtml-bootstrap.umd.js"></script>
     <link rel="canonical" href="https://nickderobertis.github.io/flexlate/tutorial/ci-automation.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -451,45 +450,46 @@ in your project, besides approving PRs and resolving merge conflicts.</p>
 that contains the necessary workflows
 to update the templates and keep the branches up to date. You can
 simply add it to your project and it should work as-is.</p>
-<div class="termy docutils container">
-<pre class="code console highlight literal-block"><code><span class="gp">$ </span>fxt add <span class="nb">source</span> https://github.com/nickderobertis/copier-flexlate-github-actions
-<span class="go"> Adding template source...
- Adding template source copier-flexlate-github-actions from 
-https://github.com/nickderobertis/copier-flexlate-github-actions
-⠋
-⠙
- Sucessfully added template source copier-flexlate-github-actions
-⠙
-⠙
-
-</span><span class="gp">$ </span>fxt add output copier-flexlate-github-actions
-<span class="go"> Applying template copier-flexlate-github-actions to /tmp/tmpvk2qhddu
- Updating 1 applied templates
-
-Name of the main branch
-main_branch_name? Format: str
-</span><span class="gp"># </span>🎤 <span class="o">[</span>main<span class="o">]</span>: $ main
-<span class="go">
-    create  .github/
-    create  .github/workflows/
-    create  .github/workflows/flexlate-after-merge.yml
-    create  .github/workflows/flexlate-update.yml
-
-
-
-    create  temp.txt
-
-
-✔ Successfully updated template output
-✔ Successfully applied template copier-flexlate-github-actions to 
-/tmp/tmpvk2qhddu
-
-</span><span class="gp">$ </span>ls -l .github/workflows
-<span class="go">total 8
--rw-r--r-- 1 runner docker 855 Apr 27 15:38 flexlate-after-merge.yml
--rw-r--r-- 1 runner docker 728 Apr 27 15:38 flexlate-update.yml</span></code></pre>
-</div>
-</section>
+<pre class="terminhtml">
+    <span data-ty="" data-ty-delay="778">$ fxt add source https://github.com/nickderobertis/copier-flexlate-github-actions</span>
+<span data-ty="" data-ty-delay="4"> Adding template source<span class="ansi33">...</span></span>
+<span data-ty="" data-ty-delay="0">[?25l Adding template source copier-flexlate-github-actions from </span>
+<span data-ty="" data-ty-delay="80"><span class="ansi4 ansi94">https://github.com/nickderobertis/copier-flexlate-github-actions</span></span>
+<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="31"><span class="ansi32">⠋</span></span>
+<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="0"><span class="ansi32">⠙</span></span>
+<span data-ty="" data-ty-delay="0"> Sucessfully added template source copier-flexlate-github-actions</span>
+<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="0"><span class="ansi32">⠙</span></span>
+<span data-ty="" data-ty-delay="0"><span class="ansi32">⠙</span></span>
+<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="52">[?25h</span>
+<span data-ty="" data-ty-delay="0"></span>
+<span data-ty="" data-ty-delay="970">$ fxt add output copier-flexlate-github-actions</span>
+<span data-ty="" data-ty-delay="159"> Applying template copier-flexlate-github-actions to <span class="ansi35">/tmp/</span><span class="ansi95">tmpo7g7wa5u</span></span>
+<span data-ty="" data-ty-delay="6"> Updating <span class="ansi1 ansi36">1</span> applied templates</span>
+<span data-ty="" data-ty-delay="0"></span>
+<span data-ty="" data-ty-delay="0"><span class="ansi3 ansi34">Name of the main branch</span></span>
+<span data-ty="" data-ty-delay="50"><span class="ansi1">main_branch_name</span>? Format: str</span>
+<span data-ty="input" data-ty-delay="2" data-ty-prompt="🎤 [main]: ">main</span>
+<span data-ty="" data-ty-delay="1"></span>
+<span data-ty="" data-ty-delay="0"><span class="ansi32"></span><span class="ansi1 ansi32">    create</span><span class="ansi1"></span>  .github/</span>
+<span data-ty="" data-ty-delay="1"><span class="ansi32"></span><span class="ansi1 ansi32">    create</span><span class="ansi1"></span>  .github/workflows/</span>
+<span data-ty="" data-ty-delay="1"><span class="ansi32"></span><span class="ansi1 ansi32">    create</span><span class="ansi1"></span>  .github/workflows/flexlate-update.yml</span>
+<span data-ty="" data-ty-delay="0"><span class="ansi32"></span><span class="ansi1 ansi32">    create</span><span class="ansi1"></span>  .github/workflows/flexlate-after-merge.yml</span>
+<span data-ty="" data-ty-delay="0"></span>
+<span data-ty="" data-ty-delay="442"></span>
+<span data-ty="" data-ty-delay="0"></span>
+<span data-ty="" data-ty-delay="0"><span class="ansi32"></span><span class="ansi1 ansi32">    create</span><span class="ansi1"></span>  temp.txt</span>
+<span data-ty="" data-ty-delay="0"></span>
+<span data-ty="" data-ty-delay="66"></span>
+<span data-ty="" data-ty-delay="0"><span class="ansi32">✔ Successfully updated template output</span></span>
+<span data-ty="" data-ty-delay="0"><span class="ansi32">✔ Successfully applied template copier-flexlate-github-actions to </span></span>
+<span data-ty="" data-ty-delay="56"><span class="ansi32">/tmp/</span><span class="ansi32">tmpo7g7wa5u</span></span>
+<span data-ty="" data-ty-delay="0"></span>
+<span data-ty="" data-ty-delay="43">$ ls -l .github/workflows</span>
+<span data-ty="" data-ty-delay="0">total 8</span>
+<span data-ty="" data-ty-delay="0">-rw-r--r-- 1 runner docker 855 May  6 19:05 flexlate-after-merge.yml</span>
+<span data-ty="" data-ty-delay="0">-rw-r--r-- 1 runner docker 728 May  6 19:05 flexlate-update.yml</span>
+<span data-ty="" data-ty-delay="0"></span>
+</pre></section>
 <section id="option-2-manually-add-the-workflows">
 <h3 id="option-2-manually-add-the-workflows">Option 2: Manually add the Workflows<a class="headerlink" href="#option-2-manually-add-the-workflows" title="Permalink to this headline">¶</a></h3>
 <p>You can also just manually create the necessary workflow files in your
