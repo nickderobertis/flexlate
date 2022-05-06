@@ -48,7 +48,7 @@ input: "[None, 'my answer\\n10']"
 git checkout -b my-feature
 fxt add output copier-simple-example
 ls
-git checkout master
+git checkout main
 git branch -D my-feature
 git branch -D flexlate-templates-my-feature
 git branch -D flexlate-output-my-feature

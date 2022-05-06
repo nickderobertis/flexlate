@@ -52,7 +52,7 @@ input: "[None, 'my answer\\n10']"
 git checkout -b feature-branch
 fxt add output copier-simple-example some/path
 fxt merge
-git checkout master
+git checkout main
 git merge feature-branch
 ```
 
