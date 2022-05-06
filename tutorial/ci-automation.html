@@ -64,6 +64,7 @@
     <script src="../_static/clipboard.min.js"></script>
     <script src="../_static/copybutton.js"></script>
     <script src="../_static/@terminhtml-bootstrap.umd.js"></script>
+    <script src="../_static/@terminhtml-bootstrap.umd.js.map"></script>
     <link rel="canonical" href="https://nickderobertis.github.io/flexlate/tutorial/ci-automation.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -451,43 +452,43 @@ that contains the necessary workflows
 to update the templates and keep the branches up to date. You can
 simply add it to your project and it should work as-is.</p>
 <pre class="terminhtml">
-    <span data-ty="" data-ty-delay="778">$ fxt add source https://github.com/nickderobertis/copier-flexlate-github-actions</span>
-<span data-ty="" data-ty-delay="4"> Adding template source<span class="ansi33">...</span></span>
+    <span data-ty="" data-ty-delay="1258">$ fxt add source https://github.com/nickderobertis/copier-flexlate-github-actions</span>
+<span data-ty="" data-ty-delay="5"> Adding template source<span class="ansi33">...</span></span>
 <span data-ty="" data-ty-delay="0">[?25l Adding template source copier-flexlate-github-actions from </span>
 <span data-ty="" data-ty-delay="80"><span class="ansi4 ansi94">https://github.com/nickderobertis/copier-flexlate-github-actions</span></span>
-<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="31"><span class="ansi32">⠋</span></span>
+<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="71"><span class="ansi32">⠋</span></span>
 <span data-ty="" data-ty-carriagereturn="true" data-ty-delay="0"><span class="ansi32">⠙</span></span>
-<span data-ty="" data-ty-delay="0"> Sucessfully added template source copier-flexlate-github-actions</span>
+<span data-ty="" data-ty-delay="1"> Sucessfully added template source copier-flexlate-github-actions</span>
 <span data-ty="" data-ty-carriagereturn="true" data-ty-delay="0"><span class="ansi32">⠙</span></span>
 <span data-ty="" data-ty-delay="0"><span class="ansi32">⠙</span></span>
-<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="52">[?25h</span>
+<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="66">[?25h</span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="970">$ fxt add output copier-flexlate-github-actions</span>
-<span data-ty="" data-ty-delay="159"> Applying template copier-flexlate-github-actions to <span class="ansi35">/tmp/</span><span class="ansi95">tmpo7g7wa5u</span></span>
-<span data-ty="" data-ty-delay="6"> Updating <span class="ansi1 ansi36">1</span> applied templates</span>
+<span data-ty="" data-ty-delay="1227">$ fxt add output copier-flexlate-github-actions</span>
+<span data-ty="" data-ty-delay="203"> Applying template copier-flexlate-github-actions to <span class="ansi35">/tmp/</span><span class="ansi95">tmph_ua6kxb</span></span>
+<span data-ty="" data-ty-delay="8"> Updating <span class="ansi1 ansi36">1</span> applied templates</span>
 <span data-ty="" data-ty-delay="0"></span>
 <span data-ty="" data-ty-delay="0"><span class="ansi3 ansi34">Name of the main branch</span></span>
 <span data-ty="" data-ty-delay="50"><span class="ansi1">main_branch_name</span>? Format: str</span>
-<span data-ty="input" data-ty-delay="2" data-ty-prompt="🎤 [main]: ">main</span>
+<span data-ty="input" data-ty-delay="3" data-ty-prompt="🎤 [main]: ">main</span>
 <span data-ty="" data-ty-delay="1"></span>
 <span data-ty="" data-ty-delay="0"><span class="ansi32"></span><span class="ansi1 ansi32">    create</span><span class="ansi1"></span>  .github/</span>
-<span data-ty="" data-ty-delay="1"><span class="ansi32"></span><span class="ansi1 ansi32">    create</span><span class="ansi1"></span>  .github/workflows/</span>
+<span data-ty="" data-ty-delay="2"><span class="ansi32"></span><span class="ansi1 ansi32">    create</span><span class="ansi1"></span>  .github/workflows/</span>
 <span data-ty="" data-ty-delay="1"><span class="ansi32"></span><span class="ansi1 ansi32">    create</span><span class="ansi1"></span>  .github/workflows/flexlate-update.yml</span>
 <span data-ty="" data-ty-delay="0"><span class="ansi32"></span><span class="ansi1 ansi32">    create</span><span class="ansi1"></span>  .github/workflows/flexlate-after-merge.yml</span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="442"></span>
-<span data-ty="" data-ty-delay="0"></span>
+<span data-ty="" data-ty-delay="1010"></span>
+<span data-ty="" data-ty-delay="1"></span>
 <span data-ty="" data-ty-delay="0"><span class="ansi32"></span><span class="ansi1 ansi32">    create</span><span class="ansi1"></span>  temp.txt</span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="66"></span>
+<span data-ty="" data-ty-delay="85"></span>
 <span data-ty="" data-ty-delay="0"><span class="ansi32">✔ Successfully updated template output</span></span>
 <span data-ty="" data-ty-delay="0"><span class="ansi32">✔ Successfully applied template copier-flexlate-github-actions to </span></span>
-<span data-ty="" data-ty-delay="56"><span class="ansi32">/tmp/</span><span class="ansi32">tmpo7g7wa5u</span></span>
+<span data-ty="" data-ty-delay="74"><span class="ansi32">/tmp/</span><span class="ansi32">tmph_ua6kxb</span></span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="43">$ ls -l .github/workflows</span>
+<span data-ty="" data-ty-delay="54">$ ls -l .github/workflows</span>
 <span data-ty="" data-ty-delay="0">total 8</span>
-<span data-ty="" data-ty-delay="0">-rw-r--r-- 1 runner docker 855 May  6 19:05 flexlate-after-merge.yml</span>
-<span data-ty="" data-ty-delay="0">-rw-r--r-- 1 runner docker 728 May  6 19:05 flexlate-update.yml</span>
+<span data-ty="" data-ty-delay="0">-rw-r--r-- 1 runner docker 855 May  6 22:10 flexlate-after-merge.yml</span>
+<span data-ty="" data-ty-delay="0">-rw-r--r-- 1 runner docker 728 May  6 22:10 flexlate-update.yml</span>
 <span data-ty="" data-ty-delay="0"></span>
 </pre></section>
 <section id="option-2-manually-add-the-workflows">
