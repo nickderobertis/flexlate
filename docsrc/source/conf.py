@@ -24,12 +24,12 @@ import datetime
 import warnings
 from typing import Final, List
 
+
 sys.path.insert(0, os.path.abspath('../..'))
 import conf
 import version as vs
 from docsrc.directives.auto_summary import AutoSummaryNameOnly
-from docsrc.directives.terminal import AnimatedTerminalDirective, RunTerminalDirective, \
-    create_run_terminal_directive_with_setup
+from sphinx_terminhtml import create_terminhtml_directive_with_setup
 
 # -- General configuration ------------------------------------------------
 
@@ -57,6 +57,7 @@ extensions = [
     'sphinx_copybutton',
     'myst_parser',
     "sphinxext.remoteliteralinclude",
+    "sphinx_terminhtml",
 ]
 
 # Options for sphinx_autodoc_typehints
@@ -174,14 +175,9 @@ if conf.GOOGLE_ANALYTICS_TRACKING_ID:
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
-html_css_files = [
-    'css/termynal.css',
-]
+html_css_files = []
 
-html_js_files = [
-    "js/termynal.js",
-    'js/custom.js',
-]
+html_js_files = []
 
 myst_heading_anchors = 4
 
@@ -282,11 +278,12 @@ git_init_commands: Final[List[str]] = [
     "git commit -m 'Initial commit'",
 ]
 
+terminal_prompt_matchers: Final[List[str]] = ["]: ", r"0m: "]
+
+
 def setup(app):
     app.connect("autodoc-skip-member", skip)
     app.add_directive('autosummarynameonly', AutoSummaryNameOnly)
-    app.add_directive("animated-terminal", AnimatedTerminalDirective)
-    app.add_directive("run-terminal", RunTerminalDirective)
-    app.add_directive("run-git-terminal", create_run_terminal_directive_with_setup(git_init_commands))
-    app.add_directive("run-fxt-terminal", create_run_terminal_directive_with_setup(git_init_commands + ["fxt init"]))
+    app.add_directive("run-git-terminal", create_terminhtml_directive_with_setup(git_init_commands, terminal_prompt_matchers))
+    app.add_directive("run-fxt-terminal", create_terminhtml_directive_with_setup(git_init_commands + ["fxt init"], terminal_prompt_matchers))
 

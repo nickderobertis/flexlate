@@ -12,7 +12,7 @@ The [`fxt update`](../commands.md#fxt-update) command updates the template(s)
 to the latest version allowed. It can also be used to update the data 
 with or without updating the version.
 
-```{run-fxt-terminal}
+```{run-git-terminal}
 ---
 setup: "fxt init-from https://github.com/nickderobertis/copier-simple-example --no-input --version c7e1ba1bfb141e9c577e7c21ee4a5d3ae5dde04d --folder-name my-project && cd my-project && fxt config target copier-simple-example"
 input: "[None, '\\n50']"
@@ -50,7 +50,7 @@ The [`fxt check`](../commands.md#fxt-check) command
 checks for updates to the template(s). It displays 
 them in a tabular format if there are updates available.
 
-```{run-fxt-terminal}
+```{run-git-terminal}
 ---
 setup: "fxt init-from https://github.com/nickderobertis/copier-simple-example --no-input --version c7e1ba1bfb141e9c577e7c21ee4a5d3ae5dde04d --folder-name my-project && cd my-project"
 allow-exceptions: True
