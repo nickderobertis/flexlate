@@ -420,14 +420,14 @@ the <a class="reference internal" href="new-project.html"><span class="doc std s
 to initialize a new Flexlate project. You must have a Flexlate project
 before you can add any template sources or outputs.</p>
 <pre class="terminhtml">
-    <span data-ty="" data-ty-delay="760">$ fxt init</span>
+    <span data-ty="" data-ty-delay="711">$ fxt init</span>
 <span data-ty="" data-ty-delay="0">[?25l Initializing flexlate project with default add mode local and <span class="ansi33">user</span>=<span class="ansi3 ansi91">False</span> in </span>
-<span data-ty="" data-ty-delay="75"><span class="ansi35">/tmp/</span><span class="ansi95">tmp3urfujrv</span></span>
-<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="49"><span class="ansi32">⠋</span>  Initializing...</span>
+<span data-ty="" data-ty-delay="74"><span class="ansi35">/tmp/</span><span class="ansi95">tmp3wo5orkr</span></span>
+<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="30"><span class="ansi32">⠋</span>  Initializing...</span>
 <span data-ty="" data-ty-carriagereturn="true" data-ty-delay="0"><span class="ansi32">⠋</span>  Initializing...</span>
 <span data-ty="" data-ty-delay="0"><span class="ansi32">⠙</span>  Initializing...</span>
-<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="0">[?25h</span>
-<span data-ty="" data-ty-delay="66"><span class="ansi32">✔ Finished initializing flexlate project</span></span>
+<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="1">[?25h</span>
+<span data-ty="" data-ty-delay="58"><span class="ansi32">✔ Finished initializing flexlate project</span></span>
 <span data-ty="" data-ty-delay="0"></span>
 </pre></section>
 <section id="add-the-template-source">
@@ -435,17 +435,16 @@ before you can add any template sources or outputs.</p>
 <p>The <a class="reference internal" href="../../commands.html#fxt-add-source"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">add</span> <span class="pre">source</span></code></span></a> command registers
 a template source in the Flexlate configuration file.</p>
 <pre class="terminhtml">
-    <span data-ty="" data-ty-delay="1230">$ fxt add source https://github.com/nickderobertis/copier-simple-example</span>
-<span data-ty="" data-ty-delay="5"> Adding template source<span class="ansi33">...</span></span>
+    <span data-ty="" data-ty-delay="1145">$ fxt add source https://github.com/nickderobertis/copier-simple-example</span>
+<span data-ty="" data-ty-delay="4"> Adding template source<span class="ansi33">...</span></span>
 <span data-ty="" data-ty-delay="0">[?25l Adding template source copier-simple-example from </span>
 <span data-ty="" data-ty-delay="80"><span class="ansi4 ansi94">https://github.com/nickderobertis/copier-simple-example</span></span>
-<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="81"><span class="ansi32">⠋</span></span>
-<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="10"><span class="ansi32">⠙</span></span>
-<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="0"><span class="ansi32">⠹</span></span>
+<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="44"><span class="ansi32">⠋</span></span>
+<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="0"><span class="ansi32">⠙</span></span>
 <span data-ty="" data-ty-delay="0"> Sucessfully added template source copier-simple-example</span>
-<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="0"><span class="ansi32">⠹</span></span>
-<span data-ty="" data-ty-delay="0"><span class="ansi32">⠹</span></span>
-<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="69">[?25h</span>
+<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="0"><span class="ansi32">⠙</span></span>
+<span data-ty="" data-ty-delay="0"><span class="ansi32">⠙</span></span>
+<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="54">[?25h</span>
 <span data-ty="" data-ty-delay="0"></span>
 <span data-ty="" data-ty-delay="46">$ cat flexlate.json</span>
 <span data-ty="" data-ty-delay="0">{</span>
@@ -474,9 +473,9 @@ the template you would like to be able to output.</p>
 <p>The <a class="reference internal" href="../../commands.html#fxt-add-output"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">add</span> <span class="pre">output</span></code></span></a> command renders the
 template at the specified location.</p>
 <pre class="terminhtml">
-    <span data-ty="" data-ty-delay="1229">$ fxt add output copier-simple-example some/path</span>
-<span data-ty="" data-ty-delay="213"> Applying template copier-simple-example to <span class="ansi35">/tmp/</span><span class="ansi95">tmpbmn39jqq</span></span>
-<span data-ty="" data-ty-delay="8"> Updating <span class="ansi1 ansi36">1</span> applied templates</span>
+    <span data-ty="" data-ty-delay="1178">$ fxt add output copier-simple-example some/path</span>
+<span data-ty="" data-ty-delay="191"> Applying template copier-simple-example to <span class="ansi35">/tmp/</span><span class="ansi95">tmp_peyhsca</span></span>
+<span data-ty="" data-ty-delay="7"> Updating <span class="ansi1 ansi36">1</span> applied templates</span>
 <span data-ty="" data-ty-delay="0"></span>
 <span data-ty="" data-ty-delay="50"><span class="ansi1">question1</span>? Format: yaml</span>
 <span data-ty="input" data-ty-delay="1" data-ty-prompt="🎤 [answer1]: ">my answer</span>
@@ -487,15 +486,15 @@ template at the specified location.</p>
 <span data-ty="" data-ty-delay="2"></span>
 <span data-ty="" data-ty-delay="0"><span class="ansi32"></span><span class="ansi1 ansi32">    create</span><span class="ansi1"></span>  my answer.txt</span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="1019"></span>
-<span data-ty="" data-ty-delay="1"></span>
+<span data-ty="" data-ty-delay="979"></span>
+<span data-ty="" data-ty-delay="0"></span>
 <span data-ty="" data-ty-delay="0"><span class="ansi32"></span><span class="ansi1 ansi32">    create</span><span class="ansi1"></span>  temp.txt</span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="83"></span>
+<span data-ty="" data-ty-delay="73"></span>
 <span data-ty="" data-ty-delay="0"><span class="ansi32">✔ Successfully updated template output</span></span>
-<span data-ty="" data-ty-delay="62"><span class="ansi32">✔ Successfully applied template copier-simple-example to </span><span class="ansi32">/tmp/</span><span class="ansi32">tmpbmn39jqq</span></span>
+<span data-ty="" data-ty-delay="55"><span class="ansi32">✔ Successfully applied template copier-simple-example to </span><span class="ansi32">/tmp/</span><span class="ansi32">tmp_peyhsca</span></span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="47">$ ls some/path</span>
+<span data-ty="" data-ty-delay="42">$ ls some/path</span>
 <span data-ty="" data-ty-delay="0"> flexlate.json	'my answer.txt'</span>
 <span data-ty="" data-ty-delay="0"></span>
 </pre><p>If you don’t specify a path to render the template to, the template will be
