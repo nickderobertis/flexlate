@@ -420,50 +420,50 @@ wants you to commit your changes before running operations.</p>
 <p>For example, say you applied a template but later decide you want
 to move it.</p>
 <pre class="terminhtml">
-    <span data-ty="" data-ty-delay="775">$ fxt add output copier-simple-example some/path</span>
-<span data-ty="" data-ty-delay="163"> Applying template copier-simple-example to <span class="ansi35">/tmp/</span><span class="ansi95">tmpx2bmvkhw</span></span>
-<span data-ty="" data-ty-delay="6"> Updating <span class="ansi1 ansi36">1</span> applied templates</span>
+    <span data-ty="" data-ty-delay="781">$ fxt add output copier-simple-example some/path</span>
+<span data-ty="" data-ty-delay="169"> Applying template copier-simple-example to <span class="ansi35">/tmp/</span><span class="ansi95">tmpxksz8w_j</span></span>
+<span data-ty="" data-ty-delay="7"> Updating <span class="ansi1 ansi36">1</span> applied templates</span>
 <span data-ty="" data-ty-delay="0"></span>
 <span data-ty="" data-ty-delay="50"><span class="ansi1">question1</span>? Format: yaml</span>
 <span data-ty="input" data-ty-delay="1" data-ty-prompt="🎤 [answer1]: ">my answer</span>
 <span data-ty="" data-ty-delay="0"></span>
 <span data-ty="" data-ty-delay="0"><span class="ansi3 ansi34">The second question</span></span>
 <span data-ty="" data-ty-delay="50"><span class="ansi1">question2</span>? Format: float</span>
-<span data-ty="input" data-ty-delay="2" data-ty-prompt="🎤 [2.7]: ">10</span>
+<span data-ty="input" data-ty-delay="3" data-ty-prompt="🎤 [2.7]: ">10</span>
 <span data-ty="" data-ty-delay="2"></span>
 <span data-ty="" data-ty-delay="0"><span class="ansi32"></span><span class="ansi1 ansi32">    create</span><span class="ansi1"></span>  my answer.txt</span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="433"></span>
+<span data-ty="" data-ty-delay="374"></span>
 <span data-ty="" data-ty-delay="0"></span>
 <span data-ty="" data-ty-delay="0"><span class="ansi32"></span><span class="ansi1 ansi32">    create</span><span class="ansi1"></span>  temp.txt</span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="63"></span>
+<span data-ty="" data-ty-delay="67"></span>
 <span data-ty="" data-ty-delay="0"><span class="ansi32">✔ Successfully updated template output</span></span>
-<span data-ty="" data-ty-delay="54"><span class="ansi32">✔ Successfully applied template copier-simple-example to </span><span class="ansi32">/tmp/</span><span class="ansi32">tmpx2bmvkhw</span></span>
+<span data-ty="" data-ty-delay="67"><span class="ansi32">✔ Successfully applied template copier-simple-example to </span><span class="ansi32">/tmp/</span><span class="ansi32">tmpxksz8w_j</span></span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="42">$ mv some/path other</span>
+<span data-ty="" data-ty-delay="43">$ mv some/path other</span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="42">$ git add -A</span>
+<span data-ty="" data-ty-delay="43">$ git add -A</span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="44">$ git commit -m 'Move copier-simple-example from some/path to other'</span>
-<span data-ty="" data-ty-delay="0">[main 072d83f] Move copier-simple-example from some/path to other</span>
+<span data-ty="" data-ty-delay="46">$ git commit -m 'Move copier-simple-example from some/path to other'</span>
+<span data-ty="" data-ty-delay="0">[main baa64d6] Move copier-simple-example from some/path to other</span>
 <span data-ty="" data-ty-delay="0"> 2 files changed, 0 insertions(+), 0 deletions(-)</span>
 <span data-ty="" data-ty-delay="0"> rename {some/path =&gt; other}/flexlate.json (100%)</span>
 <span data-ty="" data-ty-delay="0"> rename {some/path =&gt; other}/my answer.txt (100%)</span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="553">$ fxt sync</span>
-<span data-ty="" data-ty-delay="285"> Syncing local changes to flexlate branches</span>
+<span data-ty="" data-ty-delay="572">$ fxt sync</span>
+<span data-ty="" data-ty-delay="253"> Syncing local changes to flexlate branches</span>
 <span data-ty="" data-ty-delay="9"> Syncing changes in flexlate configs to output</span>
 <span data-ty="" data-ty-delay="1"></span>
 <span data-ty="" data-ty-delay="0"><span class="ansi32"></span><span class="ansi1 ansi32">    create</span><span class="ansi1"></span>  my answer.txt</span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="411"></span>
-<span data-ty="" data-ty-delay="0"></span>
+<span data-ty="" data-ty-delay="369"></span>
+<span data-ty="" data-ty-delay="1"></span>
 <span data-ty="" data-ty-delay="0"><span class="ansi32"></span><span class="ansi1 ansi32">    create</span><span class="ansi1"></span>  temp.txt</span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="70"></span>
-<span data-ty="" data-ty-delay="0"><span class="ansi32">✔ Successfully updated template output</span></span>
-<span data-ty="" data-ty-delay="54"><span class="ansi32">✔ Successfully synced local changes to flexlate branches</span></span>
+<span data-ty="" data-ty-delay="72"></span>
+<span data-ty="" data-ty-delay="1"><span class="ansi32">✔ Successfully updated template output</span></span>
+<span data-ty="" data-ty-delay="57"><span class="ansi32">✔ Successfully synced local changes to flexlate branches</span></span>
 <span data-ty="" data-ty-delay="0"></span>
 </pre></section>
 <section id="moving-a-template-source">

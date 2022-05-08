@@ -431,46 +431,8 @@ Flexlate feature branches created corresponding to your main branch.
 Simply call <code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">merge</span></code> whenever you finish a Flexlate operation
 and are satisfied with the result.</p>
 <pre class="terminhtml">
-    <span data-ty="" data-ty-delay="775">$ fxt add output copier-simple-example some/path</span>
-<span data-ty="" data-ty-delay="165"> Applying template copier-simple-example to <span class="ansi35">/tmp/</span><span class="ansi95">tmp2w5p2x3j</span></span>
-<span data-ty="" data-ty-delay="6"> Updating <span class="ansi1 ansi36">1</span> applied templates</span>
-<span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="50"><span class="ansi1">question1</span>? Format: yaml</span>
-<span data-ty="input" data-ty-delay="2" data-ty-prompt="🎤 [answer1]: ">my answer</span>
-<span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="0"><span class="ansi3 ansi34">The second question</span></span>
-<span data-ty="" data-ty-delay="50"><span class="ansi1">question2</span>? Format: float</span>
-<span data-ty="input" data-ty-delay="2" data-ty-prompt="🎤 [2.7]: ">10</span>
-<span data-ty="" data-ty-delay="2"></span>
-<span data-ty="" data-ty-delay="0"><span class="ansi32"></span><span class="ansi1 ansi32">    create</span><span class="ansi1"></span>  my answer.txt</span>
-<span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="409"></span>
-<span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="0"><span class="ansi32"></span><span class="ansi1 ansi32">    create</span><span class="ansi1"></span>  temp.txt</span>
-<span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="63"></span>
-<span data-ty="" data-ty-delay="0"><span class="ansi32">✔ Successfully updated template output</span></span>
-<span data-ty="" data-ty-delay="53"><span class="ansi32">✔ Successfully applied template copier-simple-example to </span><span class="ansi32">/tmp/</span><span class="ansi32">tmp2w5p2x3j</span></span>
-<span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="558">$ fxt merge</span>
-<span data-ty="" data-ty-delay="11"> Merging flexlate-templates-main to flexlate-templates</span>
-<span data-ty="" data-ty-delay="10"><span class="ansi32">✔ Successfully merged flexlate-templates-main to flexlate-templates</span></span>
-<span data-ty="" data-ty-delay="0"><span class="ansi32">✔ Successfully merged flexlate-output-main to flexlate-output</span></span>
-<span data-ty="" data-ty-delay="0"> Deleting flexlate feature branches flexlate-templates-main and </span>
-<span data-ty="" data-ty-delay="8">flexlate-output-main</span>
-<span data-ty="" data-ty-delay="52"><span class="ansi32">✔ Successfully deleted flexlate feature branches</span></span>
-<span data-ty="" data-ty-delay="0"></span>
-</pre></section>
-<section id="locally-merging-branches">
-<h3 id="locally-merging-branches">Locally Merging Branches<a class="headerlink" href="#locally-merging-branches" title="Permalink to this headline">¶</a></h3>
-<p>After you’ve done a template update on a feature branch and you’re ready
-to merge the changes into main, first run <code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">merge</span></code> before doing so.</p>
-<pre class="terminhtml">
-    <span data-ty="" data-ty-delay="43">$ git checkout -b feature-branch</span>
-<span data-ty="" data-ty-delay="0">Switched to a new branch 'feature-branch'</span>
-<span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="767">$ fxt add output copier-simple-example some/path</span>
-<span data-ty="" data-ty-delay="180"> Applying template copier-simple-example to <span class="ansi35">/tmp/</span><span class="ansi95">tmpin62skcu</span></span>
+    <span data-ty="" data-ty-delay="774">$ fxt add output copier-simple-example some/path</span>
+<span data-ty="" data-ty-delay="175"> Applying template copier-simple-example to <span class="ansi35">/tmp/</span><span class="ansi95">tmps3xp0pgl</span></span>
 <span data-ty="" data-ty-delay="6"> Updating <span class="ansi1 ansi36">1</span> applied templates</span>
 <span data-ty="" data-ty-delay="0"></span>
 <span data-ty="" data-ty-delay="50"><span class="ansi1">question1</span>? Format: yaml</span>
@@ -482,27 +444,65 @@ to merge the changes into main, first run <code class="docutils literal notransl
 <span data-ty="" data-ty-delay="2"></span>
 <span data-ty="" data-ty-delay="0"><span class="ansi32"></span><span class="ansi1 ansi32">    create</span><span class="ansi1"></span>  my answer.txt</span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="420"></span>
+<span data-ty="" data-ty-delay="385"></span>
 <span data-ty="" data-ty-delay="0"></span>
 <span data-ty="" data-ty-delay="0"><span class="ansi32"></span><span class="ansi1 ansi32">    create</span><span class="ansi1"></span>  temp.txt</span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="64"></span>
+<span data-ty="" data-ty-delay="69"></span>
 <span data-ty="" data-ty-delay="0"><span class="ansi32">✔ Successfully updated template output</span></span>
-<span data-ty="" data-ty-delay="55"><span class="ansi32">✔ Successfully applied template copier-simple-example to </span><span class="ansi32">/tmp/</span><span class="ansi32">tmpin62skcu</span></span>
+<span data-ty="" data-ty-delay="58"><span class="ansi32">✔ Successfully applied template copier-simple-example to </span><span class="ansi32">/tmp/</span><span class="ansi32">tmps3xp0pgl</span></span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="558">$ fxt merge</span>
-<span data-ty="" data-ty-delay="11"> Merging flexlate-templates-feature-branch to flexlate-templates</span>
-<span data-ty="" data-ty-delay="10"><span class="ansi32">✔ Successfully merged flexlate-templates-feature-branch to flexlate-templates</span></span>
+<span data-ty="" data-ty-delay="582">$ fxt merge</span>
+<span data-ty="" data-ty-delay="12"> Merging flexlate-templates-main to flexlate-templates</span>
+<span data-ty="" data-ty-delay="11"><span class="ansi32">✔ Successfully merged flexlate-templates-main to flexlate-templates</span></span>
+<span data-ty="" data-ty-delay="0"><span class="ansi32">✔ Successfully merged flexlate-output-main to flexlate-output</span></span>
+<span data-ty="" data-ty-delay="0"> Deleting flexlate feature branches flexlate-templates-main and </span>
+<span data-ty="" data-ty-delay="9">flexlate-output-main</span>
+<span data-ty="" data-ty-delay="62"><span class="ansi32">✔ Successfully deleted flexlate feature branches</span></span>
+<span data-ty="" data-ty-delay="0"></span>
+</pre></section>
+<section id="locally-merging-branches">
+<h3 id="locally-merging-branches">Locally Merging Branches<a class="headerlink" href="#locally-merging-branches" title="Permalink to this headline">¶</a></h3>
+<p>After you’ve done a template update on a feature branch and you’re ready
+to merge the changes into main, first run <code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">merge</span></code> before doing so.</p>
+<pre class="terminhtml">
+    <span data-ty="" data-ty-delay="44">$ git checkout -b feature-branch</span>
+<span data-ty="" data-ty-delay="0">Switched to a new branch 'feature-branch'</span>
+<span data-ty="" data-ty-delay="0"></span>
+<span data-ty="" data-ty-delay="774">$ fxt add output copier-simple-example some/path</span>
+<span data-ty="" data-ty-delay="195"> Applying template copier-simple-example to <span class="ansi35">/tmp/</span><span class="ansi95">tmpqlku0wcx</span></span>
+<span data-ty="" data-ty-delay="6"> Updating <span class="ansi1 ansi36">1</span> applied templates</span>
+<span data-ty="" data-ty-delay="0"></span>
+<span data-ty="" data-ty-delay="50"><span class="ansi1">question1</span>? Format: yaml</span>
+<span data-ty="input" data-ty-delay="1" data-ty-prompt="🎤 [answer1]: ">my answer</span>
+<span data-ty="" data-ty-delay="0"></span>
+<span data-ty="" data-ty-delay="0"><span class="ansi3 ansi34">The second question</span></span>
+<span data-ty="" data-ty-delay="50"><span class="ansi1">question2</span>? Format: float</span>
+<span data-ty="input" data-ty-delay="3" data-ty-prompt="🎤 [2.7]: ">10</span>
+<span data-ty="" data-ty-delay="2"></span>
+<span data-ty="" data-ty-delay="0"><span class="ansi32"></span><span class="ansi1 ansi32">    create</span><span class="ansi1"></span>  my answer.txt</span>
+<span data-ty="" data-ty-delay="0"></span>
+<span data-ty="" data-ty-delay="380"></span>
+<span data-ty="" data-ty-delay="0"></span>
+<span data-ty="" data-ty-delay="0"><span class="ansi32"></span><span class="ansi1 ansi32">    create</span><span class="ansi1"></span>  temp.txt</span>
+<span data-ty="" data-ty-delay="0"></span>
+<span data-ty="" data-ty-delay="71"></span>
+<span data-ty="" data-ty-delay="0"><span class="ansi32">✔ Successfully updated template output</span></span>
+<span data-ty="" data-ty-delay="64"><span class="ansi32">✔ Successfully applied template copier-simple-example to </span><span class="ansi32">/tmp/</span><span class="ansi32">tmpqlku0wcx</span></span>
+<span data-ty="" data-ty-delay="0"></span>
+<span data-ty="" data-ty-delay="593">$ fxt merge</span>
+<span data-ty="" data-ty-delay="12"> Merging flexlate-templates-feature-branch to flexlate-templates</span>
+<span data-ty="" data-ty-delay="12"><span class="ansi32">✔ Successfully merged flexlate-templates-feature-branch to flexlate-templates</span></span>
 <span data-ty="" data-ty-delay="0"><span class="ansi32">✔ Successfully merged flexlate-output-feature-branch to flexlate-output</span></span>
 <span data-ty="" data-ty-delay="0"> Deleting flexlate feature branches flexlate-templates-feature-branch and </span>
-<span data-ty="" data-ty-delay="8">flexlate-output-feature-branch</span>
-<span data-ty="" data-ty-delay="50"><span class="ansi32">✔ Successfully deleted flexlate feature branches</span></span>
+<span data-ty="" data-ty-delay="10">flexlate-output-feature-branch</span>
+<span data-ty="" data-ty-delay="69"><span class="ansi32">✔ Successfully deleted flexlate feature branches</span></span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="43">$ git checkout main</span>
+<span data-ty="" data-ty-delay="44">$ git checkout main</span>
 <span data-ty="" data-ty-delay="0">Switched to branch 'main'</span>
 <span data-ty="" data-ty-delay="0"></span>
 <span data-ty="" data-ty-delay="43">$ git merge feature-branch</span>
-<span data-ty="" data-ty-delay="0">Updating 789e7ec..d607494</span>
+<span data-ty="" data-ty-delay="0">Updating efa5367..a969bc8</span>
 <span data-ty="" data-ty-delay="2">Fast-forward</span>
 <span data-ty="" data-ty-delay="0"> some/path/flexlate.json | 15 +++++++++++++++</span>
 <span data-ty="" data-ty-delay="0"> some/path/my answer.txt |  2 ++</span>
@@ -517,9 +517,9 @@ to merge the changes into main, first run <code class="docutils literal notransl
 branches, you’ll want to push your changes to the remote (if you are using
 a remote) via <a class="reference internal" href="../commands.html#fxt-push-main"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">push</span> <span class="pre">main</span></code></span></a>.</p>
 <pre class="terminhtml">
-    <span data-ty="" data-ty-delay="773">$ fxt add output copier-simple-example some/path</span>
-<span data-ty="" data-ty-delay="162"> Applying template copier-simple-example to <span class="ansi35">/tmp/</span><span class="ansi95">tmpate87bai</span></span>
-<span data-ty="" data-ty-delay="6"> Updating <span class="ansi1 ansi36">1</span> applied templates</span>
+    <span data-ty="" data-ty-delay="810">$ fxt add output copier-simple-example some/path</span>
+<span data-ty="" data-ty-delay="181"> Applying template copier-simple-example to <span class="ansi35">/tmp/</span><span class="ansi95">tmpx9xu1szj</span></span>
+<span data-ty="" data-ty-delay="7"> Updating <span class="ansi1 ansi36">1</span> applied templates</span>
 <span data-ty="" data-ty-delay="0"></span>
 <span data-ty="" data-ty-delay="50"><span class="ansi1">question1</span>? Format: yaml</span>
 <span data-ty="input" data-ty-delay="1" data-ty-prompt="🎤 [answer1]: ">my answer</span>
@@ -530,25 +530,25 @@ a remote) via <a class="reference internal" href="../commands.html#fxt-push-main
 <span data-ty="" data-ty-delay="2"></span>
 <span data-ty="" data-ty-delay="0"><span class="ansi32"></span><span class="ansi1 ansi32">    create</span><span class="ansi1"></span>  my answer.txt</span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="407"></span>
+<span data-ty="" data-ty-delay="400"></span>
 <span data-ty="" data-ty-delay="0"></span>
 <span data-ty="" data-ty-delay="0"><span class="ansi32"></span><span class="ansi1 ansi32">    create</span><span class="ansi1"></span>  temp.txt</span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="63"></span>
+<span data-ty="" data-ty-delay="68"></span>
 <span data-ty="" data-ty-delay="0"><span class="ansi32">✔ Successfully updated template output</span></span>
-<span data-ty="" data-ty-delay="53"><span class="ansi32">✔ Successfully applied template copier-simple-example to </span><span class="ansi32">/tmp/</span><span class="ansi32">tmpate87bai</span></span>
+<span data-ty="" data-ty-delay="62"><span class="ansi32">✔ Successfully applied template copier-simple-example to </span><span class="ansi32">/tmp/</span><span class="ansi32">tmpx9xu1szj</span></span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="559">$ fxt merge</span>
-<span data-ty="" data-ty-delay="11"> Merging flexlate-templates-main to flexlate-templates</span>
+<span data-ty="" data-ty-delay="592">$ fxt merge</span>
+<span data-ty="" data-ty-delay="14"> Merging flexlate-templates-main to flexlate-templates</span>
 <span data-ty="" data-ty-delay="10"><span class="ansi32">✔ Successfully merged flexlate-templates-main to flexlate-templates</span></span>
 <span data-ty="" data-ty-delay="0"><span class="ansi32">✔ Successfully merged flexlate-output-main to flexlate-output</span></span>
 <span data-ty="" data-ty-delay="0"> Deleting flexlate feature branches flexlate-templates-main and </span>
-<span data-ty="" data-ty-delay="8">flexlate-output-main</span>
-<span data-ty="" data-ty-delay="50"><span class="ansi32">✔ Successfully deleted flexlate feature branches</span></span>
+<span data-ty="" data-ty-delay="10">flexlate-output-main</span>
+<span data-ty="" data-ty-delay="65"><span class="ansi32">✔ Successfully deleted flexlate feature branches</span></span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="555">$ fxt push main</span>
-<span data-ty="" data-ty-delay="40"> Pushing flexlate-templates and flexlate-output to remote origin</span>
-<span data-ty="" data-ty-delay="51"><span class="ansi32">✔ Successfully pushed branches to remote</span></span>
+<span data-ty="" data-ty-delay="587">$ fxt push main</span>
+<span data-ty="" data-ty-delay="41"> Pushing flexlate-templates and flexlate-output to remote origin</span>
+<span data-ty="" data-ty-delay="70"><span class="ansi32">✔ Successfully pushed branches to remote</span></span>
 <span data-ty="" data-ty-delay="0"></span>
 </pre></section>
 </section>
@@ -567,8 +567,8 @@ You would want to run this whenever you are pushing up the feature branch itself
     <span data-ty="" data-ty-delay="43">$ git checkout -b feature-branch</span>
 <span data-ty="" data-ty-delay="0">Switched to a new branch 'feature-branch'</span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="766">$ fxt add output copier-simple-example some/path</span>
-<span data-ty="" data-ty-delay="180"> Applying template copier-simple-example to <span class="ansi35">/tmp/</span><span class="ansi95">tmpju63wjlz</span></span>
+<span data-ty="" data-ty-delay="776">$ fxt add output copier-simple-example some/path</span>
+<span data-ty="" data-ty-delay="190"> Applying template copier-simple-example to <span class="ansi35">/tmp/</span><span class="ansi95">tmpin5995y_</span></span>
 <span data-ty="" data-ty-delay="6"> Updating <span class="ansi1 ansi36">1</span> applied templates</span>
 <span data-ty="" data-ty-delay="0"></span>
 <span data-ty="" data-ty-delay="50"><span class="ansi1">question1</span>? Format: yaml</span>
@@ -580,15 +580,15 @@ You would want to run this whenever you are pushing up the feature branch itself
 <span data-ty="" data-ty-delay="2"></span>
 <span data-ty="" data-ty-delay="0"><span class="ansi32"></span><span class="ansi1 ansi32">    create</span><span class="ansi1"></span>  my answer.txt</span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="585"></span>
+<span data-ty="" data-ty-delay="411"></span>
 <span data-ty="" data-ty-delay="0"></span>
 <span data-ty="" data-ty-delay="0"><span class="ansi32"></span><span class="ansi1 ansi32">    create</span><span class="ansi1"></span>  temp.txt</span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="64"></span>
+<span data-ty="" data-ty-delay="70"></span>
 <span data-ty="" data-ty-delay="0"><span class="ansi32">✔ Successfully updated template output</span></span>
-<span data-ty="" data-ty-delay="53"><span class="ansi32">✔ Successfully applied template copier-simple-example to </span><span class="ansi32">/tmp/</span><span class="ansi32">tmpju63wjlz</span></span>
+<span data-ty="" data-ty-delay="66"><span class="ansi32">✔ Successfully applied template copier-simple-example to </span><span class="ansi32">/tmp/</span><span class="ansi32">tmpin5995y_</span></span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="47">$ git push origin feature-branch</span>
+<span data-ty="" data-ty-delay="48">$ git push origin feature-branch</span>
 <span data-ty="" data-ty-delay="0">Enumerating objects: 22, done.</span>
 <span data-ty="" data-ty-carriagereturn="true" data-ty-delay="0">Counting objects:   4% (1/22)</span>
 <span data-ty="" data-ty-carriagereturn="true" data-ty-delay="0">Counting objects:   9% (2/22)</span>
@@ -653,15 +653,15 @@ You would want to run this whenever you are pushing up the feature branch itself
 <span data-ty="" data-ty-carriagereturn="true" data-ty-delay="0">Writing objects:  90% (20/22)</span>
 <span data-ty="" data-ty-carriagereturn="true" data-ty-delay="0">Writing objects:  95% (21/22)</span>
 <span data-ty="" data-ty-carriagereturn="true" data-ty-delay="0">Writing objects: 100% (22/22)</span>
-<span data-ty="" data-ty-delay="0">Writing objects: 100% (22/22), 2.60 KiB | 1.30 MiB/s, done.</span>
-<span data-ty="" data-ty-delay="11">Total 22 (delta 6), reused 0 (delta 0), pack-reused 0</span>
+<span data-ty="" data-ty-delay="0">Writing objects: 100% (22/22), 2.47 KiB | 2.47 MiB/s, done.</span>
+<span data-ty="" data-ty-delay="11">Total 22 (delta 7), reused 0 (delta 0), pack-reused 0</span>
 <span data-ty="" data-ty-delay="0">To ../remote</span>
 <span data-ty="" data-ty-delay="0"> * [new branch]      feature-branch -&gt; feature-branch</span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="553">$ fxt push feature</span>
+<span data-ty="" data-ty-delay="580">$ fxt push feature</span>
 <span data-ty="" data-ty-delay="0"> Pushing flexlate-templates-feature-branch and flexlate-output-feature-branch to</span>
-<span data-ty="" data-ty-delay="32">remote origin</span>
-<span data-ty="" data-ty-delay="50"><span class="ansi32">✔ Successfully pushed branches to remote</span></span>
+<span data-ty="" data-ty-delay="34">remote origin</span>
+<span data-ty="" data-ty-delay="64"><span class="ansi32">✔ Successfully pushed branches to remote</span></span>
 <span data-ty="" data-ty-delay="0"></span>
 </pre></section>
 <section id="merge-flexlate-branches-automatically-with-github-actions">
