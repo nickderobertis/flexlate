@@ -15,3 +15,4 @@ It also has a `dfxt publish` command that will render your template and
 create a new project with it. This is useful along with a 
 CI pipeline to automatically create and sync example repositories with 
 output from your template.
+
