@@ -46,7 +46,7 @@
   
   
   
-    <title>flexlate.config_manager &#8212; flexlate 0.14.1 documentation</title>
+    <title>flexlate.config_manager &#8212; flexlate 0.14.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/material.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -90,7 +90,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex navheader">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="../../index.html" title="flexlate 0.14.1 documentation"
+        <a href="../../index.html" title="flexlate 0.14.2 documentation"
            class="md-header-nav__button md-logo">
           
             <i class="md-icon">&#xe869</i>
@@ -176,7 +176,7 @@
   <nav class="md-tabs" data-md-component="tabs">
     <div class="md-tabs__inner md-grid">
       <ul class="md-tabs__list">
-          <li class="md-tabs__item"><a href="../../index.html" class="md-tabs__link">flexlate 0.14.1 documentation</a></li>
+          <li class="md-tabs__item"><a href="../../index.html" class="md-tabs__link">flexlate 0.14.2 documentation</a></li>
           <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">Module code</a></li>
       </ul>
     </div>
@@ -189,13 +189,13 @@
               <div class="md-sidebar__inner">
                 <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="../../index.html" title="flexlate 0.14.1 documentation" class="md-nav__button md-logo">
+    <a href="../../index.html" title="flexlate 0.14.2 documentation" class="md-nav__button md-logo">
       
         <i class="md-icon">&#xe869</i>
       
     </a>
     <a href="../../index.html"
-       title="flexlate 0.14.1 documentation">flexlate</a>
+       title="flexlate 0.14.2 documentation">flexlate</a>
   </label>
     <div class="md-nav__source">
       <a href="https://github.com/nickderobertis/flexlate" title="Go to repository" class="md-source" data-md-source="github">
@@ -461,7 +461,7 @@
         <span class="n">config</span> <span class="o">=</span> <span class="n">config</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="n">project_root</span><span class="p">)</span>
         <span class="n">data</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">TemplateData</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">update</span> <span class="ow">in</span> <span class="n">updates</span><span class="p">:</span>
-            <span class="n">applied_template</span> <span class="o">=</span> <span class="n">_get_applied_template_from_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">update</span><span class="p">)</span>
+            <span class="n">applied_template</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_applied_template_by_update</span><span class="p">(</span><span class="n">update</span><span class="p">)</span>
             <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">applied_template</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">data</span></div>
 
@@ -503,29 +503,37 @@
             <span class="k">raise</span> <span class="n">InvalidTemplateDataException</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">"length of templates and template data must match. got updates </span><span class="si">{</span><span class="n">updates</span><span class="si">}</span><span class="s2"> and data </span><span class="si">{</span><span class="n">template_data</span><span class="si">}</span><span class="s2">"</span>
             <span class="p">)</span>
-        <span class="k">for</span> <span class="n">update</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">updates</span><span class="p">,</span> <span class="n">all_data</span><span class="p">):</span>
-            <span class="n">applied_template</span> <span class="o">=</span> <span class="n">_get_applied_template_from_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">update</span><span class="p">)</span>
-            <span class="n">applied_template</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">update</span><span class="o">.</span><span class="n">data</span> <span class="ow">or</span> <span class="p">{}</span>
-            <span class="n">applied_template</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">update</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">version</span>
-            <span class="n">template_source</span> <span class="o">=</span> <span class="n">_get_template_source_from_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">update</span><span class="p">)</span>
-            <span class="n">template_source</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">update</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">version</span>
-            <span class="n">template_source</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">update</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">_type</span>
-            <span class="n">template_source</span><span class="o">.</span><span class="n">render_relative_root_in_output</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="n">update</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">render_relative_root_in_output</span>
-            <span class="p">)</span>
-            <span class="n">template_source</span><span class="o">.</span><span class="n">render_relative_root_in_template</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="n">update</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">render_relative_root_in_template</span>
-            <span class="p">)</span>
 
-            <span class="c1"># For remote templates, always bring over the new path</span>
-            <span class="c1"># For local templates, the use_template_source_path option toggles between</span>
-            <span class="c1"># using the original string from the template source, and the</span>
-            <span class="c1"># detected absolute location in the template.</span>
-            <span class="n">template_source</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="nb">str</span><span class="p">(</span><span class="n">update</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">template_source_path</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">use_template_source_path</span>
-                <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">update</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">update</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">updates</span><span class="p">,</span> <span class="n">all_data</span><span class="p">):</span>
+
+            <span class="k">def</span> <span class="nf">update_applied_template</span><span class="p">(</span><span class="n">applied_template</span><span class="p">:</span> <span class="n">AppliedTemplateConfig</span><span class="p">):</span>
+                <span class="n">applied_template</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">update</span><span class="o">.</span><span class="n">data</span> <span class="ow">or</span> <span class="p">{}</span>
+                <span class="n">applied_template</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">update</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">version</span>
+
+            <span class="k">def</span> <span class="nf">update_template_source</span><span class="p">(</span><span class="n">template_source</span><span class="p">:</span> <span class="n">TemplateSource</span><span class="p">):</span>
+                <span class="n">template_source</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">update</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">version</span>
+                <span class="n">template_source</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">update</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">_type</span>
+                <span class="n">template_source</span><span class="o">.</span><span class="n">render_relative_root_in_output</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">update</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">render_relative_root_in_output</span>
+                <span class="p">)</span>
+                <span class="n">template_source</span><span class="o">.</span><span class="n">render_relative_root_in_template</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">update</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">render_relative_root_in_template</span>
+                <span class="p">)</span>
+
+                <span class="c1"># For remote templates, always bring over the new path</span>
+                <span class="c1"># For local templates, the use_template_source_path option toggles between</span>
+                <span class="c1"># using the original string from the template source, and the</span>
+                <span class="c1"># detected absolute location in the template.</span>
+                <span class="n">template_source</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="nb">str</span><span class="p">(</span><span class="n">update</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">template_source_path</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">use_template_source_path</span>
+                    <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">update</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+                <span class="p">)</span>
+
+            <span class="n">config</span><span class="o">.</span><span class="n">update_applied_template</span><span class="p">(</span>
+                <span class="n">update_applied_template</span><span class="p">,</span> <span class="n">update</span><span class="o">.</span><span class="n">config_location</span><span class="p">,</span> <span class="n">update</span><span class="o">.</span><span class="n">index</span>
             <span class="p">)</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">update_template_source</span><span class="p">(</span><span class="n">update_template_source</span><span class="p">,</span> <span class="n">update</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">save_config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ConfigManager.add_template_source"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config_manager.ConfigManager.add_template_source">[docs]</a>    <span class="k">def</span> <span class="nf">add_template_source</span><span class="p">(</span>
@@ -536,12 +544,11 @@
         <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">),</span>
     <span class="p">):</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="n">project_root</span><span class="o">=</span><span class="n">project_root</span><span class="p">,</span> <span class="n">adjust_applied_paths</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="n">child_config</span> <span class="o">=</span> <span class="n">_get_or_create_child_config_by_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">config_path</span><span class="p">)</span>
         <span class="n">source</span> <span class="o">=</span> <span class="n">TemplateSource</span><span class="o">.</span><span class="n">from_template</span><span class="p">(</span>
             <span class="n">template</span><span class="p">,</span>
             <span class="n">target_version</span><span class="o">=</span><span class="n">target_version</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">child_config</span><span class="o">.</span><span class="n">template_sources</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">add_template_source</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">config_path</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">save_config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ConfigManager.remove_template_source"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config_manager.ConfigManager.remove_template_source">[docs]</a>    <span class="k">def</span> <span class="nf">remove_template_source</span><span class="p">(</span>
@@ -561,17 +568,7 @@
                 <span class="sa">f</span><span class="s2">"Cannot remove template source </span><span class="si">{</span><span class="n">template_name</span><span class="si">}</span><span class="s2"> as it has existing outputs"</span>
             <span class="p">)</span>
 
-        <span class="n">child_config</span> <span class="o">=</span> <span class="n">_get_or_create_child_config_by_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">config_path</span><span class="p">)</span>
-        <span class="n">template_index</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">template_source</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">child_config</span><span class="o">.</span><span class="n">template_sources</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">template_source</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">template_name</span><span class="p">:</span>
-                <span class="n">template_index</span> <span class="o">=</span> <span class="n">i</span>
-                <span class="k">break</span>
-        <span class="k">if</span> <span class="n">template_index</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">CannotRemoveTemplateSourceException</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">"Cannot find any template source with name </span><span class="si">{</span><span class="n">template_name</span><span class="si">}</span><span class="s2">"</span>
-            <span class="p">)</span>
-        <span class="n">child_config</span><span class="o">.</span><span class="n">template_sources</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">template_index</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">remove_template_source</span><span class="p">(</span><span class="n">template_name</span><span class="p">,</span> <span class="n">config_path</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">save_config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_applied_template_exists_in_project</span><span class="p">(</span>
@@ -597,7 +594,6 @@
         <span class="n">out_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">),</span>
     <span class="p">):</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="n">project_root</span><span class="o">=</span><span class="n">project_root</span><span class="p">,</span> <span class="n">adjust_applied_paths</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="n">child_config</span> <span class="o">=</span> <span class="n">_get_or_create_child_config_by_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">config_path</span><span class="p">)</span>
         <span class="n">applied</span> <span class="o">=</span> <span class="n">AppliedTemplateConfig</span><span class="p">(</span>
             <span class="n">name</span><span class="o">=</span><span class="n">template</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
             <span class="n">data</span><span class="o">=</span><span class="n">data</span> <span class="ow">or</span> <span class="p">{},</span>
@@ -605,7 +601,7 @@
             <span class="n">root</span><span class="o">=</span><span class="n">out_root</span><span class="p">,</span>
             <span class="n">add_mode</span><span class="o">=</span><span class="n">add_mode</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">child_config</span><span class="o">.</span><span class="n">applied_templates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">applied</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">add_applied_template</span><span class="p">(</span><span class="n">applied</span><span class="p">,</span> <span class="n">config_path</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">save_config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ConfigManager.remove_applied_template"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config_manager.ConfigManager.remove_applied_template">[docs]</a>    <span class="k">def</span> <span class="nf">remove_applied_template</span><span class="p">(</span>
@@ -626,112 +622,21 @@
 <span class="sd">            when working in a temp directory)</span>
 <span class="sd">        :return:</span>
 <span class="sd">        """</span>
-        <span class="n">template_index</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_applied_template</span><span class="p">(</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="n">project_root</span><span class="o">=</span><span class="n">project_root</span><span class="p">,</span> <span class="n">adjust_applied_paths</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">remove_applied_template</span><span class="p">(</span>
             <span class="n">template_name</span><span class="p">,</span>
             <span class="n">config_path</span><span class="p">,</span>
             <span class="n">project_root</span><span class="o">=</span><span class="n">project_root</span><span class="p">,</span>
             <span class="n">out_root</span><span class="o">=</span><span class="n">out_root</span><span class="p">,</span>
             <span class="n">orig_project_root</span><span class="o">=</span><span class="n">orig_project_root</span><span class="p">,</span>
-            <span class="n">adjust_applied_paths</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="n">project_root</span><span class="o">=</span><span class="n">project_root</span><span class="p">,</span> <span class="n">adjust_applied_paths</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="n">child_config</span> <span class="o">=</span> <span class="n">_get_or_create_child_config_by_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">config_path</span><span class="p">)</span>
-        <span class="n">child_config</span><span class="o">.</span><span class="n">applied_templates</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">template_index</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">save_config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span></div>
-
-    <span class="k">def</span> <span class="nf">_find_applied_template</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">template_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">config_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
-        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">),</span>
-        <span class="n">out_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">),</span>
-        <span class="n">orig_project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">),</span>
-        <span class="n">config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">FlexlateConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">adjust_applied_paths</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">AppliedTemplateConfig</span><span class="p">]:</span>
-        <span class="sd">"""</span>
-
-<span class="sd">        :param template_name:</span>
-<span class="sd">        :param config_path:</span>
-<span class="sd">        :param project_root: The root of the current working project (may be a temp directory)</span>
-<span class="sd">        :param out_root:</span>
-<span class="sd">        :param orig_project_root: The root of the user's project (always stays the same, even</span>
-<span class="sd">            when working in a temp directory)</span>
-<span class="sd">        :return: index, applied template config tuple</span>
-<span class="sd">        """</span>
-        <span class="n">config</span> <span class="o">=</span> <span class="n">config</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span>
-            <span class="n">project_root</span><span class="o">=</span><span class="n">project_root</span><span class="p">,</span> <span class="n">adjust_applied_paths</span><span class="o">=</span><span class="n">adjust_applied_paths</span>
-        <span class="p">)</span>
-        <span class="n">child_config</span> <span class="o">=</span> <span class="n">_get_or_create_child_config_by_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">config_path</span><span class="p">)</span>
-        <span class="n">template_index</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">orig_config_folder</span> <span class="o">=</span> <span class="n">location_relative_to_new_parent</span><span class="p">(</span>
-            <span class="n">child_config</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">config_location</span><span class="o">.</span><span class="n">parent</span><span class="p">,</span>
-            <span class="n">project_root</span><span class="p">,</span>
-            <span class="n">orig_project_root</span><span class="p">,</span>
-        <span class="p">)</span>
-        <span class="n">absolute_out_root</span> <span class="o">=</span> <span class="n">make_absolute_path_from_possibly_relative_to_another_path</span><span class="p">(</span>
-            <span class="n">out_root</span><span class="p">,</span> <span class="n">orig_config_folder</span>
-        <span class="p">)</span>
-        <span class="n">applied_template_reference_path</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">orig_project_root</span> <span class="k">if</span> <span class="n">adjust_applied_paths</span> <span class="k">else</span> <span class="n">orig_config_folder</span>
-        <span class="p">)</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">applied_template</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">child_config</span><span class="o">.</span><span class="n">applied_templates</span><span class="p">):</span>
-
-            <span class="n">absolute_template_out_root</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="n">make_absolute_path_from_possibly_relative_to_another_path</span><span class="p">(</span>
-                    <span class="n">applied_template</span><span class="o">.</span><span class="n">root</span><span class="p">,</span> <span class="n">applied_template_reference_path</span>
-                <span class="p">)</span>
-            <span class="p">)</span>
-            <span class="k">if</span> <span class="p">(</span>
-                <span class="n">applied_template</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">template_name</span>
-                <span class="ow">and</span> <span class="n">absolute_template_out_root</span> <span class="o">==</span> <span class="n">absolute_out_root</span>
-            <span class="p">):</span>
-                <span class="n">template_index</span> <span class="o">=</span> <span class="n">i</span>
-                <span class="k">break</span>
-        <span class="k">if</span> <span class="n">template_index</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">CannotRemoveAppliedTemplateException</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">"Cannot find any applied template with name </span><span class="si">{</span><span class="n">template_name</span><span class="si">}</span><span class="s2"> and root </span><span class="si">{</span><span class="n">out_root</span><span class="si">}</span><span class="s2">"</span>
-            <span class="p">)</span>
-        <span class="n">applied_template</span> <span class="o">=</span> <span class="n">child_config</span><span class="o">.</span><span class="n">applied_templates</span><span class="p">[</span><span class="n">template_index</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">template_index</span><span class="p">,</span> <span class="n">applied_template</span>
-
-    <span class="k">def</span> <span class="nf">_find_template_source</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">template_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">config_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
-        <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">),</span>
-        <span class="n">config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">FlexlateConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">TemplateSource</span><span class="p">]:</span>
-        <span class="sd">"""</span>
-
-<span class="sd">        :param template_name:</span>
-<span class="sd">        :param config_path:</span>
-<span class="sd">        :param project_root: The root of the current working project (may be a temp directory)</span>
-<span class="sd">        :param out_root:</span>
-<span class="sd">        :param orig_project_root: The root of the user's project (always stays the same, even</span>
-<span class="sd">            when working in a temp directory)</span>
-<span class="sd">        :return: index, applied template config tuple</span>
-<span class="sd">        """</span>
-        <span class="n">config</span> <span class="o">=</span> <span class="n">config</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="n">project_root</span><span class="o">=</span><span class="n">project_root</span><span class="p">)</span>
-        <span class="n">child_config</span> <span class="o">=</span> <span class="n">_get_or_create_child_config_by_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">config_path</span><span class="p">)</span>
-        <span class="n">template_index</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">template_source</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">child_config</span><span class="o">.</span><span class="n">template_sources</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">template_source</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">template_name</span><span class="p">:</span>
-                <span class="n">template_index</span> <span class="o">=</span> <span class="n">i</span>
-                <span class="k">break</span>
-        <span class="k">if</span> <span class="n">template_index</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">CannotRemoveAppliedTemplateException</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">"Cannot find any template source with name </span><span class="si">{</span><span class="n">template_name</span><span class="si">}</span><span class="s2">"</span>
-            <span class="p">)</span>
-        <span class="n">template_source</span> <span class="o">=</span> <span class="n">child_config</span><span class="o">.</span><span class="n">template_sources</span><span class="p">[</span><span class="n">template_index</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">template_index</span><span class="p">,</span> <span class="n">template_source</span>
 
 <div class="viewcode-block" id="ConfigManager.get_num_applied_templates_in_child_config"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config_manager.ConfigManager.get_num_applied_templates_in_child_config">[docs]</a>    <span class="k">def</span> <span class="nf">get_num_applied_templates_in_child_config</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">child_config_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">)</span>
     <span class="p">):</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="n">project_root</span><span class="p">)</span>
-        <span class="n">child_config</span> <span class="o">=</span> <span class="n">_get_child_config_by_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">child_config_path</span><span class="p">)</span>
-        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">child_config</span><span class="o">.</span><span class="n">applied_templates</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">config</span><span class="o">.</span><span class="n">get_num_applied_templates_in_child_config</span><span class="p">(</span><span class="n">child_config_path</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ConfigManager.get_template_sources"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config_manager.ConfigManager.get_template_sources">[docs]</a>    <span class="k">def</span> <span class="nf">get_template_sources</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -819,26 +724,14 @@
         <span class="n">orig_project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">),</span>
     <span class="p">):</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="n">project_root</span><span class="o">=</span><span class="n">project_root</span><span class="p">,</span> <span class="n">adjust_applied_paths</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="n">child_config</span> <span class="o">=</span> <span class="n">_get_or_create_child_config_by_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">config_path</span><span class="p">)</span>
-        <span class="n">template_index</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_applied_template</span><span class="p">(</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">move_applied_template</span><span class="p">(</span>
             <span class="n">template_name</span><span class="p">,</span>
             <span class="n">config_path</span><span class="p">,</span>
-            <span class="n">project_root</span><span class="o">=</span><span class="n">project_root</span><span class="p">,</span>
+            <span class="n">new_config_path</span><span class="p">,</span>
+            <span class="n">render_relative_root_in_output</span><span class="p">,</span>
             <span class="n">out_root</span><span class="o">=</span><span class="n">out_root</span><span class="p">,</span>
             <span class="n">orig_project_root</span><span class="o">=</span><span class="n">orig_project_root</span><span class="p">,</span>
-            <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
-            <span class="n">adjust_applied_paths</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">applied_template</span> <span class="o">=</span> <span class="n">child_config</span><span class="o">.</span><span class="n">applied_templates</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">template_index</span><span class="p">)</span>
-        <span class="n">expanded_out_root</span> <span class="o">=</span> <span class="n">get_expanded_out_root</span><span class="p">(</span>
-            <span class="n">out_root</span><span class="p">,</span>
-            <span class="n">project_root</span><span class="p">,</span>
-            <span class="n">render_relative_root_in_output</span><span class="p">,</span>
-            <span class="n">applied_template</span><span class="o">.</span><span class="n">add_mode</span><span class="p">,</span>
-        <span class="p">)</span>
-        <span class="n">applied_template</span><span class="o">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">expanded_out_root</span>
-        <span class="n">new_child_config</span> <span class="o">=</span> <span class="n">_get_or_create_child_config_by_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">new_config_path</span><span class="p">)</span>
-        <span class="n">new_child_config</span><span class="o">.</span><span class="n">applied_templates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">applied_template</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">save_config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ConfigManager.move_template_source"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config_manager.ConfigManager.move_template_source">[docs]</a>    <span class="k">def</span> <span class="nf">move_template_source</span><span class="p">(</span>
@@ -849,27 +742,7 @@
         <span class="n">project_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">),</span>
     <span class="p">):</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="n">project_root</span><span class="o">=</span><span class="n">project_root</span><span class="p">,</span> <span class="n">adjust_applied_paths</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="n">child_config</span> <span class="o">=</span> <span class="n">_get_or_create_child_config_by_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">config_path</span><span class="p">)</span>
-        <span class="n">template_index</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_template_source</span><span class="p">(</span>
-            <span class="n">template_name</span><span class="p">,</span>
-            <span class="n">config_path</span><span class="p">,</span>
-            <span class="n">project_root</span><span class="o">=</span><span class="n">project_root</span><span class="p">,</span>
-            <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
-        <span class="p">)</span>
-        <span class="n">template_source</span> <span class="o">=</span> <span class="n">child_config</span><span class="o">.</span><span class="n">template_sources</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">template_index</span><span class="p">)</span>
-        <span class="k">if</span> <span class="p">(</span>
-            <span class="n">template_source</span><span class="o">.</span><span class="n">is_local_template</span>
-            <span class="ow">and</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">template_source</span><span class="o">.</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">is_absolute</span><span class="p">()</span>
-        <span class="p">):</span>
-            <span class="n">abs_path</span> <span class="o">=</span> <span class="p">(</span><span class="n">config_path</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="n">template_source</span><span class="o">.</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
-            <span class="n">new_template_source_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">abs_path</span><span class="p">,</span> <span class="n">new_config_path</span><span class="o">.</span><span class="n">parent</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">new_template_source_path</span> <span class="o">=</span> <span class="n">template_source</span><span class="o">.</span><span class="n">path</span>
-        <span class="n">new_template_source</span> <span class="o">=</span> <span class="n">template_source</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span>
-            <span class="n">update</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">new_template_source_path</span><span class="p">)</span>
-        <span class="p">)</span>
-        <span class="n">new_child_config</span> <span class="o">=</span> <span class="n">_get_or_create_child_config_by_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">new_config_path</span><span class="p">)</span>
-        <span class="n">new_child_config</span><span class="o">.</span><span class="n">template_sources</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_template_source</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">move_template_source</span><span class="p">(</span><span class="n">template_name</span><span class="p">,</span> <span class="n">config_path</span><span class="p">,</span> <span class="n">new_config_path</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">save_config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_get_applied_templates_and_sources_with_local_add_mode</span><span class="p">(</span>
@@ -947,9 +820,7 @@
         <span class="n">config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">FlexlateConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">config</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="n">project_root</span><span class="p">,</span> <span class="n">adjust_applied_paths</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="n">sources</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_template_sources</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">source</span> <span class="ow">in</span> <span class="n">sources</span><span class="p">:</span>
-            <span class="n">updater</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">update_template_sources</span><span class="p">(</span><span class="n">updater</span><span class="p">,</span> <span class="n">names</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">save_config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ConfigManager.update_template_source_version"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config_manager.ConfigManager.update_template_source_version">[docs]</a>    <span class="k">def</span> <span class="nf">update_template_source_version</span><span class="p">(</span>
@@ -967,57 +838,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">update_template_sources</span><span class="p">(</span>
             <span class="p">[</span><span class="n">name</span><span class="p">],</span> <span class="n">_update_template_source_version</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span>
         <span class="p">)</span></div></div>
-
-
-<span class="k">def</span> <span class="nf">_get_child_config_by_path</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">FlexlateConfig</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FlexlateConfig</span><span class="p">:</span>
-    <span class="k">for</span> <span class="n">child_config</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">child_configs</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">child_config</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">config_location</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span> <span class="o">==</span> <span class="n">path</span><span class="o">.</span><span class="n">absolute</span><span class="p">():</span>
-            <span class="k">return</span> <span class="n">child_config</span>
-    <span class="k">raise</span> <span class="n">FlexlateConfigFileNotExistsException</span><span class="p">(</span>
-        <span class="sa">f</span><span class="s2">"could not find config with path </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">"</span>
-    <span class="p">)</span>
-
-
-<span class="k">def</span> <span class="nf">_get_or_create_child_config_by_path</span><span class="p">(</span>
-    <span class="n">config</span><span class="p">:</span> <span class="n">FlexlateConfig</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FlexlateConfig</span><span class="p">:</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">_get_child_config_by_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
-    <span class="k">except</span> <span class="n">FlexlateConfigFileNotExistsException</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">_create_child_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
-
-
-<span class="k">def</span> <span class="nf">_create_child_config</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">FlexlateConfig</span><span class="p">,</span> <span class="n">config_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FlexlateConfig</span><span class="p">:</span>
-    <span class="n">new_child</span> <span class="o">=</span> <span class="n">FlexlateConfig</span><span class="o">.</span><span class="n">load_or_create</span><span class="p">(</span><span class="n">config_path</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">_child_configs</span><span class="p">:</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">_child_configs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_child</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">_child_configs</span> <span class="o">=</span> <span class="p">[</span><span class="n">new_child</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">new_child</span>
-
-
-<span class="k">def</span> <span class="nf">_get_applied_template_from_config</span><span class="p">(</span>
-    <span class="n">config</span><span class="p">:</span> <span class="n">FlexlateConfig</span><span class="p">,</span> <span class="n">update</span><span class="p">:</span> <span class="n">TemplateUpdate</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AppliedTemplateConfig</span><span class="p">:</span>
-    <span class="n">child_config</span> <span class="o">=</span> <span class="n">_get_child_config_by_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">update</span><span class="o">.</span><span class="n">config_location</span><span class="p">)</span>
-    <span class="n">applied_template</span> <span class="o">=</span> <span class="n">child_config</span><span class="o">.</span><span class="n">applied_templates</span><span class="p">[</span><span class="n">update</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
-    <span class="k">if</span> <span class="n">applied_template</span><span class="o">.</span><span class="n">name</span> <span class="o">!=</span> <span class="n">update</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">TemplateLookupException</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">"for index </span><span class="si">{</span><span class="n">update</span><span class="o">.</span><span class="n">index</span><span class="si">}</span><span class="s2">, got applied template </span><span class="si">{</span><span class="n">applied_template</span><span class="si">}</span><span class="s2"> that does not match template </span><span class="si">{</span><span class="n">update</span><span class="o">.</span><span class="n">template</span><span class="si">}</span><span class="s2">"</span>
-        <span class="p">)</span>
-    <span class="k">return</span> <span class="n">applied_template</span>
-
-
-<span class="k">def</span> <span class="nf">_get_template_source_from_config</span><span class="p">(</span>
-    <span class="n">config</span><span class="p">:</span> <span class="n">FlexlateConfig</span><span class="p">,</span> <span class="n">update</span><span class="p">:</span> <span class="n">TemplateUpdate</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TemplateSource</span><span class="p">:</span>
-    <span class="k">for</span> <span class="n">child_config</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">child_configs</span><span class="p">:</span>
-        <span class="n">sources</span> <span class="o">=</span> <span class="n">child_config</span><span class="o">.</span><span class="n">template_sources_dict</span>
-        <span class="k">if</span> <span class="n">update</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">sources</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">sources</span><span class="p">[</span><span class="n">update</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
-    <span class="k">raise</span> <span class="n">TemplateLookupException</span><span class="p">(</span>
-        <span class="sa">f</span><span class="s2">"could not find source with name </span><span class="si">{</span><span class="n">update</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> in any child config"</span>
-    <span class="p">)</span>
 
 
 <div class="viewcode-block" id="determine_config_path_from_roots_and_add_mode"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.config_manager.determine_config_path_from_roots_and_add_mode">[docs]</a><span class="k">def</span> <span class="nf">determine_config_path_from_roots_and_add_mode</span><span class="p">(</span>
