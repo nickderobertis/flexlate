@@ -277,9 +277,7 @@ class FlexlateConfig(BaseConfig):
                     updater(template_source)
                     break
         if template_source is None:
-            raise CannotFindTemplateSourceException(
-                f"template source {name} not found in {config_location}"
-            )
+            raise CannotFindTemplateSourceException(f"template source {name} not found")
         # Do update in root config
         for ts in self.template_sources:
             if ts == template_source:
@@ -295,17 +293,17 @@ class FlexlateConfig(BaseConfig):
         matched_names: Set[str] = set()
         for child_config in self.child_configs:
             for template_source in child_config.template_sources:
-                if template_source.name in names:
+                if names is None or template_source.name in names:
                     updater(template_source)
                     matched_names.add(template_source.name)
-        if len(matched_names) < len(names):
+        if names is not None and len(matched_names) < len(names):
             diff = set(names) - matched_names
             raise CannotFindTemplateSourceException(
                 f"template sources {diff} not found"
             )
         # Do update in root config
         for ts in self.template_sources:
-            if ts.name in names:
+            if names is None or ts.name in names:
                 updater(ts)
 
     def add_template_source(
