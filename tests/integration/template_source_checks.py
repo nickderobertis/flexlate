@@ -215,13 +215,15 @@ def _get_default_data(template_source_type: TemplateSourceType) -> TemplateData:
         raise ValueError(f"unexpected template source type {template_source_type}")
 
 
-def assert_root_template_source_output_is_correct(
+def assert_template_source_output_is_correct(
     template_source: TemplateSourceFixture,
+    root_path: Path,
     after_version_update: bool = False,
     after_data_update: bool = False,
     target_version: Optional[str] = None,
     num_template_sources: int = 1,
     template_source_index: int = 0,
+    override_template_source_path: Optional[str] = None,
 ):
     version = (
         template_source.version_2 if after_version_update else template_source.version_1
@@ -232,17 +234,20 @@ def assert_root_template_source_output_is_correct(
         else template_source.input_data
     )
     at_config_path = (
-        GENERATED_REPO_DIR
+        root_path
         / template_source.evaluated_render_relative_root_in_output_creator(input_data)
         / "flexlate.json"
     )
+    ts_config_path = root_path / "flexlate.json"
     assert_project_files_are_correct(
+        root_path,
         expect_data=input_data,
         version=version,
         template_source_type=template_source.type,
     )
     assert_config_is_correct(
         at_config_path=at_config_path,
+        ts_config_path=ts_config_path,
         expect_applied_template_root=template_source.expect_local_applied_template_path,
         expect_data=input_data,
         version=version,
@@ -250,9 +255,28 @@ def assert_root_template_source_output_is_correct(
         template_source_type=template_source.type,
         name=template_source.name,
         url=template_source.url,
-        path=template_source.path,
+        path=override_template_source_path or template_source.path,
         render_relative_root_in_output=template_source.render_relative_root_in_output,
         render_relative_root_in_template=template_source.render_relative_root_in_template,
+        num_template_sources=num_template_sources,
+        template_source_index=template_source_index,
+    )
+
+
+def assert_root_template_source_output_is_correct(
+    template_source: TemplateSourceFixture,
+    after_version_update: bool = False,
+    after_data_update: bool = False,
+    target_version: Optional[str] = None,
+    num_template_sources: int = 1,
+    template_source_index: int = 0,
+):
+    assert_template_source_output_is_correct(
+        template_source,
+        GENERATED_REPO_DIR,
+        after_version_update=after_version_update,
+        after_data_update=after_data_update,
+        target_version=target_version,
         num_template_sources=num_template_sources,
         template_source_index=template_source_index,
     )

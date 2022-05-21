@@ -294,28 +294,39 @@ all_standard_template_source_fixtures: Final[List[TemplateSourceFixture]] = [
 
 
 @contextlib.contextmanager
-def template_source_with_temp_dir_if_local_template(
+def template_source_in_dir_if_local_template(
     template_source: TemplateSourceFixture,
+    dir: Path,
 ) -> ContextManager[TemplateSourceFixture]:
     template_source = deepcopy(template_source)
     if template_source.is_local_template:
         path_is_relative = not Path(template_source.path).is_absolute()
-        # Move into temporary directory so it can be updated locally
-        with tempfile.TemporaryDirectory() as temp_dir:
-            template_dir = Path(temp_dir) / template_source.name
-            source_path = template_source.path
-            if path_is_relative:
-                # Paths are set up to be relative to GENERATED_REPO_DIR
-                # Convert into absolute path so it can be copied appropriately
-                source_path = (GENERATED_REPO_DIR / source_path).resolve()
-            shutil.copytree(source_path, template_dir)
-            template_source.path = str(template_dir)
-            if path_is_relative:
-                # Original path was relative, need to make this path relative
-                template_source = template_source.relative(GENERATED_REPO_DIR)
-            yield template_source
+        # Copy into directory so it can be worked with without changing the original
+        template_dir = dir / template_source.name
+        source_path = template_source.path
+        if path_is_relative:
+            # Paths are set up to be relative to GENERATED_REPO_DIR
+            # Convert into absolute path so it can be copied appropriately
+            source_path = (GENERATED_REPO_DIR / source_path).resolve()
+        shutil.copytree(source_path, template_dir)
+        template_source.path = str(template_dir)
+        if path_is_relative:
+            # Original path was relative, need to make this path relative
+            template_source = template_source.relative(GENERATED_REPO_DIR)
+        yield template_source
     else:
         yield template_source
+
+
+@contextlib.contextmanager
+def template_source_with_temp_dir_if_local_template(
+    template_source: TemplateSourceFixture,
+) -> ContextManager[TemplateSourceFixture]:
+    with tempfile.TemporaryDirectory() as temp_dir:
+        with template_source_in_dir_if_local_template(
+            template_source, Path(temp_dir)
+        ) as output_template_source:
+            yield output_template_source
 
 
 @pytest.fixture(scope="function", params=all_standard_template_source_fixtures)
