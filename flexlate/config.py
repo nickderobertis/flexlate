@@ -1,20 +1,44 @@
 import os
 from pathlib import Path
-from typing import List, Optional, Sequence, Dict, Any, Tuple, Union, cast
+from typing import (
+    List,
+    Optional,
+    Sequence,
+    Dict,
+    Any,
+    Tuple,
+    Union,
+    cast,
+    Callable,
+    Set,
+    TYPE_CHECKING,
+)
+
+if TYPE_CHECKING:
+    from flexlate.update.template import TemplateUpdate
 
 from pyappconf import BaseConfig, AppConfig, ConfigFormats
 from pydantic import BaseModel, Field, validator, Extra, PrivateAttr
 
-from flexlate.add_mode import AddMode
+from flexlate.add_mode import AddMode, get_expanded_out_root
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.exc import (
     InvalidTemplateTypeException,
     FlexlateProjectConfigFileNotExistsException,
+    FlexlateConfigFileNotExistsException,
+    TemplateLookupException,
+    CannotFindTemplateSourceException,
+    CannotRemoveAppliedTemplateException,
+    CannotRemoveTemplateSourceException,
 )
 from flexlate.finder.multi import MultiFinder
 from flexlate.finder.specific.base import TemplateFinder
 from flexlate.finder.specific.cookiecutter import CookiecutterFinder
 from flexlate.finder.specific.copier import CopierFinder
+from flexlate.path_ops import (
+    location_relative_to_new_parent,
+    make_absolute_path_from_possibly_relative_to_another_path,
+)
 from flexlate.template.base import Template
 from flexlate.template.types import TemplateType
 from flexlate.template_data import TemplateData
@@ -208,6 +232,307 @@ class FlexlateConfig(BaseConfig):
 
             # Normal case, non-empty config, save it
             config.save(serializer_kwargs, **kwargs)
+
+    def get_applied_template_by_update(
+        self, update: "TemplateUpdate"
+    ) -> AppliedTemplateConfig:
+        child_config = self._get_child_config_by_path(update.config_location)
+        applied_template = child_config.applied_templates[update.index]
+        if applied_template.name != update.template.name:
+            raise TemplateLookupException(
+                f"for index {update.index}, got applied template {applied_template} that does not match template {update.template}"
+            )
+        return applied_template
+
+    def get_num_applied_templates_in_child_config(self, child_config_path: Path):
+        child_config = self._get_child_config_by_path(child_config_path)
+        return len(child_config.applied_templates)
+
+    def update_applied_template(
+        self,
+        updater: Callable[[AppliedTemplateConfig], None],
+        config_location: Path,
+        index: int,
+    ) -> None:
+        # Do update in child config
+        child_config = self._get_child_config_by_path(config_location)
+        applied_template = child_config.applied_templates[index]
+        updater(applied_template)
+        # Do update in root config
+        for at in self.applied_templates:
+            if at == applied_template:
+                updater(at)
+                break
+
+    def update_template_source(
+        self,
+        updater: Callable[[TemplateSource], None],
+        name: str,
+    ) -> None:
+        # Do update in child config
+        template_source: Optional[TemplateSource] = None
+        for child_config in self.child_configs:
+            for template_source in child_config.template_sources:
+                if template_source.name == name:
+                    updater(template_source)
+                    break
+        if template_source is None:
+            raise CannotFindTemplateSourceException(
+                f"template source {name} not found in {config_location}"
+            )
+        # Do update in root config
+        for ts in self.template_sources:
+            if ts == template_source:
+                updater(ts)
+                break
+
+    def update_template_sources(
+        self,
+        updater: Callable[[TemplateSource], None],
+        names: Optional[Sequence[str]] = None,
+    ) -> None:
+        # Do update in child config
+        matched_names: Set[str] = set()
+        for child_config in self.child_configs:
+            for template_source in child_config.template_sources:
+                if template_source.name in names:
+                    updater(template_source)
+                    matched_names.add(template_source.name)
+        if len(matched_names) < len(names):
+            diff = set(names) - matched_names
+            raise CannotFindTemplateSourceException(
+                f"template sources {diff} not found"
+            )
+        # Do update in root config
+        for ts in self.template_sources:
+            if ts.name in names:
+                updater(ts)
+
+    def add_template_source(
+        self, template_source: TemplateSource, config_location: Path
+    ) -> None:
+        # Do update in child config
+        child_config = self._get_or_create_child_config_by_path(config_location)
+        child_config.template_sources.append(template_source)
+        # Do update in root config
+        self.template_sources.append(template_source)
+
+    def remove_template_source(self, template_name: str, config_location: Path) -> None:
+        # Do update in child config
+        try:
+            child_config = self._get_child_config_by_path(config_location)
+        except FlexlateConfigFileNotExistsException as e:
+            raise CannotRemoveTemplateSourceException(
+                f"Cannot find any template source with name {template_name}"
+            ) from e
+        template_source: Optional[TemplateSource] = None
+        for template_source in child_config.template_sources:
+            if template_source.name == template_name:
+                child_config.template_sources.remove(template_source)
+                break
+        if template_source is None:
+            raise CannotFindTemplateSourceException(
+                f"template source {template_name} not found in {config_location}"
+            )
+        # Do update in root config
+        for ts in self.template_sources:
+            if ts.name == template_source.name:
+                self.template_sources.remove(ts)
+                break
+
+    def add_applied_template(
+        self, applied_template: AppliedTemplateConfig, config_location: Path
+    ) -> None:
+        # Do update in child config
+        child_config = self._get_or_create_child_config_by_path(config_location)
+        child_config.applied_templates.append(applied_template)
+        # Do update in root config
+        self.applied_templates.append(applied_template)
+
+    def remove_applied_template(
+        self,
+        template_name: str,
+        config_location: Path,
+        project_root: Path = Path("."),
+        out_root: Path = Path("."),
+        orig_project_root: Path = Path("."),
+    ) -> None:
+        # Do update in child config
+        child_config = self._get_child_config_by_path(config_location)
+        idx, applied_template = self._find_applied_template(
+            template_name,
+            config_location,
+            project_root=project_root,
+            out_root=out_root,
+            orig_project_root=orig_project_root,
+        )
+        child_config.applied_templates.pop(idx)
+        # Do update in root config
+        for at in self.applied_templates:
+            if at == applied_template:
+                self.applied_templates.remove(at)
+                break
+
+    def move_applied_template(
+        self,
+        template_name: str,
+        config_path: Path,
+        new_config_path: Path,
+        render_relative_root_in_output: Path,
+        project_root: Path = Path("."),
+        out_root: Path = Path("."),
+        orig_project_root: Path = Path("."),
+    ):
+        child_config = self._get_or_create_child_config_by_path(config_path)
+        template_index, _ = self._find_applied_template(
+            template_name,
+            config_path,
+            project_root=project_root,
+            out_root=out_root,
+            orig_project_root=orig_project_root,
+        )
+        applied_template = child_config.applied_templates.pop(template_index)
+        expanded_out_root = get_expanded_out_root(
+            out_root,
+            project_root,
+            render_relative_root_in_output,
+            applied_template.add_mode,
+        )
+        applied_template.root = expanded_out_root
+        new_child_config = self._get_or_create_child_config_by_path(new_config_path)
+        new_child_config.applied_templates.append(applied_template)
+        # No need update to root config needed, because only location changed
+
+    def move_template_source(
+        self,
+        template_name: str,
+        config_path: Path,
+        new_config_path: Path,
+    ):
+        child_config = self._get_or_create_child_config_by_path(config_path)
+        template_index, _ = self._find_template_source(
+            template_name,
+            config_path,
+        )
+        template_source = child_config.template_sources.pop(template_index)
+        if (
+            template_source.is_local_template
+            and not Path(template_source.path).is_absolute()
+        ):
+            abs_path = (config_path.parent / template_source.path).resolve()
+            new_template_source_path = os.path.relpath(abs_path, new_config_path.parent)
+        else:
+            new_template_source_path = template_source.path
+        template_source.path = new_template_source_path
+        new_child_config = self._get_or_create_child_config_by_path(new_config_path)
+        new_child_config.template_sources.append(template_source)
+        # Update path for root config
+        for ts in self.template_sources:
+            if ts.name == template_source.name:
+                ts.path = template_source.path
+                break
+
+    def _find_applied_template(
+        self,
+        template_name: str,
+        config_path: Path,
+        project_root: Path = Path("."),
+        out_root: Path = Path("."),
+        orig_project_root: Path = Path("."),
+        adjust_applied_paths: bool = False,
+    ) -> Tuple[int, AppliedTemplateConfig]:
+        """
+
+        :param template_name:
+        :param config_path:
+        :param project_root: The root of the current working project (may be a temp directory)
+        :param out_root:
+        :param orig_project_root: The root of the user's project (always stays the same, even
+            when working in a temp directory)
+        :return: index, applied template config tuple
+        """
+        child_config = self._get_or_create_child_config_by_path(config_path)
+        template_index: Optional[int] = None
+        orig_config_folder = location_relative_to_new_parent(
+            child_config.settings.config_location.parent,
+            project_root,
+            orig_project_root,
+        )
+        absolute_out_root = make_absolute_path_from_possibly_relative_to_another_path(
+            out_root, orig_config_folder
+        )
+        applied_template_reference_path = (
+            orig_project_root if adjust_applied_paths else orig_config_folder
+        )
+        for i, applied_template in enumerate(child_config.applied_templates):
+
+            absolute_template_out_root = (
+                make_absolute_path_from_possibly_relative_to_another_path(
+                    applied_template.root, applied_template_reference_path
+                )
+            )
+            if (
+                applied_template.name == template_name
+                and absolute_template_out_root == absolute_out_root
+            ):
+                template_index = i
+                break
+        if template_index is None:
+            raise CannotRemoveAppliedTemplateException(
+                f"Cannot find any applied template with name {template_name} and root {out_root}"
+            )
+        applied_template = child_config.applied_templates[template_index]
+        return template_index, applied_template
+
+    def _find_template_source(
+        self,
+        template_name: str,
+        config_path: Path,
+    ) -> Tuple[int, TemplateSource]:
+        """
+
+        :param template_name:
+        :param config_path:
+        :param project_root: The root of the current working project (may be a temp directory)
+        :param out_root:
+        :param orig_project_root: The root of the user's project (always stays the same, even
+            when working in a temp directory)
+        :return: index, applied template config tuple
+        """
+        child_config = self._get_or_create_child_config_by_path(config_path)
+        template_index: Optional[int] = None
+        for i, template_source in enumerate(child_config.template_sources):
+            if template_source.name == template_name:
+                template_index = i
+                break
+        if template_index is None:
+            raise CannotRemoveAppliedTemplateException(
+                f"Cannot find any template source with name {template_name}"
+            )
+        template_source = child_config.template_sources[template_index]
+        return template_index, template_source
+
+    def _get_or_create_child_config_by_path(self, path: Path) -> "FlexlateConfig":
+        try:
+            return self._get_child_config_by_path(path)
+        except FlexlateConfigFileNotExistsException:
+            return self._create_child_config(path)
+
+    def _create_child_config(self, config_path: Path) -> "FlexlateConfig":
+        new_child = FlexlateConfig.load_or_create(config_path)
+        if self._child_configs:
+            self._child_configs.append(new_child)
+        else:
+            self._child_configs = [new_child]
+        return new_child
+
+    def _get_child_config_by_path(self, path: Path) -> "FlexlateConfig":
+        for child_config in self.child_configs:
+            if child_config.settings.config_location.absolute() == path.absolute():
+                return child_config
+        raise FlexlateConfigFileNotExistsException(
+            f"could not find config with path {path}"
+        )
 
     class Config:
         extra = Extra.allow
