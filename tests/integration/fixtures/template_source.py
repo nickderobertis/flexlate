@@ -323,8 +323,10 @@ def template_source_with_temp_dir_if_local_template(
     template_source: TemplateSourceFixture,
 ) -> ContextManager[TemplateSourceFixture]:
     with tempfile.TemporaryDirectory() as temp_dir:
-        with template_source_in_dir_if_local_template(template_source, Path(temp_dir)):
-            yield template_source
+        with template_source_in_dir_if_local_template(
+            template_source, Path(temp_dir)
+        ) as output_template_source:
+            yield output_template_source
 
 
 @pytest.fixture(scope="function", params=all_standard_template_source_fixtures)
