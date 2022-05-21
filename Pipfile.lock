@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "7908d1c2f57af448687d631aa2ac324b4025b35f8e74a6f34a7facf025dd0d4b"
+            "sha256": "67ad29015721efabe03f0d8d38a840fe1d47d6a0028326f7aa2b5f10a0ecc2b3"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -296,12 +296,8 @@
             "version": "==0.17.1"
         },
         "flexlate": {
-            "hashes": [
-                "sha256:071bdcb8ab9d5ec4f8909fe7d403c7132048fb63983fcd99125afe0f7531291a",
-                "sha256:a590044640c4c26dc3477cd4662a0d3c4bc93387221ec38ada57cfba817701c1"
-            ],
-            "index": "pypi",
-            "version": "==0.14.1"
+            "editable": true,
+            "path": "."
         },
         "gitdb": {
             "hashes": [
