@@ -64,7 +64,6 @@ PACKAGE_INSTALL_REQUIRES = [
     # 'otherpackage>=1,<2'
     "py-app-conf",
     "cookiecutter",
-    "copier",
     "gitpython",
     # Should be able to remove click version fix after typer puts patch for
     # ImportError: cannot import name 'get_terminal_size' from 'click.termui'
