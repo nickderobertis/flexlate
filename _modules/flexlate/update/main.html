@@ -46,7 +46,7 @@
   
   
   
-    <title>flexlate.update.main &#8212; flexlate 0.14.3 documentation</title>
+    <title>flexlate.update.main &#8212; flexlate 0.14.4 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/material.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
@@ -90,7 +90,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex navheader">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="../../../index.html" title="flexlate 0.14.3 documentation"
+        <a href="../../../index.html" title="flexlate 0.14.4 documentation"
            class="md-header-nav__button md-logo">
           
             <i class="md-icon">&#xe869</i>
@@ -176,7 +176,7 @@
   <nav class="md-tabs" data-md-component="tabs">
     <div class="md-tabs__inner md-grid">
       <ul class="md-tabs__list">
-          <li class="md-tabs__item"><a href="../../../index.html" class="md-tabs__link">flexlate 0.14.3 documentation</a></li>
+          <li class="md-tabs__item"><a href="../../../index.html" class="md-tabs__link">flexlate 0.14.4 documentation</a></li>
           <li class="md-tabs__item"><a href="../../index.html" class="md-tabs__link">Module code</a></li>
       </ul>
     </div>
@@ -189,13 +189,13 @@
               <div class="md-sidebar__inner">
                 <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="../../../index.html" title="flexlate 0.14.3 documentation" class="md-nav__button md-logo">
+    <a href="../../../index.html" title="flexlate 0.14.4 documentation" class="md-nav__button md-logo">
       
         <i class="md-icon">&#xe869</i>
       
     </a>
     <a href="../../../index.html"
-       title="flexlate 0.14.3 documentation">flexlate</a>
+       title="flexlate 0.14.4 documentation">flexlate</a>
   </label>
     <div class="md-nav__source">
       <a href="https://github.com/nickderobertis/flexlate" title="Go to repository" class="md-source" data-md-source="github">
@@ -330,6 +330,7 @@
     <span class="n">restore_initial_commit_files</span><span class="p">,</span>
     <span class="n">get_merge_conflict_diffs</span><span class="p">,</span>
     <span class="n">update_local_branches_from_remote_without_checkout</span><span class="p">,</span>
+    <span class="n">branch_exists</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">flexlate.template_data</span> <span class="kn">import</span> <span class="n">TemplateData</span><span class="p">,</span> <span class="n">merge_data</span>
 <span class="kn">from</span> <span class="nn">flexlate.transactions.transaction</span> <span class="kn">import</span> <span class="p">(</span>
@@ -492,18 +493,30 @@
             <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Leaving temp directory"</span><span class="p">)</span>
 
         <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Updating merged branch </span><span class="si">{</span><span class="n">merged_branch_name</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-        <span class="c1"># Now prepare the merged (output) branch, by merging the current</span>
-        <span class="c1"># branch into it and then the template branch into it.</span>
-        <span class="c1"># Update with changes from the main repo</span>
-        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">"Fast forwarding </span><span class="si">{</span><span class="n">merged_branch_name</span><span class="si">}</span><span class="s2"> based on </span><span class="si">{</span><span class="n">current_branch</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span>
-        <span class="p">)</span>
-        <span class="n">fast_forward_branch_without_checkout</span><span class="p">(</span>
-            <span class="n">repo</span><span class="p">,</span> <span class="n">merged_branch_name</span><span class="p">,</span> <span class="n">current_branch</span><span class="o">.</span><span class="n">name</span>
-        <span class="p">)</span>
+        <span class="c1"># Now prepare the merged (output) branch</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">branch_exists</span><span class="p">(</span><span class="n">repo</span><span class="p">,</span> <span class="n">merged_branch_name</span><span class="p">)</span> <span class="ow">and</span> <span class="n">branch_exists</span><span class="p">(</span>
+            <span class="n">repo</span><span class="p">,</span> <span class="n">base_merged_branch_name</span>
+        <span class="p">):</span>
+            <span class="c1"># If output feature branch doesn't exist but output main branch does,</span>
+            <span class="c1"># start it from the main output branch</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Fast forwarding </span><span class="si">{</span><span class="n">merged_branch_name</span><span class="si">}</span><span class="s2"> based on </span><span class="si">{</span><span class="n">base_merged_branch_name</span><span class="si">}</span><span class="s2">"</span>
+            <span class="p">)</span>
+            <span class="n">fast_forward_branch_without_checkout</span><span class="p">(</span>
+                <span class="n">repo</span><span class="p">,</span> <span class="n">merged_branch_name</span><span class="p">,</span> <span class="n">base_merged_branch_name</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Now get the output branch updated by merging the current branch into it</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Merging </span><span class="si">{</span><span class="n">current_branch</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> into </span><span class="si">{</span><span class="n">merged_branch_name</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="c1"># If the feature output branch exists, check it out</span>
+        <span class="c1"># If the feature output branch doesn't exist:</span>
+        <span class="c1">#  If the main output branch exists, start it from the main output branch</span>
+        <span class="c1">#  If the main output branch doesn't exist, start it from the current branch</span>
+        <span class="n">checkout_template_branch</span><span class="p">(</span><span class="n">repo</span><span class="p">,</span> <span class="n">merged_branch_name</span><span class="p">,</span> <span class="n">base_merged_branch_name</span><span class="p">)</span>
+        <span class="n">merge_branch_into_current</span><span class="p">(</span><span class="n">repo</span><span class="p">,</span> <span class="n">current_branch</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
         <span class="c1"># Update with template changes</span>
         <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Merging </span><span class="si">{</span><span class="n">template_branch_name</span><span class="si">}</span><span class="s2"> into </span><span class="si">{</span><span class="n">merged_branch_name</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-        <span class="n">checkout_template_branch</span><span class="p">(</span><span class="n">repo</span><span class="p">,</span> <span class="n">merged_branch_name</span><span class="p">,</span> <span class="n">base_merged_branch_name</span><span class="p">)</span>
         <span class="n">merge_branch_into_current</span><span class="p">(</span><span class="n">repo</span><span class="p">,</span> <span class="n">template_branch_name</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">repo_has_merge_conflicts</span><span class="p">(</span><span class="n">repo</span><span class="p">):</span>
