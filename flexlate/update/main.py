@@ -214,8 +214,11 @@ class Updater:
 
         log.debug(f"Updating merged branch {merged_branch_name}")
         # Now prepare the merged (output) branch
-        if not branch_exists(repo, merged_branch_name):
-            # If output feature branch doesn't exist, start it from the main output branch
+        if not branch_exists(repo, merged_branch_name) and branch_exists(
+            repo, base_merged_branch_name
+        ):
+            # If output feature branch doesn't exist but output main branch does,
+            # start it from the main output branch
             log.debug(
                 f"Fast forwarding {merged_branch_name} based on {base_merged_branch_name}"
             )
@@ -225,6 +228,10 @@ class Updater:
 
         # Now get the output branch updated by merging the current branch into it
         log.debug(f"Merging {current_branch.name} into {merged_branch_name}")
+        # If the feature output branch exists, check it out
+        # If the feature output branch doesn't exist:
+        #  If the main output branch exists, start it from the main output branch
+        #  If the main output branch doesn't exist, start it from the current branch
         checkout_template_branch(repo, merged_branch_name, base_merged_branch_name)
         merge_branch_into_current(repo, current_branch.name)
 
