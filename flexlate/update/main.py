@@ -216,14 +216,17 @@ class Updater:
         # branch into it and then the template branch into it.
         # Update with changes from the main repo
         log.debug(
-            f"Fast forwarding {merged_branch_name} based on {current_branch.name}"
+            f"Fast forwarding {merged_branch_name} based on {base_merged_branch_name}"
         )
         fast_forward_branch_without_checkout(
-            repo, merged_branch_name, current_branch.name
+            repo, merged_branch_name, base_merged_branch_name
         )
+        log.debug(f"Merging {current_branch.name} into {merged_branch_name}")
+        checkout_template_branch(repo, merged_branch_name, base_merged_branch_name)
+        merge_branch_into_current(repo, current_branch.name)
+
         # Update with template changes
         log.debug(f"Merging {template_branch_name} into {merged_branch_name}")
-        checkout_template_branch(repo, merged_branch_name, base_merged_branch_name)
         merge_branch_into_current(repo, template_branch_name)
 
         if repo_has_merge_conflicts(repo):
