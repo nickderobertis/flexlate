@@ -72,7 +72,7 @@ PACKAGE_INSTALL_REQUIRES = [
     "rich",
     "markupsafe<2.1",
     # Need to land support for Copier 6.0.0, until then peg to 5 or below
-    "copier<6",
+    "copier==5.*",
 ]
 
 # Add any third party packages you use in requirements for optional features of your package here
