@@ -165,7 +165,9 @@ def test_update_modify_specific_template(
     assert output_path.read_text() == "atwo"
 
 
+@pytest.mark.parametrize("output_branch_diverges", [False, True])
 def test_update_modify_template_with_feature_branches_and_main_branches_are_only_on_remote(
+    output_branch_diverges: bool,
     template_branch_situation: LocalBranchSituation,
     output_branch_situation: LocalBranchSituation,
     cookiecutter_one_modified_template: CookiecutterTemplate,
@@ -178,14 +180,27 @@ def test_update_modify_template_with_feature_branches_and_main_branches_are_only
         [cookiecutter_one_modified_template], project_root=GENERATED_REPO_DIR
     )
 
-    feature_branch = "feature"
-    checkout_new_branch(repo, feature_branch)
+    feature_branch_name = "feature"
+    checkout_new_branch(repo, feature_branch_name)
     feature_merged_branch_name = get_flexlate_branch_name_for_feature_branch(
-        feature_branch, DEFAULT_MERGED_BRANCH_NAME
+        feature_branch_name, DEFAULT_MERGED_BRANCH_NAME
     )
     feature_template_branch_name = get_flexlate_branch_name_for_feature_branch(
-        feature_branch, DEFAULT_TEMPLATE_BRANCH_NAME
+        feature_branch_name, DEFAULT_TEMPLATE_BRANCH_NAME
     )
+
+    base_output_branch = repo.branches[DEFAULT_MERGED_BRANCH_NAME]  # type: ignore
+
+    if output_branch_diverges:
+        # Add a change so that main diverges from the flexlate-output main branch
+        # This simulates what happens when the user uses the Flexlate Github Actions to resolve merge conflicts
+        # in the web editor: the output branch will diverge from main.
+        base_output_branch.checkout()
+        touch_path = GENERATED_REPO_DIR / "something1.txt"
+        touch_path.touch()
+        stage_and_commit_all(repo, "Add something 1")
+        feature_branch = repo.branches[feature_branch_name]  # type: ignore
+        feature_branch.checkout()
 
     # Push to remote and delete local branches, so it will have to fetch from remote to branch off
     add_local_remote(repo)
@@ -205,7 +220,10 @@ def test_update_modify_template_with_feature_branches_and_main_branches_are_only
 
     # Ensure the output is correct
     _assert_update_of_cookiecutter_one_modified_template_was_successful(
-        repo, feature_branch, feature_template_branch_name, feature_merged_branch_name
+        repo,
+        feature_branch_name,
+        feature_template_branch_name,
+        feature_merged_branch_name,
     )
 
     # Ensure that flexlate base branches were used properly
@@ -216,7 +234,6 @@ def test_update_modify_template_with_feature_branches_and_main_branches_are_only
     )
 
     output_branch: Head = repo.branches[feature_merged_branch_name]  # type: ignore
-    base_output_branch: Head = repo.branches[DEFAULT_MERGED_BRANCH_NAME]  # type: ignore
     assert output_branch.commit.parents[0].hexsha == base_output_branch.commit.hexsha
 
 
