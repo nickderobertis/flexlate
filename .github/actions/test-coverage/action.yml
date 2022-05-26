@@ -1,0 +1,20 @@
+name: Lint and Test
+description: "Runs isort, black, flake8, mypy, pytest. Be sure to run install-dependencies first"
+inputs:
+  codecov-token:
+    required: true
+    description: "The codecov token to use for uploading coverage reports."
+runs:
+  using: composite
+  steps:
+    - name: Run tests with coverage
+      shell: bash
+      run: pipenv run nox -s test_coverage
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v2
+      with:
+        token: ${{ inputs.codecov-token }}
+        file: ./coverage.xml
+        flags: unittests
+        name: codecov-pytest
+        yml: ./codecov.yml

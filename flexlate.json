@@ -4,7 +4,7 @@
       "name": "copier-pypi-sphinx-flexlate",
       "path": "https://github.com/nickderobertis/copier-pypi-sphinx-flexlate",
       "type": "copier",
-      "version": "4c2b5cced81005b6110f498072068d7d83520f08",
+      "version": "f9d09a366c930f765b650e41ff88d6af89bb7684",
       "git_url": "https://github.com/nickderobertis/copier-pypi-sphinx-flexlate",
       "target_version": null,
       "render_relative_root_in_output": ".",
@@ -14,7 +14,7 @@
       "name": "copier-flexlate-github-actions",
       "path": "https://github.com/nickderobertis/copier-flexlate-github-actions",
       "type": "copier",
-      "version": "e45c96646c198d3903faa5df0586ea6872d0e529",
+      "version": "9743929a6beca33d162bdb936a6f462b6ed417d0",
       "git_url": "https://github.com/nickderobertis/copier-flexlate-github-actions",
       "target_version": null,
       "render_relative_root_in_output": ".",
@@ -31,13 +31,20 @@
         "repo_name": "flexlate",
         "repo_username": "nickderobertis",
         "short_description": "A composable, maintainable system for managing templates",
+        "main_branch_name": "master",
         "package_author": "Nick DeRobertis",
         "author_email": "whoopnip@gmail.com",
         "google_analytics_id": "",
+        "os_support": [
+          "ubuntu",
+          "macos",
+          "windows"
+        ],
+        "minimum_python_version": "3.8",
         "logo_url": "",
         "install_packages": "py-app-conf cookiecutter GitPython"
       },
-      "version": "4c2b5cced81005b6110f498072068d7d83520f08",
+      "version": "f9d09a366c930f765b650e41ff88d6af89bb7684",
       "add_mode": "local",
       "root": "."
     },
@@ -46,7 +53,7 @@
       "data": {
         "main_branch_name": "master"
       },
-      "version": "e45c96646c198d3903faa5df0586ea6872d0e529",
+      "version": "9743929a6beca33d162bdb936a6f462b6ed417d0",
       "add_mode": "local",
       "root": "."
     }
