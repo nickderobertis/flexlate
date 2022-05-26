@@ -3,11 +3,11 @@ Usage: python ipynb_to_gallery.py <notebook.ipynb>
 Dependencies:
 pypandoc: install using `pip install pypandoc`
 """
+import json
 import os
 from typing import Optional
 
 import pypandoc as pdoc
-import json
 
 
 def convert_ipynb_to_gallery(file_path: str, out_path: Optional[str] = None):

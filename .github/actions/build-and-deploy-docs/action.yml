@@ -1,0 +1,24 @@
+name: Build and Deploy Docs
+description: "Installs docs-specific dependencies, builds the docs, and deploys them. Be sure to run install-dependencies first"
+inputs:
+  gh-token:
+    required: true
+    description: "The GitHub token to use for authentication."
+runs:
+  using: composite
+  steps:
+    - name: Install docs-specific dependencies
+      shell: bash
+      run: |
+        sudo apt-get install pandoc -y
+    - name: Build Documentation
+      shell: bash
+      run: |
+        pipenv run nox -s docs
+        echo "" > docs/.nojekyll
+    - name: Deploy Documentation
+      uses: peaceiris/actions-gh-pages@v2.5.0
+      env:
+        GITHUB_TOKEN: ${{ inputs.gh-token }}
+        PUBLISH_BRANCH: gh-pages
+        PUBLISH_DIR: ./docs

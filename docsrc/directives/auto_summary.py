@@ -1,5 +1,6 @@
-from sphinx.ext.autosummary import Autosummary
 from typing import List, Tuple
+
+from sphinx.ext.autosummary import Autosummary
 
 
 class AutoSummaryNameOnly(Autosummary):
