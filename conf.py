@@ -20,7 +20,7 @@ REPO_MAINTAINERS = [
 ]
 
 # Package version in the format (major, minor, release)
-PACKAGE_VERSION_TUPLE = (0, 14, 0)
+PACKAGE_VERSION_TUPLE = (0, 14, 4)
 
 # Short description of the package
 PACKAGE_SHORT_DESCRIPTION = "A composable, maintainable system for managing templates"
@@ -64,7 +64,6 @@ PACKAGE_INSTALL_REQUIRES = [
     # 'otherpackage>=1,<2'
     "py-app-conf",
     "cookiecutter",
-    "copier",
     "gitpython",
     # Should be able to remove click version fix after typer puts patch for
     # ImportError: cannot import name 'get_terminal_size' from 'click.termui'
@@ -72,6 +71,8 @@ PACKAGE_INSTALL_REQUIRES = [
     "typer",
     "rich",
     "markupsafe<2.1",
+    # Need to land support for Copier 6.0.0, until then peg to 5 or below
+    "copier==5.*",
 ]
 
 # Add any third party packages you use in requirements for optional features of your package here

@@ -84,6 +84,7 @@ jobs:
         run: |
           git config --global user.email "flexlate-git@nickderobertis.com"
           git config --global user.name "flexlate-git"
+          git config --global init.defaultBranch main
       - name: Build Documentation
         run: |
           cd docsrc
