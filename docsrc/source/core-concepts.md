@@ -125,7 +125,7 @@ It comes with official Github Actions to help you do so:
 [Flexlate Update Action](https://github.com/nickderobertis/flexlate-update-action) 
 can be used to help automatically get PRs for template updates.
 - The
-[Flexlate Merge Action](https://github.com/nickderobertis/flexlate-merge-action) 
+[Flexlate After-Merge Action](https://github.com/nickderobertis/flexlate-merge-action) 
 can be used to 
 automate merging the Flexlate feature branches into the Flexlate main branches, and automate
 the handling of merge conflict resolution PRs.
@@ -148,9 +148,9 @@ in the
 [Flexate project itself](https://github.com/nickderobertis/flexlate).
 
 See example workflow runs of the 
-[Flexlate Update Action](https://github.com/nickderobertis/flexlate/actions/workflows/template-update.yml) 
+[Flexlate Update Action](https://github.com/nickderobertis/flexlate/actions/workflows/flexlate-update.yml) 
 and the
-[merge action](https://github.com/nickderobertis/flexlate/actions/workflows/merge-flexlate.yml).
+[Flexlate After-Merge Action](https://github.com/nickderobertis/flexlate/actions/workflows/flexlate-after-merge.yml).
 ```
 
 ## Flexlate Configuration Files

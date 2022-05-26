@@ -50,6 +50,7 @@ from flexlate.ext_git import (
     restore_initial_commit_files,
     get_merge_conflict_diffs,
     update_local_branches_from_remote_without_checkout,
+    branch_exists,
 )
 from flexlate.template_data import TemplateData, merge_data
 from flexlate.transactions.transaction import (
@@ -212,18 +213,30 @@ class Updater:
             log.debug("Leaving temp directory")
 
         log.debug(f"Updating merged branch {merged_branch_name}")
-        # Now prepare the merged (output) branch, by merging the current
-        # branch into it and then the template branch into it.
-        # Update with changes from the main repo
-        log.debug(
-            f"Fast forwarding {merged_branch_name} based on {current_branch.name}"
-        )
-        fast_forward_branch_without_checkout(
-            repo, merged_branch_name, current_branch.name
-        )
+        # Now prepare the merged (output) branch
+        if not branch_exists(repo, merged_branch_name) and branch_exists(
+            repo, base_merged_branch_name
+        ):
+            # If output feature branch doesn't exist but output main branch does,
+            # start it from the main output branch
+            log.debug(
+                f"Fast forwarding {merged_branch_name} based on {base_merged_branch_name}"
+            )
+            fast_forward_branch_without_checkout(
+                repo, merged_branch_name, base_merged_branch_name
+            )
+
+        # Now get the output branch updated by merging the current branch into it
+        log.debug(f"Merging {current_branch.name} into {merged_branch_name}")
+        # If the feature output branch exists, check it out
+        # If the feature output branch doesn't exist:
+        #  If the main output branch exists, start it from the main output branch
+        #  If the main output branch doesn't exist, start it from the current branch
+        checkout_template_branch(repo, merged_branch_name, base_merged_branch_name)
+        merge_branch_into_current(repo, current_branch.name)
+
         # Update with template changes
         log.debug(f"Merging {template_branch_name} into {merged_branch_name}")
-        checkout_template_branch(repo, merged_branch_name, base_merged_branch_name)
         merge_branch_into_current(repo, template_branch_name)
 
         if repo_has_merge_conflicts(repo):

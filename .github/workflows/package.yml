@@ -120,6 +120,7 @@ jobs:
         run: |
           git config --global user.email "flexlate-git@nickderobertis.com"
           git config --global user.name "flexlate-git"
+          git config --global init.defaultBranch main
       - name: Build Documentation
         if: steps.output_pypi_version.outputs.version != steps.output_build_version.outputs.version
         run: |

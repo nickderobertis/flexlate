@@ -52,7 +52,7 @@ input: "[None, 'my answer\\n10']"
 git checkout -b feature-branch
 fxt add output copier-simple-example some/path
 fxt merge
-git checkout master
+git checkout main
 git merge feature-branch
 ```
 
@@ -101,7 +101,7 @@ fxt push feature
 Flexlate has 
 [official companion Github Actions](../core-concepts.md#ci-workflows)
 that can automate using Flexlate. The 
-[Flexlate Merge Action](https://github.com/nickderobertis/flexlate-merge-action) 
+[Flexlate After-Merge Action](https://github.com/nickderobertis/flexlate-merge-action) 
 can be used to automate merging the Flexlate feature branches into the 
 Flexlate main branches.
 
