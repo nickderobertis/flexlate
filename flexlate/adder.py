@@ -1,7 +1,5 @@
 import os
 import shutil
-import tempfile
-import time
 from copy import deepcopy
 from pathlib import Path
 from typing import Optional
@@ -27,6 +25,7 @@ from flexlate.path_ops import location_relative_to_new_parent
 from flexlate.render.multi import MultiRenderer
 from flexlate.styles import INFO_STYLE, SUCCESS_STYLE, console, print_styled, styled
 from flexlate.syncer import Syncer
+from flexlate.temp_path import create_temp_path
 from flexlate.template.base import Template
 from flexlate.template_data import TemplateData
 from flexlate.transactions.transaction import (
@@ -342,10 +341,8 @@ class Adder:
         renderer: MultiRenderer = MultiRenderer(),
         syncer: Syncer = Syncer(),
     ) -> str:
-        with tempfile.TemporaryDirectory() as temp_dir:
-            temp_path = Path(temp_dir)
-
-            repo = Repo.init(temp_dir)
+        with create_temp_path() as temp_path:
+            repo = Repo.init(temp_path)
 
             def sync():
                 syncer.sync_local_changes_to_flexlate_branches(

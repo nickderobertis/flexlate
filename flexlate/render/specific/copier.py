@@ -1,5 +1,3 @@
-import shutil
-import tempfile
 from collections import ChainMap
 from pathlib import Path
 from typing import Any, Dict, Final, Sequence
@@ -12,6 +10,7 @@ from copier.config.user_data import load_config_data, query_user_data
 
 from flexlate.render.renderable import Renderable
 from flexlate.render.specific.base import SpecificTemplateRenderer
+from flexlate.temp_path import create_temp_path
 from flexlate.template.copier import CopierTemplate
 from flexlate.template.types import TemplateType
 from flexlate.template_data import TemplateData
@@ -45,15 +44,15 @@ class CopierRenderer(SpecificTemplateRenderer[CopierTemplate]):
     ) -> str:
         template = renderable.template
 
-        with tempfile.TemporaryDirectory() as temp_template_dir:
+        with create_temp_path() as temp_template_path:
             copier_config_path = _find_copier_yaml_path(template.path)
             with open(copier_config_path, "r") as f:
                 copier_config = yaml.safe_load(f)
             _modify_copier_config_yaml_to_remove_tasks(copier_config)
-            config_out_path = Path(temp_template_dir) / copier_config_path.name
+            config_out_path = temp_template_path / copier_config_path.name
             config_out_path.write_text(yaml.dump(copier_config))
             temp_template_file_path = (
-                Path(temp_template_dir)
+                temp_template_path
                 / template.render_relative_root_in_template
                 / "temp.txt"
             )
@@ -61,15 +60,15 @@ class CopierRenderer(SpecificTemplateRenderer[CopierTemplate]):
                 temp_template_file_path.parent.mkdir(parents=True)
             temp_template_file_path.write_text(string)
 
-            with tempfile.TemporaryDirectory() as temp_output_dir:
+            with create_temp_path() as temp_output_path:
                 conf = _make_config_by_adding_defaults_then_prompting_user(
-                    temp_template_dir,
-                    temp_output_dir,
+                    str(temp_template_path),
+                    str(temp_output_path),
                     data=renderable.data,
                     no_input=True,
                 )
                 copy_local(conf=conf)
-                temp_output_file_path = Path(temp_output_dir) / "temp.txt"
+                temp_output_file_path = temp_output_path / "temp.txt"
                 output = temp_output_file_path.read_text()
         return output
 
