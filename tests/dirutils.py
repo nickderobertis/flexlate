@@ -1,6 +1,7 @@
 import filecmp
 import os
 import shutil
+import time
 from pathlib import Path
 from typing import Sequence, Union
 
@@ -9,8 +10,19 @@ from tests.config import GENERATED_FILES_DIR
 
 def wipe_generated_folder():
     if GENERATED_FILES_DIR.exists():
-        shutil.rmtree(GENERATED_FILES_DIR)
+        _remove_folder(GENERATED_FILES_DIR)
     GENERATED_FILES_DIR.mkdir()
+
+def _remove_folder(folder: Path, retries: int = 20):
+    if folder.exists():
+        try:
+            shutil.rmtree(folder)
+        except PermissionError as e:
+            time.sleep(0.1)
+            if retries > 0:
+                _remove_folder(folder, retries - 1)
+            else:
+                raise e
 
 
 def display_contents_of_all_files_in_folder(
