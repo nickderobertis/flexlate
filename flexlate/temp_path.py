@@ -1,11 +1,11 @@
 import contextlib
 import tempfile
 from pathlib import Path
-from typing import ContextManager
+from typing import Iterator
 
 
 @contextlib.contextmanager
-def create_temp_path() -> ContextManager[Path]:
+def create_temp_path() -> Iterator[Path]:
     """
     Returns a temporary folder path
 
