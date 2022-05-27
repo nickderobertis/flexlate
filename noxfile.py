@@ -56,7 +56,7 @@ def test(session):
         "-r", "test-requirements.txt", "--upgrade", "--upgrade-strategy", "eager"
     )
     session.install(".")
-    session.run("pytest")
+    session.run("pytest", *session.posargs)
 
 
 @nox.session
