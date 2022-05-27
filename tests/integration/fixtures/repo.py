@@ -18,14 +18,14 @@ from tests.config import (
 )
 from tests.fixtures.git import *
 
-fxt = Flexlate()
+_fxt = Flexlate()
 
 
 @pytest.fixture
 def repo_with_default_flexlate_project(repo_with_placeholder_committed: Repo) -> Repo:
     repo = repo_with_placeholder_committed
     with change_directory_to(GENERATED_REPO_DIR):
-        fxt.init_project()
+        _fxt.init_project()
     yield repo
 
 
@@ -35,13 +35,13 @@ def repo_with_copier_remote_version_one(
 ) -> Repo:
     repo = repo_with_default_flexlate_project
     with change_directory_to(GENERATED_REPO_DIR):
-        fxt.add_template_source(
+        _fxt.add_template_source(
             COPIER_REMOTE_URL, target_version=COPIER_REMOTE_VERSION_1
         )
         # TODO: Allow updating template sources even when there are no applied templates
         #  It should not be necessary to add this template for the update cli integration tests to pass
         #  Need to rework the process of getting updates, right now it relies on there being applied templates
-        fxt.apply_template_and_add(COPIER_REMOTE_NAME, no_input=True)
+        _fxt.apply_template_and_add(COPIER_REMOTE_NAME, no_input=True)
     yield repo
 
 
@@ -51,7 +51,7 @@ def repo_with_copier_remote_version_one_and_no_target_version(
 ) -> Repo:
     repo = repo_with_copier_remote_version_one
     with change_directory_to(GENERATED_REPO_DIR):
-        fxt.update_template_source_target_version(
+        _fxt.update_template_source_target_version(
             COPIER_REMOTE_NAME, None, project_path=GENERATED_REPO_DIR
         )
     yield repo
