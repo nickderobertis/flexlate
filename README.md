@@ -48,6 +48,9 @@ linting, and tests.
 
 Develop documentation by running `nox -s docs` to start up a dev server.
 
+To run tests only, run `nox -s test`. You can pass additional arguments to pytest
+by adding them after `--`, e.g. `nox -s test -- -k test_something`.
+
 ## Author
 
 Created by Nick DeRobertis. MIT License.
