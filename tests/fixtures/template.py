@@ -1,5 +1,4 @@
 import shutil
-import tempfile
 from copy import deepcopy
 from pathlib import Path
 from typing import List, TypedDict, Union
@@ -9,6 +8,7 @@ import pytest
 from flexlate.finder.specific.cookiecutter import CookiecutterFinder
 from flexlate.finder.specific.copier import CopierFinder
 from flexlate.path_ops import change_directory_to
+from flexlate.temp_path import create_temp_path
 from flexlate.template.cookiecutter import CookiecutterTemplate
 from flexlate.template_path import get_local_repo_path_and_name_cloning_if_repo_url
 from tests.config import (
@@ -139,8 +139,7 @@ def copier_with_tasks_template() -> CookiecutterTemplate:
 @pytest.fixture()
 def cookiecutter_remote_template() -> CookiecutterTemplate:
     finder = CookiecutterFinder()
-    with tempfile.TemporaryDirectory() as temp_dir:
-        temp_path = Path(temp_dir)
+    with create_temp_path() as temp_path:
         local_path, name = get_local_repo_path_and_name_cloning_if_repo_url(
             COOKIECUTTER_REMOTE_URL, dst_folder=temp_path
         )
@@ -153,8 +152,7 @@ def cookiecutter_remote_template() -> CookiecutterTemplate:
 @pytest.fixture()
 def cookiecutter_remote_version_one_template() -> CookiecutterTemplate:
     finder = CookiecutterFinder()
-    with tempfile.TemporaryDirectory() as temp_dir:
-        temp_path = Path(temp_dir)
+    with create_temp_path() as temp_path:
         local_path, name = get_local_repo_path_and_name_cloning_if_repo_url(
             COOKIECUTTER_REMOTE_URL, COOKIECUTTER_REMOTE_VERSION_1, dst_folder=temp_path
         )
@@ -202,8 +200,7 @@ def cookiecutter_one_modified_template(
     cookiecutter_one_template: CookiecutterTemplate,
 ) -> CookiecutterTemplate:
     template = deepcopy(cookiecutter_one_template)
-    with tempfile.TemporaryDirectory() as directory:
-        out_path = Path(directory)
+    with create_temp_path() as out_path:
         shutil.copytree(template.path, out_path, dirs_exist_ok=True)
         template.path = out_path
         modify_cookiecutter_one(out_path)

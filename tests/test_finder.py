@@ -1,4 +1,3 @@
-import tempfile
 from pathlib import Path
 
 import pytest
@@ -7,6 +6,7 @@ from flexlate.finder.multi import MultiFinder
 from flexlate.finder.specific.cookiecutter import CookiecutterFinder
 from flexlate.finder.specific.copier import CopierFinder
 from flexlate.path_ops import change_directory_to
+from flexlate.temp_path import create_temp_path
 from flexlate.template.base import Template
 from flexlate.template.cookiecutter import CookiecutterTemplate
 from flexlate.template_path import get_local_repo_path_and_name_cloning_if_repo_url
@@ -95,8 +95,7 @@ def test_get_copier_local_output_subdir_template():
 )
 def test_get_cookiecutter_remote_template(version: str, expect_contents: str):
     finder = CookiecutterFinder()
-    with tempfile.TemporaryDirectory() as temp_dir:
-        temp_path = Path(temp_dir)
+    with create_temp_path() as temp_path:
         local_path, name = get_local_repo_path_and_name_cloning_if_repo_url(
             COOKIECUTTER_REMOTE_URL, version, dst_folder=temp_path
         )
@@ -129,8 +128,7 @@ def test_get_cookiecutter_remote_template(version: str, expect_contents: str):
 )
 def test_get_copier_remote_template(version: str, expect_contents: str):
     finder = CopierFinder()
-    with tempfile.TemporaryDirectory() as temp_dir:
-        temp_path = Path(temp_dir)
+    with create_temp_path() as temp_path:
         local_path, name = get_local_repo_path_and_name_cloning_if_repo_url(
             COPIER_REMOTE_URL, version, dst_folder=temp_path
         )

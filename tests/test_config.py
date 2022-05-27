@@ -1,6 +1,5 @@
 import os.path
 import shutil
-import tempfile
 from pathlib import Path
 from typing import Optional
 
@@ -139,8 +138,7 @@ def test_load_recursive_project_config(path: Path):
 
 def test_fail_to_load_non_existent_project_config():
     manager = ConfigManager()
-    with tempfile.TemporaryDirectory() as temp_dir:
-        temp_path = Path(temp_dir)
+    with create_temp_path() as temp_path:
         configs_path = temp_path / PROJECT_CONFIGS_DIR.name
         shutil.copytree(str(PROJECT_CONFIGS_DIR), configs_path)
         with pytest.raises(FlexlateProjectConfigFileNotExistsException):

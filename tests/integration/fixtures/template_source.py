@@ -1,7 +1,6 @@
 import contextlib
 import os.path
 import shutil
-import tempfile
 from copy import deepcopy
 from dataclasses import dataclass
 from enum import Enum
@@ -13,6 +12,7 @@ import pytest
 
 from flexlate.add_mode import AddMode
 from flexlate.path_ops import change_directory_to
+from flexlate.temp_path import create_temp_path
 from flexlate.template.types import TemplateType
 from flexlate.template_data import TemplateData
 from tests.config import (
@@ -322,9 +322,9 @@ def template_source_in_dir_if_local_template(
 def template_source_with_temp_dir_if_local_template(
     template_source: TemplateSourceFixture,
 ) -> ContextManager[TemplateSourceFixture]:
-    with tempfile.TemporaryDirectory() as temp_dir:
+    with create_temp_path() as temp_path:
         with template_source_in_dir_if_local_template(
-            template_source, Path(temp_dir)
+            template_source, temp_path
         ) as output_template_source:
             yield output_template_source
 
