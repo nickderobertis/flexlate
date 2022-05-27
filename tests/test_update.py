@@ -7,49 +7,49 @@ from unittest.mock import patch
 
 import pytest
 from _pytest.monkeypatch import MonkeyPatch
-from git import Repo, Head
+from git import Head, Repo
 
 from flexlate import branch_update
 from flexlate.branch_update import get_flexlate_branch_name_for_feature_branch
 from flexlate.config import FlexlateConfig, TemplateSource, TemplateSourceWithTemplates
+from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.exc import GitRepoDirtyException, MergeConflictsAndAbortException
+from flexlate.ext_git import delete_local_branch, repo_has_merge_conflicts
 from flexlate.finder.multi import MultiFinder
 from flexlate.pusher import Pusher
 from flexlate.render.specific import cookiecutter
 from flexlate.syncer import Syncer
 from flexlate.template.base import Template
 from flexlate.template.cookiecutter import CookiecutterTemplate
-from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.template.copier import CopierTemplate
 from flexlate.template.types import TemplateType
 from flexlate.transactions.transaction import FlexlateTransaction
 from flexlate.update.main import Updater
 from flexlate.update.template import TemplateUpdate
 from tests.config import (
-    GENERATED_FILES_DIR,
+    COOKIECUTTER_ONE_NAME,
+    COOKIECUTTER_ONE_VERSION,
     COOKIECUTTER_REMOTE_URL,
     COOKIECUTTER_REMOTE_VERSION_1,
     COOKIECUTTER_REMOTE_VERSION_2,
-    COOKIECUTTER_ONE_VERSION,
-    COOKIECUTTER_ONE_NAME,
+    GENERATED_FILES_DIR,
 )
 from tests.fileutils import (
     cookiecutter_one_generated_text_content,
     cookiecutter_two_generated_text_content,
 )
 from tests.fixtures.git import *
+from tests.fixtures.local_branch_situation import *
 from tests.fixtures.template import *
 from tests.fixtures.templated_repo import *
+from tests.fixtures.transaction import sync_transaction, update_transaction
 from tests.fixtures.updates import *
-from tests.fixtures.local_branch_situation import *
-from tests.fixtures.transaction import update_transaction, sync_transaction
-from flexlate.ext_git import repo_has_merge_conflicts, delete_local_branch
 
 # TODO: check that config is updated after tests
 from tests.gitutils import (
+    add_local_remote,
     assert_main_commit_message_matches,
     checkout_new_branch,
-    add_local_remote,
 )
 
 

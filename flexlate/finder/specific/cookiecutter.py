@@ -7,8 +7,8 @@ from cookiecutter.find import find_template
 
 from flexlate.finder.specific.base import TemplateFinder
 from flexlate.finder.specific.git import (
-    get_version_from_source_path,
     get_git_url_from_source_path,
+    get_version_from_source_path,
 )
 from flexlate.template.cookiecutter import CookiecutterTemplate
 from flexlate.template_config.cookiecutter import CookiecutterConfig

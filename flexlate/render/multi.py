@@ -2,7 +2,7 @@ import os
 import shutil
 import tempfile
 from pathlib import Path
-from typing import Sequence, Optional, List, Dict, Final
+from typing import Dict, Final, List, Optional, Sequence
 
 from flexlate.exc import InvalidTemplateClassException, RendererNotFoundException
 from flexlate.render.renderable import Renderable

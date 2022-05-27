@@ -1,6 +1,6 @@
 import shlex
 import subprocess
-from typing import Dict, Optional, Union, List
+from typing import Dict, List, Optional, Union
 
 from flexlate.template_data import TemplateData
 

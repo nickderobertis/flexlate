@@ -1,6 +1,6 @@
 import abc
 from pathlib import Path
-from typing import Union, Protocol, TypeVar
+from typing import Protocol, TypeVar, Union
 
 from flexlate.template.base import Template
 from flexlate.template_config.base import TemplateConfig

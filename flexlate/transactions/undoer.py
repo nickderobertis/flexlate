@@ -3,13 +3,13 @@ from git import Repo
 from flexlate.branch_update import undo_transaction_in_flexlate_branches
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.ext_git import assert_repo_is_in_clean_state
-from flexlate.styles import console, styled, INFO_STYLE, print_styled, SUCCESS_STYLE
+from flexlate.styles import INFO_STYLE, SUCCESS_STYLE, console, print_styled, styled
 from flexlate.transactions.transaction import (
-    assert_last_commit_was_in_a_flexlate_transaction,
     FlexlateTransaction,
-    reset_last_transaction,
     assert_has_at_least_n_transactions,
+    assert_last_commit_was_in_a_flexlate_transaction,
     find_last_transaction_from_commit,
+    reset_last_transaction,
 )
 
 

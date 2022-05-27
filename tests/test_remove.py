@@ -5,22 +5,22 @@ from flexlate import branch_update
 from flexlate.add_mode import AddMode
 from flexlate.config import FlexlateConfig
 from flexlate.exc import (
-    CannotRemoveTemplateSourceException,
     CannotRemoveAppliedTemplateException,
+    CannotRemoveTemplateSourceException,
 )
 from flexlate.ext_git import repo_has_merge_conflicts
 from flexlate.remover import Remover
 from flexlate.transactions.transaction import FlexlateTransaction
 from tests.config import (
     COOKIECUTTER_ONE_NAME,
-    COOKIECUTTER_TWO_NAME,
     COOKIECUTTER_REMOTE_NAME,
+    COOKIECUTTER_TWO_NAME,
 )
 from tests.fixtures.templated_repo import *
 from tests.fixtures.transaction import (
-    remove_source_transaction,
-    remove_output_transaction,
     add_source_transaction,
+    remove_output_transaction,
+    remove_source_transaction,
 )
 from tests.gitutils import accept_theirs_in_merge_conflict
 

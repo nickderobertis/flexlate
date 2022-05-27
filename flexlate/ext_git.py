@@ -5,17 +5,17 @@ import shutil
 import tempfile
 from contextlib import contextmanager
 from pathlib import Path
-from typing import cast, Set, Generator, ContextManager, Optional, Tuple, List, Sequence
+from typing import ContextManager, Generator, List, Optional, Sequence, Set, Tuple, cast
 
-from git import Repo, Blob, Tree, GitCommandError, Commit, Git  # type: ignore
+from git import Blob, Commit, Git, GitCommandError, Repo, Tree  # type: ignore
 
 from flexlate.exc import (
+    CannotFindClonedTemplateException,
     GitRepoDirtyException,
     GitRepoHasNoCommitsException,
-    CannotFindClonedTemplateException,
 )
 from flexlate.logger import log
-from flexlate.path_ops import copy_flexlate_configs, change_directory_to
+from flexlate.path_ops import change_directory_to, copy_flexlate_configs
 
 
 def checkout_template_branch(repo: Repo, branch_name: str, base_branch_name: str):

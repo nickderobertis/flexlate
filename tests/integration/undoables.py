@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Callable, List, Final
+from typing import Callable, Final, List
 
 from flexlate.main import Flexlate
 from tests.config import COOKIECUTTER_REMOTE_NAME, COPIER_ONE_DIR, COPIER_ONE_NAME

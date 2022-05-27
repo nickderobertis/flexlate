@@ -1,9 +1,9 @@
 import os
 from copy import deepcopy
 from pathlib import Path
-from typing import Sequence, Optional, List, Dict, Any
+from typing import Any, Dict, List, Optional, Sequence
 
-from git import Repo, GitCommandError
+from git import GitCommandError, Repo
 from rich.prompt import Confirm
 
 from flexlate.branch_update import (
@@ -14,53 +14,50 @@ from flexlate.cli_utils import confirm_user
 from flexlate.config_manager import ConfigManager
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.exc import (
-    TriedToCommitButNoChangesException,
     MergeConflictsAndAbortException,
+    TriedToCommitButNoChangesException,
+)
+from flexlate.ext_git import (
+    abort_merge,
+    assert_repo_is_in_clean_state,
+    branch_exists,
+    checkout_template_branch,
+    fast_forward_branch_without_checkout,
+    get_branch_sha,
+    get_merge_conflict_diffs,
+    merge_branch_into_current,
+    repo_has_merge_conflicts,
+    reset_branch_to_commit_without_checkout,
+    restore_initial_commit_files,
+    stage_and_commit_all,
+    temp_repo_that_pushes_to_branch,
+    update_local_branches_from_remote_without_checkout,
 )
 from flexlate.finder.multi import MultiFinder
 from flexlate.logger import log
 from flexlate.path_ops import (
-    make_all_dirs,
     location_relative_to_new_parent,
     make_absolute_path_from_possibly_relative_to_another_path,
+    make_all_dirs,
 )
 from flexlate.render.multi import MultiRenderer
 from flexlate.render.renderable import Renderable
 from flexlate.styles import (
-    print_styled,
     ACTION_REQUIRED_STYLE,
-    styled,
-    QUESTION_STYLE,
     ALERT_STYLE,
     INFO_STYLE,
+    QUESTION_STYLE,
     SUCCESS_STYLE,
+    print_styled,
+    styled,
 )
 from flexlate.template.base import Template
-from flexlate.ext_git import (
-    stage_and_commit_all,
-    merge_branch_into_current,
-    checkout_template_branch,
-    repo_has_merge_conflicts,
-    assert_repo_is_in_clean_state,
-    temp_repo_that_pushes_to_branch,
-    fast_forward_branch_without_checkout,
-    abort_merge,
-    reset_branch_to_commit_without_checkout,
-    get_branch_sha,
-    restore_initial_commit_files,
-    get_merge_conflict_diffs,
-    update_local_branches_from_remote_without_checkout,
-    branch_exists,
-)
 from flexlate.template_data import TemplateData, merge_data
 from flexlate.transactions.transaction import (
     FlexlateTransaction,
     create_transaction_commit_message,
 )
-from flexlate.update.template import (
-    TemplateUpdate,
-    updates_with_updated_data,
-)
+from flexlate.update.template import TemplateUpdate, updates_with_updated_data
 
 
 class Updater:

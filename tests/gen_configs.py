@@ -4,25 +4,25 @@ from pathlib import Path
 
 from flexlate.add_mode import AddMode
 from flexlate.config import (
-    FlexlateConfig,
-    TemplateSource,
     AppliedTemplateConfig,
+    FlexlateConfig,
     FlexlateProjectConfig,
     ProjectConfig,
+    TemplateSource,
 )
 from flexlate.template.types import TemplateType
 from tests.config import (
-    COOKIECUTTER_ONE_DIR,
-    CONFIGS_DIR,
-    COOKIECUTTER_TWO_DIR,
     CONFIG_SUBDIR_2,
-    PROJECT_DIR,
-    PROJECT_CONFIGS_PROJECT_2_PATH,
-    PROJECT_CONFIGS_ROOT_DIR,
+    CONFIGS_DIR,
+    COOKIECUTTER_ONE_DIR,
+    COOKIECUTTER_TWO_DIR,
+    GENERATED_FILES_DIR,
     PROJECT_CONFIGS_PROJECT_1_PATH,
     PROJECT_CONFIGS_PROJECT_1_SUBDIR,
+    PROJECT_CONFIGS_PROJECT_2_PATH,
     PROJECT_CONFIGS_PROJECT_2_SUBDIR,
-    GENERATED_FILES_DIR,
+    PROJECT_CONFIGS_ROOT_DIR,
+    PROJECT_DIR,
 )
 
 

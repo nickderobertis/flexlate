@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
 from subprocess import CompletedProcess
-from typing import List, Final, Callable, Optional, ContextManager, Union
+from typing import Callable, ContextManager, Final, List, Optional, Union
 
 import pytest
 
@@ -16,39 +16,39 @@ from flexlate.path_ops import change_directory_to
 from flexlate.template.types import TemplateType
 from flexlate.template_data import TemplateData
 from tests.config import (
+    COOKIECUTTER_ONE_DIR,
+    COOKIECUTTER_ONE_MODIFIED_VERSION,
+    COOKIECUTTER_ONE_NAME,
+    COOKIECUTTER_ONE_VERSION,
     COOKIECUTTER_REMOTE_NAME,
     COOKIECUTTER_REMOTE_URL,
     COOKIECUTTER_REMOTE_VERSION_1,
     COOKIECUTTER_REMOTE_VERSION_2,
+    COOKIECUTTER_WITH_HOOKS_DIR,
+    COOKIECUTTER_WITH_HOOKS_MODIFIED_VERSION,
+    COOKIECUTTER_WITH_HOOKS_NAME,
+    COOKIECUTTER_WITH_HOOKS_VERSION,
+    COPIER_FROM_COOKIECUTTER_ONE_VERSION,
+    COPIER_ONE_DIR,
+    COPIER_ONE_MODIFIED_VERSION,
+    COPIER_ONE_NAME,
+    COPIER_ONE_VERSION,
     COPIER_REMOTE_NAME,
     COPIER_REMOTE_URL,
     COPIER_REMOTE_VERSION_1,
     COPIER_REMOTE_VERSION_2,
-    COOKIECUTTER_ONE_NAME,
-    COOKIECUTTER_ONE_DIR,
-    COOKIECUTTER_ONE_VERSION,
-    COOKIECUTTER_ONE_MODIFIED_VERSION,
-    COPIER_ONE_NAME,
-    COPIER_ONE_DIR,
-    COPIER_ONE_VERSION,
-    COPIER_ONE_MODIFIED_VERSION,
-    GENERATED_REPO_DIR,
-    GENERATED_FILES_DIR,
-    COPIER_FROM_COOKIECUTTER_ONE_VERSION,
-    COOKIECUTTER_WITH_HOOKS_DIR,
-    COOKIECUTTER_WITH_HOOKS_NAME,
-    COOKIECUTTER_WITH_HOOKS_VERSION,
-    COOKIECUTTER_WITH_HOOKS_MODIFIED_VERSION,
-    COPIER_WITH_TASKS_MODIFIED_VERSION,
-    COPIER_WITH_TASKS_VERSION,
     COPIER_WITH_TASKS_DIR,
+    COPIER_WITH_TASKS_MODIFIED_VERSION,
     COPIER_WITH_TASKS_NAME,
+    COPIER_WITH_TASKS_VERSION,
+    GENERATED_FILES_DIR,
+    GENERATED_REPO_DIR,
 )
 from tests.ext_subprocess import run
 from tests.fixtures.template import (
     modify_cookiecutter_one,
-    modify_copier_one,
     modify_cookiecutter_one_to_be_copier,
+    modify_copier_one,
     modify_copier_with_tasks,
 )
 

@@ -19,15 +19,15 @@ from flexlate.template.types import TemplateType
 from flexlate.transactions.transaction import FlexlateTransaction
 from tests.config import GENERATED_FILES_DIR
 from tests.fileutils import cookiecutter_one_generated_text_content
+from tests.fixtures.add_mode import add_mode
 from tests.fixtures.git import *
 from tests.fixtures.subdir_style import SubdirStyle, subdir_style
 from tests.fixtures.template import *
 from tests.fixtures.templated_repo import *
-from tests.fixtures.add_mode import add_mode
 from tests.fixtures.transaction import *
 from tests.fs_checks import (
-    assert_template_source_cookiecutter_one_added_correctly,
     assert_cookiecutter_one_applied_template_added_correctly,
+    assert_template_source_cookiecutter_one_added_correctly,
 )
 from tests.gitutils import (
     accept_theirs_in_merge_conflict,

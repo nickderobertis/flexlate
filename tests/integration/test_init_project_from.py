@@ -4,10 +4,10 @@ from flexlate import Flexlate
 from flexlate.path_ops import change_directory_to
 from tests.config import GENERATED_FILES_DIR
 from tests.integration.fixtures.template_source import (
-    template_source_with_temp_dir_if_local_template,
     COPIER_LOCAL_FIXTURE,
     TemplateSourceFixture,
     template_source_in_dir_if_local_template,
+    template_source_with_temp_dir_if_local_template,
 )
 from tests.integration.template_source_checks import (
     assert_root_template_source_output_is_correct,

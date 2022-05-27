@@ -5,23 +5,23 @@ from flexlate.add_mode import AddMode
 from flexlate.config import FlexlateConfig, FlexlateProjectConfig
 from flexlate.template_data import TemplateData
 from tests.config import (
-    GENERATED_REPO_DIR,
-    COOKIECUTTER_REMOTE_VERSION_2,
     COOKIECUTTER_REMOTE_NAME,
     COOKIECUTTER_REMOTE_URL,
+    COOKIECUTTER_REMOTE_VERSION_2,
     GENERATED_FILES_DIR,
+    GENERATED_REPO_DIR,
 )
 from tests.fixtures.template import (
-    get_header_for_cookiecutter_remote_template,
-    get_footer_for_copier_remote_template,
+    CookiecutterRemoteTemplateData,
     get_footer_for_cookiecutter_local_template,
     get_footer_for_copier_local_template,
-    CookiecutterRemoteTemplateData,
+    get_footer_for_copier_remote_template,
+    get_header_for_cookiecutter_remote_template,
 )
 from tests.integration.fixtures.template_source import (
-    TemplateSourceType,
     COOKIECUTTER_REMOTE_DEFAULT_EXPECT_PATH,
     TemplateSourceFixture,
+    TemplateSourceType,
 )
 
 

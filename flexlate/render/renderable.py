@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import TypeVar, Generic
+from typing import Generic, TypeVar
 
 from pydantic import BaseModel, Field
 

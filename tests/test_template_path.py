@@ -4,16 +4,16 @@ import pytest
 
 from flexlate.exc import InvalidTemplatePathException
 from flexlate.template_path import (
-    is_repo_url,
-    is_local_template,
     get_local_repo_path_and_name_cloning_if_repo_url,
+    is_local_template,
+    is_repo_url,
 )
 from tests.config import GENERATED_FILES_DIR
 from tests.dirutils import wipe_generated_folder
 from tests.fixtures.repo_path import (
+    RepoPathFixture,
     repo_path_fixture,
     repo_path_non_ssh_fixture,
-    RepoPathFixture,
 )
 
 

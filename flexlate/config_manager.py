@@ -1,27 +1,27 @@
 import os
 from pathlib import Path
-from typing import Sequence, List, Optional, Tuple, Set, Dict, Callable
+from typing import Callable, Dict, List, Optional, Sequence, Set, Tuple
 
 from flexlate.add_mode import AddMode, get_expanded_out_root
 from flexlate.config import (
-    FlexlateConfig,
-    TemplateSource,
     AppliedTemplateConfig,
     AppliedTemplateWithSource,
+    FlexlateConfig,
     FlexlateProjectConfig,
     ProjectConfig,
+    TemplateSource,
     TemplateSourceWithTemplates,
 )
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.exc import (
-    FlexlateConfigFileNotExistsException,
-    TemplateLookupException,
-    InvalidTemplateDataException,
-    TemplateNotRegisteredException,
     CannotLoadConfigException,
-    FlexlateProjectConfigFileNotExistsException,
-    CannotRemoveTemplateSourceException,
     CannotRemoveAppliedTemplateException,
+    CannotRemoveTemplateSourceException,
+    FlexlateConfigFileNotExistsException,
+    FlexlateProjectConfigFileNotExistsException,
+    InvalidTemplateDataException,
+    TemplateLookupException,
+    TemplateNotRegisteredException,
 )
 from flexlate.path_ops import (
     location_relative_to_new_parent,

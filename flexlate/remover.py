@@ -15,11 +15,9 @@ from flexlate.ext_git import (
     assert_repo_is_in_clean_state,
     update_local_branches_from_remote_without_checkout,
 )
-from flexlate.path_ops import (
-    location_relative_to_new_parent,
-)
+from flexlate.path_ops import location_relative_to_new_parent
 from flexlate.render.multi import MultiRenderer
-from flexlate.styles import console, styled, INFO_STYLE, print_styled, SUCCESS_STYLE
+from flexlate.styles import INFO_STYLE, SUCCESS_STYLE, console, print_styled, styled
 from flexlate.transactions.transaction import (
     FlexlateTransaction,
     create_transaction_commit_message,

@@ -5,22 +5,22 @@ from pathlib import Path
 from typing import Optional
 
 from flexlate.add_mode import AddMode
-from flexlate.config import FlexlateConfig, AppliedTemplateConfig, FlexlateProjectConfig
+from flexlate.config import AppliedTemplateConfig, FlexlateConfig, FlexlateProjectConfig
 from flexlate.config_manager import ConfigManager
 from flexlate.exc import FlexlateProjectConfigFileNotExistsException
 from flexlate.update.main import Updater
 from flexlate.update.template import TemplateUpdate
 from tests.config import (
     CONFIGS_DIR,
+    COOKIECUTTER_ONE_NAME,
     GENERATED_FILES_DIR,
+    GENERATED_REPO_DIR,
+    NESTED_PROJECT_DIR,
+    PROJECT_CONFIGS_DIR,
     PROJECT_CONFIGS_PROJECT_1_PATH,
     PROJECT_CONFIGS_PROJECT_1_SUBDIR,
     PROJECT_CONFIGS_PROJECT_2_PATH,
     PROJECT_CONFIGS_PROJECT_2_SUBDIR,
-    PROJECT_CONFIGS_DIR,
-    GENERATED_REPO_DIR,
-    COOKIECUTTER_ONE_NAME,
-    NESTED_PROJECT_DIR,
 )
 from tests.dirutils import wipe_generated_folder
 from tests.fixtures.config import generated_dir_with_configs

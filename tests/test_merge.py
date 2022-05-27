@@ -3,6 +3,7 @@ from unittest.mock import patch
 
 import pytest
 
+from flexlate import merger as merger_mod
 from flexlate.branch_update import (
     get_flexlate_branch_name,
     get_flexlate_branch_name_for_feature_branch,
@@ -10,14 +11,13 @@ from flexlate.branch_update import (
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.ext_git import merge_branch_into_current
 from flexlate.merger import Merger
-from flexlate import merger as merger_mod
-from tests.fixtures.templated_repo import *
 from tests.fixtures.template import *
+from tests.fixtures.templated_repo import *
 from tests.fixtures.transaction import add_output_transaction
 from tests.gitutils import (
-    rename_branch,
     assert_main_commit_message_matches,
     checkout_new_branch,
+    rename_branch,
 )
 
 

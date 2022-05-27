@@ -8,8 +8,8 @@ from flexlate.config import FlexlateConfig
 from flexlate.exc import TemplateNotRegisteredException
 from flexlate.template.copier import CopierTemplate
 from tests.config import COOKIECUTTER_REMOTE_NAME, COPIER_ONE_NAME
-from tests.fixtures.templated_repo import *
 from tests.fixtures.template import *
+from tests.fixtures.templated_repo import *
 from tests.fixtures.transaction import *
 
 

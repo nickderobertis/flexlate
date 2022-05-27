@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Optional, List
+from typing import List, Optional
 
 import typer
 
@@ -11,7 +11,7 @@ from flexlate.exc import MergeConflictsAndAbortException
 from flexlate.get_version import get_flexlate_version
 from flexlate.logger import log
 from flexlate.main import Flexlate
-from flexlate.styles import print_styled, INFO_STYLE
+from flexlate.styles import INFO_STYLE, print_styled
 
 MAIN_DOC = """
 fxt is a CLI tool to manage project and file generator templates.

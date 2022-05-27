@@ -14,14 +14,13 @@ from flexlate.transactions.transaction import FlexlateTransaction
 from flexlate.update.main import Updater
 from tests.config import COOKIECUTTER_ONE_NAME
 from tests.fileutils import preprend_cookiecutter_one_generated_text
-
 from tests.fixtures.git import *
 from tests.fixtures.template import *
 from tests.fixtures.transaction import (
-    add_source_transaction,
     add_output_transaction,
-    remove_source_transaction,
+    add_source_transaction,
     remove_output_transaction,
+    remove_source_transaction,
     update_transaction,
 )
 from tests.gitutils import rename_branch

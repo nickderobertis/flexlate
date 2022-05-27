@@ -13,6 +13,7 @@ def wipe_generated_folder():
         _remove_folder(GENERATED_FILES_DIR)
     GENERATED_FILES_DIR.mkdir()
 
+
 def _remove_folder(folder: Path, retries: int = 20):
     if folder.exists():
         try:

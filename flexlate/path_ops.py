@@ -2,7 +2,7 @@ import os
 import shutil
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Callable, Sequence, Optional
+from typing import Callable, Optional, Sequence
 
 
 def make_func_that_creates_cwd_and_out_root_before_running(

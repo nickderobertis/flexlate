@@ -2,11 +2,11 @@ import shutil
 import tempfile
 from collections import ChainMap
 from pathlib import Path
-from typing import Sequence, Final, Any, Dict
+from typing import Any, Dict, Final, Sequence
 
 import yaml
 from copier import copy_local
-from copier.config.factory import verify_minimum_version, filter_config
+from copier.config.factory import filter_config, verify_minimum_version
 from copier.config.objects import ConfigData, EnvOps
 from copier.config.user_data import load_config_data, query_user_data
 

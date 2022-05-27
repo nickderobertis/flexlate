@@ -3,7 +3,7 @@ import contextlib
 import os
 import shutil
 from pathlib import Path
-from typing import Optional, Callable
+from typing import Callable, Optional
 from unittest.mock import patch
 
 import appdirs
@@ -20,33 +20,33 @@ from flexlate.exc import TriedToCommitButNoChangesException, UnnecessarySyncExce
 from flexlate.ext_git import merge_branch_into_current
 from flexlate.main import Flexlate
 from tests.config import (
-    GENERATED_FILES_DIR,
-    COOKIECUTTER_REMOTE_URL,
     COOKIECUTTER_REMOTE_NAME,
+    COOKIECUTTER_REMOTE_URL,
+    GENERATED_FILES_DIR,
 )
+from tests.fixtures.add_mode import *
+from tests.fixtures.cli import *
 from tests.fixtures.git import *
 from tests.fixtures.subdir_style import *
 from tests.fixtures.template import *
-from tests.fixtures.cli import *
-from tests.fixtures.add_mode import *
-from tests.integration.fixtures.template_source import *
 from tests.gitutils import (
     assert_main_commit_message_matches,
-    checkout_new_branch,
     checkout_existing_branch,
+    checkout_new_branch,
 )
 from tests.integration.cli_stub import CLIRunnerException, capture_output
+from tests.integration.fixtures.template_source import *
 from tests.integration.template_source_checks import (
-    assert_project_files_are_correct,
-    assert_project_files_do_not_exist,
-    assert_template_sources_config_is_correct,
-    assert_template_sources_config_is_empty,
+    _get_default_data,
     assert_applied_templates_config_is_correct,
     assert_applied_templates_config_is_empty,
     assert_config_is_correct,
     assert_project_config_is_correct,
-    _get_default_data,
+    assert_project_files_are_correct,
+    assert_project_files_do_not_exist,
     assert_root_template_source_output_is_correct,
+    assert_template_sources_config_is_correct,
+    assert_template_sources_config_is_empty,
 )
 from tests.integration.undoables import UNDOABLE_OPERATIONS
 from tests.test_pusher import add_local_remote_and_check_branches_on_exit

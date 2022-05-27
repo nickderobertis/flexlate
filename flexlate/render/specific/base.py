@@ -1,6 +1,6 @@
 import abc
 from pathlib import Path
-from typing import Optional, TypeVar, Type, Protocol
+from typing import Optional, Protocol, Type, TypeVar
 
 from flexlate.render.renderable import Renderable
 from flexlate.template.base import Template

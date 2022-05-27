@@ -23,11 +23,9 @@ from flexlate.ext_git import (
     stage_and_commit_all,
     update_local_branches_from_remote_without_checkout,
 )
-from flexlate.path_ops import (
-    location_relative_to_new_parent,
-)
+from flexlate.path_ops import location_relative_to_new_parent
 from flexlate.render.multi import MultiRenderer
-from flexlate.styles import SUCCESS_STYLE, INFO_STYLE, console, styled, print_styled
+from flexlate.styles import INFO_STYLE, SUCCESS_STYLE, console, print_styled, styled
 from flexlate.syncer import Syncer
 from flexlate.template.base import Template
 from flexlate.template_data import TemplateData

@@ -7,7 +7,7 @@ from flexlate.pusher import Pusher
 from tests.config import GENERATED_FILES_DIR
 from tests.dirutils import assert_dir_trees_are_equal
 from tests.fixtures.templated_repo import *
-from tests.gitutils import add_remote, add_local_remote
+from tests.gitutils import add_local_remote, add_remote
 
 
 def test_push_feature_flexlate_branches(

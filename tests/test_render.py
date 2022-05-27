@@ -8,8 +8,8 @@ from tests.fileutils import (
     cookiecutter_one_generated_text_content,
     cookiecutter_two_generated_text_content,
 )
-from tests.fixtures.template import *
 from tests.fixtures.renderable import *
+from tests.fixtures.template import *
 
 
 @pytest.fixture(autouse=True)

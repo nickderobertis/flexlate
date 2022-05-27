@@ -3,12 +3,12 @@ from pathlib import Path
 from flexlate import Flexlate
 from flexlate.template.types import TemplateType
 from tests.config import GENERATED_FILES_DIR
+from tests.integration.fixtures.repo import *
 from tests.integration.fixtures.template_source import (
     COOKIECUTTER_CHANGES_TO_COPIER_LOCAL_FIXTURE,
-    template_source_with_temp_dir_if_local_template,
     COPIER_LOCAL_FIXTURE,
+    template_source_with_temp_dir_if_local_template,
 )
-from tests.integration.fixtures.repo import *
 from tests.integration.template_source_checks import (
     assert_root_template_source_output_is_correct,
 )

@@ -1,29 +1,29 @@
 import os
 from pathlib import Path
-from typing import Callable, Union, List, Optional
+from typing import Callable, List, Optional, Union
 
-from git import Repo, repo, Head
+from git import Head, Repo, repo
 
 from flexlate.cli_utils import confirm_user
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.ext_git import (
-    temp_repo_that_pushes_to_branch,
-    stage_and_commit_all,
-    fast_forward_branch_without_checkout,
-    checked_out_template_branch,
-    merge_branch_into_current,
     abort_merge,
-    reset_branch_to_commit_without_checkout,
-    repo_has_merge_conflicts,
+    checked_out_template_branch,
+    fast_forward_branch_without_checkout,
     get_branch_sha,
+    merge_branch_into_current,
+    repo_has_merge_conflicts,
+    reset_branch_to_commit_without_checkout,
+    stage_and_commit_all,
+    temp_repo_that_pushes_to_branch,
 )
 from flexlate.path_ops import make_func_that_creates_cwd_and_out_root_before_running
 from flexlate.styles import (
-    print_styled,
     ACTION_REQUIRED_STYLE,
-    styled,
-    QUESTION_STYLE,
     ALERT_STYLE,
+    QUESTION_STYLE,
+    print_styled,
+    styled,
 )
 from flexlate.transactions.transaction import (
     FlexlateTransaction,

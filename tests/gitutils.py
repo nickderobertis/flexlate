@@ -3,7 +3,7 @@ from typing import Union
 
 from git import Repo
 
-from tests.config import GENERATED_REPO_DIR, GENERATED_FILES_DIR
+from tests.config import GENERATED_FILES_DIR, GENERATED_REPO_DIR
 
 
 def create_empty_repo(out_dir: Path = GENERATED_REPO_DIR) -> Repo:

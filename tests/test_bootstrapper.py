@@ -8,9 +8,9 @@ from flexlate.config import FlexlateProjectConfig
 from tests.fixtures.templated_repo import *
 from tests.fixtures.transaction import bootstrap_transaction
 from tests.fs_checks import (
-    assert_template_source_cookiecutter_one_added_correctly,
     assert_cookiecutter_one_applied_template_added_correctly,
     assert_project_config_is_correct,
+    assert_template_source_cookiecutter_one_added_correctly,
 )
 
 

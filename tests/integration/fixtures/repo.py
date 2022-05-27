@@ -9,12 +9,12 @@ from flexlate.main import Flexlate
 from flexlate.path_ops import change_directory_to
 from flexlate.user_config_manager import UserConfigManager
 from tests.config import (
-    GENERATED_REPO_DIR,
     COOKIECUTTER_REMOTE_URL,
     COOKIECUTTER_REMOTE_VERSION_1,
     COPIER_REMOTE_NAME,
     COPIER_REMOTE_URL,
     COPIER_REMOTE_VERSION_1,
+    GENERATED_REPO_DIR,
 )
 from tests.fixtures.git import *
 

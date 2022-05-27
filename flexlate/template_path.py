@@ -5,7 +5,7 @@ from typing import Optional, Tuple
 import appdirs
 
 from flexlate.exc import InvalidTemplatePathException
-from flexlate.ext_git import clone_repo_at_version_get_repo_and_name, checkout_version
+from flexlate.ext_git import checkout_version, clone_repo_at_version_get_repo_and_name
 
 CLONED_REPO_FOLDER = Path(appdirs.user_data_dir("flexlate"))
 
