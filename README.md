@@ -303,6 +303,16 @@ This project is currently in early-stage development. There may be
 breaking changes often. While the major version is 0, minor version
 upgrades will often have breaking changes.
 
+## Developing
+
+First ensure that you have `pipx` installed, if not, install it with `pip install pipx`.
+
+Then clone the repo and run `npm install` and `pipenv sync`. Run `pipenv shell`
+to use the virtual environment. Make your changes and then run `nox` to run formatting,
+linting, and tests.
+
+Develop documentation by running `nox -s docs` to start up a dev server.
+
 ## Author
 
 Created by Nick DeRobertis. MIT License.

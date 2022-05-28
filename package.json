@@ -1,0 +1,20 @@
+{
+  "name": "output",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "prepare": "husky install && pipx install black || true && pipx install isort || true"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@commitlint/cli": "^16.2.3",
+    "@commitlint/config-conventional": "^16.2.1",
+    "husky": "^7.0.4",
+    "lint-staged": "^12.4.1"
+  },
+  "lint-staged": {
+    "*.py": "pipenv run nox -s format_files -- "
+  }
+}

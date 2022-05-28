@@ -1,0 +1,22 @@
+branches:
+  - '+([0-9])?(.{+([0-9]),x}).x'
+  - master
+  - name: beta
+    prerelease: true
+  - name: alpha
+    prerelease: true
+
+repositoryUrl: https://github.com/nickderobertis/flexlate
+
+plugins:
+  - "@semantic-release/commit-analyzer"
+  - "@semantic-release/release-notes-generator"
+  - "semantic-release-pypi"
+  - "@semantic-release/github"
+  - [
+      "@semantic-release/git",
+      {
+        assets: [ "setup.cfg" ],
+        message: "chore(release): Bump to ${nextRelease.version}\n\n${nextRelease.notes}",
+      }
+    ]

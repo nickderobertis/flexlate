@@ -1,0 +1,30 @@
+name: Install Python Dependencies
+description: "Installs Python dependencies for the project."
+inputs:
+  python-version:
+    required: true
+    description: "The Python version to install dependencies for."
+runs:
+  using: composite
+  steps:
+    - name: Install pipenv
+      shell: bash
+      run: pipx install pipenv
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+        cache: pipenv
+    - uses: actions/cache@v3
+      name: Cache global dependencies
+      with:
+        path: ${{ env.pythonLocation }}
+        key: ${{ env.pythonLocation }}-${{ hashFiles('*-requirements.txt') }}
+    - name: Install main dependencies
+      shell: bash
+      run: |
+        pipenv --python ${{ matrix.python-version }} sync
+    - name: Install linting dependencies
+      shell: bash
+      run: |
+        pip install -r lint-requirements.txt

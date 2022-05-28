@@ -1,0 +1,8 @@
+name: Lint and Test
+description: "Runs isort, black, flake8, mypy, pytest. Be sure to run install-dependencies first"
+runs:
+  using: composite
+  steps:
+    - name: Check code formatting, linting, and run tests
+      shell: bash
+      run: pipenv run nox

@@ -1,0 +1,5 @@
+[tool.black]
+include = 'flexlate.*\.pyi?$|tests.*\.pyi?$'
+
+[tool.isort]
+profile = "black"
