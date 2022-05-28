@@ -124,6 +124,7 @@ def test_render_multi_with_overlap(
             cookiecutter_one_renderable.copy(update=dict(data={"c": "something"})),
             cookiecutter_one_renderable.copy(update=dict(data={"c": "something else"})),
         ],
+        project_root=config.GENERATED_FILES_DIR,
         no_input=True,
     )
     assert data == [{"a": "b", "c": "something"}, {"a": "b", "c": "something else"}]
