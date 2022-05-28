@@ -53,7 +53,7 @@ def test_init_from_current_path_cookiecutter(
     assert len(config.template_sources) == 1
     source = config.template_sources[0]
     assert source.name == template.name
-    assert source.path == "../../input_files/templates/cookiecutters/one"
+    assert source.path == os.path.relpath(cookiecutter_one_template.path, project_dir)
     assert source.version == template.version
     assert source.type == TemplateType.COOKIECUTTER
     assert source.render_relative_root_in_output == Path("{{ cookiecutter.a }}")
