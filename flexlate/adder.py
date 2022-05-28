@@ -486,11 +486,14 @@ class Adder:
                     move_source_path_to_be_relative_to_destination,
                     project_root=final_out_path,
                 )
-                stage_and_commit_all(
-                    repo,
-                    "Move template source path to match permanent destination of project",
-                )
-                sync()
+                # If the final output folder is at the same
+                # level as the temp folder, the relative path will be unchanged, so there will be no changes
+                if repo.is_dirty():
+                    stage_and_commit_all(
+                        repo,
+                        "Move template source path to match permanent destination of project",
+                    )
+                    sync()
 
             return folder_name
 

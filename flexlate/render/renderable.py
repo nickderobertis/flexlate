@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Generic, TypeVar
+from typing import Generic, Optional, TypeVar
 
 from pydantic import BaseModel, Field
 
@@ -18,12 +18,15 @@ class Renderable(BaseModel, Generic[T]):
 
     @classmethod
     def from_applied_template_with_source(
-        cls, applied_template_with_source: AppliedTemplateWithSource
+        cls,
+        applied_template_with_source: AppliedTemplateWithSource,
+        data: Optional[TemplateData] = None,
     ) -> "Renderable":
-        template, data = applied_template_with_source.to_template_and_data()
+        template, data_from_config = applied_template_with_source.to_template_and_data()
+        all_data = {**data_from_config, **(data or {})}
         return cls(
             template=template,
-            data=data,
+            data=all_data,
             out_root=applied_template_with_source.applied_template.root,
         )
 

@@ -175,19 +175,21 @@ class Updater:
             new_temp_updates = _move_update_config_locations_to_new_parent(
                 new_updates, project_root, temp_project_root
             )
+
+            # For applied templates with local add mode, with corresponding template sources that
+            # have a render_relative_root_in_output, may need to move the config
+            rendered_temp_updates = config_manager.move_local_applied_templates_if_necessary_produce_new_updates(
+                new_temp_updates,
+                project_root=temp_project_root,
+                orig_project_root=project_root,
+                renderer=renderer,
+            )
+
             # On second update, use template source path. This means that it will set the template
             # paths back to how they were originally (relative if needed), so that there will not be
             # unexpected changes from relative to absolute paths in the user configs
             config_manager.update_templates(
-                new_temp_updates, project_root=temp_project_root
-            )
-
-            # For applied templates with local add mode, with corresponding template sources that
-            # have a render_relative_root_in_output, may need to move the config
-            config_manager.move_local_applied_templates_if_necessary(
-                project_root=temp_project_root,
-                orig_project_root=project_root,
-                renderer=renderer,
+                rendered_temp_updates, project_root=temp_project_root
             )
 
             # Add back initial commit files if they have not been rendered from a template

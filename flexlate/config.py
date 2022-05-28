@@ -131,6 +131,9 @@ class AppliedTemplateConfig(BaseModel):
 class AppliedTemplateWithSource(BaseModel):
     applied_template: AppliedTemplateConfig
     source: TemplateSource
+    index: int
+    applied_template_config_path: Path
+    source_config_path: Path
 
     def to_template_and_data(self) -> Tuple[Template, TemplateData]:
         return (
