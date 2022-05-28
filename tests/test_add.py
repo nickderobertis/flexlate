@@ -71,7 +71,6 @@ def test_add_template_source_with_existing_name_fails(
         )
 
 
-@patch.object(appdirs, "user_config_dir", lambda name: test_config.GENERATED_FILES_DIR)
 def test_add_local_cookiecutter_applied_template_to_repo(
     add_mode: AddMode,
     repo_with_cookiecutter_one_template_source: Repo,
@@ -80,36 +79,39 @@ def test_add_local_cookiecutter_applied_template_to_repo(
 ):
     repo = repo_with_cookiecutter_one_template_source
     template = cookiecutter_one_template
-    adder = Adder()
-    adder.apply_template_and_add(
-        repo,
-        template,
-        add_output_transaction,
-        out_root=test_config.GENERATED_REPO_DIR,
-        add_mode=add_mode,
-        no_input=True,
-    )
 
-    if add_mode == AddMode.USER:
-        config_dir = test_config.GENERATED_FILES_DIR
-        template_root = test_config.GENERATED_REPO_DIR.absolute()
-    elif add_mode == AddMode.PROJECT:
-        config_dir = test_config.GENERATED_REPO_DIR
-        template_root = Path(".")
-    elif add_mode == AddMode.LOCAL:
-        # Template has output in a subdir, so with
-        # local mode config will also be in the subdir
-        config_dir = test_config.GENERATED_REPO_DIR / "b"
-        template_root = Path("..")
-    else:
-        raise ValueError(f"unsupported add mode {add_mode}")
+    with patch.object(
+        appdirs, "user_config_dir", lambda name: test_config.GENERATED_FILES_DIR
+    ):
+        adder = Adder()
+        adder.apply_template_and_add(
+            repo,
+            template,
+            add_output_transaction,
+            out_root=test_config.GENERATED_REPO_DIR,
+            add_mode=add_mode,
+            no_input=True,
+        )
 
-    assert_cookiecutter_one_applied_template_added_correctly(
-        template, config_dir, template_root, add_mode
-    )
+        if add_mode == AddMode.USER:
+            config_dir = test_config.GENERATED_FILES_DIR
+            template_root = test_config.GENERATED_REPO_DIR.absolute()
+        elif add_mode == AddMode.PROJECT:
+            config_dir = test_config.GENERATED_REPO_DIR
+            template_root = Path(".")
+        elif add_mode == AddMode.LOCAL:
+            # Template has output in a subdir, so with
+            # local mode config will also be in the subdir
+            config_dir = test_config.GENERATED_REPO_DIR / "b"
+            template_root = Path("..")
+        else:
+            raise ValueError(f"unsupported add mode {add_mode}")
+
+        assert_cookiecutter_one_applied_template_added_correctly(
+            template, config_dir, template_root, add_mode
+        )
 
 
-@patch.object(appdirs, "user_config_dir", lambda name: test_config.GENERATED_FILES_DIR)
 def test_add_local_copier_output_subdir_applied_template_to_repo(
     add_mode: AddMode,
     repo_with_copier_output_subdir_template_source: Repo,
@@ -118,42 +120,45 @@ def test_add_local_copier_output_subdir_applied_template_to_repo(
 ):
     repo = repo_with_copier_output_subdir_template_source
     template = copier_output_subdir_template
-    adder = Adder()
-    adder.apply_template_and_add(
-        repo,
-        template,
-        add_output_transaction,
-        out_root=test_config.GENERATED_REPO_DIR,
-        add_mode=add_mode,
-        no_input=True,
-    )
 
-    if add_mode == AddMode.USER:
-        config_dir = test_config.GENERATED_FILES_DIR
-        template_root = test_config.GENERATED_REPO_DIR.absolute()
-    elif add_mode == AddMode.PROJECT:
-        config_dir = test_config.GENERATED_REPO_DIR
-        template_root = Path(".")
-    elif add_mode == AddMode.LOCAL:
-        # Even though template has output in a subdir, with copier
-        # it all still renders at root in output
-        config_dir = test_config.GENERATED_REPO_DIR
-        template_root = Path(".")
-    else:
-        raise ValueError(f"unsupported add mode {add_mode}")
+    with patch.object(
+        appdirs, "user_config_dir", lambda name: test_config.GENERATED_FILES_DIR
+    ):
+        adder = Adder()
+        adder.apply_template_and_add(
+            repo,
+            template,
+            add_output_transaction,
+            out_root=test_config.GENERATED_REPO_DIR,
+            add_mode=add_mode,
+            no_input=True,
+        )
 
-    config_path = config_dir / "flexlate.json"
-    config = FlexlateConfig.load(config_path)
-    assert len(config.applied_templates) == 1
-    at = config.applied_templates[0]
-    assert at.name == template.name
-    assert at.version == template.version
-    assert at.data == {"qone": "aone", "qtwo": "atwo"}
-    assert at.root == template_root
-    assert at.add_mode == add_mode
+        if add_mode == AddMode.USER:
+            config_dir = test_config.GENERATED_FILES_DIR
+            template_root = test_config.GENERATED_REPO_DIR.absolute()
+        elif add_mode == AddMode.PROJECT:
+            config_dir = test_config.GENERATED_REPO_DIR
+            template_root = Path(".")
+        elif add_mode == AddMode.LOCAL:
+            # Even though template has output in a subdir, with copier
+            # it all still renders at root in output
+            config_dir = test_config.GENERATED_REPO_DIR
+            template_root = Path(".")
+        else:
+            raise ValueError(f"unsupported add mode {add_mode}")
+
+        config_path = config_dir / "flexlate.json"
+        config = FlexlateConfig.load(config_path)
+        assert len(config.applied_templates) == 1
+        at = config.applied_templates[0]
+        assert at.name == template.name
+        assert at.version == template.version
+        assert at.data == {"qone": "aone", "qtwo": "atwo"}
+        assert at.root == template_root
+        assert at.add_mode == add_mode
 
 
-@patch.object(appdirs, "user_config_dir", lambda name: test_config.GENERATED_FILES_DIR)
 def test_add_remote_cookiecutter_applied_template_to_repo(
     add_mode: AddMode,
     repo_with_remote_cookiecutter_template_source: Repo,
@@ -162,42 +167,47 @@ def test_add_remote_cookiecutter_applied_template_to_repo(
 ):
     repo = repo_with_remote_cookiecutter_template_source
     template = cookiecutter_remote_template
-    adder = Adder()
-    adder.apply_template_and_add(
-        repo,
-        template,
-        add_output_transaction,
-        out_root=test_config.GENERATED_REPO_DIR,
-        add_mode=add_mode,
-        no_input=True,
-    )
+    with patch.object(
+        appdirs, "user_config_dir", lambda name: test_config.GENERATED_FILES_DIR
+    ):
+        adder = Adder()
+        adder.apply_template_and_add(
+            repo,
+            template,
+            add_output_transaction,
+            out_root=test_config.GENERATED_REPO_DIR,
+            add_mode=add_mode,
+            no_input=True,
+        )
 
-    if add_mode == AddMode.USER:
-        config_dir = test_config.GENERATED_FILES_DIR
-        template_root = test_config.GENERATED_REPO_DIR.absolute()
-    elif add_mode == AddMode.PROJECT:
-        config_dir = test_config.GENERATED_REPO_DIR
-        template_root = Path(".")
-    elif add_mode == AddMode.LOCAL:
-        config_dir = test_config.GENERATED_REPO_DIR / "abc"
-        template_root = Path("..")
-    else:
-        raise ValueError(f"unsupported add mode {add_mode}")
+        if add_mode == AddMode.USER:
+            config_dir = test_config.GENERATED_FILES_DIR
+            template_root = test_config.GENERATED_REPO_DIR.absolute()
+        elif add_mode == AddMode.PROJECT:
+            config_dir = test_config.GENERATED_REPO_DIR
+            template_root = Path(".")
+        elif add_mode == AddMode.LOCAL:
+            config_dir = test_config.GENERATED_REPO_DIR / "abc"
+            template_root = Path("..")
+        else:
+            raise ValueError(f"unsupported add mode {add_mode}")
 
-    _assert_remote_cookiecutter_applied_correctly(
-        template, template_root, add_mode, config_dir=config_dir
-    )
+        _assert_remote_cookiecutter_applied_correctly(
+            template, template_root, add_mode, config_dir=config_dir
+        )
 
-    template_sources_config_path = test_config.GENERATED_REPO_DIR / "flexlate.json"
-    ts_config = FlexlateConfig.load(template_sources_config_path)
-    assert len(ts_config.template_sources) == 1
-    source = ts_config.template_sources[0]
-    assert source.name == cookiecutter_remote_template.name
-    assert source.path == cookiecutter_remote_template.git_url
-    assert source.version == cookiecutter_remote_template.version
-    assert source.type == TemplateType.COOKIECUTTER
-    assert source.render_relative_root_in_output == Path("{{ cookiecutter.name }}")
-    assert source.render_relative_root_in_template == Path("{{ cookiecutter.name }}")
+        template_sources_config_path = test_config.GENERATED_REPO_DIR / "flexlate.json"
+        ts_config = FlexlateConfig.load(template_sources_config_path)
+        assert len(ts_config.template_sources) == 1
+        source = ts_config.template_sources[0]
+        assert source.name == cookiecutter_remote_template.name
+        assert source.path == cookiecutter_remote_template.git_url
+        assert source.version == cookiecutter_remote_template.version
+        assert source.type == TemplateType.COOKIECUTTER
+        assert source.render_relative_root_in_output == Path("{{ cookiecutter.name }}")
+        assert source.render_relative_root_in_template == Path(
+            "{{ cookiecutter.name }}"
+        )
 
 
 def _assert_remote_cookiecutter_applied_correctly(
@@ -260,7 +270,6 @@ def test_add_source_and_output_at_target_version(
     assert at.version == COOKIECUTTER_REMOTE_VERSION_1
 
 
-@patch.object(appdirs, "user_config_dir", lambda name: test_config.GENERATED_FILES_DIR)
 def test_add_applied_template_to_subdir(
     add_mode: AddMode,
     subdir_style: SubdirStyle,
@@ -272,59 +281,65 @@ def test_add_applied_template_to_subdir(
     template = cookiecutter_one_template
     subdir = test_config.GENERATED_REPO_DIR / "subdir1" / "subdir2"
     subdir.mkdir(parents=True)
-    adder = Adder()
-    if subdir_style == SubdirStyle.CD:
-        with change_directory_to(subdir):
-            adder.apply_template_and_add(
-                repo, template, add_output_transaction, add_mode=add_mode, no_input=True
-            )
-    elif subdir_style == SubdirStyle.PROVIDE_RELATIVE:
-        with change_directory_to(test_config.GENERATED_REPO_DIR):
+    with patch.object(
+        appdirs, "user_config_dir", lambda name: test_config.GENERATED_FILES_DIR
+    ):
+        adder = Adder()
+        if subdir_style == SubdirStyle.CD:
+            with change_directory_to(subdir):
+                adder.apply_template_and_add(
+                    repo,
+                    template,
+                    add_output_transaction,
+                    add_mode=add_mode,
+                    no_input=True,
+                )
+        elif subdir_style == SubdirStyle.PROVIDE_RELATIVE:
+            with change_directory_to(test_config.GENERATED_REPO_DIR):
+                adder.apply_template_and_add(
+                    repo,
+                    template,
+                    add_output_transaction,
+                    out_root=subdir.relative_to(os.getcwd()),
+                    add_mode=add_mode,
+                    no_input=True,
+                )
+        elif subdir_style == SubdirStyle.PROVIDE_ABSOLUTE:
             adder.apply_template_and_add(
                 repo,
                 template,
                 add_output_transaction,
-                out_root=subdir.relative_to(os.getcwd()),
+                out_root=subdir.absolute(),
                 add_mode=add_mode,
                 no_input=True,
             )
-    elif subdir_style == SubdirStyle.PROVIDE_ABSOLUTE:
-        adder.apply_template_and_add(
-            repo,
-            template,
-            add_output_transaction,
-            out_root=subdir.absolute(),
-            add_mode=add_mode,
-            no_input=True,
-        )
 
-    if add_mode == AddMode.LOCAL:
-        config_dir = subdir / "b"
-        template_root = Path("..")
-    elif add_mode == AddMode.PROJECT:
-        config_dir = test_config.GENERATED_REPO_DIR
-        template_root = subdir.relative_to(test_config.GENERATED_REPO_DIR)
-    elif add_mode == AddMode.USER:
-        config_dir = test_config.GENERATED_FILES_DIR
-        template_root = subdir.absolute()
-    else:
-        raise ValueError(f"unsupported add mode {add_mode}")
+        if add_mode == AddMode.LOCAL:
+            config_dir = subdir / "b"
+            template_root = Path("..")
+        elif add_mode == AddMode.PROJECT:
+            config_dir = test_config.GENERATED_REPO_DIR
+            template_root = subdir.relative_to(test_config.GENERATED_REPO_DIR)
+        elif add_mode == AddMode.USER:
+            config_dir = test_config.GENERATED_FILES_DIR
+            template_root = subdir.absolute()
+        else:
+            raise ValueError(f"unsupported add mode {add_mode}")
 
-    config_path = config_dir / "flexlate.json"
-    config = FlexlateConfig.load(config_path)
-    assert len(config.applied_templates) == 1
-    at = config.applied_templates[0]
-    assert at.name == template.name
-    assert at.version == template.version
-    assert at.data == {"a": "b", "c": ""}
-    assert at.root == template_root
-    assert at.add_mode == add_mode
+        config_path = config_dir / "flexlate.json"
+        config = FlexlateConfig.load(config_path)
+        assert len(config.applied_templates) == 1
+        at = config.applied_templates[0]
+        assert at.name == template.name
+        assert at.version == template.version
+        assert at.data == {"a": "b", "c": ""}
+        assert at.root == template_root
+        assert at.add_mode == add_mode
 
-    output_file_path = subdir / "b" / "text.txt"
-    assert output_file_path.read_text() == "b"
+        output_file_path = subdir / "b" / "text.txt"
+        assert output_file_path.read_text() == "b"
 
 
-@patch.object(appdirs, "user_config_dir", lambda name: test_config.GENERATED_FILES_DIR)
 def test_add_multiple_applied_templates_for_one_source(
     add_mode: AddMode,
     repo_with_cookiecutter_one_template_source: Repo,
@@ -335,93 +350,96 @@ def test_add_multiple_applied_templates_for_one_source(
     template = cookiecutter_one_template
     subdir = test_config.GENERATED_REPO_DIR / "subdir1" / "subdir2"
     subdir.mkdir(parents=True)
-    adder = Adder()
-    with change_directory_to(test_config.GENERATED_REPO_DIR):
-        adder.apply_template_and_add(
-            repo, template, add_output_transaction, add_mode=add_mode, no_input=True
-        )
-    with change_directory_to(subdir):
-        adder.apply_template_and_add(
-            repo, template, add_output_transaction, add_mode=add_mode, no_input=True
-        )
+    with patch.object(
+        appdirs, "user_config_dir", lambda name: test_config.GENERATED_FILES_DIR
+    ):
+        adder = Adder()
+        with change_directory_to(test_config.GENERATED_REPO_DIR):
+            adder.apply_template_and_add(
+                repo, template, add_output_transaction, add_mode=add_mode, no_input=True
+            )
+        with change_directory_to(subdir):
+            adder.apply_template_and_add(
+                repo, template, add_output_transaction, add_mode=add_mode, no_input=True
+            )
 
-    @dataclass
-    class OutputOptions:
-        config_dir: Path
-        template_root: Path
-        render_root: Path
-        expect_num_applied_templates: int = 1
-        applied_template_index: int = 0
+        @dataclass
+        class OutputOptions:
+            config_dir: Path
+            template_root: Path
+            render_root: Path
+            expect_num_applied_templates: int = 1
+            applied_template_index: int = 0
 
-    output_options: List[OutputOptions] = []
-    if add_mode == AddMode.LOCAL:
-        output_options.extend(
-            [
-                OutputOptions(
-                    test_config.GENERATED_REPO_DIR / "b",
-                    Path(".."),
-                    test_config.GENERATED_REPO_DIR,
-                ),
-                OutputOptions(subdir / "b", Path(".."), subdir),
-            ]
-        )
-    elif add_mode == AddMode.PROJECT:
-        output_options.extend(
-            [
-                OutputOptions(
-                    test_config.GENERATED_REPO_DIR,
-                    Path("."),
-                    test_config.GENERATED_REPO_DIR,
-                    expect_num_applied_templates=2,
-                ),
-                OutputOptions(
-                    test_config.GENERATED_REPO_DIR,
-                    subdir.relative_to(test_config.GENERATED_REPO_DIR),
-                    subdir,
-                    expect_num_applied_templates=2,
-                    applied_template_index=1,
-                ),
-            ]
-        )
-    elif add_mode == AddMode.USER:
-        output_options.extend(
-            [
-                OutputOptions(
-                    test_config.GENERATED_FILES_DIR,
-                    test_config.GENERATED_REPO_DIR.absolute(),
-                    test_config.GENERATED_REPO_DIR,
-                    expect_num_applied_templates=2,
-                ),
-                OutputOptions(
-                    test_config.GENERATED_FILES_DIR,
-                    subdir.absolute(),
-                    subdir,
-                    expect_num_applied_templates=2,
-                    applied_template_index=1,
-                ),
-            ]
-        )
-    else:
-        raise ValueError(f"unsupported add mode {add_mode}")
+        output_options: List[OutputOptions] = []
+        if add_mode == AddMode.LOCAL:
+            output_options.extend(
+                [
+                    OutputOptions(
+                        test_config.GENERATED_REPO_DIR / "b",
+                        Path(".."),
+                        test_config.GENERATED_REPO_DIR,
+                    ),
+                    OutputOptions(subdir / "b", Path(".."), subdir),
+                ]
+            )
+        elif add_mode == AddMode.PROJECT:
+            output_options.extend(
+                [
+                    OutputOptions(
+                        test_config.GENERATED_REPO_DIR,
+                        Path("."),
+                        test_config.GENERATED_REPO_DIR,
+                        expect_num_applied_templates=2,
+                    ),
+                    OutputOptions(
+                        test_config.GENERATED_REPO_DIR,
+                        subdir.relative_to(test_config.GENERATED_REPO_DIR),
+                        subdir,
+                        expect_num_applied_templates=2,
+                        applied_template_index=1,
+                    ),
+                ]
+            )
+        elif add_mode == AddMode.USER:
+            output_options.extend(
+                [
+                    OutputOptions(
+                        test_config.GENERATED_FILES_DIR,
+                        test_config.GENERATED_REPO_DIR.absolute(),
+                        test_config.GENERATED_REPO_DIR,
+                        expect_num_applied_templates=2,
+                    ),
+                    OutputOptions(
+                        test_config.GENERATED_FILES_DIR,
+                        subdir.absolute(),
+                        subdir,
+                        expect_num_applied_templates=2,
+                        applied_template_index=1,
+                    ),
+                ]
+            )
+        else:
+            raise ValueError(f"unsupported add mode {add_mode}")
 
-    for output_option in output_options:
-        config_dir = output_option.config_dir
-        template_root = output_option.template_root
-        render_root = output_option.render_root
-        expect_num_applied_templates = output_option.expect_num_applied_templates
-        applied_template_index = output_option.applied_template_index
-        config_path = config_dir / "flexlate.json"
-        config = FlexlateConfig.load(config_path)
-        assert len(config.applied_templates) == expect_num_applied_templates
-        at = config.applied_templates[applied_template_index]
-        assert at.name == template.name
-        assert at.version == template.version
-        assert at.data == {"a": "b", "c": ""}
-        assert at.root == template_root
-        assert at.add_mode == add_mode
+        for output_option in output_options:
+            config_dir = output_option.config_dir
+            template_root = output_option.template_root
+            render_root = output_option.render_root
+            expect_num_applied_templates = output_option.expect_num_applied_templates
+            applied_template_index = output_option.applied_template_index
+            config_path = config_dir / "flexlate.json"
+            config = FlexlateConfig.load(config_path)
+            assert len(config.applied_templates) == expect_num_applied_templates
+            at = config.applied_templates[applied_template_index]
+            assert at.name == template.name
+            assert at.version == template.version
+            assert at.data == {"a": "b", "c": ""}
+            assert at.root == template_root
+            assert at.add_mode == add_mode
 
-        output_file_path = render_root / "b" / "text.txt"
-        assert output_file_path.read_text() == "b"
+            output_file_path = render_root / "b" / "text.txt"
+            assert output_file_path.read_text() == "b"
 
 
 def test_add_source_to_project_with_existing_outputs(

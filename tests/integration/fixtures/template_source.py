@@ -71,6 +71,7 @@ class TemplateSourceFixture:
     version_1: str
     version_2: str
     is_local_template: bool = False
+    is_relative_template: bool = False
     version_migrate_func: Callable[[str], None] = lambda path: None
     self_migrate_func: Callable[
         ["TemplateSourceFixture"], None
@@ -95,14 +96,6 @@ class TemplateSourceFixture:
         if self.is_local_template:
             return None
         return self.path
-
-    def relative(self, to: Path) -> "TemplateSourceFixture":
-        new_fixture = deepcopy(self)
-        if not self.is_local_template:
-            # Nothing to do for remote templates as paths are urls
-            return new_fixture
-        new_fixture.path = os.path.relpath(self.path, to)
-        return new_fixture
 
     @property
     def has_relative_path(self) -> bool:
@@ -153,9 +146,39 @@ class TemplateSourceFixture:
             setattr(new, key, val)
         return new
 
+    def move(self, to: Path):
+        if not self.is_local_template:
+            return
+
+        template_dir = to / self.name
+        source_path = self.path
+        shutil.copytree(source_path, template_dir)
+        self.path = str(template_dir)
+
     def migrate_version(self, path: str):
         self.version_migrate_func(path)  # type: ignore
         self.self_migrate_func(self)  # type: ignore
+
+    def setup_paths(
+        self, relative_to: Optional[Path] = None
+    ) -> "TemplateSourceFixture":
+        """
+        Sets up local paths for the template.
+
+        This should be called first during the test run. It is called then
+        rather than as part of the fixture setup because it needs to happen
+        after the generated folder is set in conftest.py.
+        :return:
+        """
+        out_template_source = self.copy()
+        if not self.is_local_template:
+            return out_template_source
+
+        relative_to = relative_to or config.GENERATED_REPO_DIR
+
+        if out_template_source.is_relative_template:
+            out_template_source = os.path.relpath(out_template_source.path, relative_to)
+        return out_template_source
 
 
 COOKIECUTTER_REMOTE_FIXTURE: Final[TemplateSourceFixture] = TemplateSourceFixture(
@@ -282,8 +305,7 @@ remote_fixtures: Final[List[TemplateSourceFixture]] = [
 
 # Create relative path fixtures
 local_relative_path_fixtures: Final[List[TemplateSourceFixture]] = [
-    fixture.relative(config.GENERATED_REPO_DIR)
-    for fixture in local_absolute_path_fixtures
+    fixture.copy(is_relative_path=True) for fixture in local_absolute_path_fixtures
 ]
 
 
@@ -295,27 +317,14 @@ all_standard_template_source_fixtures: Final[List[TemplateSourceFixture]] = [
 
 @contextlib.contextmanager
 def template_source_in_dir_if_local_template(
-    template_source: TemplateSourceFixture,
+    orig_template_source: TemplateSourceFixture,
     dir: Path,
 ) -> ContextManager[TemplateSourceFixture]:
-    template_source = deepcopy(template_source)
-    if template_source.is_local_template:
-        path_is_relative = not Path(template_source.path).is_absolute()
+    out_template_source = orig_template_source.copy()
+    if orig_template_source.is_local_template:
         # Copy into directory so it can be worked with without changing the original
-        template_dir = dir / template_source.name
-        source_path = template_source.path
-        if path_is_relative:
-            # Paths are set up to be relative to config.GENERATED_REPO_DIR
-            # Convert into absolute path so it can be copied appropriately
-            source_path = (config.GENERATED_REPO_DIR / source_path).resolve()
-        shutil.copytree(source_path, template_dir)
-        template_source.path = str(template_dir)
-        if path_is_relative:
-            # Original path was relative, need to make this path relative
-            template_source = template_source.relative(config.GENERATED_REPO_DIR)
-        yield template_source
-    else:
-        yield template_source
+        out_template_source.move(dir)
+    yield out_template_source
 
 
 @contextlib.contextmanager
@@ -359,7 +368,10 @@ one_remote_all_local_relative_fixtures = [
 
 @pytest.fixture(scope="function", params=one_remote_all_local_relative_fixtures)
 def template_source_one_remote_and_all_local_relative(request) -> TemplateSourceFixture:
-    yield request.param
+    with template_source_with_temp_dir_if_local_template(
+        request.param
+    ) as template_source:
+        yield template_source
 
 
 COOKIECUTTER_REMOTE_DEFAULT_EXPECT_PATH = COOKIECUTTER_REMOTE_FIXTURE.path
