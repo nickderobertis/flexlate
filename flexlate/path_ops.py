@@ -62,7 +62,7 @@ def location_relative_to_new_parent(
         )
     abs_path: Path = path
     if not path.is_absolute() and path_is_relative_to is not None:
-        abs_path = path_is_relative_to.absolute() / path
+        abs_path = (path_is_relative_to.absolute() / path).resolve()
     try:
         result = new_parent / abs_path.relative_to(orig_parent)
         return result

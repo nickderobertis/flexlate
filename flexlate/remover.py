@@ -227,12 +227,12 @@ class Remover:
 def _remove_template_source_commit_message(
     template_name: str, out_root: Path, project_root: Path
 ) -> str:
-    relative_path = out_root.absolute().relative_to(project_root)
+    relative_path = Path(os.path.relpath(out_root.absolute(), project_root))
     return f"Removed template source {template_name} from {relative_path}"
 
 
 def _remove_applied_template_commit_message(
     template_name: str, out_root: Path, project_root: Path
 ) -> str:
-    relative_path = out_root.absolute().relative_to(project_root)
+    relative_path = Path(os.path.relpath(out_root.absolute(), project_root))
     return f"Removed template {template_name} from {relative_path}"

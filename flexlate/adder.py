@@ -498,19 +498,19 @@ class Adder:
 def _add_template_commit_message(
     template: Template, out_root: Path, project_root: Path
 ) -> str:
-    relative_path = out_root.absolute().relative_to(project_root)
+    relative_path = Path(os.path.relpath(out_root.absolute(), project_root))
     return f"Applied template {template.name} to {relative_path}"
 
 
 def _move_applied_template_config_message(
     template: Template, out_root: Path, project_root: Path
 ) -> str:
-    relative_path = out_root.absolute().relative_to(project_root)
+    relative_path = Path(os.path.relpath(out_root.absolute(), project_root))
     return f"Moved config for {template.name} to {relative_path}"
 
 
 def _add_template_source_commit_message(
     template: Template, out_root: Path, project_root: Path
 ) -> str:
-    relative_path = out_root.absolute().relative_to(project_root)
+    relative_path = Path(os.path.relpath(out_root.absolute(), project_root))
     return f"Added template source {template.name} to {relative_path}"
