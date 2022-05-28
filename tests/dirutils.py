@@ -1,20 +1,27 @@
 import filecmp
 import os
 import shutil
+import tempfile
 import time
 from pathlib import Path
 from typing import Sequence, Union
 
-from tests.config import GENERATED_FILES_DIR
+from tests import config
 
 
 def wipe_generated_folder():
-    if GENERATED_FILES_DIR.exists():
-        _remove_folder(GENERATED_FILES_DIR)
-    GENERATED_FILES_DIR.mkdir()
+    using_temp_dir = config.USING_TEMP_DIR_AS_GENERATED_DIR
+    if config.GENERATED_FILES_DIR.exists():
+        _remove_folder(
+            config.GENERATED_FILES_DIR, fail_on_permission_error=not using_temp_dir
+        )
+    if not using_temp_dir:
+        config.GENERATED_FILES_DIR.mkdir()
 
 
-def _remove_folder(folder: Path, retries: int = 20):
+def _remove_folder(
+    folder: Path, retries: int = 10, fail_on_permission_error: bool = True
+):
     if folder.exists():
         try:
             shutil.rmtree(folder)
@@ -23,7 +30,10 @@ def _remove_folder(folder: Path, retries: int = 20):
             if retries > 0:
                 _remove_folder(folder, retries - 1)
             else:
-                raise e
+                if fail_on_permission_error:
+                    raise e
+                else:
+                    print(f"Failed to remove folder {folder}")
 
 
 def display_contents_of_all_files_in_folder(
@@ -83,3 +93,9 @@ def assert_dir_trees_are_equal(dir1: Union[str, Path], dir2: Union[str, Path]):
         new_dir1 = os.path.join(dir1, common_dir)
         new_dir2 = os.path.join(dir2, common_dir)
         assert_dir_trees_are_equal(new_dir1, new_dir2)
+
+
+def create_temp_path_without_cleanup() -> Path:
+    temp_dir = tempfile.mkdtemp()
+    path = Path(temp_dir).resolve()
+    return path

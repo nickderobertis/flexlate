@@ -15,6 +15,7 @@ from flexlate.path_ops import change_directory_to
 from flexlate.temp_path import create_temp_path
 from flexlate.template.types import TemplateType
 from flexlate.template_data import TemplateData
+from tests import config
 from tests.config import (
     COOKIECUTTER_ONE_DIR,
     COOKIECUTTER_ONE_MODIFIED_VERSION,
@@ -41,8 +42,6 @@ from tests.config import (
     COPIER_WITH_TASKS_MODIFIED_VERSION,
     COPIER_WITH_TASKS_NAME,
     COPIER_WITH_TASKS_VERSION,
-    GENERATED_FILES_DIR,
-    GENERATED_REPO_DIR,
 )
 from tests.ext_subprocess import run
 from tests.fixtures.template import (
@@ -113,19 +112,19 @@ class TemplateSourceFixture:
     def url_or_absolute_path(self) -> str:
         if not self.has_relative_path:
             return self.path
-        # Must be local relative path. Paths are relative to GENERATED_REPO_DIR
-        return str((GENERATED_REPO_DIR / Path(self.path)).resolve())
+        # Must be local relative path. Paths are relative to config.GENERATED_REPO_DIR
+        return str((config.GENERATED_REPO_DIR / Path(self.path)).resolve())
 
     def relative_path_relative_to(
-        self, relative: Union[str, Path], orig_relative_to: Path = GENERATED_REPO_DIR
+        self, relative: Union[str, Path], orig_relative_to: Optional[Path] = None
     ) -> str:
+        orig_relative_to = orig_relative_to or config.GENERATED_REPO_DIR
         if not self.has_relative_path:
             return self.path
         return os.path.relpath((orig_relative_to / self.path).resolve(), relative)
 
-    def render_without_flexlate(
-        self, path: Path = GENERATED_REPO_DIR
-    ) -> CompletedProcess:
+    def render_without_flexlate(self, path: Optional[Path] = None) -> CompletedProcess:
+        path = path or config.GENERATED_REPO_DIR
         if self.template_type == TemplateType.COPIER:
             if self.is_local_template:
                 use_path = self.path  # local templates already at v1 by default
@@ -283,7 +282,8 @@ remote_fixtures: Final[List[TemplateSourceFixture]] = [
 
 # Create relative path fixtures
 local_relative_path_fixtures: Final[List[TemplateSourceFixture]] = [
-    fixture.relative(GENERATED_REPO_DIR) for fixture in local_absolute_path_fixtures
+    fixture.relative(config.GENERATED_REPO_DIR)
+    for fixture in local_absolute_path_fixtures
 ]
 
 
@@ -305,14 +305,14 @@ def template_source_in_dir_if_local_template(
         template_dir = dir / template_source.name
         source_path = template_source.path
         if path_is_relative:
-            # Paths are set up to be relative to GENERATED_REPO_DIR
+            # Paths are set up to be relative to config.GENERATED_REPO_DIR
             # Convert into absolute path so it can be copied appropriately
-            source_path = (GENERATED_REPO_DIR / source_path).resolve()
+            source_path = (config.GENERATED_REPO_DIR / source_path).resolve()
         shutil.copytree(source_path, template_dir)
         template_source.path = str(template_dir)
         if path_is_relative:
             # Original path was relative, need to make this path relative
-            template_source = template_source.relative(GENERATED_REPO_DIR)
+            template_source = template_source.relative(config.GENERATED_REPO_DIR)
         yield template_source
     else:
         yield template_source

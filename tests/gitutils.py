@@ -1,12 +1,13 @@
 from pathlib import Path
-from typing import Union
+from typing import Optional, Union
 
 from git import Repo
 
-from tests.config import GENERATED_FILES_DIR, GENERATED_REPO_DIR
+from tests import config
 
 
-def create_empty_repo(out_dir: Path = GENERATED_REPO_DIR) -> Repo:
+def create_empty_repo(out_dir: Optional[Path] = None) -> Repo:
+    out_dir = out_dir or config.GENERATED_REPO_DIR
     if not out_dir.exists():
         out_dir.mkdir(parents=True)
     return Repo.init(out_dir)
@@ -64,8 +65,10 @@ def add_remote(repo: Repo, path: Union[str, Path], remote_name: str = "origin"):
 
 
 def add_local_remote(
-    repo: Repo, remote_path: Path = GENERATED_FILES_DIR / "remote"
+    repo: Repo,
+    remote_path: Optional[Path] = None,
 ) -> Repo:
+    remote_path = remote_path or config.GENERATED_FILES_DIR / "remote"
     if not remote_path.exists():
         remote_path.mkdir()
     remote_repo = Repo.init(remote_path)

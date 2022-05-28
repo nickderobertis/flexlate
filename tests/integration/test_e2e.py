@@ -19,11 +19,8 @@ from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRAN
 from flexlate.exc import TriedToCommitButNoChangesException, UnnecessarySyncException
 from flexlate.ext_git import merge_branch_into_current
 from flexlate.main import Flexlate
-from tests.config import (
-    COOKIECUTTER_REMOTE_NAME,
-    COOKIECUTTER_REMOTE_URL,
-    GENERATED_FILES_DIR,
-)
+from tests import config
+from tests.config import COOKIECUTTER_REMOTE_NAME, COOKIECUTTER_REMOTE_URL
 from tests.fixtures.add_mode import *
 from tests.fixtures.cli import *
 from tests.fixtures.git import *
@@ -60,7 +57,7 @@ def test_init_project_and_add_source_and_template(
     fxt = flexlates.flexlate
     no_input = flexlates.type == FlexlateType.APP
     repo = repo_with_placeholder_committed
-    with change_directory_to(GENERATED_REPO_DIR):
+    with change_directory_to(config.GENERATED_REPO_DIR):
         fxt.init_project()
         fxt.add_template_source(template_source.path)
         fxt.apply_template_and_add(
@@ -78,7 +75,9 @@ def test_init_project_and_add_source_and_template(
         )
     )
     assert_config_is_correct(
-        at_config_path=GENERATED_REPO_DIR / config_relative_root / "flexlate.json",
+        at_config_path=config.GENERATED_REPO_DIR
+        / config_relative_root
+        / "flexlate.json",
         expect_applied_template_root=template_source.expect_local_applied_template_path,
         expect_data=template_source.input_data,
         template_source_type=template_source.type,
@@ -90,11 +89,11 @@ def test_init_project_and_add_source_and_template(
         render_relative_root_in_template=template_source.render_relative_root_in_template,
     )
 
-    project_config_path = GENERATED_REPO_DIR / "flexlate-project.json"
+    project_config_path = config.GENERATED_REPO_DIR / "flexlate-project.json"
     assert_project_config_is_correct(project_config_path, user=False)
 
 
-@patch.object(appdirs, "user_config_dir", lambda name: GENERATED_FILES_DIR)
+@patch.object(appdirs, "user_config_dir", lambda name: config.GENERATED_FILES_DIR)
 def test_init_project_for_user_and_add_source_and_template(
     flexlates: FlexlateFixture,
     add_mode: AddMode,
@@ -102,7 +101,7 @@ def test_init_project_for_user_and_add_source_and_template(
 ):
     fxt = flexlates.flexlate
     repo = repo_with_placeholder_committed
-    with change_directory_to(GENERATED_REPO_DIR):
+    with change_directory_to(config.GENERATED_REPO_DIR):
         fxt.init_project(user=True, default_add_mode=add_mode)
         fxt.add_template_source(COOKIECUTTER_REMOTE_URL)
         fxt.apply_template_and_add(COOKIECUTTER_REMOTE_NAME, no_input=True)
@@ -110,16 +109,16 @@ def test_init_project_for_user_and_add_source_and_template(
     assert_project_files_are_correct()
 
     if add_mode == AddMode.USER:
-        at_config_root = GENERATED_FILES_DIR
-        ts_config_root = GENERATED_FILES_DIR
-        template_root = GENERATED_REPO_DIR.absolute()
+        at_config_root = config.GENERATED_FILES_DIR
+        ts_config_root = config.GENERATED_FILES_DIR
+        template_root = config.GENERATED_REPO_DIR.absolute()
     elif add_mode == AddMode.PROJECT:
-        at_config_root = GENERATED_REPO_DIR
-        ts_config_root = GENERATED_REPO_DIR
+        at_config_root = config.GENERATED_REPO_DIR
+        ts_config_root = config.GENERATED_REPO_DIR
         template_root = Path(".")
     elif add_mode == AddMode.LOCAL:
-        at_config_root = GENERATED_REPO_DIR / "abc"
-        ts_config_root = GENERATED_REPO_DIR
+        at_config_root = config.GENERATED_REPO_DIR / "abc"
+        ts_config_root = config.GENERATED_REPO_DIR
         template_root = Path("..")
     else:
         raise ValueError(f"unsupported add mode {add_mode}")
@@ -131,11 +130,11 @@ def test_init_project_for_user_and_add_source_and_template(
         expect_add_mode=add_mode,
     )
 
-    project_config_path = GENERATED_FILES_DIR / "flexlate-project.json"
+    project_config_path = config.GENERATED_FILES_DIR / "flexlate-project.json"
     assert_project_config_is_correct(project_config_path, user=True, add_mode=add_mode)
 
 
-@patch.object(appdirs, "user_config_dir", lambda name: GENERATED_FILES_DIR)
+@patch.object(appdirs, "user_config_dir", lambda name: config.GENERATED_FILES_DIR)
 def test_init_project_and_add_source_and_template_in_subdir(
     flexlates: FlexlateFixture,
     add_mode: AddMode,
@@ -147,10 +146,10 @@ def test_init_project_and_add_source_and_template_in_subdir(
     template_source = template_source_one_remote_and_all_local_relative
     repo = repo_with_placeholder_committed
 
-    with change_directory_to(GENERATED_REPO_DIR):
+    with change_directory_to(config.GENERATED_REPO_DIR):
         fxt.init_project(default_add_mode=add_mode)
         fxt.add_template_source(template_source.path)
-        subdir = GENERATED_REPO_DIR / "subdir1" / "subdir2"
+        subdir = config.GENERATED_REPO_DIR / "subdir1" / "subdir2"
         subdir.mkdir(parents=True)
         if subdir_style == SubdirStyle.CD:
             with change_directory_to(subdir):
@@ -183,17 +182,17 @@ def test_init_project_and_add_source_and_template_in_subdir(
         expect_applied_template_root = (
             template_source.expect_local_applied_template_path
         )
-        template_sources_config_dir = GENERATED_REPO_DIR
+        template_sources_config_dir = config.GENERATED_REPO_DIR
         expect_template_source_path = template_source.path
     elif add_mode == AddMode.PROJECT:
-        applied_config_dir = GENERATED_REPO_DIR
-        expect_applied_template_root = subdir.relative_to(GENERATED_REPO_DIR)
-        template_sources_config_dir = GENERATED_REPO_DIR
+        applied_config_dir = config.GENERATED_REPO_DIR
+        expect_applied_template_root = subdir.relative_to(config.GENERATED_REPO_DIR)
+        template_sources_config_dir = config.GENERATED_REPO_DIR
         expect_template_source_path = template_source.path
     elif add_mode == AddMode.USER:
-        applied_config_dir = GENERATED_FILES_DIR
+        applied_config_dir = config.GENERATED_FILES_DIR
         expect_applied_template_root = subdir.absolute()
-        template_sources_config_dir = GENERATED_FILES_DIR
+        template_sources_config_dir = config.GENERATED_FILES_DIR
         if template_source.is_local_template:
             # Move the original directory down a level in the relative path
             # E.g. move ../../input_files/templates/cookiecutters/one to ../input_files/templates/cookiecutters/one
@@ -223,7 +222,7 @@ def test_init_project_and_add_source_and_template_in_subdir(
         expect_add_mode=add_mode,
     )
 
-    project_config_path = GENERATED_REPO_DIR / "flexlate-project.json"
+    project_config_path = config.GENERATED_REPO_DIR / "flexlate-project.json"
     assert_project_config_is_correct(project_config_path, user=False, add_mode=add_mode)
 
 
@@ -239,7 +238,7 @@ def test_update_project(
     template_source = template_source_with_relative
 
     no_input = flexlates.type == FlexlateType.APP
-    subdir = GENERATED_REPO_DIR / "subdir1" / "subdir2"
+    subdir = config.GENERATED_REPO_DIR / "subdir1" / "subdir2"
     subdir.mkdir(parents=True)
 
     def assert_root_template_output_is_correct(
@@ -290,7 +289,7 @@ def test_update_project(
         )
         assert_template_sources_config_is_empty(at_config_path)
 
-    with change_directory_to(GENERATED_REPO_DIR):
+    with change_directory_to(config.GENERATED_REPO_DIR):
         fxt.init_project()
         fxt.add_template_source(
             template_source.path, target_version=template_source.version_1
@@ -308,7 +307,7 @@ def test_update_project(
             )
             assert_subdir_template_output_is_correct()
 
-        update_directory = subdir if update_from_subdir else GENERATED_REPO_DIR
+        update_directory = subdir if update_from_subdir else config.GENERATED_REPO_DIR
         with change_directory_to(update_directory):
             # First update does nothing, because version is at target version
             # When using app, it will throw an error
@@ -355,7 +354,7 @@ def test_update_project(
         after_version_update=True, after_data_update=True
     )
 
-    project_config_path = GENERATED_REPO_DIR / "flexlate-project.json"
+    project_config_path = config.GENERATED_REPO_DIR / "flexlate-project.json"
     assert_project_config_is_correct(project_config_path, user=False)
 
 
@@ -371,7 +370,7 @@ def test_update_one_template(
     with template_source_with_temp_dir_if_local_template(
         COPIER_LOCAL_FIXTURE
     ) as template_source:
-        with change_directory_to(GENERATED_REPO_DIR):
+        with change_directory_to(config.GENERATED_REPO_DIR):
             fxt.init_project()
             # Add both template sources and outputs in the main directory at version 1
             for i, ts in enumerate([template_source, non_update_template_source]):
@@ -458,11 +457,11 @@ def test_update_one_template(
             target_version=non_update_template_source.version_1,
         )
 
-        project_config_path = GENERATED_REPO_DIR / "flexlate-project.json"
+        project_config_path = config.GENERATED_REPO_DIR / "flexlate-project.json"
         assert_project_config_is_correct(project_config_path, user=False)
 
 
-@patch.object(appdirs, "user_config_dir", lambda name: GENERATED_FILES_DIR)
+@patch.object(appdirs, "user_config_dir", lambda name: config.GENERATED_FILES_DIR)
 @pytest.mark.parametrize("user", [False, True])
 def test_remove_template_source(
     user: bool,
@@ -474,12 +473,16 @@ def test_remove_template_source(
     repo = repo_with_placeholder_committed
     fxt = flexlates.flexlate
     config_root = (
-        GENERATED_FILES_DIR if add_mode == AddMode.USER else GENERATED_REPO_DIR
+        config.GENERATED_FILES_DIR
+        if add_mode == AddMode.USER
+        else config.GENERATED_REPO_DIR
     )
-    project_config_root = GENERATED_FILES_DIR if user else GENERATED_REPO_DIR
+    project_config_root = (
+        config.GENERATED_FILES_DIR if user else config.GENERATED_REPO_DIR
+    )
     config_path = config_root / "flexlate.json"
     project_config_path = project_config_root / "flexlate-project.json"
-    with change_directory_to(GENERATED_REPO_DIR):
+    with change_directory_to(config.GENERATED_REPO_DIR):
         fxt.init_project(user=user, default_add_mode=add_mode)
         fxt.add_template_source(COOKIECUTTER_REMOTE_URL)
         assert config_path.exists()
@@ -489,15 +492,15 @@ def test_remove_template_source(
     assert_project_config_is_correct(project_config_path, user=user, add_mode=add_mode)
 
     # Works for main dir, now try subdir
-    subdir = GENERATED_REPO_DIR / "subdir1" / "subdir2"
+    subdir = config.GENERATED_REPO_DIR / "subdir1" / "subdir2"
     subdir.mkdir(parents=True)
     subdir_config_root: Path
     if add_mode == AddMode.USER:
-        subdir_config_root = GENERATED_FILES_DIR
+        subdir_config_root = config.GENERATED_FILES_DIR
     elif add_mode == AddMode.LOCAL:
         subdir_config_root = subdir
     elif add_mode == AddMode.PROJECT:
-        subdir_config_root = GENERATED_REPO_DIR
+        subdir_config_root = config.GENERATED_REPO_DIR
     else:
         raise ValueError("unsupported add mode")
     subdir_config_path = subdir_config_root / "flexlate.json"
@@ -530,7 +533,7 @@ def test_remove_template_source(
     assert_project_config_is_correct(project_config_path, user=user, add_mode=add_mode)
 
 
-@patch.object(appdirs, "user_config_dir", lambda name: GENERATED_FILES_DIR)
+@patch.object(appdirs, "user_config_dir", lambda name: config.GENERATED_FILES_DIR)
 @pytest.mark.parametrize("user", [False, True])
 def test_remove_applied_template(
     user: bool,
@@ -542,13 +545,17 @@ def test_remove_applied_template(
     fxt = flexlates.flexlate
     no_input = flexlates.type == FlexlateType.APP
     config_root = (
-        GENERATED_FILES_DIR if add_mode == AddMode.USER else GENERATED_REPO_DIR
+        config.GENERATED_FILES_DIR
+        if add_mode == AddMode.USER
+        else config.GENERATED_REPO_DIR
     )
-    project_config_root = GENERATED_FILES_DIR if user else GENERATED_REPO_DIR
+    project_config_root = (
+        config.GENERATED_FILES_DIR if user else config.GENERATED_REPO_DIR
+    )
     config_path = config_root / "flexlate.json"
     project_config_path = project_config_root / "flexlate-project.json"
     expect_data: CookiecutterRemoteTemplateData = dict(name="woo", key="it works")
-    with change_directory_to(GENERATED_REPO_DIR):
+    with change_directory_to(config.GENERATED_REPO_DIR):
         fxt.init_project(user=user, default_add_mode=add_mode)
         fxt.add_template_source(COOKIECUTTER_REMOTE_URL)
         fxt.apply_template_and_add(
@@ -564,7 +571,7 @@ def test_remove_applied_template(
         assert_applied_templates_config_is_empty(config_path)
 
         # Works for main dir, now try subdir
-        subdir = GENERATED_REPO_DIR / "subdir1" / "subdir2"
+        subdir = config.GENERATED_REPO_DIR / "subdir1" / "subdir2"
         subdir.mkdir(parents=True)
         if subdir_style == SubdirStyle.CD:
             with change_directory_to(subdir):
@@ -600,21 +607,21 @@ def test_remove_applied_template(
     assert not (subdir / "flexlate.json").exists()
 
 
-@patch.object(appdirs, "user_config_dir", lambda name: GENERATED_FILES_DIR)
+@patch.object(appdirs, "user_config_dir", lambda name: config.GENERATED_FILES_DIR)
 def test_undo(
     flexlates: FlexlateFixture,
     repo_with_placeholder_committed: Repo,
 ):
     fxt = flexlates.flexlate
     repo = repo_with_placeholder_committed
-    with change_directory_to(GENERATED_REPO_DIR):
+    with change_directory_to(config.GENERATED_REPO_DIR):
         fxt.init_project()
         fxt.add_template_source(COOKIECUTTER_REMOTE_URL)
         fxt.apply_template_and_add(COOKIECUTTER_REMOTE_NAME, no_input=True)
         # Work in a subdirectory so that we can run all operations.
         # Commit a file so that the folder will persist and ensure that
         # the file is never removed
-        subdir = GENERATED_REPO_DIR / "subdir"
+        subdir = config.GENERATED_REPO_DIR / "subdir"
         subdir.mkdir()
         subdir_placeholder_path = (subdir / "some-file.txt").resolve()
         subdir_placeholder_path.write_text("something")
@@ -652,7 +659,7 @@ def test_undo(
     assert_merged_commit_history_is_correct()
     assert_project_files_are_correct()
     assert_config_is_correct(
-        at_config_path=GENERATED_REPO_DIR / "abc" / "flexlate.json",
+        at_config_path=config.GENERATED_REPO_DIR / "abc" / "flexlate.json",
         expect_applied_template_root=Path(".."),
     )
     assert_project_config_is_correct()
@@ -689,8 +696,8 @@ def test_init_project_from_template(
     template_source = template_source_with_relative
 
     no_input = flexlates.type == FlexlateType.APP
-    with change_directory_to(GENERATED_FILES_DIR):
-        subdir = GENERATED_FILES_DIR / "subdir" / "nested"
+    with change_directory_to(config.GENERATED_FILES_DIR):
+        subdir = config.GENERATED_FILES_DIR / "subdir" / "nested"
         fxt.init_project_from(
             template_source.path,
             path=subdir,
@@ -750,9 +757,9 @@ def test_sync_manually_remove_applied_template(
     fxt = flexlates.flexlate
     repo = repo_with_placeholder_committed
 
-    output_folder = GENERATED_REPO_DIR / "abc"
+    output_folder = config.GENERATED_REPO_DIR / "abc"
 
-    with change_directory_to(GENERATED_REPO_DIR):
+    with change_directory_to(config.GENERATED_REPO_DIR):
         fxt.init_project()
         fxt.add_template_source(COOKIECUTTER_REMOTE_URL)
         fxt.apply_template_and_add(COOKIECUTTER_REMOTE_NAME, no_input=True)
@@ -780,10 +787,10 @@ def test_merge(flexlates: FlexlateFixture, repo_with_placeholder_committed: Repo
     fxt = flexlates.flexlate
     repo = repo_with_placeholder_committed
 
-    with change_directory_to(GENERATED_REPO_DIR):
+    with change_directory_to(config.GENERATED_REPO_DIR):
         fxt.init_project()
         # Make a dummy change
-        dummy_file = GENERATED_REPO_DIR / "something.txt"
+        dummy_file = config.GENERATED_REPO_DIR / "something.txt"
         dummy_file.write_text("text")
         stage_and_commit_all(repo, "Add a dummy change to the main branch")
         with _checkout_new_branch_that_merges_back(repo, fxt, "add-source"):
@@ -811,10 +818,10 @@ def test_push(flexlates: FlexlateFixture, repo_with_placeholder_committed: Repo)
     fxt = flexlates.flexlate
     repo = repo_with_placeholder_committed
 
-    with change_directory_to(GENERATED_REPO_DIR):
+    with change_directory_to(config.GENERATED_REPO_DIR):
         fxt.init_project()
         # Make a dummy change
-        dummy_file = GENERATED_REPO_DIR / "something.txt"
+        dummy_file = config.GENERATED_REPO_DIR / "something.txt"
         dummy_file.write_text("text")
         stage_and_commit_all(repo, "Add a dummy change to the main branch")
         with _checkout_new_branch_that_merges_back(repo, fxt, "add-source"):
@@ -894,7 +901,7 @@ def test_check(
             _assert_no_output,
         )
 
-    with change_directory_to(GENERATED_REPO_DIR):
+    with change_directory_to(config.GENERATED_REPO_DIR):
         fxt.init_project()
         fxt.add_template_source(
             template_source.path, target_version=template_source.version_1
@@ -923,7 +930,7 @@ def test_bootstrap(
     template_source = template_source_with_relative
     no_input = flexlates.type == FlexlateType.APP
 
-    with change_directory_to(GENERATED_REPO_DIR):
+    with change_directory_to(config.GENERATED_REPO_DIR):
         template_source.render_without_flexlate()
         stage_and_commit_all(
             repo, f"Render files with {template_source.template_type.value}"
@@ -956,7 +963,7 @@ def test_update_target_version(
     fxt = flexlates.flexlate
     repo = repo_with_placeholder_committed
 
-    config_path = GENERATED_REPO_DIR / "flexlate.json"
+    config_path = config.GENERATED_REPO_DIR / "flexlate.json"
 
     def assert_target_version_is(version: Optional[str]):
         config = FlexlateConfig.load(config_path)
@@ -964,7 +971,7 @@ def test_update_target_version(
         ts = config.template_sources[0]
         assert ts.target_version == version
 
-    with change_directory_to(GENERATED_REPO_DIR):
+    with change_directory_to(config.GENERATED_REPO_DIR):
         fxt.init_project()
         fxt.add_template_source(template_source.path)
         assert_target_version_is(None)

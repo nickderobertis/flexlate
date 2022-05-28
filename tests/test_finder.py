@@ -10,6 +10,7 @@ from flexlate.temp_path import create_temp_path
 from flexlate.template.base import Template
 from flexlate.template.cookiecutter import CookiecutterTemplate
 from flexlate.template_path import get_local_repo_path_and_name_cloning_if_repo_url
+from tests import config
 from tests.config import (
     COOKIECUTTER_ONE_DIR,
     COOKIECUTTER_ONE_NAME,
@@ -28,7 +29,6 @@ from tests.config import (
     COPIER_REMOTE_URL,
     COPIER_REMOTE_VERSION_1,
     COPIER_REMOTE_VERSION_2,
-    GENERATED_FILES_DIR,
 )
 
 
@@ -182,7 +182,9 @@ def test_multi_finder_get_cookiecutter_remote_template(
 ):
     finder = MultiFinder()
     template = finder.find(COOKIECUTTER_REMOTE_URL, version=version)
-    assert template.path == GENERATED_FILES_DIR / COOKIECUTTER_REMOTE_NAME / version
+    assert (
+        template.path == config.GENERATED_FILES_DIR / COOKIECUTTER_REMOTE_NAME / version
+    )
     assert template.git_url == COOKIECUTTER_REMOTE_URL
     assert template.version == version
     assert template.config.defaults == {"name": "abc", "key": "value"}
@@ -204,7 +206,7 @@ def test_multi_finder_get_cookiecutter_remote_template(
 def test_multi_finder_get_copier_remote_template(version: str, expect_contents: str):
     finder = MultiFinder()
     template = finder.find(COPIER_REMOTE_URL, version=version)
-    assert template.path == GENERATED_FILES_DIR / COPIER_REMOTE_NAME / version
+    assert template.path == config.GENERATED_FILES_DIR / COPIER_REMOTE_NAME / version
     assert template.git_url == COPIER_REMOTE_URL
     assert template.version == version
     assert template.config.defaults == {"question1": "answer1", "question2": 2.7}

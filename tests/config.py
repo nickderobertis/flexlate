@@ -6,6 +6,7 @@ TESTS_DIR = Path(__file__).parent
 INPUT_FILES_DIR = TESTS_DIR / "input_files"
 GENERATED_FILES_DIR = TESTS_DIR / "generated"
 GENERATED_REPO_DIR = GENERATED_FILES_DIR / "project"
+USING_TEMP_DIR_AS_GENERATED_DIR = False
 
 TEMPLATES_DIR = INPUT_FILES_DIR / "templates"
 

@@ -5,14 +5,14 @@ from unittest.mock import patch
 import appdirs
 
 from flexlate.user_config_manager import UserConfigManager
-from tests.config import GENERATED_FILES_DIR
+from tests import config
 from tests.fixtures.add_mode import *
 from tests.fixtures.templated_repo import *
 from tests.fixtures.transaction import update_target_version_transaction
 from tests.gitutils import assert_main_commit_message_matches
 
 
-@patch.object(appdirs, "user_config_dir", lambda name: GENERATED_FILES_DIR)
+@patch.object(appdirs, "user_config_dir", lambda name: config.GENERATED_FILES_DIR)
 def test_add_local_cookiecutter_applied_template_to_repo(
     add_mode: AddMode,
     repo_with_cookiecutter_one_template_source: Repo,
@@ -25,10 +25,13 @@ def test_add_local_cookiecutter_applied_template_to_repo(
 
     if add_mode == AddMode.USER:
         # Template source was already added at project root before this, so need to move config
-        shutil.move(str(GENERATED_REPO_DIR / "flexlate.json"), str(GENERATED_FILES_DIR))
-        config_dir = GENERATED_FILES_DIR
+        shutil.move(
+            str(config.GENERATED_REPO_DIR / "flexlate.json"),
+            str(config.GENERATED_FILES_DIR),
+        )
+        config_dir = config.GENERATED_FILES_DIR
     elif add_mode in (AddMode.PROJECT, AddMode.LOCAL):
-        config_dir = GENERATED_REPO_DIR
+        config_dir = config.GENERATED_REPO_DIR
     else:
         raise NotImplementedError(f"unsupported add mode {add_mode}")
 
@@ -47,7 +50,7 @@ def test_add_local_cookiecutter_applied_template_to_repo(
         target_version,
         repo,
         transaction,
-        project_path=GENERATED_REPO_DIR,
+        project_path=config.GENERATED_REPO_DIR,
         add_mode=add_mode,
     )
     assert_target_version_is(target_version)

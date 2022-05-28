@@ -2,7 +2,7 @@ from pathlib import Path
 
 from flexlate import Flexlate
 from flexlate.template.types import TemplateType
-from tests.config import GENERATED_FILES_DIR
+from tests import config as test_config
 from tests.integration.fixtures.repo import *
 from tests.integration.fixtures.template_source import (
     COOKIECUTTER_CHANGES_TO_COPIER_LOCAL_FIXTURE,
@@ -20,7 +20,7 @@ def test_update_template_from_cookiecutter_to_copier(
     repo_with_default_flexlate_project: Repo,
 ):
     def assert_template_type_is(template_type: TemplateType):
-        config = FlexlateConfig.load(GENERATED_REPO_DIR / "flexlate.json")
+        config = FlexlateConfig.load(test_config.GENERATED_REPO_DIR / "flexlate.json")
         assert len(config.template_sources) == 1
         ts = config.template_sources[0]
         assert ts.type == template_type
@@ -28,7 +28,7 @@ def test_update_template_from_cookiecutter_to_copier(
     with template_source_with_temp_dir_if_local_template(
         COOKIECUTTER_CHANGES_TO_COPIER_LOCAL_FIXTURE
     ) as template_source:
-        with change_directory_to(GENERATED_REPO_DIR):
+        with change_directory_to(test_config.GENERATED_REPO_DIR):
             fxt.add_template_source(template_source.path)
             fxt.apply_template_and_add(
                 template_source.name, data=template_source.input_data, no_input=True
@@ -60,10 +60,10 @@ def test_update_template_from_cookiecutter_to_copier(
 def test_update_template_with_relative_path_from_outside_project(
     repo_with_default_flexlate_project: Repo,
 ):
-    update_from_dir = GENERATED_FILES_DIR / "something"
+    update_from_dir = test_config.GENERATED_FILES_DIR / "something"
     update_from_dir.mkdir()
 
-    project_dir = GENERATED_REPO_DIR
+    project_dir = test_config.GENERATED_REPO_DIR
 
     with template_source_with_temp_dir_if_local_template(
         COPIER_LOCAL_FIXTURE

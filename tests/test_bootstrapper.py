@@ -5,6 +5,7 @@ from git import Repo
 from flexlate import branch_update
 from flexlate.bootstrapper import Bootstrapper
 from flexlate.config import FlexlateProjectConfig
+from tests import config
 from tests.fixtures.templated_repo import *
 from tests.fixtures.transaction import bootstrap_transaction
 from tests.fs_checks import (
@@ -30,7 +31,7 @@ def test_bootstrap_cookiecutter_one(
     # Check that all Flexlate config files are correct
     assert_template_source_cookiecutter_one_added_correctly(cookiecutter_one_template)
     assert_cookiecutter_one_applied_template_added_correctly(
-        template, GENERATED_REPO_DIR / "b"
+        template, config.GENERATED_REPO_DIR / "b"
     )
     assert_project_config_is_correct()
 
@@ -46,7 +47,7 @@ def test_bootstrap_cookiecutter_one_with_conflicts(
     template = cookiecutter_one_template
 
     # Modify templated output to cause conflict
-    content_path = GENERATED_REPO_DIR / "b" / "text.txt"
+    content_path = config.GENERATED_REPO_DIR / "b" / "text.txt"
     content_path.write_text("merge conflict")
     stage_and_commit_all(
         repo, "Add a change that should cause a merge conflict on bootstrap"
@@ -66,7 +67,7 @@ def test_bootstrap_cookiecutter_one_with_conflicts(
     # Check that all Flexlate config files are correct
     assert_template_source_cookiecutter_one_added_correctly(cookiecutter_one_template)
     assert_cookiecutter_one_applied_template_added_correctly(
-        template, GENERATED_REPO_DIR / "b"
+        template, config.GENERATED_REPO_DIR / "b"
     )
     assert_project_config_is_correct()
 

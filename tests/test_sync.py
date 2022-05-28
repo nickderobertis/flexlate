@@ -6,6 +6,7 @@ from flexlate.config import FlexlateConfig
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.exc import GitRepoDirtyException
 from flexlate.syncer import Syncer
+from tests import config as test_config
 from tests.fixtures.templated_repo import *
 from tests.fixtures.transaction import sync_transaction
 
@@ -16,7 +17,7 @@ def test_sync_change_in_template_source_name(
 ):
     repo = repo_with_cookiecutter_one_template_source
     expect_name = "new-name"
-    config_path = GENERATED_REPO_DIR / "flexlate.json"
+    config_path = test_config.GENERATED_REPO_DIR / "flexlate.json"
 
     def update_config(config: FlexlateConfig):
         config.template_sources[0].name = expect_name
@@ -43,9 +44,9 @@ def test_sync_change_to_applied_template_root(
     sync_transaction: FlexlateTransaction,
 ):
     repo = repo_with_template_branch_from_cookiecutter_one_project_add_mode
-    expect_original_output_path = GENERATED_REPO_DIR / "b" / "text.txt"
-    expect_new_output_path = GENERATED_REPO_DIR / "a" / "b" / "text.txt"
-    config_path = GENERATED_REPO_DIR / "flexlate.json"
+    expect_original_output_path = test_config.GENERATED_REPO_DIR / "b" / "text.txt"
+    expect_new_output_path = test_config.GENERATED_REPO_DIR / "a" / "b" / "text.txt"
+    config_path = test_config.GENERATED_REPO_DIR / "flexlate.json"
     assert expect_original_output_path.exists()
 
     def update_config(config: FlexlateConfig):
@@ -79,15 +80,15 @@ def test_sync_change_to_applied_template_location(
     sync_transaction: FlexlateTransaction,
 ):
     repo = repo_with_template_branch_from_cookiecutter_one
-    expect_out_path = GENERATED_REPO_DIR / "b" / "text.txt"
-    config_path = GENERATED_REPO_DIR / "b" / "flexlate.json"
-    new_folder = GENERATED_REPO_DIR / "subdir"
+    expect_out_path = test_config.GENERATED_REPO_DIR / "b" / "text.txt"
+    config_path = test_config.GENERATED_REPO_DIR / "b" / "flexlate.json"
+    new_folder = test_config.GENERATED_REPO_DIR / "subdir"
     new_folder.mkdir()
     new_config_path = new_folder / "b" / "flexlate.json"
     new_out_path = new_folder / "b" / "text.txt"
     assert expect_out_path.exists()
 
-    shutil.move(str(GENERATED_REPO_DIR / "b"), new_folder)
+    shutil.move(str(test_config.GENERATED_REPO_DIR / "b"), new_folder)
     stage_and_commit_all(repo, "Manually move applied template")
 
     # Sync changes to flexlate branches
@@ -108,8 +109,8 @@ def test_sync_change_to_data(
     sync_transaction: FlexlateTransaction,
 ):
     repo = repo_with_template_branch_from_cookiecutter_one
-    expect_out_path = GENERATED_REPO_DIR / "b" / "text.txt"
-    config_path = GENERATED_REPO_DIR / "b" / "flexlate.json"
+    expect_out_path = test_config.GENERATED_REPO_DIR / "b" / "text.txt"
+    config_path = test_config.GENERATED_REPO_DIR / "b" / "flexlate.json"
     assert expect_out_path.exists()
     assert expect_out_path.read_text() == "b"
     config = FlexlateConfig.load(config_path)
@@ -146,8 +147,8 @@ def test_sync_change_to_template_version(
     sync_transaction: FlexlateTransaction,
 ):
     repo = repo_with_template_branch_from_cookiecutter_remote_version_one
-    expect_output_path = GENERATED_REPO_DIR / "abc" / "abc.txt"
-    config_path = GENERATED_REPO_DIR / "flexlate.json"
+    expect_output_path = test_config.GENERATED_REPO_DIR / "abc" / "abc.txt"
+    config_path = test_config.GENERATED_REPO_DIR / "flexlate.json"
     assert expect_output_path.exists()
     assert expect_output_path.read_text() == "value"
 
@@ -218,7 +219,7 @@ def test_sync_fails_when_there_are_uncommitted_changes(
     sync_transaction: FlexlateTransaction,
 ):
     repo = repo_with_cookiecutter_one_template_source
-    new_file_path = GENERATED_REPO_DIR / "my-new-file.txt"
+    new_file_path = test_config.GENERATED_REPO_DIR / "my-new-file.txt"
     new_file_path.write_text("some text")
 
     syncer = Syncer()

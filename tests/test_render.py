@@ -2,7 +2,7 @@ from flexlate.render.multi import MultiRenderer
 from flexlate.render.renderable import Renderable
 from flexlate.render.specific.cookiecutter import CookiecutterRenderer
 from flexlate.render.specific.copier import CopierRenderer
-from tests.config import GENERATED_FILES_DIR
+from tests import config
 from tests.dirutils import wipe_generated_folder
 from tests.fileutils import (
     cookiecutter_one_generated_text_content,
@@ -30,7 +30,7 @@ def test_render_copier_with_defaults(copier_one_renderable: Renderable):
     renderer = CopierRenderer()
     data = renderer.render(copier_one_renderable, no_input=True)
     assert data == {"q1": "a1", "q2": 1, "q3": None}
-    rendered_path = GENERATED_FILES_DIR / "a1.txt"
+    rendered_path = config.GENERATED_FILES_DIR / "a1.txt"
     assert rendered_path.read_text() == "1"
 
 
@@ -41,9 +41,9 @@ def test_render_copier_subdir_with_defaults(
     renderable = copier_output_subdir_renderable
     data = renderer.render(renderable, no_input=True)
     assert data == {"qone": "aone", "qtwo": "atwo"}
-    rendered_path = GENERATED_FILES_DIR / "aone.txt"
+    rendered_path = config.GENERATED_FILES_DIR / "aone.txt"
     assert rendered_path.read_text() == "atwo"
-    should_not_exist_path = GENERATED_FILES_DIR / "not-rendered.txt"
+    should_not_exist_path = config.GENERATED_FILES_DIR / "not-rendered.txt"
     assert not should_not_exist_path.exists()
 
 
@@ -65,14 +65,16 @@ def test_render_copier_with_data(copier_one_renderable: Renderable):
     copier_one_renderable.data = {"q2": 2, "q3": "a3"}
     data = renderer.render(copier_one_renderable, no_input=True)
     assert data == {"q1": "a1", "q2": 2, "q3": "a3"}
-    rendered_path = GENERATED_FILES_DIR / "a1.txt"
+    rendered_path = config.GENERATED_FILES_DIR / "a1.txt"
     assert rendered_path.read_text() == "2"
 
 
 def test_render_multi_with_defaults(cookiecutter_local_renderables: List[Renderable]):
     renderer = MultiRenderer()
     data = renderer.render(
-        cookiecutter_local_renderables, project_root=GENERATED_FILES_DIR, no_input=True
+        cookiecutter_local_renderables,
+        project_root=config.GENERATED_FILES_DIR,
+        no_input=True,
     )
     assert data == [{"a": "b", "c": ""}, {"a": "b", "d": "e"}]
     assert cookiecutter_one_generated_text_content() == "b"
@@ -82,10 +84,10 @@ def test_render_multi_with_defaults(cookiecutter_local_renderables: List[Rendera
 def test_render_multi_with_copier_defaults(copier_one_renderable: Renderable):
     renderer = MultiRenderer()
     data = renderer.render(
-        [copier_one_renderable], project_root=GENERATED_FILES_DIR, no_input=True
+        [copier_one_renderable], project_root=config.GENERATED_FILES_DIR, no_input=True
     )
     assert data == [{"q1": "a1", "q2": 1, "q3": None}]
-    rendered_path = GENERATED_FILES_DIR / "a1.txt"
+    rendered_path = config.GENERATED_FILES_DIR / "a1.txt"
     assert rendered_path.read_text() == "1"
 
 
@@ -98,7 +100,7 @@ def test_render_multi_with_data(
     copier_one_renderable.data = {"q2": 2, "q3": "a3"}
     data = renderer.render(
         [*cookiecutter_local_renderables, copier_one_renderable],
-        project_root=GENERATED_FILES_DIR,
+        project_root=config.GENERATED_FILES_DIR,
         no_input=True,
     )
     assert data == [
@@ -108,7 +110,7 @@ def test_render_multi_with_data(
     ]
     assert cookiecutter_one_generated_text_content(folder="z") == "zsomething"
     assert cookiecutter_two_generated_text_content(folder="z") == "f"
-    copier_rendered_path = GENERATED_FILES_DIR / "a1.txt"
+    copier_rendered_path = config.GENERATED_FILES_DIR / "a1.txt"
     assert copier_rendered_path.read_text() == "2"
 
 

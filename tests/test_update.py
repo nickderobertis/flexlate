@@ -22,13 +22,13 @@ from flexlate.template.types import TemplateType
 from flexlate.transactions.transaction import FlexlateTransaction
 from flexlate.update.main import Updater
 from flexlate.update.template import TemplateUpdate
+from tests import config as test_config
 from tests.config import (
     COOKIECUTTER_ONE_NAME,
     COOKIECUTTER_ONE_VERSION,
     COOKIECUTTER_REMOTE_URL,
     COOKIECUTTER_REMOTE_VERSION_1,
     COOKIECUTTER_REMOTE_VERSION_2,
-    GENERATED_FILES_DIR,
 )
 from tests.fileutils import (
     cookiecutter_one_generated_text_content,
@@ -80,16 +80,16 @@ def _assert_update_of_cookiecutter_one_modified_template_was_successful(
         f"Update flexlate templates\n\none: {COOKIECUTTER_ONE_MODIFIED_VERSION}",
     )
     assert (
-        cookiecutter_one_generated_text_content(gen_dir=GENERATED_REPO_DIR)
+        cookiecutter_one_generated_text_content(gen_dir=test_config.GENERATED_REPO_DIR)
         == "b and extra"
     )
-    assert (GENERATED_REPO_DIR / "ignored" / "ignored.txt").exists()
-    assert (GENERATED_REPO_DIR / ".gitignore").exists()
-    assert (GENERATED_REPO_DIR / "some-dir" / "placeholder.txt").exists()
+    assert (test_config.GENERATED_REPO_DIR / "ignored" / "ignored.txt").exists()
+    assert (test_config.GENERATED_REPO_DIR / ".gitignore").exists()
+    assert (test_config.GENERATED_REPO_DIR / "some-dir" / "placeholder.txt").exists()
     merged_branch.checkout()
     assert repo.active_branch == merged_branch
     assert (
-        cookiecutter_one_generated_text_content(gen_dir=GENERATED_REPO_DIR)
+        cookiecutter_one_generated_text_content(gen_dir=test_config.GENERATED_REPO_DIR)
         == "b and extra"
     )
 
@@ -102,7 +102,8 @@ def test_update_modify_template(
     repo = repo_with_gitignore_and_template_branch_from_cookiecutter_one
     updater = Updater()
     template_updates = updater.get_updates_for_templates(
-        [cookiecutter_one_modified_template], project_root=GENERATED_REPO_DIR
+        [cookiecutter_one_modified_template],
+        project_root=test_config.GENERATED_REPO_DIR,
     )
     updater.update(repo, template_updates, update_transaction, no_input=True)
     _assert_update_of_cookiecutter_one_modified_template_was_successful(
@@ -124,18 +125,18 @@ def test_update_modify_specific_template(
 
     # Add a second template source and output that we are not updating
     adder = Adder()
-    with change_directory_to(GENERATED_REPO_DIR):
+    with change_directory_to(test_config.GENERATED_REPO_DIR):
         adder.add_template_source(
             repo,
             copier_output_subdir_template,
             add_source_transaction,
-            out_root=GENERATED_REPO_DIR,
+            out_root=test_config.GENERATED_REPO_DIR,
         )
         adder.apply_template_and_add(
             repo,
             copier_output_subdir_template,
             add_output_transaction,
-            out_root=GENERATED_REPO_DIR,
+            out_root=test_config.GENERATED_REPO_DIR,
             no_input=True,
         )
 
@@ -149,7 +150,7 @@ def test_update_modify_specific_template(
             copier_output_subdir_template,
         ]
     template_updates = updater.get_updates_for_templates(
-        update_templates, project_root=GENERATED_REPO_DIR
+        update_templates, project_root=test_config.GENERATED_REPO_DIR
     )
     updater.update(repo, template_updates, update_transaction, no_input=True)
     _assert_update_of_cookiecutter_one_modified_template_was_successful(
@@ -157,7 +158,7 @@ def test_update_modify_specific_template(
     )
 
     # Check to make sure other output was not affected
-    output_path = GENERATED_REPO_DIR / "aone.txt"
+    output_path = test_config.GENERATED_REPO_DIR / "aone.txt"
     assert output_path.read_text() == "atwo"
 
 
@@ -173,7 +174,8 @@ def test_update_modify_template_with_feature_branches_and_main_branches_are_only
     repo = repo_with_gitignore_and_template_branch_from_cookiecutter_one
     updater = Updater()
     template_updates = updater.get_updates_for_templates(
-        [cookiecutter_one_modified_template], project_root=GENERATED_REPO_DIR
+        [cookiecutter_one_modified_template],
+        project_root=test_config.GENERATED_REPO_DIR,
     )
 
     feature_branch_name = "feature"
@@ -192,7 +194,7 @@ def test_update_modify_template_with_feature_branches_and_main_branches_are_only
         # This simulates what happens when the user uses the Flexlate Github Actions to resolve merge conflicts
         # in the web editor: the output branch will diverge from main.
         base_output_branch.checkout()
-        touch_path = GENERATED_REPO_DIR / "something1.txt"
+        touch_path = test_config.GENERATED_REPO_DIR / "something1.txt"
         touch_path.touch()
         stage_and_commit_all(repo, "Add something 1")
         feature_branch = repo.branches[feature_branch_name]  # type: ignore
@@ -244,7 +246,8 @@ def test_update_modify_template_with_feature_branches_and_feature_branches_are_o
     repo = repo_with_gitignore_and_template_branch_from_cookiecutter_one
     updater = Updater()
     template_updates = updater.get_updates_for_templates(
-        [cookiecutter_one_modified_template], project_root=GENERATED_REPO_DIR
+        [cookiecutter_one_modified_template],
+        project_root=test_config.GENERATED_REPO_DIR,
     )
 
     feature_branch = "feature"
@@ -258,7 +261,7 @@ def test_update_modify_template_with_feature_branches_and_feature_branches_are_o
 
     # Create flexlate feature branches and add commits to distinguish from base flexlate branches
     syncer = Syncer()
-    config_path = GENERATED_REPO_DIR / "b" / "flexlate.json"
+    config_path = test_config.GENERATED_REPO_DIR / "b" / "flexlate.json"
     config = FlexlateConfig.load(config_path)
     at = config.applied_templates[0]
     at.data = dict(a="b", c="d")
@@ -316,20 +319,22 @@ def test_update_modify_data(
     template_updates = updater.get_updates_for_templates(
         [cookiecutter_one_template],
         data=[{"a": "d", "c": "e"}],
-        project_root=GENERATED_REPO_DIR,
+        project_root=test_config.GENERATED_REPO_DIR,
     )
     updater.update(repo, template_updates, update_transaction, no_input=True)
     assert (
-        cookiecutter_one_generated_text_content(folder="d", gen_dir=GENERATED_REPO_DIR)
+        cookiecutter_one_generated_text_content(
+            folder="d", gen_dir=test_config.GENERATED_REPO_DIR
+        )
         == "de"
     )
-    assert (GENERATED_REPO_DIR / "ignored" / "ignored.txt").exists()
-    assert (GENERATED_REPO_DIR / ".gitignore").exists()
+    assert (test_config.GENERATED_REPO_DIR / "ignored" / "ignored.txt").exists()
+    assert (test_config.GENERATED_REPO_DIR / ".gitignore").exists()
 
     # Original b directory should no longer exist, everything moved to d
-    assert not (GENERATED_REPO_DIR / "b").exists()
+    assert not (test_config.GENERATED_REPO_DIR / "b").exists()
 
-    config_path = GENERATED_REPO_DIR / "d" / "flexlate.json"
+    config_path = test_config.GENERATED_REPO_DIR / "d" / "flexlate.json"
     config = FlexlateConfig.load(config_path)
     assert len(config.applied_templates) == 1
     at = config.applied_templates[0]
@@ -346,20 +351,22 @@ def test_update_modify_data_for_template_in_repo(
     template_updates = updater.get_updates_for_templates(
         [cookiecutter_one_template_in_repo],
         data=[{"a": "d", "c": "e"}],
-        project_root=GENERATED_REPO_DIR,
+        project_root=test_config.GENERATED_REPO_DIR,
     )
     updater.update(repo, template_updates, update_transaction, no_input=True)
     assert (
-        cookiecutter_one_generated_text_content(folder="d", gen_dir=GENERATED_REPO_DIR)
+        cookiecutter_one_generated_text_content(
+            folder="d", gen_dir=test_config.GENERATED_REPO_DIR
+        )
         == "de"
     )
-    assert (GENERATED_REPO_DIR / "ignored" / "ignored.txt").exists()
-    assert (GENERATED_REPO_DIR / ".gitignore").exists()
+    assert (test_config.GENERATED_REPO_DIR / "ignored" / "ignored.txt").exists()
+    assert (test_config.GENERATED_REPO_DIR / ".gitignore").exists()
 
     # Original b directory should no longer exist, everything moved to d
-    assert not (GENERATED_REPO_DIR / "b").exists()
+    assert not (test_config.GENERATED_REPO_DIR / "b").exists()
 
-    config_path = GENERATED_REPO_DIR / "d" / "flexlate.json"
+    config_path = test_config.GENERATED_REPO_DIR / "d" / "flexlate.json"
     config = FlexlateConfig.load(config_path)
     assert len(config.applied_templates) == 1
     at = config.applied_templates[0]
@@ -374,7 +381,8 @@ def test_update_modify_template_conflict(
     repo = repo_from_cookiecutter_one_with_modifications
     updater = Updater()
     template_updates = updater.get_updates_for_templates(
-        [cookiecutter_one_modified_template], project_root=GENERATED_FILES_DIR
+        [cookiecutter_one_modified_template],
+        project_root=test_config.GENERATED_FILES_DIR,
     )
     manual_commit_message = "Manually resolve conflicts"
 
@@ -404,7 +412,8 @@ def test_update_modify_template_conflict_with_resolution(
 
     updater = Updater()
     template_updates = updater.get_updates_for_templates(
-        [cookiecutter_one_modified_template], project_root=GENERATED_FILES_DIR
+        [cookiecutter_one_modified_template],
+        project_root=test_config.GENERATED_FILES_DIR,
     )
     with patch.object(branch_update, "confirm_user", _resolve_conflicts_then_type_yes):
         updater.update(repo, template_updates, update_transaction)
@@ -434,7 +443,8 @@ def test_update_modify_template_conflict_with_reject(
 
     updater = Updater()
     template_updates = updater.get_updates_for_templates(
-        [cookiecutter_one_modified_template], project_root=GENERATED_FILES_DIR
+        [cookiecutter_one_modified_template],
+        project_root=test_config.GENERATED_FILES_DIR,
     )
     with patch.object(branch_update, "confirm_user", _reject_update):
         with pytest.raises(MergeConflictsAndAbortException):
@@ -475,7 +485,8 @@ def test_update_modify_template_conflict_with_reject_on_feature_branches(
 
     updater = Updater()
     template_updates = updater.get_updates_for_templates(
-        [cookiecutter_one_modified_template], project_root=GENERATED_FILES_DIR
+        [cookiecutter_one_modified_template],
+        project_root=test_config.GENERATED_FILES_DIR,
     )
     with patch.object(branch_update, "confirm_user", _reject_update):
         with pytest.raises(MergeConflictsAndAbortException):
@@ -511,7 +522,8 @@ def test_update_modify_template_conflict_with_abort_resets_state(
     repo = repo_from_cookiecutter_one_with_modifications
     updater = Updater()
     template_updates = updater.get_updates_for_templates(
-        [cookiecutter_one_modified_template], project_root=GENERATED_FILES_DIR
+        [cookiecutter_one_modified_template],
+        project_root=test_config.GENERATED_FILES_DIR,
     )
 
     with pytest.raises(MergeConflictsAndAbortException):
@@ -536,7 +548,8 @@ def test_update_modify_template_conflict_with_abort_and_no_cleanup_leaves_git_me
     repo = repo_from_cookiecutter_one_with_modifications
     updater = Updater()
     template_updates = updater.get_updates_for_templates(
-        [cookiecutter_one_modified_template], project_root=GENERATED_FILES_DIR
+        [cookiecutter_one_modified_template],
+        project_root=test_config.GENERATED_FILES_DIR,
     )
 
     with pytest.raises(MergeConflictsAndAbortException):
@@ -648,7 +661,7 @@ def test_update_passed_templates_to_newest_versions_but_already_at_targets(
 
 
 def _modify_cookiecutter_one_template_in_generated_folder(template: Template):
-    template_folder = GENERATED_FILES_DIR / COOKIECUTTER_ONE_NAME
+    template_folder = test_config.GENERATED_FILES_DIR / COOKIECUTTER_ONE_NAME
     shutil.copytree(template.path, template_folder, dirs_exist_ok=True)
     template.path = template_folder
     (template_folder / "some file.txt").touch()
