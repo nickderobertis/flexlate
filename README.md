@@ -1,4 +1,4 @@
-[![](https://codecov.io/gh/nickderobertis/flexlate/branch/main/graph/badge.svg)](https://codecov.io/gh/nickderobertis/flexlate)
+[![](https://codecov.io/gh/nickderobertis/flexlate/branch/master/graph/badge.svg)](https://codecov.io/gh/nickderobertis/flexlate)
 [![PyPI](https://img.shields.io/pypi/v/flexlate)](https://pypi.org/project/flexlate/)
 ![PyPI - License](https://img.shields.io/pypi/l/flexlate)
 [![Documentation](https://img.shields.io/badge/documentation-pass-green)](https://nickderobertis.github.io/flexlate/)
@@ -47,6 +47,9 @@ to use the virtual environment. Make your changes and then run `nox` to run form
 linting, and tests.
 
 Develop documentation by running `nox -s docs` to start up a dev server.
+
+To run tests only, run `nox -s test`. You can pass additional arguments to pytest
+by adding them after `--`, e.g. `nox -s test -- -k test_something`.
 
 ## Author
 

@@ -20,7 +20,11 @@ runs:
       with:
         path: ${{ env.pythonLocation }}
         key: ${{ env.pythonLocation }}-${{ hashFiles('*-requirements.txt') }}
-    - name: Install dependencies
+    - name: Install main dependencies
       shell: bash
       run: |
         pipenv --python ${{ matrix.python-version }} sync
+    - name: Install linting dependencies
+      shell: bash
+      run: |
+        pip install -r lint-requirements.txt

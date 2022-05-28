@@ -4,7 +4,7 @@ name: Test, Build and Push Python Package and Docs
 on:
   push:
     branches:
-      - main
+      - master
       - alpha
       - beta
       - "*.*.*"
@@ -42,9 +42,6 @@ jobs:
         python-version: [3.8]
     steps:
       - uses: actions/checkout@v3
-      - uses: ./.github/actions/install-dependencies
-        with:
-          python-version: ${{ matrix.python-version }}
       - name: Install dependencies to build package
         run: pip install --upgrade --upgrade-strategy eager setuptools wheel twine
       - name: Semantic Release
@@ -57,6 +54,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           PYPI_TOKEN: ${{ secrets.PYPI_PASSWORD }}
+      - uses: ./.github/actions/install-dependencies
+        if: steps.semantic-release.outputs.new_release_published == 'true'
+        with:
+          python-version: ${{ matrix.python-version }}
       - name: Deploy docs
         if: steps.semantic-release.outputs.new_release_published == 'true'
         uses: ./.github/actions/build-and-deploy-docs
