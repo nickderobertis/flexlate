@@ -23,6 +23,6 @@ def create_temp_path() -> Iterator[Path]:
     kwargs = {}
     if PY10:
         kwargs["ignore_cleanup_errors"] = True
-    with tempfile.TemporaryDirectory(**kwargs) as temp_dir:
+    with tempfile.TemporaryDirectory(**kwargs) as temp_dir:  # type: ignore
         path = Path(temp_dir).resolve()
         yield path
