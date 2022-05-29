@@ -43,6 +43,7 @@ from tests.config import (
     COPIER_WITH_TASKS_NAME,
     COPIER_WITH_TASKS_VERSION,
 )
+from tests.dirutils import remove_folder
 from tests.ext_subprocess import run
 from tests.fixtures.template import (
     modify_cookiecutter_one,
@@ -132,7 +133,7 @@ class TemplateSourceFixture:
             # Need to wipe any local cache or it will ask whether to use it
             cache_path = Path("~").expanduser() / ".cookiecutters" / self.name
             if cache_path.exists():
-                shutil.rmtree(cache_path)
+                remove_folder(cache_path)
             with change_directory_to(path):
                 return run(f"cookiecutter {use_path}", input_data=self.input_data)
         else:

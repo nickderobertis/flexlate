@@ -12,25 +12,21 @@ from tests import config
 def wipe_generated_folder():
     using_temp_dir = config.USING_TEMP_DIR_AS_GENERATED_DIR
     if config.GENERATED_FILES_DIR.exists():
-        _remove_folder(
-            config.GENERATED_FILES_DIR, fail_on_permission_error=not using_temp_dir
-        )
+        remove_folder(config.GENERATED_FILES_DIR, raise_on_error=not using_temp_dir)
     if not using_temp_dir:
         config.GENERATED_FILES_DIR.mkdir()
 
 
-def _remove_folder(
-    folder: Path, retries: int = 10, fail_on_permission_error: bool = True
-):
+def remove_folder(folder: Path, retries: int = 10, raise_on_error: bool = True):
     if folder.exists():
         try:
-            shutil.rmtree(folder)
+            shutil.rmtree(folder, ignore_errors=not raise_on_error)
         except PermissionError as e:
             time.sleep(0.1)
             if retries > 0:
-                _remove_folder(folder, retries - 1)
+                remove_folder(folder, retries - 1)
             else:
-                if fail_on_permission_error:
+                if raise_on_error:
                     raise e
                 else:
                     print(f"Failed to remove folder {folder}")
