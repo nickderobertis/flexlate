@@ -197,6 +197,14 @@ flexlate.syncer module
    :undoc-members:
    :show-inheritance:
 
+flexlate.temp\_path module
+--------------------------
+
+.. automodule:: flexlate.temp_path
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 flexlate.template\_data module
 ------------------------------
 

@@ -46,7 +46,7 @@
   
   
   
-    <title>flexlate.render.multi &#8212; flexlate 0.14.4 documentation</title>
+    <title>flexlate.render.multi &#8212; flexlate 0.14.5a1 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/material.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
@@ -90,7 +90,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex navheader">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="../../../index.html" title="flexlate 0.14.4 documentation"
+        <a href="../../../index.html" title="flexlate 0.14.5a1 documentation"
            class="md-header-nav__button md-logo">
           
             <i class="md-icon">&#xe869</i>
@@ -176,7 +176,7 @@
   <nav class="md-tabs" data-md-component="tabs">
     <div class="md-tabs__inner md-grid">
       <ul class="md-tabs__list">
-          <li class="md-tabs__item"><a href="../../../index.html" class="md-tabs__link">flexlate 0.14.4 documentation</a></li>
+          <li class="md-tabs__item"><a href="../../../index.html" class="md-tabs__link">flexlate 0.14.5a1 documentation</a></li>
           <li class="md-tabs__item"><a href="../../index.html" class="md-tabs__link">Module code</a></li>
       </ul>
     </div>
@@ -189,13 +189,13 @@
               <div class="md-sidebar__inner">
                 <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="../../../index.html" title="flexlate 0.14.4 documentation" class="md-nav__button md-logo">
+    <a href="../../../index.html" title="flexlate 0.14.5a1 documentation" class="md-nav__button md-logo">
       
         <i class="md-icon">&#xe869</i>
       
     </a>
     <a href="../../../index.html"
-       title="flexlate 0.14.4 documentation">flexlate</a>
+       title="flexlate 0.14.5a1 documentation">flexlate</a>
   </label>
     <div class="md-nav__source">
       <a href="https://github.com/nickderobertis/flexlate" title="Go to repository" class="md-source" data-md-source="github">
@@ -280,15 +280,15 @@
   <h1 id="modules-flexlate-render-multi--page-root">Source code for flexlate.render.multi</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
-<span class="kn">import</span> <span class="nn">tempfile</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Final</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Final</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Sequence</span>
 
 <span class="kn">from</span> <span class="nn">flexlate.exc</span> <span class="kn">import</span> <span class="n">InvalidTemplateClassException</span><span class="p">,</span> <span class="n">RendererNotFoundException</span>
 <span class="kn">from</span> <span class="nn">flexlate.render.renderable</span> <span class="kn">import</span> <span class="n">Renderable</span>
 <span class="kn">from</span> <span class="nn">flexlate.render.specific.base</span> <span class="kn">import</span> <span class="n">SpecificTemplateRenderer</span>
 <span class="kn">from</span> <span class="nn">flexlate.render.specific.cookiecutter</span> <span class="kn">import</span> <span class="n">CookiecutterRenderer</span>
 <span class="kn">from</span> <span class="nn">flexlate.render.specific.copier</span> <span class="kn">import</span> <span class="n">CopierRenderer</span>
+<span class="kn">from</span> <span class="nn">flexlate.temp_path</span> <span class="kn">import</span> <span class="n">create_temp_path</span>
 <span class="kn">from</span> <span class="nn">flexlate.template.base</span> <span class="kn">import</span> <span class="n">Template</span>
 <span class="kn">from</span> <span class="nn">flexlate.template.types</span> <span class="kn">import</span> <span class="n">TemplateType</span>
 <span class="kn">from</span> <span class="nn">flexlate.template_data</span> <span class="kn">import</span> <span class="n">TemplateData</span>
@@ -310,8 +310,7 @@
         <span class="n">no_input</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">TemplateData</span><span class="p">]:</span>
         <span class="n">out_data</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">TemplateData</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">d</span><span class="p">:</span>
-            <span class="n">temp_root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">create_temp_path</span><span class="p">()</span> <span class="k">as</span> <span class="n">temp_root</span><span class="p">:</span>
             <span class="n">temp_folders</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">renderable</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">renderables</span><span class="p">):</span>
                 <span class="n">template</span> <span class="o">=</span> <span class="n">renderable</span><span class="o">.</span><span class="n">template</span>
@@ -319,8 +318,8 @@
                 <span class="n">temp_folder</span> <span class="o">=</span> <span class="n">temp_root</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">template</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span> <span class="o">/</span> <span class="n">project_root</span><span class="o">.</span><span class="n">name</span>
                 <span class="n">temp_folders</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">temp_folder</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">renderable</span><span class="o">.</span><span class="n">out_root</span><span class="o">.</span><span class="n">is_absolute</span><span class="p">():</span>
-                    <span class="n">relative_root</span> <span class="o">=</span> <span class="n">renderable</span><span class="o">.</span><span class="n">out_root</span><span class="o">.</span><span class="n">relative_to</span><span class="p">(</span>
-                        <span class="n">project_root</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span>
+                    <span class="n">relative_root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">renderable</span><span class="o">.</span><span class="n">out_root</span><span class="p">,</span> <span class="n">project_root</span><span class="o">.</span><span class="n">absolute</span><span class="p">())</span>
                     <span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">relative_root</span> <span class="o">=</span> <span class="n">renderable</span><span class="o">.</span><span class="n">out_root</span>

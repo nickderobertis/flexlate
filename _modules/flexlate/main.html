@@ -46,7 +46,7 @@
   
   
   
-    <title>flexlate.main &#8212; flexlate 0.14.4 documentation</title>
+    <title>flexlate.main &#8212; flexlate 0.14.5a1 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/material.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -90,7 +90,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex navheader">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="../../index.html" title="flexlate 0.14.4 documentation"
+        <a href="../../index.html" title="flexlate 0.14.5a1 documentation"
            class="md-header-nav__button md-logo">
           
             <i class="md-icon">&#xe869</i>
@@ -176,7 +176,7 @@
   <nav class="md-tabs" data-md-component="tabs">
     <div class="md-tabs__inner md-grid">
       <ul class="md-tabs__list">
-          <li class="md-tabs__item"><a href="../../index.html" class="md-tabs__link">flexlate 0.14.4 documentation</a></li>
+          <li class="md-tabs__item"><a href="../../index.html" class="md-tabs__link">flexlate 0.14.5a1 documentation</a></li>
           <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">Module code</a></li>
       </ul>
     </div>
@@ -189,13 +189,13 @@
               <div class="md-sidebar__inner">
                 <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="../../index.html" title="flexlate 0.14.4 documentation" class="md-nav__button md-logo">
+    <a href="../../index.html" title="flexlate 0.14.5a1 documentation" class="md-nav__button md-logo">
       
         <i class="md-icon">&#xe869</i>
       
     </a>
     <a href="../../index.html"
-       title="flexlate 0.14.4 documentation">flexlate</a>
+       title="flexlate 0.14.5a1 documentation">flexlate</a>
   </label>
     <div class="md-nav__source">
       <a href="https://github.com/nickderobertis/flexlate" title="Go to repository" class="md-source" data-md-source="github">
@@ -279,12 +279,12 @@
             
   <h1 id="modules-flexlate-main--page-root">Source code for flexlate.main</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Sequence</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Sequence</span>
 
 <span class="kn">from</span> <span class="nn">git</span> <span class="kn">import</span> <span class="n">Repo</span>
 
-<span class="kn">from</span> <span class="nn">flexlate.adder</span> <span class="kn">import</span> <span class="n">Adder</span>
 <span class="kn">from</span> <span class="nn">flexlate.add_mode</span> <span class="kn">import</span> <span class="n">AddMode</span>
+<span class="kn">from</span> <span class="nn">flexlate.adder</span> <span class="kn">import</span> <span class="n">Adder</span>
 <span class="kn">from</span> <span class="nn">flexlate.bootstrapper</span> <span class="kn">import</span> <span class="n">Bootstrapper</span>
 <span class="kn">from</span> <span class="nn">flexlate.branch_update</span> <span class="kn">import</span> <span class="n">get_flexlate_branch_name</span>
 <span class="kn">from</span> <span class="nn">flexlate.checker</span> <span class="kn">import</span> <span class="n">Checker</span><span class="p">,</span> <span class="n">CheckResults</span><span class="p">,</span> <span class="n">CheckResultsRenderable</span>
@@ -300,10 +300,7 @@
 <span class="kn">from</span> <span class="nn">flexlate.syncer</span> <span class="kn">import</span> <span class="n">Syncer</span>
 <span class="kn">from</span> <span class="nn">flexlate.template.base</span> <span class="kn">import</span> <span class="n">Template</span>
 <span class="kn">from</span> <span class="nn">flexlate.template_data</span> <span class="kn">import</span> <span class="n">TemplateData</span>
-<span class="kn">from</span> <span class="nn">flexlate.transactions.transaction</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">FlexlateTransaction</span><span class="p">,</span>
-    <span class="n">TransactionType</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">flexlate.transactions.transaction</span> <span class="kn">import</span> <span class="n">FlexlateTransaction</span><span class="p">,</span> <span class="n">TransactionType</span>
 <span class="kn">from</span> <span class="nn">flexlate.transactions.undoer</span> <span class="kn">import</span> <span class="n">Undoer</span>
 <span class="kn">from</span> <span class="nn">flexlate.update.main</span> <span class="kn">import</span> <span class="n">Updater</span>
 <span class="kn">from</span> <span class="nn">flexlate.user_config_manager</span> <span class="kn">import</span> <span class="n">UserConfigManager</span>

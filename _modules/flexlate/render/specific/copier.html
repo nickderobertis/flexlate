@@ -46,7 +46,7 @@
   
   
   
-    <title>flexlate.render.specific.copier &#8212; flexlate 0.14.4 documentation</title>
+    <title>flexlate.render.specific.copier &#8212; flexlate 0.14.5a1 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/material.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css" />
@@ -90,7 +90,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex navheader">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="../../../../index.html" title="flexlate 0.14.4 documentation"
+        <a href="../../../../index.html" title="flexlate 0.14.5a1 documentation"
            class="md-header-nav__button md-logo">
           
             <i class="md-icon">&#xe869</i>
@@ -176,7 +176,7 @@
   <nav class="md-tabs" data-md-component="tabs">
     <div class="md-tabs__inner md-grid">
       <ul class="md-tabs__list">
-          <li class="md-tabs__item"><a href="../../../../index.html" class="md-tabs__link">flexlate 0.14.4 documentation</a></li>
+          <li class="md-tabs__item"><a href="../../../../index.html" class="md-tabs__link">flexlate 0.14.5a1 documentation</a></li>
           <li class="md-tabs__item"><a href="../../../index.html" class="md-tabs__link">Module code</a></li>
       </ul>
     </div>
@@ -189,13 +189,13 @@
               <div class="md-sidebar__inner">
                 <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="../../../../index.html" title="flexlate 0.14.4 documentation" class="md-nav__button md-logo">
+    <a href="../../../../index.html" title="flexlate 0.14.5a1 documentation" class="md-nav__button md-logo">
       
         <i class="md-icon">&#xe869</i>
       
     </a>
     <a href="../../../../index.html"
-       title="flexlate 0.14.4 documentation">flexlate</a>
+       title="flexlate 0.14.5a1 documentation">flexlate</a>
   </label>
     <div class="md-nav__source">
       <a href="https://github.com/nickderobertis/flexlate" title="Go to repository" class="md-source" data-md-source="github">
@@ -278,20 +278,19 @@
           <article class="md-content__inner md-typeset" role="main">
             
   <h1 id="modules-flexlate-render-specific-copier--page-root">Source code for flexlate.render.specific.copier</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">shutil</span>
-<span class="kn">import</span> <span class="nn">tempfile</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">ChainMap</span>
+<span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">ChainMap</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Final</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Final</span><span class="p">,</span> <span class="n">Sequence</span>
 
 <span class="kn">import</span> <span class="nn">yaml</span>
 <span class="kn">from</span> <span class="nn">copier</span> <span class="kn">import</span> <span class="n">copy_local</span>
-<span class="kn">from</span> <span class="nn">copier.config.factory</span> <span class="kn">import</span> <span class="n">verify_minimum_version</span><span class="p">,</span> <span class="n">filter_config</span>
+<span class="kn">from</span> <span class="nn">copier.config.factory</span> <span class="kn">import</span> <span class="n">filter_config</span><span class="p">,</span> <span class="n">verify_minimum_version</span>
 <span class="kn">from</span> <span class="nn">copier.config.objects</span> <span class="kn">import</span> <span class="n">ConfigData</span><span class="p">,</span> <span class="n">EnvOps</span>
 <span class="kn">from</span> <span class="nn">copier.config.user_data</span> <span class="kn">import</span> <span class="n">load_config_data</span><span class="p">,</span> <span class="n">query_user_data</span>
 
 <span class="kn">from</span> <span class="nn">flexlate.render.renderable</span> <span class="kn">import</span> <span class="n">Renderable</span>
 <span class="kn">from</span> <span class="nn">flexlate.render.specific.base</span> <span class="kn">import</span> <span class="n">SpecificTemplateRenderer</span>
+<span class="kn">from</span> <span class="nn">flexlate.temp_path</span> <span class="kn">import</span> <span class="n">create_temp_path</span>
 <span class="kn">from</span> <span class="nn">flexlate.template.copier</span> <span class="kn">import</span> <span class="n">CopierTemplate</span>
 <span class="kn">from</span> <span class="nn">flexlate.template.types</span> <span class="kn">import</span> <span class="n">TemplateType</span>
 <span class="kn">from</span> <span class="nn">flexlate.template_data</span> <span class="kn">import</span> <span class="n">TemplateData</span>
@@ -325,15 +324,15 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">template</span> <span class="o">=</span> <span class="n">renderable</span><span class="o">.</span><span class="n">template</span>
 
-        <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">temp_template_dir</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">create_temp_path</span><span class="p">()</span> <span class="k">as</span> <span class="n">temp_template_path</span><span class="p">:</span>
             <span class="n">copier_config_path</span> <span class="o">=</span> <span class="n">_find_copier_yaml_path</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">copier_config_path</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
                 <span class="n">copier_config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
             <span class="n">_modify_copier_config_yaml_to_remove_tasks</span><span class="p">(</span><span class="n">copier_config</span><span class="p">)</span>
-            <span class="n">config_out_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">temp_template_dir</span><span class="p">)</span> <span class="o">/</span> <span class="n">copier_config_path</span><span class="o">.</span><span class="n">name</span>
+            <span class="n">config_out_path</span> <span class="o">=</span> <span class="n">temp_template_path</span> <span class="o">/</span> <span class="n">copier_config_path</span><span class="o">.</span><span class="n">name</span>
             <span class="n">config_out_path</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">copier_config</span><span class="p">))</span>
             <span class="n">temp_template_file_path</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="n">Path</span><span class="p">(</span><span class="n">temp_template_dir</span><span class="p">)</span>
+                <span class="n">temp_template_path</span>
                 <span class="o">/</span> <span class="n">template</span><span class="o">.</span><span class="n">render_relative_root_in_template</span>
                 <span class="o">/</span> <span class="s2">"temp.txt"</span>
             <span class="p">)</span>
@@ -341,15 +340,15 @@
                 <span class="n">temp_template_file_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="n">temp_template_file_path</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
 
-            <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">temp_output_dir</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">create_temp_path</span><span class="p">()</span> <span class="k">as</span> <span class="n">temp_output_path</span><span class="p">:</span>
                 <span class="n">conf</span> <span class="o">=</span> <span class="n">_make_config_by_adding_defaults_then_prompting_user</span><span class="p">(</span>
-                    <span class="n">temp_template_dir</span><span class="p">,</span>
-                    <span class="n">temp_output_dir</span><span class="p">,</span>
+                    <span class="nb">str</span><span class="p">(</span><span class="n">temp_template_path</span><span class="p">),</span>
+                    <span class="nb">str</span><span class="p">(</span><span class="n">temp_output_path</span><span class="p">),</span>
                     <span class="n">data</span><span class="o">=</span><span class="n">renderable</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
                     <span class="n">no_input</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                 <span class="p">)</span>
                 <span class="n">copy_local</span><span class="p">(</span><span class="n">conf</span><span class="o">=</span><span class="n">conf</span><span class="p">)</span>
-                <span class="n">temp_output_file_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">temp_output_dir</span><span class="p">)</span> <span class="o">/</span> <span class="s2">"temp.txt"</span>
+                <span class="n">temp_output_file_path</span> <span class="o">=</span> <span class="n">temp_output_path</span> <span class="o">/</span> <span class="s2">"temp.txt"</span>
                 <span class="n">output</span> <span class="o">=</span> <span class="n">temp_output_file_path</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">output</span></div></div>
 

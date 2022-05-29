@@ -47,7 +47,7 @@
   
   
   
-    <title>Welcome to Flexlate documentation! &#8212; flexlate 0.14.4 documentation</title>
+    <title>Welcome to Flexlate documentation! &#8212; flexlate 0.14.5a1 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/material.css" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
@@ -92,7 +92,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex navheader">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="#" title="flexlate 0.14.4 documentation"
+        <a href="#" title="flexlate 0.14.5a1 documentation"
            class="md-header-nav__button md-logo">
           
             <i class="md-icon">&#xe869</i>
@@ -178,7 +178,7 @@
   <nav class="md-tabs" data-md-component="tabs">
     <div class="md-tabs__inner md-grid">
       <ul class="md-tabs__list">
-          <li class="md-tabs__item"><a href="#" class="md-tabs__link">flexlate 0.14.4 documentation</a></li>
+          <li class="md-tabs__item"><a href="#" class="md-tabs__link">flexlate 0.14.5a1 documentation</a></li>
       </ul>
     </div>
   </nav>
@@ -190,13 +190,13 @@
               <div class="md-sidebar__inner">
                 <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="#" title="flexlate 0.14.4 documentation" class="md-nav__button md-logo">
+    <a href="#" title="flexlate 0.14.5a1 documentation" class="md-nav__button md-logo">
       
         <i class="md-icon">&#xe869</i>
       
     </a>
     <a href="#"
-       title="flexlate 0.14.4 documentation">flexlate</a>
+       title="flexlate 0.14.5a1 documentation">flexlate</a>
   </label>
     <div class="md-nav__source">
       <a href="https://github.com/nickderobertis/flexlate" title="Go to repository" class="md-source" data-md-source="github">
@@ -322,6 +322,8 @@
         </li>
         <li class="md-nav__item"><a href="#development-status" class="md-nav__link">Development Status</a>
         </li>
+        <li class="md-nav__item"><a href="#developing" class="md-nav__link">Developing</a>
+        </li>
         <li class="md-nav__item"><a href="#author" class="md-nav__link">Author</a>
         </li>
         <li class="md-nav__item"><a href="#links" class="md-nav__link">Links</a>
@@ -354,6 +356,8 @@
 <a class="reference external" href="https://pypi.org/project/flexlate/"><img alt="PyPI" src="https://img.shields.io/pypi/v/flexlate"/></a>
 <img alt="PyPI - License" src="https://img.shields.io/pypi/l/flexlate"/>
 <a class="reference external" href="https://nickderobertis.github.io/flexlate/"><img alt="Documentation" src="https://img.shields.io/badge/documentation-pass-green"/></a>
+<img alt="Tests Run on Ubuntu Python Versions" src="https://img.shields.io/badge/Tests%20Ubuntu%2FPython-3.8%20%7C%203.9%20%7C%203.10-blue"/>
+<img alt="Tests Run on Macos Python Versions" src="https://img.shields.io/badge/Tests%20Macos%2FPython-3.8%20%7C%203.9%20%7C%203.10-blue"/>
 <a class="reference external" href="https://github.com/nickderobertis/flexlate/"><img alt="Github Repo" src="https://img.shields.io/badge/repo-github-informational"/></a></p>
 </section>
 <section id="flexlate">
@@ -635,6 +639,16 @@ Commands:
 <p>This project is currently in early-stage development. There may be
 breaking changes often. While the major version is 0, minor version
 upgrades will often have breaking changes.</p>
+</section>
+<section id="developing">
+<h2 id="developing">Developing<a class="headerlink" href="#developing" title="Permalink to this headline">¶</a></h2>
+<p>First ensure that you have <code class="docutils literal notranslate"><span class="pre">pipx</span></code> installed, if not, install it with <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">pipx</span></code>.</p>
+<p>Then clone the repo and run <code class="docutils literal notranslate"><span class="pre">npm</span> <span class="pre">install</span></code> and <code class="docutils literal notranslate"><span class="pre">pipenv</span> <span class="pre">sync</span></code>. Run <code class="docutils literal notranslate"><span class="pre">pipenv</span> <span class="pre">shell</span></code>
+to use the virtual environment. Make your changes and then run <code class="docutils literal notranslate"><span class="pre">nox</span></code> to run formatting,
+linting, and tests.</p>
+<p>Develop documentation by running <code class="docutils literal notranslate"><span class="pre">nox</span> <span class="pre">-s</span> <span class="pre">docs</span></code> to start up a dev server.</p>
+<p>To run tests only, run <code class="docutils literal notranslate"><span class="pre">nox</span> <span class="pre">-s</span> <span class="pre">test</span></code>. You can pass additional arguments to pytest
+by adding them after <code class="docutils literal notranslate"><span class="pre">--</span></code>, e.g. <code class="docutils literal notranslate"><span class="pre">nox</span> <span class="pre">-s</span> <span class="pre">test</span> <span class="pre">--</span> <span class="pre">-k</span> <span class="pre">test_something</span></code>.</p>
 </section>
 <section id="author">
 <h2 id="author">Author<a class="headerlink" href="#author" title="Permalink to this headline">¶</a></h2>
