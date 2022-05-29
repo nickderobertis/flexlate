@@ -47,7 +47,7 @@
   
   
   
-    <title>Undo Flexlate Operations &#8212; flexlate 0.14.5a1 documentation</title>
+    <title>Undo Flexlate Operations &#8212; flexlate 0.14.5 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/material.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
@@ -93,7 +93,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex navheader">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="../index.html" title="flexlate 0.14.5a1 documentation"
+        <a href="../index.html" title="flexlate 0.14.5 documentation"
            class="md-header-nav__button md-logo">
           
             <i class="md-icon">&#xe869</i>
@@ -179,7 +179,7 @@
   <nav class="md-tabs" data-md-component="tabs">
     <div class="md-tabs__inner md-grid">
       <ul class="md-tabs__list">
-          <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">flexlate 0.14.5a1 documentation</a></li>
+          <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">flexlate 0.14.5 documentation</a></li>
           <li class="md-tabs__item"><a href="index.html" class="md-tabs__link">Flexlate User Guide</a></li>
       </ul>
     </div>
@@ -192,13 +192,13 @@
               <div class="md-sidebar__inner">
                 <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="../index.html" title="flexlate 0.14.5a1 documentation" class="md-nav__button md-logo">
+    <a href="../index.html" title="flexlate 0.14.5 documentation" class="md-nav__button md-logo">
       
         <i class="md-icon">&#xe869</i>
       
     </a>
     <a href="../index.html"
-       title="flexlate 0.14.5a1 documentation">flexlate</a>
+       title="flexlate 0.14.5 documentation">flexlate</a>
   </label>
     <div class="md-nav__source">
       <a href="https://github.com/nickderobertis/flexlate" title="Go to repository" class="md-source" data-md-source="github">
@@ -394,40 +394,41 @@ changes, but it still <strong>deletes Git history</strong>. It is recommended to
 only use this command if you are following a feature branch workflow.</p>
 </div>
 <pre class="terminhtml">
-    <span data-ty="" data-ty-delay="1236">$ fxt add output copier-simple-example</span>
-<span data-ty="" data-ty-delay="172"> Applying template copier-simple-example to <span class="ansi35">/tmp/</span><span class="ansi95">tmp58f91adt</span></span>
-<span data-ty="" data-ty-delay="6"> Updating <span class="ansi1 ansi36">1</span> applied templates</span>
+    <span data-ty="" data-ty-delay="1539">$ fxt add output copier-simple-example</span>
+<span data-ty="" data-ty-delay="250"> Applying template copier-simple-example to <span class="ansi35">/tmp/</span><span class="ansi95">tmpae99ke38</span></span>
+<span data-ty="" data-ty-delay="10"> Updating <span class="ansi1 ansi36">1</span> applied templates</span>
 <span data-ty="" data-ty-delay="0"></span>
 <span data-ty="" data-ty-delay="50"><span class="ansi1">question1</span>? Format: yaml</span>
-<span data-ty="input" data-ty-delay="1" data-ty-prompt="🎤 [answer1]: ">my answer</span>
+<span data-ty="input" data-ty-delay="2" data-ty-prompt="🎤 [answer1]: ">my answer</span>
 <span data-ty="" data-ty-delay="0"></span>
 <span data-ty="" data-ty-delay="0"><span class="ansi3 ansi34">The second question</span></span>
 <span data-ty="" data-ty-delay="50"><span class="ansi1">question2</span>? Format: float</span>
-<span data-ty="input" data-ty-delay="2" data-ty-prompt="🎤 [2.7]: ">10</span>
+<span data-ty="input" data-ty-delay="3" data-ty-prompt="🎤 [2.7]: ">10</span>
 <span data-ty="" data-ty-delay="2"></span>
 <span data-ty="" data-ty-delay="0"><span class="ansi32"></span><span class="ansi1 ansi32">    create</span><span class="ansi1"></span>  my answer.txt</span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="968"></span>
-<span data-ty="" data-ty-delay="0"></span>
+<span data-ty="" data-ty-delay="970"></span>
+<span data-ty="" data-ty-delay="1"></span>
 <span data-ty="" data-ty-delay="0"><span class="ansi32"></span><span class="ansi1 ansi32">    create</span><span class="ansi1"></span>  temp.txt</span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="62"></span>
+<span data-ty="" data-ty-delay="89"></span>
 <span data-ty="" data-ty-delay="0"><span class="ansi32">✔ Successfully updated template output</span></span>
-<span data-ty="" data-ty-delay="65"><span class="ansi32">✔ Successfully applied template copier-simple-example to </span><span class="ansi32">/tmp/</span><span class="ansi32">tmp58f91adt</span></span>
+<span data-ty="" data-ty-delay="86"><span class="ansi32">✔ Successfully applied template copier-simple-example to </span><span class="ansi32">/tmp/</span><span class="ansi32">tmpae99ke38</span></span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="43">$ ls</span>
+<span data-ty="" data-ty-delay="51">$ ls</span>
 <span data-ty="" data-ty-delay="0"> flexlate-project.json	 flexlate.json	'my answer.txt'   woo.txt</span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="733">$ fxt undo</span>
-<span data-ty="" data-ty-delay="81"> Undoing transaction <span class="ansi1 ansi36">1</span></span>
-<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="33"><span class="ansi32">⠋</span>  Undoing 1 flexlate transactions</span>
-<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="0"><span class="ansi32">⠙</span>  Undoing 1 flexlate transactions</span>
-<span data-ty="" data-ty-delay="0"><span class="ansi32">✔ Successfully reversed transaction </span><span class="ansi1 ansi32">1</span></span>
-<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="0"><span class="ansi32">⠙</span>  Undoing 1 flexlate transactions</span>
-<span data-ty="" data-ty-delay="0"><span class="ansi32">⠙</span>  Undoing 1 flexlate transactions</span>
-<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="62"></span>
+<span data-ty="" data-ty-delay="999">$ fxt undo</span>
+<span data-ty="" data-ty-delay="75"> Undoing transaction <span class="ansi1 ansi36">1</span></span>
+<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="86"><span class="ansi32">⠋</span>  Undoing 1 flexlate transactions</span>
+<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="5"><span class="ansi32">⠋</span>  Undoing 1 flexlate transactions</span>
+<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="0"><span class="ansi32">⠹</span>  Undoing 1 flexlate transactions</span>
+<span data-ty="" data-ty-delay="1"><span class="ansi32">✔ Successfully reversed transaction </span><span class="ansi1 ansi32">1</span></span>
+<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="0"><span class="ansi32">⠹</span>  Undoing 1 flexlate transactions</span>
+<span data-ty="" data-ty-delay="0"><span class="ansi32">⠹</span>  Undoing 1 flexlate transactions</span>
+<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="83"></span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="43">$ ls</span>
+<span data-ty="" data-ty-delay="52">$ ls</span>
 <span data-ty="" data-ty-delay="0">flexlate-project.json  flexlate.json  woo.txt</span>
 <span data-ty="" data-ty-delay="0"></span>
 </pre></section>
@@ -440,46 +441,46 @@ If you have not yet merged the feature branches into the main branches, and you
 want to reverse all operations you’ve made on this feature branch, you can
 simply delete the Flexlate feature branches.</p>
 <pre class="terminhtml">
-    <span data-ty="" data-ty-delay="44">$ git checkout -b my-feature</span>
+    <span data-ty="" data-ty-delay="53">$ git checkout -b my-feature</span>
 <span data-ty="" data-ty-delay="0">Switched to a new branch 'my-feature'</span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="1193">$ fxt add output copier-simple-example</span>
-<span data-ty="" data-ty-delay="188"> Applying template copier-simple-example to <span class="ansi35">/tmp/</span><span class="ansi95">tmpq9t94ja1</span></span>
-<span data-ty="" data-ty-delay="7"> Updating <span class="ansi1 ansi36">1</span> applied templates</span>
+<span data-ty="" data-ty-delay="1558">$ fxt add output copier-simple-example</span>
+<span data-ty="" data-ty-delay="273"> Applying template copier-simple-example to <span class="ansi35">/tmp/</span><span class="ansi95">tmpsj2wo4ji</span></span>
+<span data-ty="" data-ty-delay="9"> Updating <span class="ansi1 ansi36">1</span> applied templates</span>
 <span data-ty="" data-ty-delay="0"></span>
 <span data-ty="" data-ty-delay="50"><span class="ansi1">question1</span>? Format: yaml</span>
-<span data-ty="input" data-ty-delay="1" data-ty-prompt="🎤 [answer1]: ">my answer</span>
+<span data-ty="input" data-ty-delay="2" data-ty-prompt="🎤 [answer1]: ">my answer</span>
 <span data-ty="" data-ty-delay="0"></span>
 <span data-ty="" data-ty-delay="0"><span class="ansi3 ansi34">The second question</span></span>
 <span data-ty="" data-ty-delay="50"><span class="ansi1">question2</span>? Format: float</span>
-<span data-ty="input" data-ty-delay="2" data-ty-prompt="🎤 [2.7]: ">10</span>
-<span data-ty="" data-ty-delay="2"></span>
+<span data-ty="input" data-ty-delay="4" data-ty-prompt="🎤 [2.7]: ">10</span>
+<span data-ty="" data-ty-delay="3"></span>
 <span data-ty="" data-ty-delay="0"><span class="ansi32"></span><span class="ansi1 ansi32">    create</span><span class="ansi1"></span>  my answer.txt</span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="1187"></span>
-<span data-ty="" data-ty-delay="0"></span>
+<span data-ty="" data-ty-delay="1034"></span>
+<span data-ty="" data-ty-delay="1"></span>
 <span data-ty="" data-ty-delay="0"><span class="ansi32"></span><span class="ansi1 ansi32">    create</span><span class="ansi1"></span>  temp.txt</span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="64"></span>
+<span data-ty="" data-ty-delay="84"></span>
 <span data-ty="" data-ty-delay="0"><span class="ansi32">✔ Successfully updated template output</span></span>
-<span data-ty="" data-ty-delay="59"><span class="ansi32">✔ Successfully applied template copier-simple-example to </span><span class="ansi32">/tmp/</span><span class="ansi32">tmpq9t94ja1</span></span>
+<span data-ty="" data-ty-delay="78"><span class="ansi32">✔ Successfully applied template copier-simple-example to </span><span class="ansi32">/tmp/</span><span class="ansi32">tmpsj2wo4ji</span></span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="44">$ ls</span>
+<span data-ty="" data-ty-delay="52">$ ls</span>
 <span data-ty="" data-ty-delay="0"> flexlate-project.json	 flexlate.json	'my answer.txt'   woo.txt</span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="44">$ git checkout main</span>
+<span data-ty="" data-ty-delay="54">$ git checkout main</span>
 <span data-ty="" data-ty-delay="0">Switched to branch 'main'</span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="44">$ git branch -D my-feature</span>
-<span data-ty="" data-ty-delay="0">Deleted branch my-feature (was 63ec4b2).</span>
+<span data-ty="" data-ty-delay="60">$ git branch -D my-feature</span>
+<span data-ty="" data-ty-delay="1">Deleted branch my-feature (was 90e74bf).</span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="44">$ git branch -D flexlate-templates-my-feature</span>
-<span data-ty="" data-ty-delay="0">Deleted branch flexlate-templates-my-feature (was 63ec4b2).</span>
+<span data-ty="" data-ty-delay="53">$ git branch -D flexlate-templates-my-feature</span>
+<span data-ty="" data-ty-delay="1">Deleted branch flexlate-templates-my-feature (was 90e74bf).</span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="43">$ git branch -D flexlate-output-my-feature</span>
-<span data-ty="" data-ty-delay="0">Deleted branch flexlate-output-my-feature (was 63ec4b2).</span>
+<span data-ty="" data-ty-delay="53">$ git branch -D flexlate-output-my-feature</span>
+<span data-ty="" data-ty-delay="0">Deleted branch flexlate-output-my-feature (was 90e74bf).</span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="44">$ ls</span>
+<span data-ty="" data-ty-delay="53">$ ls</span>
 <span data-ty="" data-ty-delay="0">flexlate-project.json  flexlate.json  woo.txt</span>
 <span data-ty="" data-ty-delay="0"></span>
 </pre></section>
