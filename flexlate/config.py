@@ -1,35 +1,35 @@
 import os
 from pathlib import Path
 from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Dict,
     List,
     Optional,
     Sequence,
-    Dict,
-    Any,
+    Set,
     Tuple,
     Union,
     cast,
-    Callable,
-    Set,
-    TYPE_CHECKING,
 )
 
 if TYPE_CHECKING:
     from flexlate.update.template import TemplateUpdate
 
-from pyappconf import BaseConfig, AppConfig, ConfigFormats
-from pydantic import BaseModel, Field, validator, Extra, PrivateAttr
+from pyappconf import AppConfig, BaseConfig, ConfigFormats
+from pydantic import BaseModel, Extra, Field, PrivateAttr, validator
 
 from flexlate.add_mode import AddMode, get_expanded_out_root
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.exc import (
-    InvalidTemplateTypeException,
-    FlexlateProjectConfigFileNotExistsException,
-    FlexlateConfigFileNotExistsException,
-    TemplateLookupException,
     CannotFindTemplateSourceException,
     CannotRemoveAppliedTemplateException,
     CannotRemoveTemplateSourceException,
+    FlexlateConfigFileNotExistsException,
+    FlexlateProjectConfigFileNotExistsException,
+    InvalidTemplateTypeException,
+    TemplateLookupException,
 )
 from flexlate.finder.multi import MultiFinder
 from flexlate.finder.specific.base import TemplateFinder
@@ -131,6 +131,9 @@ class AppliedTemplateConfig(BaseModel):
 class AppliedTemplateWithSource(BaseModel):
     applied_template: AppliedTemplateConfig
     source: TemplateSource
+    index: int
+    applied_template_config_path: Path
+    source_config_path: Path
 
     def to_template_and_data(self) -> Tuple[Template, TemplateData]:
         return (

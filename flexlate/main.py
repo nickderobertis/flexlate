@@ -1,10 +1,10 @@
 from pathlib import Path
-from typing import Optional, List, Sequence
+from typing import List, Optional, Sequence
 
 from git import Repo
 
-from flexlate.adder import Adder
 from flexlate.add_mode import AddMode
+from flexlate.adder import Adder
 from flexlate.bootstrapper import Bootstrapper
 from flexlate.branch_update import get_flexlate_branch_name
 from flexlate.checker import Checker, CheckResults, CheckResultsRenderable
@@ -20,10 +20,7 @@ from flexlate.styles import console
 from flexlate.syncer import Syncer
 from flexlate.template.base import Template
 from flexlate.template_data import TemplateData
-from flexlate.transactions.transaction import (
-    FlexlateTransaction,
-    TransactionType,
-)
+from flexlate.transactions.transaction import FlexlateTransaction, TransactionType
 from flexlate.transactions.undoer import Undoer
 from flexlate.update.main import Updater
 from flexlate.user_config_manager import UserConfigManager

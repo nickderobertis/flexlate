@@ -7,9 +7,10 @@ from flexlate.checker import Checker
 from flexlate.config import FlexlateConfig
 from flexlate.exc import TemplateNotRegisteredException
 from flexlate.template.copier import CopierTemplate
+from tests import config
 from tests.config import COOKIECUTTER_REMOTE_NAME, COPIER_ONE_NAME
-from tests.fixtures.templated_repo import *
 from tests.fixtures.template import *
+from tests.fixtures.templated_repo import *
 from tests.fixtures.transaction import *
 
 
@@ -29,11 +30,11 @@ def test_check_for_remote_template_update(
 
     # Add a source that is already up to date
     adder.add_template_source(
-        repo, template, add_source_transaction, out_root=GENERATED_REPO_DIR
+        repo, template, add_source_transaction, out_root=config.GENERATED_REPO_DIR
     )
 
     new_versions = checker.find_new_versions_for_template_sources(
-        names=names, project_root=GENERATED_REPO_DIR
+        names=names, project_root=config.GENERATED_REPO_DIR
     ).update_version_dict
     if names is None or names == [COOKIECUTTER_REMOTE_NAME]:
         assert new_versions == {COOKIECUTTER_REMOTE_NAME: COOKIECUTTER_REMOTE_VERSION_2}
@@ -46,7 +47,7 @@ def test_check_for_update_with_no_template_sources(
 ):
     checker = Checker()
     new_versions = checker.find_new_versions_for_template_sources(
-        project_root=GENERATED_REPO_DIR
+        project_root=config.GENERATED_REPO_DIR
     ).update_version_dict
     assert new_versions == {}
 
@@ -57,5 +58,5 @@ def test_check_for_update_template_that_does_not_exist(
     checker = Checker()
     with pytest.raises(TemplateNotRegisteredException):
         checker.find_new_versions_for_template_sources(
-            names=["some-fake-template"], project_root=GENERATED_REPO_DIR
+            names=["some-fake-template"], project_root=config.GENERATED_REPO_DIR
         )

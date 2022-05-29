@@ -8,7 +8,7 @@ from flexlate.adder import Adder
 from flexlate.config_manager import ConfigManager
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.render.multi import MultiRenderer
-from flexlate.styles import print_styled, INFO_STYLE, SUCCESS_STYLE
+from flexlate.styles import INFO_STYLE, SUCCESS_STYLE, print_styled
 from flexlate.template.base import Template
 from flexlate.template_data import TemplateData
 from flexlate.transactions.transaction import FlexlateTransaction

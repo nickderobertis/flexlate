@@ -3,9 +3,9 @@ from typing import Optional, Sequence
 from git import Repo
 
 from flexlate.branch_update import get_flexlate_branch_name_for_feature_branch
-from flexlate.constants import DEFAULT_TEMPLATE_BRANCH_NAME, DEFAULT_MERGED_BRANCH_NAME
+from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.ext_git import branch_exists, push_to_remote
-from flexlate.styles import print_styled, ALERT_STYLE, INFO_STYLE, SUCCESS_STYLE
+from flexlate.styles import ALERT_STYLE, INFO_STYLE, SUCCESS_STYLE, print_styled
 
 
 class Pusher:

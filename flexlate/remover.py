@@ -15,11 +15,9 @@ from flexlate.ext_git import (
     assert_repo_is_in_clean_state,
     update_local_branches_from_remote_without_checkout,
 )
-from flexlate.path_ops import (
-    location_relative_to_new_parent,
-)
+from flexlate.path_ops import location_relative_to_new_parent
 from flexlate.render.multi import MultiRenderer
-from flexlate.styles import console, styled, INFO_STYLE, print_styled, SUCCESS_STYLE
+from flexlate.styles import INFO_STYLE, SUCCESS_STYLE, console, print_styled, styled
 from flexlate.transactions.transaction import (
     FlexlateTransaction,
     create_transaction_commit_message,
@@ -229,12 +227,12 @@ class Remover:
 def _remove_template_source_commit_message(
     template_name: str, out_root: Path, project_root: Path
 ) -> str:
-    relative_path = out_root.absolute().relative_to(project_root)
+    relative_path = Path(os.path.relpath(out_root.absolute(), project_root))
     return f"Removed template source {template_name} from {relative_path}"
 
 
 def _remove_applied_template_commit_message(
     template_name: str, out_root: Path, project_root: Path
 ) -> str:
-    relative_path = out_root.absolute().relative_to(project_root)
+    relative_path = Path(os.path.relpath(out_root.absolute(), project_root))
     return f"Removed template {template_name} from {relative_path}"

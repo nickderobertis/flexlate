@@ -1,23 +1,23 @@
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Final, List, Callable, Optional
+from typing import Callable, Final, List, Optional
 
 import pytest
 
 from tests.config import (
     COOKIECUTTER_ONE_DIR,
-    COOKIECUTTER_REMOTE_URL,
     COOKIECUTTER_ONE_NAME,
     COOKIECUTTER_REMOTE_NAME,
-    COPIER_REMOTE_NAME,
-    COOKIECUTTER_REMOTE_VERSION_2,
-    COPIER_REMOTE_VERSION_2,
+    COOKIECUTTER_REMOTE_URL,
     COOKIECUTTER_REMOTE_VERSION_1,
+    COOKIECUTTER_REMOTE_VERSION_2,
+    COPIER_REMOTE_NAME,
     COPIER_REMOTE_VERSION_1,
+    COPIER_REMOTE_VERSION_2,
 )
 from tests.fixtures.template import (
-    get_header_for_cookiecutter_remote_template,
     get_footer_for_copier_remote_template,
+    get_header_for_cookiecutter_remote_template,
 )
 
 

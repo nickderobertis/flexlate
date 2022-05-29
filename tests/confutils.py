@@ -3,6 +3,7 @@ from pathlib import Path
 
 from flexlate.config import FlexlateConfig
 
+
 # NOTE: currently unused, consider removing
 def patch_config_location(config: FlexlateConfig, new_folder: Path):
     orig_project_root = os.path.commonpath(

@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import List, Final, Optional
+from typing import Final, List, Optional
 
 import pytest
 

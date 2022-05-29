@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import List, Final
+from typing import Final, List
 
 import pytest
 from git import Repo

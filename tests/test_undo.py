@@ -6,7 +6,7 @@ from flexlate.exc import (
     TooFewTransactionsException,
 )
 from flexlate.transactions.undoer import Undoer
-from tests.config import GENERATED_FILES_DIR
+from tests import config as test_config
 from tests.fixtures.templated_repo import *
 
 INITIAL_COMMIT_MESSAGE = "Initial commit\n"
@@ -23,8 +23,8 @@ MERGED_MESSAGE = "Merge branch 'flexlate-templates' into flexlate-output\n"
 def test_undo_add_template_source(repo_with_cookiecutter_one_template_source: Repo):
     repo = repo_with_cookiecutter_one_template_source
     undoer = Undoer()
-    config_path = GENERATED_REPO_DIR / "flexlate.json"
-    with change_directory_to(GENERATED_REPO_DIR):
+    config_path = test_config.GENERATED_REPO_DIR / "flexlate.json"
+    with change_directory_to(test_config.GENERATED_REPO_DIR):
         assert config_path.exists()
         assert repo.commit().message == REPO_WITH_COOKIECUTTER_ONE_SOURCE_COMMIT_MESSAGE
         undoer.undo_transactions(repo)
@@ -37,9 +37,9 @@ def test_undo_adding_applied_template(
 ):
     repo = repo_with_template_branch_from_cookiecutter_one
     undoer = Undoer()
-    config_path = GENERATED_REPO_DIR / "flexlate.json"
-    output_path = GENERATED_REPO_DIR / "b" / "text.txt"
-    with change_directory_to(GENERATED_REPO_DIR):
+    config_path = test_config.GENERATED_REPO_DIR / "flexlate.json"
+    output_path = test_config.GENERATED_REPO_DIR / "b" / "text.txt"
+    with change_directory_to(test_config.GENERATED_REPO_DIR):
         assert output_path.read_text() == "b"
         assert (
             repo.commit().message
@@ -59,9 +59,9 @@ def test_undo_multiple_transactions(
 ):
     repo = repo_with_template_branch_from_cookiecutter_one
     undoer = Undoer()
-    config_path = GENERATED_REPO_DIR / "flexlate.json"
-    output_path = GENERATED_REPO_DIR / "b" / "text.txt"
-    with change_directory_to(GENERATED_REPO_DIR):
+    config_path = test_config.GENERATED_REPO_DIR / "flexlate.json"
+    output_path = test_config.GENERATED_REPO_DIR / "b" / "text.txt"
+    with change_directory_to(test_config.GENERATED_REPO_DIR):
         assert output_path.read_text() == "b"
         assert (
             repo.commit().message
@@ -78,8 +78,8 @@ def test_undo_multiple_transactions(
 def test_undo_remove_template_source(repo_with_template_source_removed: Repo):
     repo = repo_with_template_source_removed
     undoer = Undoer()
-    config_path = GENERATED_REPO_DIR / "flexlate.json"
-    with change_directory_to(GENERATED_REPO_DIR):
+    config_path = test_config.GENERATED_REPO_DIR / "flexlate.json"
+    with change_directory_to(test_config.GENERATED_REPO_DIR):
         assert not config_path.exists()
         assert repo.commit().message == REPO_WITH_SOURCE_REMOVED_COMMIT_MESSAGE
         undoer.undo_transactions(repo)
@@ -92,9 +92,9 @@ def test_undo_remove_applied_template(
 ):
     repo = repo_with_applied_output_removed
     undoer = Undoer()
-    config_path = GENERATED_REPO_DIR / "flexlate.json"
-    output_path = GENERATED_REPO_DIR / "b" / "text.txt"
-    with change_directory_to(GENERATED_REPO_DIR):
+    config_path = test_config.GENERATED_REPO_DIR / "flexlate.json"
+    output_path = test_config.GENERATED_REPO_DIR / "b" / "text.txt"
+    with change_directory_to(test_config.GENERATED_REPO_DIR):
         assert not output_path.exists()
         config = FlexlateConfig.load(config_path)
         assert len(config.template_sources) == 1
@@ -114,8 +114,8 @@ def test_undo_update(
 ):
     repo = repo_after_updating_cookiecutter_one
     undoer = Undoer()
-    output_path = GENERATED_REPO_DIR / "b" / "text.txt"
-    with change_directory_to(GENERATED_REPO_DIR):
+    output_path = test_config.GENERATED_REPO_DIR / "b" / "text.txt"
+    with change_directory_to(test_config.GENERATED_REPO_DIR):
         assert output_path.read_text() == "b and extra"
         assert (
             repo.commit().message == REPO_WITH_COOKIECUTTER_ONE_UPDATED_COMMIT_MESSAGE
@@ -134,8 +134,8 @@ def test_undo_update(
 def test_undo_too_many_transactions(repo_with_cookiecutter_one_template_source: Repo):
     repo = repo_with_cookiecutter_one_template_source
     undoer = Undoer()
-    config_path = GENERATED_REPO_DIR / "flexlate.json"
-    with change_directory_to(GENERATED_REPO_DIR):
+    config_path = test_config.GENERATED_REPO_DIR / "flexlate.json"
+    with change_directory_to(test_config.GENERATED_REPO_DIR):
         assert config_path.exists()
         assert repo.commit().message == REPO_WITH_COOKIECUTTER_ONE_SOURCE_COMMIT_MESSAGE
         with pytest.raises(TooFewTransactionsException):
@@ -149,6 +149,6 @@ def test_undo_when_last_commit_is_not_from_flexlate(
 ):
     repo = repo_with_placeholder_committed
     undoer = Undoer()
-    with change_directory_to(GENERATED_REPO_DIR):
+    with change_directory_to(test_config.GENERATED_REPO_DIR):
         with pytest.raises(LastCommitWasNotByFlexlateException):
             undoer.undo_transactions(repo)

@@ -1,4 +1,4 @@
-from typing import Sequence, Optional, List, Final
+from typing import Final, List, Optional, Sequence
 
 from flexlate.exc import InvalidTemplatePathException
 from flexlate.finder.specific.base import TemplateFinder

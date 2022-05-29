@@ -3,6 +3,7 @@ from unittest.mock import patch
 
 import pytest
 
+from flexlate import merger as merger_mod
 from flexlate.branch_update import (
     get_flexlate_branch_name,
     get_flexlate_branch_name_for_feature_branch,
@@ -10,14 +11,14 @@ from flexlate.branch_update import (
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.ext_git import merge_branch_into_current
 from flexlate.merger import Merger
-from flexlate import merger as merger_mod
-from tests.fixtures.templated_repo import *
+from tests import config
 from tests.fixtures.template import *
+from tests.fixtures.templated_repo import *
 from tests.fixtures.transaction import add_output_transaction
 from tests.gitutils import (
-    rename_branch,
     assert_main_commit_message_matches,
     checkout_new_branch,
+    rename_branch,
 )
 
 
@@ -61,7 +62,7 @@ def test_merge_with_existing_main_branches(
 
     # Existing repo has main flexlate branches. Now do another operation with feature branch
     checkout_new_branch(repo, feature_branch_name)
-    subdir = GENERATED_REPO_DIR / "subdir"
+    subdir = config.GENERATED_REPO_DIR / "subdir"
     subdir.mkdir()
     with change_directory_to(subdir):
         adder = Adder()
@@ -69,7 +70,7 @@ def test_merge_with_existing_main_branches(
             repo,
             cookiecutter_one_template,
             add_output_transaction,
-            out_root=GENERATED_REPO_DIR,
+            out_root=config.GENERATED_REPO_DIR,
             no_input=True,
             merged_branch_name=feature_merged_branch_name,
             template_branch_name=feature_template_branch_name,
@@ -98,7 +99,7 @@ def test_merge_with_existing_main_branches_and_conflicts(
     merger = Merger()
 
     # Existing repo has main flexlate branches. Now do another operation with feature branch
-    subdir = GENERATED_REPO_DIR / "subdir"
+    subdir = config.GENERATED_REPO_DIR / "subdir"
     subdir.mkdir()
     with change_directory_to(subdir):
         for i in range(2):
@@ -115,7 +116,7 @@ def test_merge_with_existing_main_branches_and_conflicts(
                 repo,
                 cookiecutter_one_template,
                 add_output_transaction,
-                out_root=GENERATED_REPO_DIR,
+                out_root=config.GENERATED_REPO_DIR,
                 no_input=True,
                 data=data,
                 add_mode=AddMode.PROJECT,

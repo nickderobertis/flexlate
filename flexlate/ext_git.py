@@ -2,20 +2,20 @@ import itertools
 import os
 import re
 import shutil
-import tempfile
 from contextlib import contextmanager
 from pathlib import Path
-from typing import cast, Set, Generator, ContextManager, Optional, Tuple, List, Sequence
+from typing import ContextManager, Generator, List, Optional, Sequence, Set, Tuple, cast
 
-from git import Repo, Blob, Tree, GitCommandError, Commit, Git  # type: ignore
+from git import Blob, Commit, Git, GitCommandError, Repo, Tree  # type: ignore
 
 from flexlate.exc import (
+    CannotFindClonedTemplateException,
     GitRepoDirtyException,
     GitRepoHasNoCommitsException,
-    CannotFindClonedTemplateException,
 )
 from flexlate.logger import log
-from flexlate.path_ops import copy_flexlate_configs, change_directory_to
+from flexlate.path_ops import change_directory_to, copy_flexlate_configs
+from flexlate.temp_path import create_temp_path
 
 
 def checkout_template_branch(repo: Repo, branch_name: str, base_branch_name: str):
@@ -159,8 +159,8 @@ def temp_repo_that_pushes_to_branch(  # type: ignore
     if repo.working_dir is None:
         raise ValueError("repo working dir must not be None")
     folder_name = Path(repo.working_dir).name
-    with tempfile.TemporaryDirectory() as tmp_dir:
-        tmp_path = Path(tmp_dir) / folder_name
+    with create_temp_path() as tmp_dir:
+        tmp_path = tmp_dir / folder_name
         log.debug(
             f"Creating temp repo at {tmp_path} that has branch {branch_name} possibly created from {base_branch_name}"
         )
@@ -384,7 +384,7 @@ def get_repo_remote_name_from_repo(repo: Repo) -> str:
 def clone_repo_at_version_get_repo_and_name(
     path: str, dst_folder: Path, version: Optional[str] = None
 ) -> Tuple[Repo, str]:
-    with tempfile.TemporaryDirectory() as temp_dir:
+    with create_temp_path() as temp_dir:
         repo = Repo.clone_from(path, temp_dir)
         name = get_repo_remote_name_from_repo(repo)
         if version:

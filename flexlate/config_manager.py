@@ -1,27 +1,27 @@
 import os
 from pathlib import Path
-from typing import Sequence, List, Optional, Tuple, Set, Dict, Callable
+from typing import Callable, Dict, List, Optional, Sequence, Set, Tuple
 
 from flexlate.add_mode import AddMode, get_expanded_out_root
 from flexlate.config import (
-    FlexlateConfig,
-    TemplateSource,
     AppliedTemplateConfig,
     AppliedTemplateWithSource,
+    FlexlateConfig,
     FlexlateProjectConfig,
     ProjectConfig,
+    TemplateSource,
     TemplateSourceWithTemplates,
 )
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.exc import (
-    FlexlateConfigFileNotExistsException,
-    TemplateLookupException,
-    InvalidTemplateDataException,
-    TemplateNotRegisteredException,
     CannotLoadConfigException,
-    FlexlateProjectConfigFileNotExistsException,
-    CannotRemoveTemplateSourceException,
     CannotRemoveAppliedTemplateException,
+    CannotRemoveTemplateSourceException,
+    FlexlateConfigFileNotExistsException,
+    FlexlateProjectConfigFileNotExistsException,
+    InvalidTemplateDataException,
+    TemplateLookupException,
+    TemplateNotRegisteredException,
 )
 from flexlate.path_ops import (
     location_relative_to_new_parent,
@@ -111,24 +111,44 @@ class ConfigManager:
         config: Optional[FlexlateConfig] = None,
     ) -> List[AppliedTemplateWithSource]:
         config = config or self.load_config(project_root)
+
+        # TODO: more efficient algorithm for getting applied templates with sources
+
+        def get_source_config_path(source_name: str) -> Path:
+            if config is None:
+                raise ValueError("should not hit this, for type narrowing")
+            for child_config in config.child_configs:
+                for source in child_config.template_sources:
+                    if source.name == source_name:
+                        return child_config.settings.config_location
+            raise ValueError(f"could not find source {source_name}")
+
         sources = config.template_sources_dict
         applied_template_with_sources: List[AppliedTemplateWithSource] = []
-        for applied_template in config.applied_templates:
-            source = sources[applied_template.name]
-            if (
-                relative_to is not None
-                and source.git_url is None
-                and not Path(source.path).is_absolute()
-            ):
-                new_path = (relative_to / Path(source.path)).resolve()
-                use_source = source.copy(update=dict(path=new_path))
-            else:
-                use_source = source
-            applied_template_with_sources.append(
-                AppliedTemplateWithSource(
-                    applied_template=applied_template, source=use_source
+
+        for child_config in config.child_configs:
+            for i, applied_template in enumerate(child_config.applied_templates):
+                source = sources[applied_template.name]
+                source_config_path = get_source_config_path(source.name)
+                applied_template_config_path = child_config.settings.config_location
+                if (
+                    relative_to is not None
+                    and source.git_url is None
+                    and not Path(source.path).is_absolute()
+                ):
+                    new_path = (relative_to / Path(source.path)).resolve()
+                    use_source = source.copy(update=dict(path=new_path))
+                else:
+                    use_source = source
+                applied_template_with_sources.append(
+                    AppliedTemplateWithSource(
+                        applied_template=applied_template,
+                        source=use_source,
+                        index=i,
+                        source_config_path=source_config_path,
+                        applied_template_config_path=applied_template_config_path,
+                    )
                 )
-            )
         return applied_template_with_sources
 
     def get_all_renderables(
@@ -480,30 +500,43 @@ class ConfigManager:
             if atws.applied_template.add_mode == AddMode.LOCAL
         ]
 
-    def move_local_applied_templates_if_necessary(
+    def move_local_applied_templates_if_necessary_produce_new_updates(
         self,
+        updates: Sequence[TemplateUpdate],
         project_root: Path = Path("."),
         orig_project_root: Path = Path("."),
         renderer: MultiRenderer = MultiRenderer(),
-    ):
+    ) -> List[TemplateUpdate]:
         config = self.load_config(project_root=project_root)
         applied_templates_with_sources = (
             self._get_applied_templates_and_sources_with_local_add_mode(
                 project_root=project_root, config=config
             )
         )
+        update_dict = {
+            (update.config_location, update.index): update for update in updates
+        }
+        out_updates: List[TemplateUpdate] = []
         for atwc in applied_templates_with_sources:
             source = atwc.source
+            try:
+                update = update_dict.pop(
+                    (atwc.applied_template_config_path, atwc.index)
+                )
+            except KeyError:
+                continue
             if source.is_local_template:
                 # Move source back to orig project so that relative template
                 # paths can be resolved
                 source.path = str(
                     location_relative_to_new_parent(
                         Path(source.path), project_root, orig_project_root, project_root
-                    ).resolve()
+                    )
                 )
             template = source.to_template()
-            renderable = Renderable.from_applied_template_with_source(atwc)
+            renderable = Renderable.from_applied_template_with_source(
+                atwc, data=update.data
+            )
             new_relative_out_root = Path(
                 renderer.render_string(
                     str(template.render_relative_root_in_output), renderable
@@ -517,7 +550,12 @@ class ConfigManager:
             new_config_path = render_root / new_relative_out_root / "flexlate.json"
             if orig_config_path == new_config_path:
                 # No need to move, still in the same location
+                out_updates.append(update)
                 continue
+
+            out_updates.append(
+                update.copy(update=dict(config_location=new_config_path))
+            )
 
             # Must have different location now, move it
             # TODO: more efficient algorithm for updating locations of applied templates
@@ -531,6 +569,9 @@ class ConfigManager:
                 out_root=atwc.applied_template._orig_root,
                 orig_project_root=orig_project_root,
             )
+        out_updates.extend(update_dict.values())
+        assert len(out_updates) == len(updates)
+        return out_updates
 
     def update_template_sources(
         self,

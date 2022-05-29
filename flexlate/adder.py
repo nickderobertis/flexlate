@@ -1,7 +1,5 @@
 import os
 import shutil
-import tempfile
-import time
 from copy import deepcopy
 from pathlib import Path
 from typing import Optional
@@ -23,12 +21,11 @@ from flexlate.ext_git import (
     stage_and_commit_all,
     update_local_branches_from_remote_without_checkout,
 )
-from flexlate.path_ops import (
-    location_relative_to_new_parent,
-)
+from flexlate.path_ops import location_relative_to_new_parent
 from flexlate.render.multi import MultiRenderer
-from flexlate.styles import SUCCESS_STYLE, INFO_STYLE, console, styled, print_styled
+from flexlate.styles import INFO_STYLE, SUCCESS_STYLE, console, print_styled, styled
 from flexlate.syncer import Syncer
+from flexlate.temp_path import create_temp_path
 from flexlate.template.base import Template
 from flexlate.template_data import TemplateData
 from flexlate.transactions.transaction import (
@@ -344,10 +341,8 @@ class Adder:
         renderer: MultiRenderer = MultiRenderer(),
         syncer: Syncer = Syncer(),
     ) -> str:
-        with tempfile.TemporaryDirectory() as temp_dir:
-            temp_path = Path(temp_dir)
-
-            repo = Repo.init(temp_dir)
+        with create_temp_path() as temp_path:
+            repo = Repo.init(temp_path)
 
             def sync():
                 syncer.sync_local_changes_to_flexlate_branches(
@@ -491,11 +486,14 @@ class Adder:
                     move_source_path_to_be_relative_to_destination,
                     project_root=final_out_path,
                 )
-                stage_and_commit_all(
-                    repo,
-                    "Move template source path to match permanent destination of project",
-                )
-                sync()
+                # If the final output folder is at the same
+                # level as the temp folder, the relative path will be unchanged, so there will be no changes
+                if repo.is_dirty():
+                    stage_and_commit_all(
+                        repo,
+                        "Move template source path to match permanent destination of project",
+                    )
+                    sync()
 
             return folder_name
 
@@ -503,19 +501,19 @@ class Adder:
 def _add_template_commit_message(
     template: Template, out_root: Path, project_root: Path
 ) -> str:
-    relative_path = out_root.absolute().relative_to(project_root)
+    relative_path = Path(os.path.relpath(out_root.absolute(), project_root))
     return f"Applied template {template.name} to {relative_path}"
 
 
 def _move_applied_template_config_message(
     template: Template, out_root: Path, project_root: Path
 ) -> str:
-    relative_path = out_root.absolute().relative_to(project_root)
+    relative_path = Path(os.path.relpath(out_root.absolute(), project_root))
     return f"Moved config for {template.name} to {relative_path}"
 
 
 def _add_template_source_commit_message(
     template: Template, out_root: Path, project_root: Path
 ) -> str:
-    relative_path = out_root.absolute().relative_to(project_root)
+    relative_path = Path(os.path.relpath(out_root.absolute(), project_root))
     return f"Added template source {template.name} to {relative_path}"

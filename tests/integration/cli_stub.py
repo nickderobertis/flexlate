@@ -1,7 +1,7 @@
 import shlex
 from enum import Enum
 from pathlib import Path
-from typing import Union, Sequence, Optional, List, Callable, Any, cast, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Callable, List, Optional, Sequence, Union, cast
 
 from tests.ext_subprocess import get_text_input_from_data
 
@@ -11,14 +11,13 @@ if TYPE_CHECKING:
 from _pytest.capture import CaptureFixture
 from click.testing import Result
 from pydantic import BaseModel
+from typer.testing import CliRunner
 
 from flexlate.add_mode import AddMode
 from flexlate.cli import cli
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.main import Flexlate
 from flexlate.template_data import TemplateData
-from typer.testing import CliRunner
-
 from tests import ext_click
 
 runner = CliRunner()

@@ -1,4 +1,4 @@
-from typing import Dict, Any, Sequence, List
+from typing import Any, Dict, List, Sequence
 
 TemplateData = Dict[str, Any]
 
