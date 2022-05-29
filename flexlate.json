@@ -37,7 +37,8 @@
         "google_analytics_id": "",
         "os_support": [
           "ubuntu",
-          "macos"
+          "macos",
+          "windows"
         ],
         "minimum_python_version": "3.8",
         "logo_url": "",
