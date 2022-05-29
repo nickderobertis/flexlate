@@ -11,7 +11,7 @@ from tests import config
 
 def wipe_generated_folder():
     using_temp_dir = config.USING_TEMP_DIR_AS_GENERATED_DIR
-    if config.GENERATED_FILES_DIR.exists():
+    if not using_temp_dir and config.GENERATED_FILES_DIR.exists():
         _remove_folder(
             config.GENERATED_FILES_DIR, fail_on_permission_error=not using_temp_dir
         )
