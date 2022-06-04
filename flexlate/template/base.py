@@ -60,3 +60,17 @@ class Template(abc.ABC):
             )
         except AttributeError:
             return False
+
+    def update_from_template(self, template: "Template"):
+        self.config = template.config
+        self.path = template.path
+        self.git_url = template.git_url
+        self.target_version = template.target_version
+        self.name = template.name
+        self.version = template.version
+        self.template_source_path = template.template_source_path
+        self.render_relative_root_in_output = template.render_relative_root_in_output
+        self.render_relative_root_in_template = (
+            template.render_relative_root_in_template
+        )
+        self._type = template._type
