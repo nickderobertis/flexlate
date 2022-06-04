@@ -17,8 +17,10 @@ def wipe_generated_folder():
         config.GENERATED_FILES_DIR.mkdir()
 
 
-def remove_folder(folder: Path, retries: int = 10, raise_on_error: bool = True):
-    if folder.exists():
+def remove_folder(
+    folder: Union[str, Path], retries: int = 10, raise_on_error: bool = True
+):
+    if Path(folder).exists():
         try:
             shutil.rmtree(folder, ignore_errors=not raise_on_error)
         except PermissionError as e:
