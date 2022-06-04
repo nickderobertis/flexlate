@@ -276,7 +276,7 @@ copier_with_tasks_local_fixture: Final[TemplateSourceFixture] = TemplateSourceFi
 )
 
 
-def _update_cookiecutter_local_template_source_to_copier(
+def _update_cookiecutter_template_source_to_copier(
     template_source: TemplateSourceFixture,
 ):
     template_source.evaluated_render_relative_root_in_output_creator = (
@@ -292,7 +292,7 @@ COOKIECUTTER_CHANGES_TO_COPIER_LOCAL_FIXTURE: Final[
 ] = cookiecutter_local_fixture.copy(
     version_migrate_func=modify_cookiecutter_one_to_be_copier,
     version_2=COPIER_FROM_COOKIECUTTER_ONE_VERSION,
-    self_migrate_func=_update_cookiecutter_local_template_source_to_copier,
+    self_migrate_func=_update_cookiecutter_template_source_to_copier,
 )
 
 
@@ -311,6 +311,7 @@ COOKIECUTTER_CHANGES_TO_COPIER_REMOTE_FIXTURE: Final[
     render_relative_root_in_template=Path("{{ cookiecutter.a }}"),
     evaluated_render_relative_root_in_output_creator=lambda data: Path(data["a"]),
     expect_local_applied_template_path=Path(".."),
+    self_migrate_func=_update_cookiecutter_template_source_to_copier,
 )
 
 
