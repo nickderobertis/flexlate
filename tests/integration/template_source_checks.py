@@ -54,6 +54,11 @@ def assert_project_files_are_correct(
         out_path = root / f"{data['q1']}.txt"
         footer = get_footer_for_copier_local_template(version)
         expect_content = f"{data['q1']}{footer}"
+    elif (
+        template_source_type == TemplateSourceType.COOKIECUTTER_CHANGES_TO_COPIER_REMOTE
+    ):
+        out_path = root / data["a"] / "text.txt"
+        expect_content = f"{data['a']}{data['c']}"
     else:
         raise ValueError(f"unexpected template source type {template_source_type}")
 
@@ -216,7 +221,10 @@ def _get_default_data(template_source_type: TemplateSourceType) -> TemplateData:
         return dict(name="abc", key="value")
     elif template_source_type == TemplateSourceType.COPIER_REMOTE:
         return dict(question1="answer1", question2=2.7)
-    elif template_source_type == TemplateSourceType.COOKIECUTTER_LOCAL:
+    elif template_source_type in (
+        TemplateSourceType.COOKIECUTTER_LOCAL,
+        TemplateSourceType.COOKIECUTTER_CHANGES_TO_COPIER_REMOTE,
+    ):
         return dict(a="b", c="")
     elif template_source_type == TemplateSourceType.COPIER_LOCAL:
         return dict(q1="a1", q2=1, q3=None)

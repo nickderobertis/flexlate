@@ -17,6 +17,10 @@ from flexlate.template.types import TemplateType
 from flexlate.template_data import TemplateData
 from tests import config
 from tests.config import (
+    COOKIECUTTER_CHANGES_TO_COPIER_REMOTE_NAME,
+    COOKIECUTTER_CHANGES_TO_COPIER_REMOTE_URL,
+    COOKIECUTTER_CHANGES_TO_COPIER_REMOTE_VERSION_1,
+    COOKIECUTTER_CHANGES_TO_COPIER_REMOTE_VERSION_2,
     COOKIECUTTER_ONE_DIR,
     COOKIECUTTER_ONE_MODIFIED_VERSION,
     COOKIECUTTER_ONE_NAME,
@@ -59,6 +63,7 @@ class TemplateSourceType(str, Enum):
     COOKIECUTTER_LOCAL = "cookiecutter_local"
     COPIER_LOCAL = "copier_local"
     COPIER_WITH_TASKS = "copier_with_tasks"
+    COOKIECUTTER_CHANGES_TO_COPIER_REMOTE = "cookiecutter_changes_to_copier_remote"
 
 
 @dataclass
@@ -272,7 +277,7 @@ copier_with_tasks_local_fixture: Final[TemplateSourceFixture] = TemplateSourceFi
 )
 
 
-def _update_cookiecutter_local_template_source_to_copier(
+def _update_cookiecutter_template_source_to_copier(
     template_source: TemplateSourceFixture,
 ):
     template_source.evaluated_render_relative_root_in_output_creator = (
@@ -288,7 +293,26 @@ COOKIECUTTER_CHANGES_TO_COPIER_LOCAL_FIXTURE: Final[
 ] = cookiecutter_local_fixture.copy(
     version_migrate_func=modify_cookiecutter_one_to_be_copier,
     version_2=COPIER_FROM_COOKIECUTTER_ONE_VERSION,
-    self_migrate_func=_update_cookiecutter_local_template_source_to_copier,
+    self_migrate_func=_update_cookiecutter_template_source_to_copier,
+)
+
+
+COOKIECUTTER_CHANGES_TO_COPIER_REMOTE_FIXTURE: Final[
+    TemplateSourceFixture
+] = TemplateSourceFixture(
+    name=COOKIECUTTER_CHANGES_TO_COPIER_REMOTE_NAME,
+    path=COOKIECUTTER_CHANGES_TO_COPIER_REMOTE_URL,
+    type=TemplateSourceType.COOKIECUTTER_CHANGES_TO_COPIER_REMOTE,
+    template_type=TemplateType.COOKIECUTTER,
+    input_data=dict(a="z", c="f"),
+    update_input_data=dict(a="n", c="q"),
+    version_1=COOKIECUTTER_CHANGES_TO_COPIER_REMOTE_VERSION_1,
+    version_2=COOKIECUTTER_CHANGES_TO_COPIER_REMOTE_VERSION_2,
+    render_relative_root_in_output=Path("{{ cookiecutter.a }}"),
+    render_relative_root_in_template=Path("{{ cookiecutter.a }}"),
+    evaluated_render_relative_root_in_output_creator=lambda data: Path(data["a"]),
+    expect_local_applied_template_path=Path(".."),
+    self_migrate_func=_update_cookiecutter_template_source_to_copier,
 )
 
 
@@ -369,6 +393,20 @@ one_remote_all_local_relative_fixtures = [
 
 @pytest.fixture(scope="function", params=one_remote_all_local_relative_fixtures)
 def template_source_one_remote_and_all_local_relative(request) -> TemplateSourceFixture:
+    with template_source_with_temp_dir_if_local_template(
+        request.param
+    ) as template_source:
+        yield template_source
+
+
+cookiecutter_changes_to_copier_fixtures = [
+    COOKIECUTTER_CHANGES_TO_COPIER_LOCAL_FIXTURE,
+    COOKIECUTTER_CHANGES_TO_COPIER_REMOTE_FIXTURE,
+]
+
+
+@pytest.fixture(scope="function", params=cookiecutter_changes_to_copier_fixtures)
+def template_source_cookiecutter_changes_to_copier(request) -> TemplateSourceFixture:
     with template_source_with_temp_dir_if_local_template(
         request.param
     ) as template_source:

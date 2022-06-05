@@ -310,8 +310,7 @@ class Updater:
             for update in all_updates:
                 if update.template.name == template.name:
                     update.data = merge_data([template_data], [update.data or {}])[0]
-                    update.template.version = template.version
-                    update.template.path = template.path
+                    update.template.update_from_template(template)
                     out_updates.append(update)
         return out_updates
 
@@ -335,11 +334,13 @@ class Updater:
                 kwargs.update(version=source.target_version)
             for template in source_with_templates.templates:
                 new_template = finder.find(str(source.update_location), **kwargs)
+                # TODO: Create new templates rather than updating existing ones
+                #  This would eliminate issues from partial updates of templates as new attributes are added.
+                #  I think the logic is set up this way because order of the templates matters.
                 if template.version != new_template.version:
                     # Template needs to be upgraded
                     # As finder already updates the local files, just update the template object
-                    template.version = new_template.version
-                    template.path = new_template.path
+                    template.update_from_template(new_template)
 
 
 def _commit_message(renderables: Sequence[Renderable]) -> str:
