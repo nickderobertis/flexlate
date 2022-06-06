@@ -1,7 +1,11 @@
+
+
 [![](https://codecov.io/gh/nickderobertis/flexlate/branch/master/graph/badge.svg)](https://codecov.io/gh/nickderobertis/flexlate)
 [![PyPI](https://img.shields.io/pypi/v/flexlate)](https://pypi.org/project/flexlate/)
 ![PyPI - License](https://img.shields.io/pypi/l/flexlate)
 [![Documentation](https://img.shields.io/badge/documentation-pass-green)](https://nickderobertis.github.io/flexlate/)
+![Tests Run on Ubuntu Python Versions](https://img.shields.io/badge/Tests%20Ubuntu%2FPython-3.8%20%7C%203.9%20%7C%203.10-blue)
+![Tests Run on Macos Python Versions](https://img.shields.io/badge/Tests%20Macos%2FPython-3.8%20%7C%203.9%20%7C%203.10-blue)
 [![Github Repo](https://img.shields.io/badge/repo-github-informational)](https://github.com/nickderobertis/flexlate/)
 
 

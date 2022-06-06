@@ -1,6 +1,6 @@
 import nox
 
-nox.options.sessions = ["format", "lint", "test"]
+nox.options.sessions = ["format", "strip", "lint", "test"]
 
 
 @nox.session(python=False)
@@ -48,6 +48,23 @@ def lint(session):
         "--statistics",
     )
     session.run("mypy")
+
+
+@nox.session(python=False, name="strip")
+def strip_imports(session):
+    common_args = (
+        "--remove-all-unused-imports",
+        "--in-place",
+        "--recursive",
+        ".",
+        "--exclude=test*",
+    )
+    if session.interactive:
+        # When run as user, strip unused imports and exit successfully
+        session.run("autoflake", *common_args)
+    else:
+        # When run from CI, fail the check if stripping is not correct
+        session.run("autoflake", "--check", *common_args)
 
 
 @nox.session

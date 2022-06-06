@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "prepare": "husky install && pipx install black || true && pipx install isort || true"
+    "prepare": "husky install && pipx install black || true && pipx install isort || true && pipx install autoflake || true"
   },
   "author": "",
   "license": "ISC",
