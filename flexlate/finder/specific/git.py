@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Union, Optional, Any, Dict
+from typing import Any, Dict, Optional, Union
 
 from git import Repo
 

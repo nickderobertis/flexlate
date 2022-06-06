@@ -1,14 +1,14 @@
 import os
 import shutil
-import tempfile
 from pathlib import Path
-from typing import Sequence, Optional, List, Dict, Final
+from typing import Final, List, Sequence
 
 from flexlate.exc import InvalidTemplateClassException, RendererNotFoundException
 from flexlate.render.renderable import Renderable
 from flexlate.render.specific.base import SpecificTemplateRenderer
 from flexlate.render.specific.cookiecutter import CookiecutterRenderer
 from flexlate.render.specific.copier import CopierRenderer
+from flexlate.temp_path import create_temp_path
 from flexlate.template.base import Template
 from flexlate.template.types import TemplateType
 from flexlate.template_data import TemplateData
@@ -30,8 +30,7 @@ class MultiRenderer:
         no_input: bool = False,
     ) -> List[TemplateData]:
         out_data: List[TemplateData] = []
-        with tempfile.TemporaryDirectory() as d:
-            temp_root = Path(d)
+        with create_temp_path() as temp_root:
             temp_folders: List[Path] = []
             for i, renderable in enumerate(renderables):
                 template = renderable.template
@@ -39,8 +38,8 @@ class MultiRenderer:
                 temp_folder = temp_root / f"{i + 1}-{template.name}" / project_root.name
                 temp_folders.append(temp_folder)
                 if renderable.out_root.is_absolute():
-                    relative_root = renderable.out_root.relative_to(
-                        project_root.absolute()
+                    relative_root = Path(
+                        os.path.relpath(renderable.out_root, project_root.absolute())
                     )
                 else:
                     relative_root = renderable.out_root

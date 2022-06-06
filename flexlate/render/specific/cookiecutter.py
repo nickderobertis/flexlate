@@ -1,5 +1,3 @@
-import tempfile
-from pathlib import Path
 from typing import Tuple
 
 from cookiecutter.config import get_user_config
@@ -8,6 +6,7 @@ from cookiecutter.prompt import prompt_for_config
 
 from flexlate.render.renderable import Renderable
 from flexlate.render.specific.base import SpecificTemplateRenderer
+from flexlate.temp_path import create_temp_path
 from flexlate.template.cookiecutter import CookiecutterTemplate
 from flexlate.template.types import TemplateType
 from flexlate.template_data import TemplateData
@@ -63,19 +62,20 @@ class CookiecutterRenderer(SpecificTemplateRenderer[CookiecutterTemplate]):
         )
         context["cookiecutter"] = prompt_for_config(context, no_input=True)
 
-        with tempfile.TemporaryDirectory() as temp_template_dir:
+        with create_temp_path() as temp_template_path:
+            temp_template_dir = str(temp_template_path)
             context["cookiecutter"]["_template"] = temp_template_dir
             (
                 cookiecutter_pre_folder_name,
                 cookiecutter_post_folder_name,
             ) = _cookiecutter_before_and_after_render_string_temp_folder(context)
             temp_template_file_path = (
-                Path(temp_template_dir) / cookiecutter_pre_folder_name / "temp.txt"
+                temp_template_path / cookiecutter_pre_folder_name / "temp.txt"
             )
             temp_template_file_path.parent.mkdir()
             temp_template_file_path.write_text(string)
 
-            with tempfile.TemporaryDirectory() as temp_output_dir:
+            with create_temp_path() as temp_output_dir:
                 generate_files(
                     repo_dir=temp_template_dir,
                     context=context,
@@ -84,7 +84,7 @@ class CookiecutterRenderer(SpecificTemplateRenderer[CookiecutterTemplate]):
                     output_dir=temp_output_dir,
                 )
                 temp_output_file_path = (
-                    Path(temp_output_dir) / cookiecutter_post_folder_name / "temp.txt"
+                    temp_output_dir / cookiecutter_post_folder_name / "temp.txt"
                 )
                 output = temp_output_file_path.read_text()
 

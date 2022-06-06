@@ -2,9 +2,9 @@ import sys
 from contextlib import contextmanager
 from functools import wraps
 from types import TracebackType
-from typing import Callable, Type, Tuple
+from typing import Callable, Tuple, Type
 
-from flexlate.styles import print_styled, ALERT_STYLE
+from flexlate.styles import ALERT_STYLE, print_styled
 
 
 def simple_output_for_exceptions(*exceptions: Type[BaseException]):

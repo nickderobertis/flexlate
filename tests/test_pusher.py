@@ -4,10 +4,10 @@ from typing import Sequence
 from git import Repo
 
 from flexlate.pusher import Pusher
-from tests.config import GENERATED_FILES_DIR
+from tests import config
 from tests.dirutils import assert_dir_trees_are_equal
 from tests.fixtures.templated_repo import *
-from tests.gitutils import add_remote, add_local_remote
+from tests.gitutils import add_local_remote, add_remote
 
 
 def test_push_feature_flexlate_branches(
@@ -42,7 +42,7 @@ def test_push_main_flexlate_branches(
 def add_local_remote_and_check_branches_on_exit(
     repo: Repo, branch_names: Sequence[str]
 ):
-    remote_path = GENERATED_FILES_DIR / "remote"
+    remote_path = config.GENERATED_FILES_DIR / "remote"
     remote_repo = add_local_remote(repo, remote_path=remote_path)
 
     yield
@@ -52,4 +52,4 @@ def add_local_remote_and_check_branches_on_exit(
         remote_branch = remote_repo.branches[branch_name]  # type: ignore
         branch.checkout()
         remote_branch.checkout()
-        assert_dir_trees_are_equal(GENERATED_REPO_DIR, remote_path)
+        assert_dir_trees_are_equal(config.GENERATED_REPO_DIR, remote_path)

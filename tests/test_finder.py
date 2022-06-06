@@ -1,4 +1,3 @@
-import tempfile
 from pathlib import Path
 
 import pytest
@@ -7,28 +6,29 @@ from flexlate.finder.multi import MultiFinder
 from flexlate.finder.specific.cookiecutter import CookiecutterFinder
 from flexlate.finder.specific.copier import CopierFinder
 from flexlate.path_ops import change_directory_to
+from flexlate.temp_path import create_temp_path
 from flexlate.template.base import Template
 from flexlate.template.cookiecutter import CookiecutterTemplate
 from flexlate.template_path import get_local_repo_path_and_name_cloning_if_repo_url
+from tests import config
 from tests.config import (
     COOKIECUTTER_ONE_DIR,
+    COOKIECUTTER_ONE_NAME,
+    COOKIECUTTER_ONE_VERSION,
+    COOKIECUTTER_REMOTE_NAME,
     COOKIECUTTER_REMOTE_URL,
     COOKIECUTTER_REMOTE_VERSION_1,
     COOKIECUTTER_REMOTE_VERSION_2,
-    COOKIECUTTER_ONE_VERSION,
     COPIER_ONE_DIR,
+    COPIER_ONE_NAME,
     COPIER_ONE_VERSION,
+    COPIER_OUTPUT_SUBDIR_DIR,
+    COPIER_OUTPUT_SUBDIR_NAME,
+    COPIER_OUTPUT_SUBDIR_VERSION,
+    COPIER_REMOTE_NAME,
+    COPIER_REMOTE_URL,
     COPIER_REMOTE_VERSION_1,
     COPIER_REMOTE_VERSION_2,
-    COPIER_REMOTE_URL,
-    COPIER_REMOTE_NAME,
-    COOKIECUTTER_REMOTE_NAME,
-    COPIER_ONE_NAME,
-    COOKIECUTTER_ONE_NAME,
-    GENERATED_FILES_DIR,
-    COPIER_OUTPUT_SUBDIR_VERSION,
-    COPIER_OUTPUT_SUBDIR_NAME,
-    COPIER_OUTPUT_SUBDIR_DIR,
 )
 
 
@@ -95,8 +95,7 @@ def test_get_copier_local_output_subdir_template():
 )
 def test_get_cookiecutter_remote_template(version: str, expect_contents: str):
     finder = CookiecutterFinder()
-    with tempfile.TemporaryDirectory() as temp_dir:
-        temp_path = Path(temp_dir)
+    with create_temp_path() as temp_path:
         local_path, name = get_local_repo_path_and_name_cloning_if_repo_url(
             COOKIECUTTER_REMOTE_URL, version, dst_folder=temp_path
         )
@@ -129,8 +128,7 @@ def test_get_cookiecutter_remote_template(version: str, expect_contents: str):
 )
 def test_get_copier_remote_template(version: str, expect_contents: str):
     finder = CopierFinder()
-    with tempfile.TemporaryDirectory() as temp_dir:
-        temp_path = Path(temp_dir)
+    with create_temp_path() as temp_path:
         local_path, name = get_local_repo_path_and_name_cloning_if_repo_url(
             COPIER_REMOTE_URL, version, dst_folder=temp_path
         )
@@ -184,7 +182,9 @@ def test_multi_finder_get_cookiecutter_remote_template(
 ):
     finder = MultiFinder()
     template = finder.find(COOKIECUTTER_REMOTE_URL, version=version)
-    assert template.path == GENERATED_FILES_DIR / COOKIECUTTER_REMOTE_NAME / version
+    assert (
+        template.path == config.GENERATED_FILES_DIR / COOKIECUTTER_REMOTE_NAME / version
+    )
     assert template.git_url == COOKIECUTTER_REMOTE_URL
     assert template.version == version
     assert template.config.defaults == {"name": "abc", "key": "value"}
@@ -206,7 +206,7 @@ def test_multi_finder_get_cookiecutter_remote_template(
 def test_multi_finder_get_copier_remote_template(version: str, expect_contents: str):
     finder = MultiFinder()
     template = finder.find(COPIER_REMOTE_URL, version=version)
-    assert template.path == GENERATED_FILES_DIR / COPIER_REMOTE_NAME / version
+    assert template.path == config.GENERATED_FILES_DIR / COPIER_REMOTE_NAME / version
     assert template.git_url == COPIER_REMOTE_URL
     assert template.version == version
     assert template.config.defaults == {"question1": "answer1", "question2": 2.7}

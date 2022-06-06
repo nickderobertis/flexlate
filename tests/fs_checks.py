@@ -7,7 +7,7 @@ from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRAN
 from flexlate.template.base import Template
 from flexlate.template.cookiecutter import CookiecutterTemplate
 from flexlate.template.types import TemplateType
-from tests.config import GENERATED_REPO_DIR
+from tests import config as test_config
 
 
 def assert_template_source_cookiecutter_one_added_correctly(
@@ -17,7 +17,7 @@ def assert_template_source_cookiecutter_one_added_correctly(
     num_applied_templates: int = 0,
     target_version: Optional[str] = None,
 ):
-    config_path = GENERATED_REPO_DIR / "flexlate.json"
+    config_path = test_config.GENERATED_REPO_DIR / "flexlate.json"
     config = FlexlateConfig.load(config_path)
     assert len(config.applied_templates) == num_applied_templates
     assert len(config.template_sources) == num_sources
@@ -33,10 +33,11 @@ def assert_template_source_cookiecutter_one_added_correctly(
 
 def assert_cookiecutter_one_applied_template_added_correctly(
     template: Template,
-    config_dir: Path = GENERATED_REPO_DIR,
+    config_dir: Optional[Path] = None,
     template_root: Path = Path(".."),
     add_mode=AddMode.LOCAL,
 ):
+    config_dir = config_dir or test_config.GENERATED_REPO_DIR
     config_path = config_dir / "flexlate.json"
     config = FlexlateConfig.load(config_path)
     assert len(config.applied_templates) == 1
@@ -49,7 +50,7 @@ def assert_cookiecutter_one_applied_template_added_correctly(
 
 
 def assert_project_config_is_correct(add_mode: AddMode = AddMode.LOCAL):
-    projects_config_path = GENERATED_REPO_DIR / "flexlate-project.json"
+    projects_config_path = test_config.GENERATED_REPO_DIR / "flexlate-project.json"
     projects_config = FlexlateProjectConfig.load(projects_config_path)
     assert len(projects_config.projects) == 1
     project_config = projects_config.projects[0]

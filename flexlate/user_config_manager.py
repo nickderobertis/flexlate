@@ -8,8 +8,8 @@ from flexlate.branch_update import modify_files_via_branches_and_temp_repo
 from flexlate.config_manager import ConfigManager
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.transactions.transaction import (
-    create_transaction_commit_message,
     FlexlateTransaction,
+    create_transaction_commit_message,
 )
 
 

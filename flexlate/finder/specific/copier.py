@@ -1,13 +1,13 @@
 from pathlib import Path
-from typing import Optional, TypedDict, Dict
+from typing import Dict, Optional, TypedDict
 
 from copier.config.factory import filter_config
 from copier.config.user_data import load_config_data
 
 from flexlate.finder.specific.base import TemplateFinder
 from flexlate.finder.specific.git import (
-    get_version_from_source_path,
     get_git_url_from_source_path,
+    get_version_from_source_path,
 )
 from flexlate.template.copier import CopierTemplate
 from flexlate.template_config.copier import CopierConfig

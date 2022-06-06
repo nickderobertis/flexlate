@@ -1,13 +1,13 @@
 from pathlib import Path
-from typing import Sequence, Optional, Dict, Any, List
+from typing import Any, Dict, List, Optional, Sequence
 
 from pydantic import BaseModel
-from rich.console import ConsoleOptions, RenderResult, Console
+from rich.console import Console, ConsoleOptions, RenderResult
 from rich.table import Table
 
 from flexlate.config_manager import ConfigManager
 from flexlate.finder.multi import MultiFinder
-from flexlate.styles import styled, SUCCESS_STYLE, ACTION_REQUIRED_STYLE
+from flexlate.styles import ACTION_REQUIRED_STYLE, SUCCESS_STYLE, styled
 
 
 class CheckResult(BaseModel):

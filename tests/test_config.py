@@ -1,26 +1,24 @@
 import os.path
 import shutil
-import tempfile
 from pathlib import Path
 from typing import Optional
 
 from flexlate.add_mode import AddMode
-from flexlate.config import FlexlateConfig, AppliedTemplateConfig, FlexlateProjectConfig
+from flexlate.config import AppliedTemplateConfig, FlexlateConfig, FlexlateProjectConfig
 from flexlate.config_manager import ConfigManager
 from flexlate.exc import FlexlateProjectConfigFileNotExistsException
 from flexlate.update.main import Updater
 from flexlate.update.template import TemplateUpdate
+from tests import config as test_config
 from tests.config import (
     CONFIGS_DIR,
-    GENERATED_FILES_DIR,
+    COOKIECUTTER_ONE_NAME,
+    NESTED_PROJECT_DIR,
+    PROJECT_CONFIGS_DIR,
     PROJECT_CONFIGS_PROJECT_1_PATH,
     PROJECT_CONFIGS_PROJECT_1_SUBDIR,
     PROJECT_CONFIGS_PROJECT_2_PATH,
     PROJECT_CONFIGS_PROJECT_2_SUBDIR,
-    PROJECT_CONFIGS_DIR,
-    GENERATED_REPO_DIR,
-    COOKIECUTTER_ONE_NAME,
-    NESTED_PROJECT_DIR,
 )
 from tests.dirutils import wipe_generated_folder
 from tests.fixtures.config import generated_dir_with_configs
@@ -59,16 +57,16 @@ def test_update_and_save_multi_config(
     template_updates = updater.get_updates_for_templates(
         [cookiecutter_one_modified_template],
         [{"a": "yeah", "c": "woo"}],
-        project_root=GENERATED_FILES_DIR,
+        project_root=test_config.GENERATED_FILES_DIR,
         config_manager=manager,
     )
     manager.update_templates(
         template_updates,
-        project_root=GENERATED_FILES_DIR,
+        project_root=test_config.GENERATED_FILES_DIR,
     )
 
-    config_1_path = GENERATED_FILES_DIR / "flexlate.json"
-    config_2_path = GENERATED_FILES_DIR / "subdir2" / "flexlate.json"
+    config_1_path = test_config.GENERATED_FILES_DIR / "flexlate.json"
+    config_2_path = test_config.GENERATED_FILES_DIR / "subdir2" / "flexlate.json"
     config_1 = FlexlateConfig.load(config_1_path)
     config_2 = FlexlateConfig.load(config_2_path)
 
@@ -105,8 +103,10 @@ def test_update_and_save_multi_config(
 def test_add_project_config_in_project(add_mode: AddMode):
     wipe_generated_folder()
     manager = ConfigManager()
-    manager.add_project(GENERATED_FILES_DIR, default_add_mode=add_mode)
-    config = FlexlateProjectConfig.load(GENERATED_FILES_DIR / "flexlate-project.json")
+    manager.add_project(test_config.GENERATED_FILES_DIR, default_add_mode=add_mode)
+    config = FlexlateProjectConfig.load(
+        test_config.GENERATED_FILES_DIR / "flexlate-project.json"
+    )
     assert len(config.projects) == 1
     project = config.projects[0]
     assert project.path == Path(".")
@@ -139,8 +139,7 @@ def test_load_recursive_project_config(path: Path):
 
 def test_fail_to_load_non_existent_project_config():
     manager = ConfigManager()
-    with tempfile.TemporaryDirectory() as temp_dir:
-        temp_path = Path(temp_dir)
+    with create_temp_path() as temp_path:
         configs_path = temp_path / PROJECT_CONFIGS_DIR.name
         shutil.copytree(str(PROJECT_CONFIGS_DIR), configs_path)
         with pytest.raises(FlexlateProjectConfigFileNotExistsException):
@@ -151,7 +150,7 @@ def test_update_template_source_version(
     generated_dir_with_configs: None,
 ):
     manager = ConfigManager()
-    config_path = GENERATED_FILES_DIR / "flexlate.json"
+    config_path = test_config.GENERATED_FILES_DIR / "flexlate.json"
 
     def assert_target_version_is(version: Optional[str]):
         config = FlexlateConfig.load(config_path)
@@ -162,6 +161,8 @@ def test_update_template_source_version(
     assert_target_version_is(None)
     target_version = COOKIECUTTER_ONE_VERSION
     manager.update_template_source_version(
-        COOKIECUTTER_ONE_NAME, target_version, project_root=GENERATED_FILES_DIR
+        COOKIECUTTER_ONE_NAME,
+        target_version,
+        project_root=test_config.GENERATED_FILES_DIR,
     )
     assert_target_version_is(target_version)

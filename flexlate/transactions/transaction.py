@@ -1,26 +1,26 @@
 import uuid
 from enum import Enum
 from pathlib import Path
-from typing import Optional, List, Sequence
+from typing import List, Optional, Sequence
 
-from git import Repo, Commit  # type: ignore
-from pydantic import BaseModel, Field, UUID4, validator
+from git import Commit, Repo  # type: ignore
+from pydantic import UUID4, BaseModel, Field, validator
 
 from flexlate.exc import (
-    CannotParseCommitMessageFlexlateTransaction,
-    LastCommitWasNotByFlexlateException,
-    TransactionMismatchBetweenBranchesException,
-    InvalidNumberOfTransactionsException,
-    TooFewTransactionsException,
-    ExpectedMergeCommitException,
     CannotFindCorrectMergeParentException,
-    UserChangesWouldHaveBeenDeletedException,
-    MergeCommitIsNotMergingAFlexlateTransactionException,
     CannotFindMergeForTransactionException,
+    CannotParseCommitMessageFlexlateTransaction,
+    ExpectedMergeCommitException,
+    InvalidNumberOfTransactionsException,
+    LastCommitWasNotByFlexlateException,
+    MergeCommitIsNotMergingAFlexlateTransactionException,
+    TooFewTransactionsException,
+    TransactionMismatchBetweenBranchesException,
+    UserChangesWouldHaveBeenDeletedException,
 )
 from flexlate.ext_git import (
-    reset_current_branch_to_commit,
     get_commits_between_two_commits,
+    reset_current_branch_to_commit,
 )
 from flexlate.template_data import TemplateData
 

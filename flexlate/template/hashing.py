@@ -1,8 +1,9 @@
 # Adapted from https://stackoverflow.com/a/54477583/6276321
 import hashlib
-from _hashlib import HASH as Hash
 from pathlib import Path
 from typing import Union
+
+from _hashlib import HASH as Hash
 
 
 def md5_update_from_file(filename: Union[str, Path], hash: Hash) -> Hash:

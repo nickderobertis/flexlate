@@ -1,54 +1,57 @@
 import contextlib
 import os.path
 import shutil
-import tempfile
 from copy import deepcopy
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
 from subprocess import CompletedProcess
-from typing import List, Final, Callable, Optional, ContextManager, Union
+from typing import Callable, ContextManager, Final, List, Optional, Union
 
 import pytest
 
 from flexlate.add_mode import AddMode
 from flexlate.path_ops import change_directory_to
+from flexlate.temp_path import create_temp_path
 from flexlate.template.types import TemplateType
 from flexlate.template_data import TemplateData
+from tests import config
 from tests.config import (
+    COOKIECUTTER_CHANGES_TO_COPIER_REMOTE_NAME,
+    COOKIECUTTER_CHANGES_TO_COPIER_REMOTE_URL,
+    COOKIECUTTER_CHANGES_TO_COPIER_REMOTE_VERSION_1,
+    COOKIECUTTER_CHANGES_TO_COPIER_REMOTE_VERSION_2,
+    COOKIECUTTER_ONE_DIR,
+    COOKIECUTTER_ONE_MODIFIED_VERSION,
+    COOKIECUTTER_ONE_NAME,
+    COOKIECUTTER_ONE_VERSION,
     COOKIECUTTER_REMOTE_NAME,
     COOKIECUTTER_REMOTE_URL,
     COOKIECUTTER_REMOTE_VERSION_1,
     COOKIECUTTER_REMOTE_VERSION_2,
+    COOKIECUTTER_WITH_HOOKS_DIR,
+    COOKIECUTTER_WITH_HOOKS_MODIFIED_VERSION,
+    COOKIECUTTER_WITH_HOOKS_NAME,
+    COOKIECUTTER_WITH_HOOKS_VERSION,
+    COPIER_FROM_COOKIECUTTER_ONE_VERSION,
+    COPIER_ONE_DIR,
+    COPIER_ONE_MODIFIED_VERSION,
+    COPIER_ONE_NAME,
+    COPIER_ONE_VERSION,
     COPIER_REMOTE_NAME,
     COPIER_REMOTE_URL,
     COPIER_REMOTE_VERSION_1,
     COPIER_REMOTE_VERSION_2,
-    COOKIECUTTER_ONE_NAME,
-    COOKIECUTTER_ONE_DIR,
-    COOKIECUTTER_ONE_VERSION,
-    COOKIECUTTER_ONE_MODIFIED_VERSION,
-    COPIER_ONE_NAME,
-    COPIER_ONE_DIR,
-    COPIER_ONE_VERSION,
-    COPIER_ONE_MODIFIED_VERSION,
-    GENERATED_REPO_DIR,
-    GENERATED_FILES_DIR,
-    COPIER_FROM_COOKIECUTTER_ONE_VERSION,
-    COOKIECUTTER_WITH_HOOKS_DIR,
-    COOKIECUTTER_WITH_HOOKS_NAME,
-    COOKIECUTTER_WITH_HOOKS_VERSION,
-    COOKIECUTTER_WITH_HOOKS_MODIFIED_VERSION,
-    COPIER_WITH_TASKS_MODIFIED_VERSION,
-    COPIER_WITH_TASKS_VERSION,
     COPIER_WITH_TASKS_DIR,
+    COPIER_WITH_TASKS_MODIFIED_VERSION,
     COPIER_WITH_TASKS_NAME,
+    COPIER_WITH_TASKS_VERSION,
 )
 from tests.ext_subprocess import run
 from tests.fixtures.template import (
     modify_cookiecutter_one,
-    modify_copier_one,
     modify_cookiecutter_one_to_be_copier,
+    modify_copier_one,
     modify_copier_with_tasks,
 )
 
@@ -59,6 +62,7 @@ class TemplateSourceType(str, Enum):
     COOKIECUTTER_LOCAL = "cookiecutter_local"
     COPIER_LOCAL = "copier_local"
     COPIER_WITH_TASKS = "copier_with_tasks"
+    COOKIECUTTER_CHANGES_TO_COPIER_REMOTE = "cookiecutter_changes_to_copier_remote"
 
 
 @dataclass
@@ -72,6 +76,7 @@ class TemplateSourceFixture:
     version_1: str
     version_2: str
     is_local_template: bool = False
+    is_relative_template: bool = False
     version_migrate_func: Callable[[str], None] = lambda path: None
     self_migrate_func: Callable[
         ["TemplateSourceFixture"], None
@@ -97,14 +102,6 @@ class TemplateSourceFixture:
             return None
         return self.path
 
-    def relative(self, to: Path) -> "TemplateSourceFixture":
-        new_fixture = deepcopy(self)
-        if not self.is_local_template:
-            # Nothing to do for remote templates as paths are urls
-            return new_fixture
-        new_fixture.path = os.path.relpath(self.path, to)
-        return new_fixture
-
     @property
     def has_relative_path(self) -> bool:
         return self.is_local_template and not Path(self.path).is_absolute()
@@ -113,19 +110,19 @@ class TemplateSourceFixture:
     def url_or_absolute_path(self) -> str:
         if not self.has_relative_path:
             return self.path
-        # Must be local relative path. Paths are relative to GENERATED_REPO_DIR
-        return str((GENERATED_REPO_DIR / Path(self.path)).resolve())
+        # Must be local relative path. Paths are relative to config.GENERATED_REPO_DIR
+        return str((config.GENERATED_REPO_DIR / Path(self.path)).resolve())
 
     def relative_path_relative_to(
-        self, relative: Union[str, Path], orig_relative_to: Path = GENERATED_REPO_DIR
+        self, relative: Union[str, Path], orig_relative_to: Optional[Path] = None
     ) -> str:
+        orig_relative_to = orig_relative_to or config.GENERATED_REPO_DIR
         if not self.has_relative_path:
             return self.path
         return os.path.relpath((orig_relative_to / self.path).resolve(), relative)
 
-    def render_without_flexlate(
-        self, path: Path = GENERATED_REPO_DIR
-    ) -> CompletedProcess:
+    def render_without_flexlate(self, path: Optional[Path] = None) -> CompletedProcess:
+        path = path or config.GENERATED_REPO_DIR
         if self.template_type == TemplateType.COPIER:
             if self.is_local_template:
                 use_path = self.path  # local templates already at v1 by default
@@ -154,9 +151,39 @@ class TemplateSourceFixture:
             setattr(new, key, val)
         return new
 
+    def move(self, to: Path):
+        if not self.is_local_template:
+            return
+
+        template_dir = to / self.name
+        source_path = self.path
+        shutil.copytree(source_path, template_dir)
+        self.path = str(template_dir)
+
     def migrate_version(self, path: str):
         self.version_migrate_func(path)  # type: ignore
         self.self_migrate_func(self)  # type: ignore
+
+    def setup_paths(
+        self, relative_to: Optional[Path] = None
+    ) -> "TemplateSourceFixture":
+        """
+        Sets up local paths for the template.
+
+        This should be called first during the test run. It is called then
+        rather than as part of the fixture setup because it needs to happen
+        after the generated folder is set in conftest.py.
+        :return:
+        """
+        out_template_source = self.copy()
+        if not self.is_local_template:
+            return out_template_source
+
+        relative_to = relative_to or config.GENERATED_REPO_DIR
+
+        if out_template_source.is_relative_template:
+            out_template_source = os.path.relpath(out_template_source.path, relative_to)
+        return out_template_source
 
 
 COOKIECUTTER_REMOTE_FIXTURE: Final[TemplateSourceFixture] = TemplateSourceFixture(
@@ -249,7 +276,7 @@ copier_with_tasks_local_fixture: Final[TemplateSourceFixture] = TemplateSourceFi
 )
 
 
-def _update_cookiecutter_local_template_source_to_copier(
+def _update_cookiecutter_template_source_to_copier(
     template_source: TemplateSourceFixture,
 ):
     template_source.evaluated_render_relative_root_in_output_creator = (
@@ -265,7 +292,26 @@ COOKIECUTTER_CHANGES_TO_COPIER_LOCAL_FIXTURE: Final[
 ] = cookiecutter_local_fixture.copy(
     version_migrate_func=modify_cookiecutter_one_to_be_copier,
     version_2=COPIER_FROM_COOKIECUTTER_ONE_VERSION,
-    self_migrate_func=_update_cookiecutter_local_template_source_to_copier,
+    self_migrate_func=_update_cookiecutter_template_source_to_copier,
+)
+
+
+COOKIECUTTER_CHANGES_TO_COPIER_REMOTE_FIXTURE: Final[
+    TemplateSourceFixture
+] = TemplateSourceFixture(
+    name=COOKIECUTTER_CHANGES_TO_COPIER_REMOTE_NAME,
+    path=COOKIECUTTER_CHANGES_TO_COPIER_REMOTE_URL,
+    type=TemplateSourceType.COOKIECUTTER_CHANGES_TO_COPIER_REMOTE,
+    template_type=TemplateType.COOKIECUTTER,
+    input_data=dict(a="z", c="f"),
+    update_input_data=dict(a="n", c="q"),
+    version_1=COOKIECUTTER_CHANGES_TO_COPIER_REMOTE_VERSION_1,
+    version_2=COOKIECUTTER_CHANGES_TO_COPIER_REMOTE_VERSION_2,
+    render_relative_root_in_output=Path("{{ cookiecutter.a }}"),
+    render_relative_root_in_template=Path("{{ cookiecutter.a }}"),
+    evaluated_render_relative_root_in_output_creator=lambda data: Path(data["a"]),
+    expect_local_applied_template_path=Path(".."),
+    self_migrate_func=_update_cookiecutter_template_source_to_copier,
 )
 
 
@@ -283,7 +329,7 @@ remote_fixtures: Final[List[TemplateSourceFixture]] = [
 
 # Create relative path fixtures
 local_relative_path_fixtures: Final[List[TemplateSourceFixture]] = [
-    fixture.relative(GENERATED_REPO_DIR) for fixture in local_absolute_path_fixtures
+    fixture.copy(is_relative_path=True) for fixture in local_absolute_path_fixtures
 ]
 
 
@@ -295,36 +341,23 @@ all_standard_template_source_fixtures: Final[List[TemplateSourceFixture]] = [
 
 @contextlib.contextmanager
 def template_source_in_dir_if_local_template(
-    template_source: TemplateSourceFixture,
+    orig_template_source: TemplateSourceFixture,
     dir: Path,
 ) -> ContextManager[TemplateSourceFixture]:
-    template_source = deepcopy(template_source)
-    if template_source.is_local_template:
-        path_is_relative = not Path(template_source.path).is_absolute()
+    out_template_source = orig_template_source.copy()
+    if orig_template_source.is_local_template:
         # Copy into directory so it can be worked with without changing the original
-        template_dir = dir / template_source.name
-        source_path = template_source.path
-        if path_is_relative:
-            # Paths are set up to be relative to GENERATED_REPO_DIR
-            # Convert into absolute path so it can be copied appropriately
-            source_path = (GENERATED_REPO_DIR / source_path).resolve()
-        shutil.copytree(source_path, template_dir)
-        template_source.path = str(template_dir)
-        if path_is_relative:
-            # Original path was relative, need to make this path relative
-            template_source = template_source.relative(GENERATED_REPO_DIR)
-        yield template_source
-    else:
-        yield template_source
+        out_template_source.move(dir)
+    yield out_template_source
 
 
 @contextlib.contextmanager
 def template_source_with_temp_dir_if_local_template(
     template_source: TemplateSourceFixture,
 ) -> ContextManager[TemplateSourceFixture]:
-    with tempfile.TemporaryDirectory() as temp_dir:
+    with create_temp_path() as temp_path:
         with template_source_in_dir_if_local_template(
-            template_source, Path(temp_dir)
+            template_source, temp_path
         ) as output_template_source:
             yield output_template_source
 
@@ -359,7 +392,24 @@ one_remote_all_local_relative_fixtures = [
 
 @pytest.fixture(scope="function", params=one_remote_all_local_relative_fixtures)
 def template_source_one_remote_and_all_local_relative(request) -> TemplateSourceFixture:
-    yield request.param
+    with template_source_with_temp_dir_if_local_template(
+        request.param
+    ) as template_source:
+        yield template_source
+
+
+cookiecutter_changes_to_copier_fixtures = [
+    COOKIECUTTER_CHANGES_TO_COPIER_LOCAL_FIXTURE,
+    COOKIECUTTER_CHANGES_TO_COPIER_REMOTE_FIXTURE,
+]
+
+
+@pytest.fixture(scope="function", params=cookiecutter_changes_to_copier_fixtures)
+def template_source_cookiecutter_changes_to_copier(request) -> TemplateSourceFixture:
+    with template_source_with_temp_dir_if_local_template(
+        request.param
+    ) as template_source:
+        yield template_source
 
 
 COOKIECUTTER_REMOTE_DEFAULT_EXPECT_PATH = COOKIECUTTER_REMOTE_FIXTURE.path

@@ -1,29 +1,29 @@
 from typing import Optional
 
-from git import Repo, GitCommandError
+from git import GitCommandError, Repo
 
 from flexlate.branch_update import (
-    get_flexlate_branch_name_for_feature_branch,
     abort_merge_and_reset_flexlate_branches,
+    get_flexlate_branch_name_for_feature_branch,
 )
 from flexlate.cli_utils import confirm_user
 from flexlate.constants import DEFAULT_MERGED_BRANCH_NAME, DEFAULT_TEMPLATE_BRANCH_NAME
 from flexlate.ext_git import (
-    fast_forward_branch_without_checkout,
-    temp_repo_that_pushes_to_branch,
-    repo_has_merge_conflicts,
-    get_branch_sha,
     delete_local_branch,
+    fast_forward_branch_without_checkout,
+    get_branch_sha,
     merge_branch_into_current,
+    repo_has_merge_conflicts,
+    temp_repo_that_pushes_to_branch,
 )
 from flexlate.styles import (
-    print_styled,
-    INFO_STYLE,
     ACTION_REQUIRED_STYLE,
-    styled,
-    QUESTION_STYLE,
     ALERT_STYLE,
+    INFO_STYLE,
+    QUESTION_STYLE,
     SUCCESS_STYLE,
+    print_styled,
+    styled,
 )
 
 

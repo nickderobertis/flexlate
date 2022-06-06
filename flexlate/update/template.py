@@ -1,14 +1,14 @@
 import os.path
 from copy import deepcopy
 from pathlib import Path
-from typing import Optional, Sequence, List
+from typing import List, Optional, Sequence
 
 from pydantic import BaseModel
 
 from flexlate.config import AppliedTemplateConfig, FlexlateConfig
 from flexlate.exc import (
-    InvalidTemplateDataException,
     CannotFindAppliedTemplateException,
+    InvalidTemplateDataException,
 )
 from flexlate.path_ops import location_relative_to_new_parent
 from flexlate.render.renderable import Renderable
