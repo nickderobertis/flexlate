@@ -57,7 +57,7 @@ def strip_imports(session):
         "--in-place",
         "--recursive",
         ".",
-        "--exclude=test*",
+        "--exclude=test*,__init__.py",
     )
     if session.interactive:
         # When run as user, strip unused imports and exit successfully
