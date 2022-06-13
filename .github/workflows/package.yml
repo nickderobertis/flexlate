@@ -25,7 +25,6 @@ jobs:
       - uses: ./.github/actions/lint-and-test
 
   collectTODO:
-    needs: test
     runs-on: ubuntu-latest
     steps:
       - uses: "actions/checkout@master"
