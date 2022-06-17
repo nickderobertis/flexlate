@@ -1,2 +1,2 @@
 [flake8]
-exclude = .git,.nox,__pycache__,dist,build,docs,docsrc/source/conf.py
+exclude = .git,.nox,__pycache__,dist,build,docs,docsrc/source/conf.py,lib

@@ -4,6 +4,7 @@ inputs:
   python-version:
     required: true
     description: "The Python version to install dependencies for."
+
 runs:
   using: composite
   steps:
@@ -20,11 +21,30 @@ runs:
       with:
         path: ${{ env.pythonLocation }}
         key: ${{ env.pythonLocation }}-${{ hashFiles('*-requirements.txt') }}
+    - name: Get Venvs Path
+      id: get-venv-path
+      shell: python
+      run: |
+        from pathlib import Path
+        home = Path("~").expanduser()
+        venv_path = home / ".venvs"
+        print(f"::set-output name=venv-path::{venv_path}")
+    - uses: actions/cache@v3
+      id: cache-venvs
+      name: Cache venvs
+      with:
+        path: ${{ steps.get-venv-path.outputs.venv-path }}
+        key: ${{ env.pythonLocation }}-venvs-${{ hashFiles('*-requirements.txt') }}
     - name: Install main dependencies
       shell: bash
       run: |
         pipenv --python ${{ matrix.python-version }} sync
-    - name: Install linting dependencies
+    - name: Install global dependencies
       shell: bash
       run: |
-        pip install -r lint-requirements.txt
+        pip install -r global-requirements.txt
+    - name: Create venvs
+      shell: bash
+      if: steps.cache-venvs.outputs.cache-hit != 'true'
+      run: |
+        pipenv run nox -s venv -- create lint
