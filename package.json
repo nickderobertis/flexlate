@@ -15,7 +15,10 @@
     "lint-staged": "^12.4.1"
   },
   "lint-staged": {
-    "*.py": "pipenv run nox -s format_files -- ",
+    "*.py": [
+      "pipenv run nox -s format_files -- ",
+      "pipenv run nox -s strip --non-interactive -- "
+    ],
     "*-requirements.in": "pip-compile --upgrade --generate-hashes"
   }
 }

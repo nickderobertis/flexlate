@@ -71,12 +71,17 @@ def lint(session):
 
 @nox.session(python=False, name="strip")
 def strip_imports(session):
+    if session.posargs:
+        files = session.posargs
+    else:
+        files = ["."]
+
     common_args = (
         "--remove-all-unused-imports",
         "--in-place",
         "--recursive",
-        ".",
         "--exclude=test*,__init__.py",
+        *files,
     )
     if session.interactive:
         # When run as user, strip unused imports and exit successfully
