@@ -1,0 +1,19 @@
+name: Sync Github Topics
+on:
+  push:
+    paths:
+      - ".github/workflows/sync-topics.yml"
+    branches:
+      - master
+      - alpha
+      - beta
+
+jobs:
+  sync-topics:
+    runs-on: ubuntu-latest
+    name: Sync Github Topics
+    steps:
+      - uses: nickderobertis/github-topic-syncer@v1
+        with:
+          topics: ""
+          token: ${{ secrets.gh_token }}

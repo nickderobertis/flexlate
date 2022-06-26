@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "prepare": "husky install && cat global-requirements.txt | xargs -n1 pipx install || true"
+    "prepare": "husky install && cat global-requirements.in | xargs -n1 pipx install || true"
   },
   "author": "",
   "license": "ISC",
