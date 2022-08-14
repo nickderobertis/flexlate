@@ -9,7 +9,7 @@ runs:
   steps:
     - name: Install pipenv
       shell: bash
-      run: pipx install pipenv
+      run: pipx install pipenv==2022.3.24
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v3
       with:
