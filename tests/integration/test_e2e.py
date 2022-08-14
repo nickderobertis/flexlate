@@ -794,7 +794,7 @@ def test_sync_manually_remove_applied_template(
         fxt.apply_template_and_add(COOKIECUTTER_REMOTE_NAME, no_input=True)
 
         assert output_folder.exists()
-        shutil.rmtree(output_folder)
+        remove_folder(output_folder)
         stage_and_commit_all(repo, "Manual change to remove applied template")
 
         fxt.sync()

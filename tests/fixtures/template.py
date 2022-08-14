@@ -35,6 +35,7 @@ from tests.config import (
     COPIER_WITH_TASKS_MODIFIED_VERSION,
     COPIER_WITH_TASKS_VERSION,
 )
+from tests.dirutils import remove_folder
 
 
 class CookiecutterRemoteTemplateData(TypedDict):
@@ -191,7 +192,7 @@ def modify_copier_with_tasks(root: Union[str, Path]):
 
 
 def modify_cookiecutter_one_to_be_copier(root: Union[str, Path]):
-    shutil.rmtree(root)
+    remove_folder(root)
     shutil.copytree(COPIER_FROM_COOKIECUTTER_ONE_DIR, root)
 
 
