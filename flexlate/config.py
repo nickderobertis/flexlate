@@ -176,8 +176,10 @@ class FlexlateConfig(BaseConfig):
         template_sources: List[TemplateSource] = []
         applied_templates: List[AppliedTemplateConfig] = []
         for conf in configs:
-            template_sources.extend(conf.template_sources)
-            applied_templates.extend(conf.applied_templates)
+            # Copy to avoid bugs from mutating the configs
+            # When updating, always update both the child and root config
+            template_sources.extend([ts.copy() for ts in conf.template_sources])
+            applied_templates.extend([at.copy() for at in conf.applied_templates])
         obj = cls(
             template_sources=template_sources, applied_templates=applied_templates
         )
