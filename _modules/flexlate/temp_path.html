@@ -46,7 +46,7 @@
   
   
   
-    <title>flexlate.temp_path &#8212; flexlate 0.14.6 documentation</title>
+    <title>flexlate.temp_path &#8212; flexlate 0.14.7a1 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/material.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -90,7 +90,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex navheader">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="../../index.html" title="flexlate 0.14.6 documentation"
+        <a href="../../index.html" title="flexlate 0.14.7a1 documentation"
            class="md-header-nav__button md-logo">
           
             <i class="md-icon">&#xe869</i>
@@ -176,7 +176,7 @@
   <nav class="md-tabs" data-md-component="tabs">
     <div class="md-tabs__inner md-grid">
       <ul class="md-tabs__list">
-          <li class="md-tabs__item"><a href="../../index.html" class="md-tabs__link">flexlate 0.14.6 documentation</a></li>
+          <li class="md-tabs__item"><a href="../../index.html" class="md-tabs__link">flexlate 0.14.7a1 documentation</a></li>
           <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">Module code</a></li>
       </ul>
     </div>
@@ -189,13 +189,13 @@
               <div class="md-sidebar__inner">
                 <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="../../index.html" title="flexlate 0.14.6 documentation" class="md-nav__button md-logo">
+    <a href="../../index.html" title="flexlate 0.14.7a1 documentation" class="md-nav__button md-logo">
       
         <i class="md-icon">&#xe869</i>
       
     </a>
     <a href="../../index.html"
-       title="flexlate 0.14.6 documentation">flexlate</a>
+       title="flexlate 0.14.7a1 documentation">flexlate</a>
   </label>
     <div class="md-nav__source">
       <a href="https://github.com/nickderobertis/flexlate" title="Go to repository" class="md-source" data-md-source="github">
@@ -279,11 +279,10 @@
             
   <h1 id="modules-flexlate-temp-path--page-root">Source code for flexlate.temp_path</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">contextlib</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">import</span> <span class="nn">tempfile</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterator</span>
-
-<span class="kn">from</span> <span class="nn">flexlate.constants</span> <span class="kn">import</span> <span class="n">PY10</span>
 
 
 <div class="viewcode-block" id="create_temp_path"><a class="viewcode-back" href="../../api/flexlate.html#flexlate.temp_path.create_temp_path">[docs]</a><span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
@@ -295,17 +294,13 @@
 <span class="sd">    1. That returns a string and not a path</span>
 <span class="sd">    2. On MacOS, the temp directory has a symlink. This resolves the symlink so that</span>
 <span class="sd">       there won't be any mismatch in resolved paths.</span>
-<span class="sd">    3. On Windows, the temp directory can fail to delete with a PermissionError. On Python</span>
-<span class="sd">       3.10 and greater, there is a ignore_cleanup_errors parameter that can be added to</span>
-<span class="sd">       tempfile.TemporaryDirectory to ignore the error. This function passes this</span>
-<span class="sd">       parameter if we are running on Python 3.10 or greater.</span>
+<span class="sd">    3. On Windows, the temp directory can fail to delete with a PermissionError. This function</span>
+<span class="sd">       will try to delete the temp directory, but if it fails with an error it will just ignore it.</span>
 <span class="sd">    """</span>
-    <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">if</span> <span class="n">PY10</span><span class="p">:</span>
-        <span class="n">kwargs</span><span class="p">[</span><span class="s2">"ignore_cleanup_errors"</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-    <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">as</span> <span class="n">temp_dir</span><span class="p">:</span>  <span class="c1"># type: ignore</span>
-        <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">temp_dir</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
-        <span class="k">yield</span> <span class="n">path</span></div>
+    <span class="n">temp_dir</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span>
+    <span class="n">temp_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">temp_dir</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="k">yield</span> <span class="n">temp_path</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">temp_path</span><span class="p">,</span> <span class="n">ignore_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 </pre></div>
 
           </article>

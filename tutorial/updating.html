@@ -47,7 +47,7 @@
   
   
   
-    <title>Update Templates &#8212; flexlate 0.14.6 documentation</title>
+    <title>Update Templates &#8212; flexlate 0.14.7a1 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/material.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
@@ -93,7 +93,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex navheader">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="../index.html" title="flexlate 0.14.6 documentation"
+        <a href="../index.html" title="flexlate 0.14.7a1 documentation"
            class="md-header-nav__button md-logo">
           
             <i class="md-icon">&#xe869</i>
@@ -179,7 +179,7 @@
   <nav class="md-tabs" data-md-component="tabs">
     <div class="md-tabs__inner md-grid">
       <ul class="md-tabs__list">
-          <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">flexlate 0.14.6 documentation</a></li>
+          <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">flexlate 0.14.7a1 documentation</a></li>
           <li class="md-tabs__item"><a href="index.html" class="md-tabs__link">Flexlate User Guide</a></li>
       </ul>
     </div>
@@ -192,13 +192,13 @@
               <div class="md-sidebar__inner">
                 <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="../index.html" title="flexlate 0.14.6 documentation" class="md-nav__button md-logo">
+    <a href="../index.html" title="flexlate 0.14.7a1 documentation" class="md-nav__button md-logo">
       
         <i class="md-icon">&#xe869</i>
       
     </a>
     <a href="../index.html"
-       title="flexlate 0.14.6 documentation">flexlate</a>
+       title="flexlate 0.14.7a1 documentation">flexlate</a>
   </label>
     <div class="md-nav__source">
       <a href="https://github.com/nickderobertis/flexlate" title="Go to repository" class="md-source" data-md-source="github">
@@ -418,28 +418,28 @@ have to resolve the same conflicts again on the next update.</p>
 to the latest version allowed. It can also be used to update the data
 with or without updating the version.</p>
 <pre class="terminhtml">
-    <span data-ty="" data-ty-delay="50">$ cat answer1.txt</span>
+    <span data-ty="" data-ty-delay="43">$ cat answer1.txt</span>
 <span data-ty="" data-ty-delay="0">2.7</span>
-<span data-ty="" data-ty-delay="1502">$ fxt update</span>
+<span data-ty="" data-ty-delay="1628">$ fxt update</span>
 <span data-ty="" data-ty-delay="8"> Syncing changes in flexlate configs to output</span>
 <span data-ty="" data-ty-delay="0"></span>
 <span data-ty="" data-ty-delay="50"><span class="ansi1">question1</span>? Format: yaml</span>
-<span data-ty="input" data-ty-delay="2" data-ty-prompt="🎤 [answer1]: "></span>
+<span data-ty="input" data-ty-delay="1" data-ty-prompt="🎤 [answer1]: "></span>
 <span data-ty="" data-ty-delay="0"></span>
 <span data-ty="" data-ty-delay="0"><span class="ansi3 ansi34">The second question</span></span>
 <span data-ty="" data-ty-delay="50"><span class="ansi1">question2</span>? Format: float</span>
-<span data-ty="input" data-ty-delay="4" data-ty-prompt="🎤 [2.7]: ">50</span>
-<span data-ty="" data-ty-delay="3"></span>
+<span data-ty="input" data-ty-delay="2" data-ty-prompt="🎤 [2.7]: ">50</span>
+<span data-ty="" data-ty-delay="2"></span>
 <span data-ty="" data-ty-delay="0"><span class="ansi32"></span><span class="ansi1 ansi32">    create</span><span class="ansi1"></span>  answer1.txt</span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="395"></span>
-<span data-ty="" data-ty-delay="1"></span>
+<span data-ty="" data-ty-delay="431"></span>
+<span data-ty="" data-ty-delay="0"></span>
 <span data-ty="" data-ty-delay="0"><span class="ansi32"></span><span class="ansi1 ansi32">    create</span><span class="ansi1"></span>  temp.txt</span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="77"></span>
-<span data-ty="" data-ty-delay="57"><span class="ansi32">✔ Successfully updated template output</span></span>
+<span data-ty="" data-ty-delay="76"></span>
+<span data-ty="" data-ty-delay="62"><span class="ansi32">✔ Successfully updated template output</span></span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="43">$ cat answer1.txt</span>
+<span data-ty="" data-ty-delay="42">$ cat answer1.txt</span>
 <span data-ty="" data-ty-delay="0">50.0</span>
 <span data-ty="" data-ty-delay="0">some new footer</span>
 </pre><p>By default, it will prompt for all the questions, using the saved answers
@@ -466,18 +466,18 @@ sources you want to update, for example:</p>
 checks for updates to the template(s). It displays
 them in a tabular format if there are updates available.</p>
 <pre class="terminhtml">
-    <span data-ty="" data-ty-delay="826">$ fxt check</span>
-<span data-ty="" data-ty-delay="56"><span class="ansi32">✔ All templates up to date</span></span>
+    <span data-ty="" data-ty-delay="827">$ fxt check</span>
+<span data-ty="" data-ty-delay="58"><span class="ansi32">✔ All templates up to date</span></span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="803">$ fxt config target copier-simple-example</span>
+<span data-ty="" data-ty-delay="770">$ fxt config target copier-simple-example</span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="835">$ fxt check</span>
+<span data-ty="" data-ty-delay="827">$ fxt check</span>
 <span data-ty="" data-ty-delay="0"><span class="ansi33">📝 Some templates are not up to date. Run fxt update to update</span></span>
 <span data-ty="" data-ty-delay="0">┏━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━┓</span>
 <span data-ty="" data-ty-delay="0">┃<span class="ansi1"> </span><span class="ansi1">Template Name        </span><span class="ansi1"> </span>┃<span class="ansi1"> </span><span class="ansi1">Current Version         </span><span class="ansi1"> </span>┃<span class="ansi1"> </span><span class="ansi1">Latest Version           </span><span class="ansi1"> </span>┃</span>
 <span data-ty="" data-ty-delay="0">┡━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━┩</span>
 <span data-ty="" data-ty-delay="0">│ copier-simple-example │ c7e1ba1bfb141e9c577e7c2… │ f3fa2c9526c12b3011e0a261… │</span>
-<span data-ty="" data-ty-delay="51">└───────────────────────┴──────────────────────────┴───────────────────────────┘</span>
+<span data-ty="" data-ty-delay="62">└───────────────────────┴──────────────────────────┴───────────────────────────┘</span>
 <span data-ty="" data-ty-delay="0"></span>
 </pre><p>For scripting purposes, it returns code <code class="docutils literal notranslate"><span class="pre">0</span></code> if there are no updates available,
 and <code class="docutils literal notranslate"><span class="pre">1</span></code> if there are:</p>
@@ -500,67 +500,67 @@ source, <code class="docutils literal notranslate"><span class="pre">fxt</span> 
 <a class="reference internal" href="../commands.html#fxt-config-target"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">fxt</span> <span class="pre">config</span> <span class="pre">target</span></code></span></a> command to remove
 the target version.</p>
 <pre class="terminhtml">
-    <span data-ty="" data-ty-delay="853">$ fxt init-from https://github.com/nickderobertis/copier-simple-example --version c7e1ba1bfb141e9c577e7c21ee4a5d3ae5dde04d</span>
+    <span data-ty="" data-ty-delay="879">$ fxt init-from https://github.com/nickderobertis/copier-simple-example --version c7e1ba1bfb141e9c577e7c21ee4a5d3ae5dde04d</span>
 <span data-ty="" data-ty-delay="0"> Initializing flexlate project with default add mode local and <span class="ansi33">user</span>=<span class="ansi3 ansi91">False</span> in </span>
-<span data-ty="" data-ty-delay="75"><span class="ansi35">/tmp/</span><span class="ansi95">tmpvw1q_1o1</span></span>
-<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="14"><span class="ansi32">⠋</span>  Initializing...</span>
+<span data-ty="" data-ty-delay="76"><span class="ansi35">/tmp/</span><span class="ansi95">tmpywj643zc</span></span>
+<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="26"><span class="ansi32">⠋</span>  Initializing...</span>
 <span data-ty="" data-ty-carriagereturn="true" data-ty-delay="0"><span class="ansi32">⠋</span>  Initializing...</span>
 <span data-ty="" data-ty-delay="0"><span class="ansi32">⠙</span>  Initializing...</span>
 <span data-ty="" data-ty-carriagereturn="true" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="17"><span class="ansi32">✔ Finished initializing flexlate project</span></span>
-<span data-ty="" data-ty-delay="0"> Adding template source<span class="ansi33">...</span></span>
+<span data-ty="" data-ty-delay="19"><span class="ansi32">✔ Finished initializing flexlate project</span></span>
+<span data-ty="" data-ty-delay="1"> Adding template source<span class="ansi33">...</span></span>
 <span data-ty="" data-ty-delay="0"> Adding template source copier-simple-example from </span>
-<span data-ty="" data-ty-delay="83"><span class="ansi4 ansi94">https://github.com/nickderobertis/copier-simple-example</span></span>
-<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="16"><span class="ansi32">⠋</span></span>
+<span data-ty="" data-ty-delay="81"><span class="ansi4 ansi94">https://github.com/nickderobertis/copier-simple-example</span></span>
+<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="27"><span class="ansi32">⠋</span></span>
 <span data-ty="" data-ty-carriagereturn="true" data-ty-delay="0"><span class="ansi32">⠙</span></span>
 <span data-ty="" data-ty-delay="0"> Sucessfully added template source copier-simple-example</span>
 <span data-ty="" data-ty-carriagereturn="true" data-ty-delay="0"><span class="ansi32">⠙</span></span>
 <span data-ty="" data-ty-delay="0"><span class="ansi32">⠙</span></span>
-<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="192"></span>
-<span data-ty="" data-ty-delay="162"> Applying template copier-simple-example to <span class="ansi35">/tmp/</span><span class="ansi95">tmpvw1q_1o1</span></span>
-<span data-ty="" data-ty-delay="6"> Updating <span class="ansi1 ansi36">1</span> applied templates</span>
+<span data-ty="" data-ty-carriagereturn="true" data-ty-delay="211"></span>
+<span data-ty="" data-ty-delay="172"> Applying template copier-simple-example to <span class="ansi35">/tmp/</span><span class="ansi95">tmpywj643zc</span></span>
+<span data-ty="" data-ty-delay="7"> Updating <span class="ansi1 ansi36">1</span> applied templates</span>
 <span data-ty="" data-ty-delay="0"></span>
 <span data-ty="" data-ty-delay="50"><span class="ansi1">question1</span>? Format: yaml</span>
-<span data-ty="input" data-ty-delay="2" data-ty-prompt="🎤 [answer1]: ">my answer</span>
+<span data-ty="input" data-ty-delay="1" data-ty-prompt="🎤 [answer1]: ">my answer</span>
 <span data-ty="" data-ty-delay="0"></span>
 <span data-ty="" data-ty-delay="0"><span class="ansi3 ansi34">The second question</span></span>
 <span data-ty="" data-ty-delay="50"><span class="ansi1">question2</span>? Format: float</span>
-<span data-ty="input" data-ty-delay="5" data-ty-prompt="🎤 [2.7]: ">10</span>
-<span data-ty="" data-ty-delay="2"></span>
+<span data-ty="input" data-ty-delay="2" data-ty-prompt="🎤 [2.7]: ">10</span>
+<span data-ty="" data-ty-delay="1"></span>
 <span data-ty="" data-ty-delay="0"><span class="ansi32"></span><span class="ansi1 ansi32">    create</span><span class="ansi1"></span>  my answer.txt</span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="483"></span>
+<span data-ty="" data-ty-delay="447"></span>
 <span data-ty="" data-ty-delay="0"></span>
 <span data-ty="" data-ty-delay="0"><span class="ansi32"></span><span class="ansi1 ansi32">    create</span><span class="ansi1"></span>  temp.txt</span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="63"></span>
+<span data-ty="" data-ty-delay="64"></span>
 <span data-ty="" data-ty-delay="0"><span class="ansi32">✔ Successfully updated template output</span></span>
-<span data-ty="" data-ty-delay="50"><span class="ansi32">✔ Successfully applied template copier-simple-example to </span><span class="ansi32">/tmp/</span><span class="ansi32">tmpvw1q_1o1</span></span>
-<span data-ty="input" data-ty-delay="77" data-ty-prompt="Output folder name? (this template does not provide one) (project): "></span>
+<span data-ty="" data-ty-delay="50"><span class="ansi32">✔ Successfully applied template copier-simple-example to </span><span class="ansi32">/tmp/</span><span class="ansi32">tmpywj643zc</span></span>
+<span data-ty="input" data-ty-delay="87" data-ty-prompt="Output folder name? (this template does not provide one) (project): "></span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="44">$ cd project</span>
+<span data-ty="" data-ty-delay="41">$ cd project</span>
 <span data-ty="" data-ty-delay="0"></span>
 <span data-ty="" data-ty-delay="43">$ cat flexlate.json | grep target</span>
 <span data-ty="" data-ty-delay="0">      "target_version": "c7e1ba1bfb141e9c577e7c21ee4a5d3ae5dde04d",</span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="816">$ fxt config target copier-simple-example</span>
+<span data-ty="" data-ty-delay="782">$ fxt config target copier-simple-example</span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="45">$ cat flexlate.json | grep target</span>
+<span data-ty="" data-ty-delay="43">$ cat flexlate.json | grep target</span>
 <span data-ty="" data-ty-delay="0">      "target_version": null,</span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="41">$ cat 'my answer.txt'</span>
+<span data-ty="" data-ty-delay="44">$ cat 'my answer.txt'</span>
 <span data-ty="" data-ty-delay="0">10.0</span>
-<span data-ty="" data-ty-delay="1473">$ fxt update --no-input</span>
-<span data-ty="" data-ty-delay="9"> Syncing changes in flexlate configs to output</span>
+<span data-ty="" data-ty-delay="1519">$ fxt update --no-input</span>
+<span data-ty="" data-ty-delay="11"> Syncing changes in flexlate configs to output</span>
 <span data-ty="" data-ty-delay="1"></span>
 <span data-ty="" data-ty-delay="0"><span class="ansi32"></span><span class="ansi1 ansi32">    create</span><span class="ansi1"></span>  my answer.txt</span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="377"></span>
+<span data-ty="" data-ty-delay="407"></span>
 <span data-ty="" data-ty-delay="0"></span>
 <span data-ty="" data-ty-delay="0"><span class="ansi32"></span><span class="ansi1 ansi32">    create</span><span class="ansi1"></span>  temp.txt</span>
 <span data-ty="" data-ty-delay="0"></span>
-<span data-ty="" data-ty-delay="84"></span>
-<span data-ty="" data-ty-delay="57"><span class="ansi32">✔ Successfully updated template output</span></span>
+<span data-ty="" data-ty-delay="81"></span>
+<span data-ty="" data-ty-delay="69"><span class="ansi32">✔ Successfully updated template output</span></span>
 <span data-ty="" data-ty-delay="0"></span>
 <span data-ty="" data-ty-delay="42">$ cat 'my answer.txt'</span>
 <span data-ty="" data-ty-delay="0">10.0</span>
