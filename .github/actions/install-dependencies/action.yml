@@ -24,6 +24,10 @@ runs:
       shell: bash
       run: |
         pipenv --python ${{ matrix.python-version }} sync
+    - name: Check pipenv dependencies
+      shell: bash
+      run: |
+        pipenv run pip freeze
     - name: Install linting dependencies
       shell: bash
       run: |
